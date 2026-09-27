@@ -370,7 +370,7 @@ var cv=$('cv'),rd;
 try{rd=new T.WebGLRenderer({canvas:cv,antialias:true,powerPreference:'high-performance'});}catch(e){fatal('此裝置未能顯示 3D 畫面。');return;}
 var PR=Math.min(FINE?(PHONE?1.5:1.75):2,window.devicePixelRatio||1);rd.setPixelRatio(PR);
 if(FINE){rd.outputEncoding=T.sRGBEncoding;rd.toneMapping=T.ACESFilmicToneMapping;rd.toneMappingExposure=1;rd.shadowMap.enabled=true;rd.shadowMap.type=T.PCFSoftShadowMap;}
-var cam=new T.PerspectiveCamera(35,1,0.1,400);
+var cam=new T.PerspectiveCamera(35,1,0.5,400);
 // 動森「滾木」彎曲：以鏡頭焦點 z 為中心，將地面繞一條半徑 uR 嘅圓柱彎落去（InstancedMesh 都得）。
 // ⚠ 室內唔可以用「好大半徑」扮平：float32 喺 1e6 附近精度得 0.06，會出現梯級。所以用 uB 開關。
 // ⚠ 陰影用冇彎曲嘅座標計（投影同接收都係），所以成個世界連影一齊彎，唔會錯位。
@@ -855,7 +855,7 @@ function tiltShader(h){return {uniforms:{tDiffuse:{value:null},amt:{value:0.003}
 var GRADE={uniforms:{tDiffuse:{value:null},uSat:{value:1.08},uTint:{value:new T.Vector3(1.02,1,0.97)},uVig:{value:0.5}},vertexShader:PPVS,
  fragmentShader:'uniform sampler2D tDiffuse;uniform float uSat;uniform float uVig;uniform vec3 uTint;varying vec2 vUv;void main(){vec3 c=texture2D(tDiffuse,vUv).rgb;float l=dot(c,vec3(0.299,0.587,0.114));c=mix(vec3(l),c,uSat)*uTint;vec2 q=vUv-0.5;c*=clamp(1.0-dot(q,q)*uVig,0.0,1.0);gl_FragColor=vec4(c,1.0);}'};
 function initComposer(){if(FINE&&T.EffectComposer&&T.UnrealBloomPass&&T.ShaderPass&&T.RenderPass){try{
-  var opt={minFilter:T.LinearFilter,magFilter:T.LinearFilter,format:T.RGBAFormat,encoding:T.sRGBEncoding},rt;
+  var opt={minFilter:T.LinearFilter,magFilter:T.LinearFilter,format:T.RGBAFormat,encoding:T.sRGBEncoding,stencilBuffer:true},rt;
   if(rd.capabilities.isWebGL2&&T.WebGLMultisampleRenderTarget){rt=new T.WebGLMultisampleRenderTarget(4,4,opt);rt.samples=PHONE?2:4;}else rt=new T.WebGLRenderTarget(4,4,opt);
   COMP=new T.EffectComposer(rd,rt);COMP.rp=new T.RenderPass(scO,cam);COMP.addPass(COMP.rp);
   bloomP=new T.UnrealBloomPass(new T.Vector2(256,256),0.22,0.45,0.84);COMP.addPass(bloomP);
@@ -1924,7 +1924,7 @@ function updCCN(dt,t){CCN.forEach(function(n,i){var near=where==='cc'&&Math.hypo
  n.rot=lerpA(n.rot,n.face,dt*6);n.m.position.set(n.x,0,n.z);n.m.rotation.y=n.rot;
  var b=n.m.userData.b,h=npcHop[n.k]||0;if(h>0)npcHop[n.k]=h-dt;
  if(mv){n.ph+=dt*9;b.position.y=Math.abs(Math.sin(n.ph))*0.025;b.rotation.z=Math.sin(n.ph)*0.07;}else{b.rotation.z*=0.85;b.position.y=(h>0?Math.abs(Math.sin(t*12))*0.05:0)+Math.abs(Math.sin(t*1.8+i))*0.01;}});}
-function fadeTick(dt){FADERS.forEach(function(F0){var near=false;if(where==='out'&&!making&&phase==='play'){_uc.copy(bendPt(F0.x,F0.y,F0.z));near=segDist(_uc,cam.position,P.x,1.1,P.z)<F0.r;}
+function fadeTick(dt){FADERS.forEach(function(F0){var near=false;if(where==='out'&&!making&&phase==='play'){_uc.copy(bendPt(F0.x,F0.y,F0.z));near=P.z<F0.z+0.3&&segDist(_uc,cam.position,P.x,1.1,P.z)<F0.r;}
  var tg=near?0.18:1;if(Math.abs(tg-F0.f)<0.002)return;F0.f+=(tg-F0.f)*Math.min(1,dt*7);F0.mats.forEach(function(m){m.opacity=F0.f;m.depthWrite=F0.f>0.95;});});}
 // 俊康：喺檔口前面行來行去；玩家行近就停低望住你
 var BEAR={x:0,z:0,tx:0,wait:1,rot:0,face:0,ph:0};
@@ -2018,11 +2018,11 @@ function dayNight(dt){todT+=dt;var inPlay=!(making||phase!=='play');
  if(where==='out'||phase!=='play'){rd.setClearColor(L.hor,1);}else rd.setClearColor(INB,1);
  skyU.uTop.value.copy(L.top);skyU.uHor.value.copy(L.hor);skyU.uGlow.value.copy(L.glow);skyU.uSun.value.copy(SUN_DIR);scO.fog.color.copy(L.hor);
  sunO.color.copy(L.sun);hemiO.color.copy(L.hs);hemiO.groundColor.copy(L.hg);if(FINE){sunO.color.convertSRGBToLinear();hemiO.color.convertSRGBToLinear();hemiO.groundColor.convertSRGBToLinear();}
- sunO.intensity=FINE?L.sunI*0.56:L.sunI*0.19;hemiO.intensity=FINE?L.hi*0.82:L.hi*0.75;if(FINE)rd.toneMappingExposure=L.exp;
+ sunO.intensity=FINE?L.sunI*0.56:L.sunI*0.19;hemiO.intensity=FINE?L.hi*0.82:L.hi*0.75;var outV=where==='out'||phase!=='play';if(FINE)rd.toneMappingExposure=outV?L.exp:1;
  if(!FINE||!COMP)sunO.position.copy(SUN_DIR).multiplyScalar(20).add(sunO.target.position);
  WU.uSky.value.copy(lc(L.hor.getHex()));WU.uDeep.value.copy(lc(L.deep.getHex()));WU.uShal.value.copy(lc(L.shal.getHex()));WU.uSunC.value.copy(lc(L.sun.getHex())).multiplyScalar(Math.min(1,L.sunI/2));WU.uSunD.value.copy(SUN_DIR);WU.uSpec.value=L.lamp>0.9?0.5:1;
  CLOUDS.forEach(function(c){c.material.color.copy(lc(L.cloud.getHex()));c.material.opacity=0.9-0.4*L.star;});stars.material.opacity=L.star;
- if(bloomP){bloomP.strength=0.1+0.4*L.lamp;bloomP.threshold=0.93-0.18*L.lamp;}
+ if(bloomP){var bl0=outV?L.lamp:0;bloomP.strength=0.1+0.4*bl0;bloomP.threshold=0.93-0.18*bl0;}
  var cd=cam.position.distanceTo(_st.set(where==='out'&&phase==='play'?fx:0,0,where==='out'&&phase==='play'?fz:0));scO.fog.near=cd+20;scO.fog.far=cd+95;
  winM.emissive.copy(lc(0xffc766)).multiplyScalar(nk*0.9);bulbM.emissive.copy(lc(0xffe39a)).multiplyScalar(nk);GLOWC.forEach(function(g){g.c.emissive.copy(g.s.emissive);});ringM.emissive.copy(lc(0xff5fae)).multiplyScalar(nk*0.6);
  uL.forEach(function(lm,i){lm.emissive.copy(lm.color).multiplyScalar((0.25+0.25*Math.sin(tm*5+i*1.3))*(0.6+0.8*nk));});}
