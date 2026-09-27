@@ -2,7 +2,7 @@
 <html lang="zh-Hant-HK">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="color-scheme" content="light">
 <!-- iPhone Safari 冇 element fullscreen API：由「分享 → 加入主畫面」開就會冇工具列（同旅款亂Upper 一樣）-->
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -11,7 +11,7 @@
 <title>真．旅遊星球</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{margin:0;height:100%;overflow:hidden;background:#bde7ff;}
+html,body{margin:0;height:100%;overflow:hidden;background:#bde7ff;touch-action:none;overscroll-behavior:none;-webkit-text-size-adjust:100%;}
 body{font:15px/1.6 -apple-system,"PingFang HK","Noto Sans HK","Microsoft JhengHei",sans-serif;color:#5a4632;}
 button{font:inherit;cursor:pointer;}
 #app{position:fixed;inset:0;touch-action:none;user-select:none;-webkit-user-select:none;overflow:hidden;}
@@ -90,6 +90,7 @@ button.pill:active{transform:translateY(1px);}
 .swb{width:34px;height:34px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 2px #e9dfc9;padding:0;}
 .swb.on{box-shadow:0 0 0 3px #f4c542;}
 .mk .chips{margin:0;}
+button{touch-action:manipulation;}
 .mkgo{display:block;width:100%;margin-top:14px;border:none;border-radius:999px;padding:10px;background:#f4a53c;color:#fff;font-size:17px;font-weight:700;box-shadow:0 3px 0 #c9822a;}
 .mkno{display:block;width:100%;margin-top:6px;border:none;background:none;color:#8a7560;font-size:14px;padding:6px;}
 .making #joy,.making #abtn,.making #hudL,.making #hudR,.making #hint,.making #toasts{display:none!important;}
@@ -115,6 +116,9 @@ button.pill:active{transform:translateY(1px);}
 .tg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:6px 0 10px;}
 .tc{border:none;background:#fff;border-radius:14px;padding:8px 2px 6px;color:#5a4632;font-size:13px;line-height:1.3;box-shadow:0 2px 0 rgba(90,70,50,.1);}
 .tc b{display:block;font-size:26px;line-height:1.2;font-weight:400;}
+.tc img{display:block;width:46px;height:46px;margin:0 auto 3px;border-radius:9px;image-rendering:pixelated;}
+#terr .mk{padding:14px 14px 12px;}#terr .mk .sub{margin-bottom:4px;}#terr .ti{padding:8px 12px;font-size:13px;line-height:1.6;}#terr .mkgo{margin-top:10px;padding:8px;}
+@media (max-width:700px) and (orientation:portrait){#terr .mk{max-height:60%;}}
 .tc.on{background:#fff4cf;box-shadow:inset 0 0 0 3px #f4c542;}
 .ti{background:#fff;border-radius:16px;padding:10px 14px;font-size:14px;line-height:1.7;}
 .ti small{display:block;color:#8a7560;font-size:13px;}
@@ -128,7 +132,7 @@ button.pill:active{transform:translateY(1px);}
 <div id="app">
 <canvas id="cv"></canvas>
 <div id="hudL"><div class="row"><div class="pill">🪙 <span id="coins">0</span></div><div class="pill" id="where">星球廣場</div></div><div class="pill" id="rstat"></div></div>
-<div id="hudR"><div class="pill" id="clock">&nbsp;</div><div class="row"><button class="pill" id="bcam">🎥 標準</button><button class="pill" id="bday" aria-label="切換日夜">🌙</button><button class="pill" id="bphone">📱 手機<i id="badge"></i></button></div></div>
+<div id="hudR"><div class="pill" id="clock">&nbsp;</div><div class="row"><button class="pill" id="bcam">🎥 標準</button><button class="pill" id="bphone">📱 手機<i id="badge"></i></button></div></div>
 <div id="toasts"></div>
 <div id="hint">方向鍵／WASD 或左下搖桿移動　空白鍵或 A 按鈕互動　C 切換鏡頭</div>
 <div id="joy"><div id="knob"></div></div>
@@ -136,7 +140,7 @@ button.pill:active{transform:translateY(1px);}
 <div id="dlg"><div id="dlgO"></div><div id="dlgN"></div><div id="dlgB"><span id="dlgT"></span><span id="dlgA"></span></div></div>
 <div id="panel"><div class="ph"><div><h2 id="pTitle"></h2><div class="sub" id="pSub"></div></div><button class="x" id="pClose" aria-label="關閉">✕</button></div><div class="tabs" id="pTabs"></div><div class="pb" id="pBody"></div></div>
 <div id="make"><div class="mk"><h2 id="mkTitle">建立你的角色</h2><div class="sub" id="mkSub">先決定名字和樣子。之後可以到服務中心找綿綿改變造型。</div><label for="mkName">名字（最多 8 個字）</label><input id="mkName" maxlength="12" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done"><div class="mkerr" id="mkErr"></div><label>膚色</label><div class="sws" id="mkSkin"></div><label>髮色</label><div class="sws" id="mkHair"></div><label>髮型</label><div class="chips" id="mkHs"></div><label>眼睛</label><div class="chips" id="mkEye"></div><button class="mkgo" id="mkGo">完成</button><button class="mkno" id="mkNo">取消</button></div></div>
-<div id="terr"><div class="mk"><h2>選擇你的星球地形</h2><div class="sub">每個新星球只可以揀一次地形。點選看看，後面會即時顯示。</div><div class="tg" id="trGrid"></div><div class="ti" id="trInfo"></div><button class="mkgo" id="trGo">就選這個地形</button></div></div>
+<div id="terr"><div class="mk"><h2>選擇你的島嶼</h2><div class="sub">點選看看，後面會即時顯示。每個新星球只可以揀一次。</div><div class="tg" id="trGrid"></div><div class="ti" id="trInfo"></div><button class="mkgo" id="trGo">就選這個地形</button></div></div>
 <div id="cover"><div class="cv-logo"><div class="cv-planet"></div><div class="cv-sub">旅遊與款待・經營遊戲</div><h1>真．旅遊星球</h1></div><div><button class="cv-go" id="cvGo">開始遊戲</button><div class="cv-hint" id="cvHint">&nbsp;</div></div></div>
 <div id="fade"></div>
 </div>
@@ -153,30 +157,32 @@ var T=THREE;
 // ⚠ 示範用「快速時間」：一格農田由播種到成熟大約 2 分鐘，方便即場試玩。
 //   正式俾學生玩，可以將 stageSec／wetSec 調大（例如以小時計），做成動森咁每日返嚟打理。
 var CFG={stageSec:40,wetSec:70,remindSec:30,patience:45,eatSec:12,baseInterval:14,marketSec:120,yield:2,saveKey:'ths-new-planet-v1',
- pondCap:8,fishGrowSec:90,breedSec:120,jobSec:150,researchFee:80,refreshFee:30};
+ pondCap:8,fishGrowSec:90,breedSec:120,jobSec:150,researchFee:80,refreshFee:30,fruitMin:90,fruitMax:240};
 
 // ================= 資料 =================
 var CROPS={tomato:{n:'番茄',seed:12,sell:26},lettuce:{n:'生菜',seed:8,sell:18},carrot:{n:'甘筍',seed:10,sell:22},potato:{n:'薯仔',seed:14,sell:30}};
 var GOODS={egg:{n:'雞蛋',p:14},milk:{n:'牛奶',p:16},rice:{n:'白米',p:12},fish:{n:'鮮魚',p:28},pineapple:{n:'菠蘿',p:24}};
-var ICON={tomato:'🍅',lettuce:'🥬',carrot:'🥕',potato:'🥔',egg:'🥚',milk:'🥛',rice:'🍚',fish:'🐟',pineapple:'🍍'};
-function iname(k){return (CROPS[k]||GOODS[k]).n;}
+// 樹上採到嘅水果同蜂蜜：可以做食材或者賣
+var FRUITS={apple:{n:'蘋果',sell:30},orange:{n:'橙',sell:30},peach:{n:'桃',sell:34},honey:{n:'蜂蜜',sell:60}};
+var FRCOL={apple:0xe8473f,orange:0xff9f1c,peach:0xffa8a0};
+var ICON={tomato:'🍅',lettuce:'🥬',carrot:'🥕',potato:'🥔',egg:'🥚',milk:'🥛',rice:'🍚',fish:'🐟',pineapple:'🍍',apple:'🍎',orange:'🍊',peach:'🍑',honey:'🍯'};
+function iname(k){return (CROPS[k]||GOODS[k]||FRUITS[k]).n;}
+function sellPrice(k){return CROPS[k]?CROPS[k].sell:FRUITS[k]?FRUITS[k].sell:0;}
 // 食材等級（研發新菜用）：g＝等級、v＝價值。等級越低，做出嚟嘅菜越平。
-var ING={lettuce:{g:1,v:10},carrot:{g:1,v:11},tomato:{g:1,v:13},potato:{g:1,v:15},rice:{g:2,v:16},egg:{g:2,v:18},milk:{g:2,v:20},pineapple:{g:3,v:28},fish:{g:3,v:32}};
-var ING_ORDER=['lettuce','carrot','tomato','potato','rice','egg','milk','pineapple','fish'],GRADE_N=['','一級','二級','三級'];
+var ING={lettuce:{g:1,v:10},carrot:{g:1,v:11},tomato:{g:1,v:13},potato:{g:1,v:15},rice:{g:2,v:16},apple:{g:2,v:17},orange:{g:2,v:17},egg:{g:2,v:18},peach:{g:2,v:19},milk:{g:2,v:20},pineapple:{g:3,v:28},honey:{g:3,v:30},fish:{g:3,v:32}};
+var ING_ORDER=['lettuce','carrot','tomato','potato','rice','apple','orange','peach','egg','milk','pineapple','honey','fish'],FRUITY={apple:1,orange:1,peach:1,pineapple:1},GRADE_N=['','一級','二級','三級'];
 function sortKs(ks){return ks.slice().sort(function(a,b){return ING_ORDER.indexOf(a)-ING_ORDER.indexOf(b);});}
 function dishPrice(ks){var s=0;ks.forEach(function(k){s+=ING[k].v;});return Math.round(s*2.5+15*ks.length);}
+// 菜名同圖示由食材自動砌：有米＝炒飯、有魚＝魚湯、奶＋水果＝奶昔、有奶＝忌廉焗、蛋＋水果／蜜糖＝班戟、有蛋＝炒蛋、淨水果＝果汁、有生菜＝沙律，其餘＝湯；有蜂蜜加「蜜糖」
+function dishKind(ks){var has=function(k){return ks.indexOf(k)>=0;},fr=ks.some(function(k){return FRUITY[k];}),veg=ks.some(function(k){return CROPS[k];});
+ if(has('rice'))return 'rice';if(has('fish'))return 'fish';if(has('milk')&&fr&&!veg)return 'shake';if(has('milk'))return 'bake';if(has('egg')&&(fr||has('honey'))&&!veg)return 'pancake';if(has('egg'))return 'egg';
+ if(fr&&!veg)return 'juice';if(has('lettuce'))return 'salad';return 'soup';}
 function dishStyle(ks){var has=function(k){return ks.indexOf(k)>=0;};
  if(ks.length===1&&ks[0]==='potato')return {ic:'🍟',col:0xf2cf55};
- if(has('rice'))return {ic:'🍛',col:0xf2c14e};if(has('fish'))return {ic:'🍲',col:0xe9885a,bowl:1};if(has('milk'))return {ic:'🧀',col:0xf5deb3};
- if(has('egg'))return {ic:'🍳',col:0xf06a3c};if(has('lettuce'))return {ic:'🥗',col:0x8fd46f};return {ic:'🥣',col:0xf59a3c,bowl:1};}
-// 菜名由食材自動砌：有米＝炒飯、有魚＝魚湯、有奶＝忌廉焗、有蛋＝炒蛋、有生菜＝沙律，其餘＝湯
-function dishName(ks){var has=function(k){return ks.indexOf(k)>=0;},base=sortKs(ks).filter(function(k){return ['rice','egg','milk','fish'].indexOf(k)<0;}).map(function(k){return (CROPS[k]||GOODS[k]).n;}).join('');
- if(has('rice'))return base+(has('egg')?'蛋':'')+(has('fish')?'魚片':'')+(has('milk')?'忌廉':'')+'炒飯';
- if(has('fish'))return (has('milk')?'忌廉':'')+base+(has('egg')?'蛋花':'')+'魚湯';
- if(has('milk'))return '忌廉焗'+base+(has('egg')?'蛋':'');
- if(has('egg'))return base+'炒蛋';
- if(has('lettuce'))return base+'沙律';
- return base+'湯';}
+ return {rice:{ic:'🍛',col:0xf2c14e},fish:{ic:'🍲',col:0xe9885a,bowl:1},shake:{ic:'🥤',col:0xffb6c8,bowl:1},bake:{ic:'🧀',col:0xf5deb3},pancake:{ic:'🥞',col:0xf2c46b},egg:{ic:'🍳',col:0xf06a3c},juice:{ic:'🧃',col:0xffb347,bowl:1},salad:{ic:'🥗',col:0x8fd46f},soup:{ic:'🥣',col:0xf59a3c,bowl:1}}[dishKind(ks)];}
+function dishName(ks){var has=function(k){return ks.indexOf(k)>=0;},hn=has('honey')?'蜜糖':'',base=sortKs(ks).filter(function(k){return ['rice','egg','milk','fish','honey'].indexOf(k)<0;}).map(function(k){return iname(k);}).join('');
+ switch(dishKind(ks)){case 'rice':return hn+base+(has('egg')?'蛋':'')+(has('fish')?'魚片':'')+(has('milk')?'忌廉':'')+'炒飯';case 'fish':return hn+(has('milk')?'忌廉':'')+base+(has('egg')?'蛋花':'')+'魚湯';
+  case 'shake':return hn+base+'奶昔';case 'bake':return hn+'忌廉焗'+base+(has('egg')?'蛋':'');case 'pancake':return hn+base+'班戟';case 'egg':return hn+base+'炒蛋';case 'juice':return hn+base+'汁';case 'salad':return hn+base+'沙律';default:return hn+base+'湯';}}
 function makeRecipe(ks,nm){ks=sortKs(ks);var st=dishStyle(ks);return {id:ks.join('+'),n:nm||dishName(ks),ks:ks,ic:st.ic,col:st.col,bowl:st.bowl||0,price:dishPrice(ks)};}
 // 開局識煮嘅三款
 function starterRecipes(){return [makeRecipe(['lettuce','tomato'],'田園沙律'),makeRecipe(['carrot'],'甘筍湯'),makeRecipe(['potato'],'香脆薯條')];}
@@ -225,18 +231,32 @@ var WEAR={
  acc:[{id:'',n:'不戴飾物',p:0},{id:'bow',n:'蝴蝶結',st:'bow',c:0xe8574f,p:160},{id:'flower',n:'花朵髮夾',st:'flower',c:0xff85bd,p:160},{id:'scarf',n:'頸巾',st:'scarf',c:0xf4c542,p:200}]};
 var WEAR_CAT={top:'上衣',bot:'下裝',hat:'帽子',gl:'眼鏡',acc:'小飾物'};
 // 澆水器（百貨櫃檯）：k＝連按兩下 A 一次過澆幾格；普通澆水器只可以澆一格
+// 採摘器（百貨櫃檯）：同澆水器一樣，連按兩下 A 一次過收成幾格
+var HARVS=[{n:'普通採摘器',k:1,p:0,c:0x9ad48a},{n:'銅採摘器',k:2,p:300,c:0xc87533},{n:'銀採摘器',k:3,p:700,c:0xc9cfd8},{n:'金採摘器',k:4,p:1200,c:0xf2c14e},{n:'鑽石採摘器',k:6,p:2000,c:0x9fe8ff},{n:'紅鑽採摘器',k:9,p:3500,c:0xe8414f}];
+// 魚竿（百貨櫃檯）：越高級，珍貴魚越常上釣、拉竿時限越長、試咬越易分、仲有機會一釣就係中／大魚
+var RODS=[{n:'普通魚竿',p:0,c:0x8a5a34},{n:'竹魚竿',p:400,c:0x9bbf5a},{n:'碳纖魚竿',p:1000,c:0x3d3f47},{n:'金魚竿',p:2000,c:0xf2c14e},{n:'星光魚竿',p:3500,c:0xa98bff}];
 var CANS=[{n:'普通澆水器',k:1,p:0,c:0x7fc66e},{n:'銅澆水器',k:2,p:300,c:0xc87533},{n:'銀澆水器',k:3,p:700,c:0xc9cfd8},{n:'金澆水器',k:4,p:1200,c:0xf2c14e},{n:'鑽石澆水器',k:6,p:2000,c:0x9fe8ff},{n:'紅鑽澆水器',k:9,p:3500,c:0xe8414f}];
-// 星球地形（新玩家開局揀一次）：g＝草地、p＝小路、b＝沙灘兩隻顏色；side＝島邊；sea＝海；fl＝花色
-var TERRAINS=[
- {id:'grass',n:'青青草原',emo:'🌿',ex:'內蒙古呼倫貝爾草原',d:'一望無際的綠草地，適合騎馬和野餐。',g:['#95d774','#89ce69'],p:['#ebd9a6','#e3cf98'],b:['#f2e2b1','#eddaa8'],side:0xe8d29b,sea:0x6fcbe6,fl:[0xff7eb6,0xffd35c,0xffffff,0xa98bff,0xff9f43]},
- {id:'beach',n:'陽光海島',emo:'🏝️',ex:'馬爾代夫',d:'白沙、椰林和碧綠的海水，最適合陽光與海灘假期。',g:['#a8e27f','#9ad971'],p:['#fbf0cf','#f5e6bd'],b:['#fff7df','#fbf0d2'],side:0xf6e7c0,sea:0x3fd6d4,fl:[0xff7eb6,0xffd35c,0xff5a5f,0xffffff]},
- {id:'forest',n:'森林秘境',emo:'🌲',ex:'日本屋久島',d:'參天古樹和清新空氣，適合遠足和森林浴。',g:['#6fbf5b','#63b150'],p:['#d9c08e','#cfb582'],b:['#e8d6a6','#dfcc9a'],side:0xc9ae7c,sea:0x5bb8d6,fl:[0xffffff,0xffd35c,0xa98bff]},
- {id:'snow',n:'雪山高原',emo:'🏔️',ex:'瑞士阿爾卑斯山',d:'白雪覆蓋的高原，可以看雪景、堆雪人。',g:['#f4f8ff','#e8f0fb'],p:['#d6e2f1','#ccd9eb'],b:['#eef3fb','#e4ecf8'],side:0xdfe8f5,sea:0x7aa9d6,fl:[0xffffff,0xbfe3ff,0xd9d0ff]},
- {id:'desert',n:'沙漠綠洲',emo:'🐫',ex:'杜拜沙漠',d:'金黃色的沙丘和仙人掌，池塘就是綠洲。',g:['#f0d38e','#e9c97f'],p:['#e2b96a','#d9ae5e'],b:['#f6e2ae','#f0d9a0'],side:0xe8c88a,sea:0x4fc2d9,fl:[0xff7eb6,0xffd35c]},
- {id:'volcano',n:'火山溫泉',emo:'🌋',ex:'日本箱根',d:'火山地熱造就溫泉，四處冒著白煙。',g:['#86b96d','#7bae62'],p:['#a59a90','#9a8f84'],b:['#9a948f','#908a85'],side:0x6e6660,sea:0x5aa7c8,fl:[0xff9f43,0xffd35c,0xffffff]},
- {id:'flower',n:'紫色花海',emo:'💜',ex:'北海道富良野',d:'一望無際的薰衣草田，花香撲鼻。',g:['#9fd67e','#93cd70'],p:['#ecdcb4','#e3d2a6'],b:['#f2e2b1','#eddaa8'],side:0xe8d29b,sea:0x6fcbe6,fl:[0xa98bff,0x8f6ae0,0xc9b3ff,0xff7eb6]},
- {id:'maple',n:'楓紅山谷',emo:'🍁',ex:'京都嵐山',d:'秋天的紅葉把整個山谷染成一片火紅。',g:['#bccb6c','#b0c060'],p:['#e6cf9c','#dcc48e'],b:['#f0dfb0','#e9d6a2'],side:0xd9bf8a,sea:0x5fb3d4,fl:[0xff9f43,0xe8574f,0xffd35c]}];
-function terrOf(id){for(var i=0;i<TERRAINS.length;i++)if(TERRAINS[i].id===id)return TERRAINS[i];return TERRAINS[0];}
+// 島嶼地形（新玩家開局揀一次）：8 款形狀同建築位置都唔同。x 向東、z 向南；pier＝[x,z,方向]
+function hRiver(x,z){return Math.abs(x-(3+2.2*Math.sin(z/5)))<1.7;}
+function heart(x,z){var u=x/17.5,v=-(z+1.5)/17.5,a=u*u+v*v-1;return a*a*a-u*u*v*v*v<=0;}
+var LAYOUTS=[
+ {id:'square',n:'方形島',d:'四四方方的經典小島，建築圍住中央廣場，碼頭在東岸。',land:function(x,z){return Math.abs(x)<=19.5&&Math.abs(z)<=19.5;},
+  rest:[-7,-4],svc:[-5.7,4.3],mkt:[7.5,-4.8],farm:[6.4,2.2],pond:[-11.4,6],plaza:[0,1.5],ufo:[0,16],pier:[18.3,-1.6,'E'],hotel:[11,-12.3],wheel:[-11,-12.5],dome:[0,-13.8],mark:['windmill',-15.8,-15.8],seed:11},
+ {id:'round',n:'圓形島',d:'圓圓的小島，碼頭伸向東面大海，池塘在南岸。',land:function(x,z){return x*x+z*z<=420;},
+  rest:[8,-6],svc:[-7,-6],mkt:[9,6],farm:[-12.5,1.5],pond:[5,13],plaza:[0,0],ufo:[-4,14],pier:[19.2,0,'E'],hotel:[-9,-14],wheel:[10,-14],dome:[0,-14],mark:['lighthouse',15,-9],seed:23},
+ {id:'long',n:'長島',d:'東西狹長的小島，建築一字排開，碼頭在南岸。',land:function(x,z){return Math.abs(x)<=23.5&&Math.abs(z)<=12.5;},
+  rest:[-14,-3.5],svc:[-5,-4],mkt:[12,-4],farm:[16,1.5],pond:[-18.5,6],plaza:[2,0],ufo:[-7,7],pier:[8,11.6,'S'],hotel:[-19,-9],wheel:[-7,-10],dome:[8,-9],mark:['windmill',20,-9],seed:37},
+ {id:'lshape',n:'L 形島',d:'像英文字母 L 的小島，農場在南邊的海角，碼頭在東南。',land:function(x,z){return (x>=-20&&x<=4&&z>=-20&&z<=20)||(x>=-20&&x<=20&&z>=4&&z<=20);},
+  rest:[-12,-5],svc:[-1,-6],mkt:[-15,12],farm:[6,6],pond:[15.5,9],plaza:[-8,6],ufo:[-4,15],pier:[19.3,16,'E'],hotel:[-10,-15],wheel:[-1,-16],dome:[-15,-11.5],mark:['giant',-16,17.5],seed:41},
+ {id:'bay',n:'月灣島',d:'北面有一個圓圓的海灣，碼頭伸入海灣，適合釣魚。',land:function(x,z){return x*x+z*z<=420&&x*x+(z+15)*(z+15)>=77.4;},
+  rest:[-11,-4],svc:[-11,6],mkt:[11,-4],farm:[5,8],pond:[-7,14],plaza:[0,3],ufo:[0,15],pier:[0,-6.0,'N'],hotel:[-14,-10],wheel:[14,-10],dome:[15,7],mark:['lighthouse',-17,-4],seed:53},
+ {id:'twin',n:'雙子島',d:'兩個小島由木橋連接：西島是市中心，東島是市場和農場。',land:function(x,z){return (x+11.5)*(x+11.5)+z*z<=132.25||(x-13)*(x-13)+z*z<=110.25;},
+  rest:[-14,-7.5],svc:[-5,-5],mkt:[10,-5.5],farm:[11,0.5],pond:[-16,5.5],plaza:[-11,-1],ufo:[-7.5,7],pier:[23,1,'E'],hotel:[-20,-2],wheel:[16,-6.5],dome:[19,-1],mark:['windmill',8,6.5],seed:67},
+ {id:'heart',n:'心形島',d:'心形的小島，餐廳和服務中心分坐兩邊，飛碟站在心尖。',land:heart,
+  rest:[-9,-10],svc:[9,-10],mkt:[9,2],farm:[-12,-4],pond:[-4,6],plaza:[0,-2],ufo:[1,11.5],pier:[16.8,-2,'E'],hotel:[-12,-16],wheel:[12,-16],dome:[0,-12.5],mark:null,seed:71},
+ {id:'river',n:'河流島',d:'一條小河由北到南穿過小島，要過橋才到市場和農場。',land:function(x,z){return Math.abs(x)<=20.5&&Math.abs(z)<=19.5&&!hRiver(x,z);},
+  rest:[-13,-7],svc:[-12,9],mkt:[12,-7],farm:[11,2],pond:[-16,15],plaza:[-8,2],ufo:[-5,14],pier:[19.8,-13,'E'],hotel:[13,-15],wheel:[-12,-16],dome:[-4,-14],mark:['windmill',16,14],seed:83}];
+function layoutOf(id){for(var i=0;i<LAYOUTS.length;i++)if(LAYOUTS[i].id===id)return LAYOUTS[i];return LAYOUTS[0];}
 function wearItem(cat,id){var L=WEAR[cat];for(var i=0;i<L.length;i++)if(L[i].id===id)return L[i];return L[0];}
 // 外觀選項（開局建立角色）
 var SKIN_OPTS=[0xffe8d6,0xffdcbf,0xf1c29b,0xd9a276,0xa8704a,0x7a4f35];
@@ -265,7 +285,7 @@ function nameErr(t){t=cleanName(t);if(!t)return '請輸入名字。';if(Array.fr
 function fresh(){
  var plots=[];for(var i=0;i<9;i++)plots.push({c:null,p:0,w:0});
  plots[0].c='tomato';plots[1].c='lettuce';plots[2].c='carrot';
- return {v:5,coins:300,can:0,terrain:null,bag:{tier:0,cap:BAGS[0].cap,s:[{k:'seed:tomato',n:3},{k:'seed:lettuce',n:3},{k:'seed:carrot',n:3},{k:'seed:potato',n:3}]},
+ return {v:6,coins:300,can:0,harv:0,rod:0,layout:null,fruit:{},bag:{tier:0,cap:BAGS[0].cap,s:[{k:'seed:tomato',n:3},{k:'seed:lettuce',n:3},{k:'seed:carrot',n:3},{k:'seed:potato',n:3}]},
   seen:{tomato:1,lettuce:1,carrot:1,potato:1},me:null,wear:{top:'tee_blue',bot:'jeans',hat:'',gl:'',acc:''},own:{top:['tee_blue'],bot:['jeans'],hat:[''],gl:[''],acc:['']},
   inv:{tomato:4,lettuce:4,carrot:4,potato:4,egg:0,milk:0,rice:0,fish:0,pineapple:0},plots:plots,
   deco:{cur:{floor:'wood',wall:'cream',table:'wood',chair:'stool'},own:{floor:['wood'],wall:['cream'],table:['wood'],chair:['stool']}},
@@ -290,7 +310,9 @@ if(S&&S.v===3){S.v=4;var bs=[];
  S.me=null;S.wear={top:'tee_blue',bot:'jeans',hat:'',gl:'',acc:''};S.own={top:['tee_blue'],bot:['jeans'],hat:[''],gl:[''],acc:['']};}
 // v4 → v5：自動灑水器改做澆水器（3 格→銀、6 格→鑽石、全部→紅鑽）；舊玩家地形當「青青草原」
 if(S&&S.v===4){S.v=5;S.can=[0,2,4,5][(S.up&&S.up.spr)||0]||0;if(S.up)delete S.up.spr;S.terrain='grass';}
-if(!S||S.v!==5)S=fresh();
+// v5 → v6：天氣主題改做島嶼地圖（舊玩家當方形島，即係原本嗰個地圖）；加採摘器、魚竿、果樹
+if(S&&S.v===5){S.v=6;S.layout='square';delete S.terrain;S.harv=0;S.rod=0;S.fruit={};}
+if(!S||S.v!==6)S=fresh();
 // ⚠ 重新開始時要先封住 save()：reload 前會觸發 pagehide，唔封就會將舊進度寫返入去，清極都清唔走
 var noSave=false;
 function save(){if(noSave)return;try{localStorage.setItem(CFG.saveKey,JSON.stringify(S));}catch(e){}}
@@ -608,7 +630,6 @@ function cropItem(k){var g=new T.Group();
  else{var p0=ms(new T.SphereGeometry(0.18,12,10),M(0xc9a26b));p0.scale.set(1.25,0.9,1);g.add(p0);[[0.1,0.08,0.12],[-0.12,0.02,0.1],[0.05,-0.08,0.14]].forEach(function(p){g.add(ms(new T.SphereGeometry(0.02,6,4),M(0x9a7a4a),p[0],p[1],p[2]));});}
  return g;}
 // ================= 第五批：新外型建築、澆水器、地形道具 =================
-var LAVA=bend(new T.MeshBasicMaterial({color:0xff7a2a}));
 // 旅款餐廳（世界尺寸，正面向 +z）：石基、米白牆、木框、紅瓦金字頂、山牆招牌、條紋雨篷、拱門、花槽窗、壁燈、煙囪
 function restaurantBld(){var g=new T.Group(),wall=M(0xfff3de),wood=M(0x8a5a34),roof=M(0xd9573f),W=3.6,D=2.8,H=2.0,B=0.28,fz=D/2,top=B+H;
  g.add(ms(new T.BoxGeometry(W+0.3,B,D+0.3),M(0xcfc6b4),0,B/2,0));g.add(ms(new T.BoxGeometry(W,H,D),wall,0,B+H/2,0));
@@ -664,55 +685,32 @@ function canModel(t){var g=new T.Group(),m=M(CANS[t].c);g.add(ms(new T.CylinderG
  g.add(ms(new T.TorusGeometry(0.035,0.009,6,12,Math.PI),m,-0.02,0.045,0));
  if(t>=4)[-1,1].forEach(function(s){g.add(ms(new T.OctahedronGeometry(0.018,0),M(0xffffff),0,0.01,s*0.058));});return g;}
 // ---- 地形道具（樹用同 tree() 一樣嘅細尺寸；其他用世界尺寸）----
-function palm(){var g=new T.Group(),tr=M(0xa8744a);for(var i=0;i<6;i++)g.add(ms(new T.CylinderGeometry(0.028-i*0.002,0.034-i*0.002,0.13,7),tr,i*i*0.004,0.065+i*0.125,0));
- var tp=new T.Group();tp.position.set(0.1,0.78,0);for(var k=0;k<7;k++){var h=new T.Group();h.rotation.y=k*0.9;var lf=ms(new T.BoxGeometry(0.34,0.012,0.09),M(k%2?0x4caf50:0x5cba66),0.16,-0.05,0);lf.rotation.z=-0.45;h.add(lf);tp.add(h);}
- [0,2.1,4.2].forEach(function(a){tp.add(ms(new T.SphereGeometry(0.035,8,6),M(0x8a5a34),Math.cos(a)*0.04,-0.04,Math.sin(a)*0.04));});g.add(tp);return g;}
-function cactus(){var g=new T.Group(),c=M(0x5aa84a);g.add(ms(new T.CylinderGeometry(0.06,0.065,0.6,10),c,0,0.3,0));g.add(ms(new T.SphereGeometry(0.06,10,8),c,0,0.6,0));
- [[-1,0.26,0.16],[1,0.34,0.13]].forEach(function(a){var s=a[0],h=ms(new T.CylinderGeometry(0.032,0.032,0.1,8),c,s*0.1,a[1],0);h.rotation.z=Math.PI/2;g.add(h);g.add(ms(new T.CylinderGeometry(0.035,0.035,a[2],8),c,s*0.15,a[1]+a[2]/2,0));g.add(ms(new T.SphereGeometry(0.035,8,6),c,s*0.15,a[1]+a[2],0));});
- g.add(ms(new T.SphereGeometry(0.03,8,6),M(0xff7eb6),0,0.66,0));return g;}
-function snowPine(){var g=new T.Group();g.add(ms(gTr,M(0x8a6445),0,0.15,0));[[0.4,0.21,0.34,0x3f8b6b],[0.58,0.16,0.26,0x4a9a78],[0.72,0.1,0.18,0x52a37f]].forEach(function(l){g.add(ms(new T.ConeGeometry(l[1],l[2],7),M(l[3]),0,l[0],0));g.add(ms(new T.ConeGeometry(l[1]*0.7,l[2]*0.45,7),M(0xffffff),0,l[0]+l[2]*0.3,0));});return g;}
-function mapleTree(v){var cs=[[0xe8574f,0xf07a4f],[0xff9f43,0xffb85c],[0xf4c542,0xffd35c]][v%3],g=new T.Group();g.add(ms(gTr,M(0x7a4a30),0,0.15,0));g.add(ms(gLA,M(cs[0]),0,0.45,0));g.add(ms(gLB,M(cs[1]),0.1,0.6,0.04));g.add(ms(new T.IcosahedronGeometry(0.14,0),M(cs[1]),-0.12,0.52,-0.05));return g;}
-function rockM(c,s){var m=ms(new T.IcosahedronGeometry(s,0),M(c),0,s*0.45,0);m.scale.y=0.7;return m;}
-function rocks(c,n){var g=new T.Group();for(var i=0;i<n;i++){var r=rockM(c,0.25+((i*37)%10)/25);if(i){r.position.x=Math.cos(i*2.4)*0.6;r.position.z=Math.sin(i*2.4)*0.6;}r.rotation.y=i;g.add(r);}return g;}
 function windmill(){var g=new T.Group();g.add(ms(new T.CylinderGeometry(0.55,0.85,3.0,10),M(0xfff3de),0,1.5,0));g.add(ms(new T.ConeGeometry(0.75,0.8,10),M(0xd9573f),0,3.4,0));g.add(ms(new T.BoxGeometry(0.4,0.7,0.1),M(0x9a6440),0,0.35,0.8));
  var hub=new T.Group();hub.position.set(0,2.7,0.66);hub.add(ms(new T.SphereGeometry(0.14,10,8),M(0x8a5a34)));for(var i=0;i<4;i++){var bl=new T.Group();bl.rotation.z=i*Math.PI/2;bl.add(ms(new T.BoxGeometry(0.1,1.5,0.04),M(0x8a5a34),0,0.8,0));bl.add(ms(new T.BoxGeometry(0.34,1.2,0.02),M(0xfffaeb),0.2,0.9,0.02));hub.add(bl);}
  g.add(hub);g.userData.spin=hub;return g;}
 function lighthouse(){var g=new T.Group();for(var i=0;i<5;i++)g.add(ms(new T.CylinderGeometry(0.54-i*0.08,0.62-i*0.08,0.7,14),M(i%2?0xe8574f:0xffffff),0,0.35+i*0.7,0));
  g.add(ms(new T.CylinderGeometry(0.52,0.52,0.08,14),M(0x3d3f47),0,3.54,0));g.add(ms(new T.CylinderGeometry(0.32,0.32,0.5,12),bulbM,0,3.83,0));g.add(ms(new T.ConeGeometry(0.46,0.5,12),M(0xe8574f),0,4.33,0));return g;}
-function beachSet(){var g=new T.Group();g.add(ms(new T.CylinderGeometry(0.025,0.025,1.9,6),M(0xdddddd),0,0.95,0));for(var i=0;i<8;i++)g.add(ms(new T.ConeGeometry(0.95,0.36,2,1,true,i*Math.PI/4,Math.PI/4),M(i%2?0xffffff:0x57b3e8),0,1.9,0));
- var ch=new T.Group();ch.position.set(0.9,0,0.35);ch.rotation.y=-0.5;ch.add(ms(new T.BoxGeometry(0.45,0.05,1.0),M(0xf4c542),0,0.25,0));var bk=ms(new T.BoxGeometry(0.45,0.05,0.5),M(0xf4c542),0,0.43,-0.62);bk.rotation.x=-0.8;ch.add(bk);
- [[-0.2,-0.4],[0.2,-0.4],[-0.2,0.4],[0.2,0.4]].forEach(function(l){ch.add(ms(new T.CylinderGeometry(0.02,0.02,0.25,5),M(0xdddddd),l[0],0.12,l[1]));});g.add(ch);return g;}
-function sandcastle(){var g=new T.Group(),sd=M(0xeed8a0);g.add(ms(new T.BoxGeometry(1.2,0.35,1.0),sd,0,0.175,0));[[-0.45,-0.35],[0.45,-0.35],[-0.45,0.35],[0.45,0.35]].forEach(function(p){g.add(ms(new T.CylinderGeometry(0.16,0.18,0.6,10),sd,p[0],0.3,p[1]));g.add(ms(new T.ConeGeometry(0.19,0.25,10),sd,p[0],0.72,p[1]));});
- g.add(ms(new T.CylinderGeometry(0.24,0.28,0.7,12),sd,0,0.5,0));g.add(ms(new T.ConeGeometry(0.3,0.35,12),sd,0,1.02,0));g.add(ms(new T.CylinderGeometry(0.01,0.01,0.35,4),M(0x8a5a34),0,1.35,0));g.add(ms(new T.BoxGeometry(0.2,0.12,0.01),M(0xe8574f),0.1,1.45,0));return g;}
 function giantTree(){var g=new T.Group();g.add(ms(new T.CylinderGeometry(0.45,0.75,2.4,10),M(0x7a5234),0,1.2,0));
  [[0,3.0,0,1.5,0x3f9b5b],[1.0,2.6,0.4,1.0,0x4caf50],[-1.0,2.7,-0.2,1.1,0x52b36a],[0.2,3.8,-0.3,1.0,0x5cba66],[-0.4,2.4,0.9,0.8,0x4caf50]].forEach(function(f){g.add(ms(new T.IcosahedronGeometry(f[3],1),M(f[4]),f[0],f[1],f[2]));});
  [[0.8,0],[-0.7,0.4],[0.1,-0.8]].forEach(function(r){var rt=ms(new T.CylinderGeometry(0.08,0.2,1.1,6),M(0x7a5234),r[0],0.1,r[1]);rt.rotation.z=r[0]*0.9;rt.rotation.x=-r[1]*0.9;g.add(rt);});return g;}
-function mushrooms(){var g=new T.Group();[[0,0,0.32,0xe8574f],[0.45,0.2,0.22,0xff9f43],[-0.35,0.3,0.18,0xe8574f]].forEach(function(m){var r=m[2];g.add(ms(new T.CylinderGeometry(r*0.35,r*0.45,r*1.1,8),M(0xfff3de),m[0],r*0.55,m[1]));
- g.add(ms(new T.SphereGeometry(r,12,8,0,Math.PI*2,0,Math.PI/2),M(m[3]),m[0],r*1.05,m[1]));for(var k=0;k<4;k++){var a=k*1.57+0.4;g.add(ms(new T.SphereGeometry(r*0.14,6,4),M(0xffffff),m[0]+Math.cos(a)*r*0.62,r*1.05+r*0.72,m[1]+Math.sin(a)*r*0.62));}});return g;}
-function logPile(){var g=new T.Group();[[0,0.2,0],[0.1,0.2,0.42],[0.05,0.54,0.21]].forEach(function(p){var l=ms(new T.CylinderGeometry(0.2,0.2,1.4,10),M(0x9a6b45),p[0],p[1],p[2]);l.rotation.z=Math.PI/2;g.add(l);
- [-1,1].forEach(function(e){var c=ms(new T.CircleGeometry(0.185,10),M(0xe0c08a),p[0]+e*0.701,p[1],p[2]);c.rotation.y=e*Math.PI/2;g.add(c);});});return g;}
-function snowMountain(){var g=new T.Group();g.add(ms(new T.ConeGeometry(2.6,3.6,9),M(0x8f9aa8),0,1.8,0));g.add(ms(new T.ConeGeometry(1.46,2.02,9),M(0xffffff),0,2.6,0));g.add(ms(new T.ConeGeometry(1.4,1.7,8),M(0x9aa5b2),1.7,0.85,0.7));g.add(ms(new T.ConeGeometry(0.72,0.86,8),M(0xffffff),1.7,1.28,0.7));return g;}
-function snowman(){var g=new T.Group(),w=M(0xffffff);g.add(ms(new T.SphereGeometry(0.42,14,10),w,0,0.4,0));g.add(ms(new T.SphereGeometry(0.3,14,10),w,0,0.98,0));g.add(ms(new T.SphereGeometry(0.21,12,10),w,0,1.42,0));
- var n=ms(new T.ConeGeometry(0.04,0.2,8),M(0xff8a3d),0,1.42,0.28);n.rotation.x=Math.PI/2;g.add(n);[-1,1].forEach(function(s){g.add(ms(new T.SphereGeometry(0.03,6,4),M(0x2d2a32),s*0.07,1.5,0.18));var a=ms(new T.CylinderGeometry(0.015,0.015,0.5,5),M(0x7a5234),s*0.45,1.05,0);a.rotation.z=s*1.0;g.add(a);});
- g.add(ms(new T.CylinderGeometry(0.17,0.17,0.25,12),M(0x3d3f47),0,1.72,0));g.add(ms(new T.CylinderGeometry(0.26,0.26,0.03,14),M(0x3d3f47),0,1.6,0));var sc=ms(new T.TorusGeometry(0.22,0.045,6,14),M(0xe8574f),0,1.2,0);sc.rotation.x=Math.PI/2;g.add(sc);return g;}
-function pyramid(){var g=new T.Group(),p=ms(new T.ConeGeometry(2.4,2.6,4),M(0xe2b96a),0,1.3,0);p.rotation.y=Math.PI/4;g.add(p);var cp=ms(new T.ConeGeometry(0.5,0.54,4),M(0xf4c542),0,2.33,0);cp.rotation.y=Math.PI/4;g.add(cp);return g;}
-function volcanoM(){var g=new T.Group();g.add(ms(new T.CylinderGeometry(0.75,2.6,3.0,12),M(0x6b5d55),0,1.5,0));g.add(ms(new T.CylinderGeometry(0.64,0.64,0.05,12),LAVA,0,3.0,0));
- [0.5,2.6,4.4].forEach(function(l){var s=ms(new T.BoxGeometry(0.16,1.5,0.05),LAVA,Math.sin(l)*1.32,2.15,Math.cos(l)*1.32);s.rotation.order='YXZ';s.rotation.y=l;s.rotation.x=-0.55;g.add(s);});return g;}
-function hotSpring(){var g=new T.Group(),w=ms(new T.RingGeometry(0,1.0,24,4),M(0x86d9cf),0,0.03,0);w.rotation.x=-Math.PI/2;g.add(w);
- for(var i=0;i<9;i++){var a=i/9*Math.PI*2,r=rockM(i%2?0x8a8480:0x6e6660,0.22+(i%3)*0.05);r.position.set(Math.cos(a)*1.08,0,Math.sin(a)*1.08);g.add(r);}return g;}
-function lavender(n){var g=new T.Group();for(var r=0;r<3;r++)for(var i=0;i<n;i++){var b=ms(new T.SphereGeometry(0.2,8,6),M([0x9b7ae0,0xa98bff,0x8a68d6][(i+r)%3]),i*0.42-(n-1)*0.21,0.22,r*0.62-0.62);b.scale.y=1.3;g.add(b);}return g;}
-function flowerHill(){var g=new T.Group(),h=ms(new T.SphereGeometry(2.4,20,12,0,Math.PI*2,0,Math.PI/2),M(0x8fcd70));h.scale.y=0.45;g.add(h);
- for(var r=0;r<5;r++)for(var i=0;i<9;i++){var a=i/9*Math.PI*2+r*0.3,rr=0.45*r+0.3,y=Math.sqrt(Math.max(0,1-(rr/2.4)*(rr/2.4)))*2.4*0.45;g.add(ms(new T.SphereGeometry(0.13,6,5),M([0xa98bff,0xff7eb6,0xffd35c,0x9b7ae0,0xffffff][(i+r)%5]),Math.cos(a)*rr,y+0.05,Math.sin(a)*rr));}return g;}
-function torii(){var g=new T.Group(),red=M(0xe24b3b),blk=M(0x2d2a32);[-1,1].forEach(function(s){g.add(ms(new T.CylinderGeometry(0.13,0.15,2.6,10),red,s*1.1,1.3,0));g.add(ms(new T.CylinderGeometry(0.18,0.18,0.18,10),blk,s*1.1,0.09,0));});
- g.add(ms(new T.BoxGeometry(2.9,0.16,0.22),red,0,2.1,0));g.add(ms(new T.BoxGeometry(3.3,0.2,0.3),red,0,2.62,0));g.add(ms(new T.BoxGeometry(3.5,0.1,0.34),blk,0,2.76,0));g.add(ms(new T.BoxGeometry(0.16,0.5,0.16),red,0,2.36,0));return g;}
-function leafPile(){var g=new T.Group();for(var i=0;i<10;i++){var l=ms(new T.SphereGeometry(0.17,6,4),M([0xe8574f,0xff9f43,0xf4c542][i%3]),Math.cos(i*2.4)*0.4*(i%4)/3,0.06+(i%3)*0.03,Math.sin(i*2.4)*0.4*(i%4)/3);l.scale.y=0.35;g.add(l);}return g;}
-function stoneLantern(){var g=new T.Group(),st=M(0xb9b4a8);g.add(ms(new T.CylinderGeometry(0.28,0.32,0.15,8),st,0,0.075,0));g.add(ms(new T.CylinderGeometry(0.09,0.11,0.7,8),st,0,0.5,0));g.add(ms(new T.BoxGeometry(0.46,0.3,0.46),st,0,0.98,0));
- g.add(ms(new T.BoxGeometry(0.2,0.16,0.02),bulbM,0,0.98,0.235));var rf=ms(new T.ConeGeometry(0.42,0.3,4),st,0,1.28,0);rf.rotation.y=Math.PI/4;g.add(rf);g.add(ms(new T.SphereGeometry(0.06,8,6),st,0,1.47,0));return g;}
-function haystack(){var g=new T.Group();g.add(ms(new T.CylinderGeometry(0.55,0.6,0.7,14),M(0xf2d27a),0,0.35,0));var t=ms(new T.SphereGeometry(0.55,14,8,0,Math.PI*2,0,Math.PI/2),M(0xf2d27a),0,0.7,0);t.scale.y=0.7;g.add(t);return g;}
-function picnic(){var g=new T.Group(),c=document.createElement('canvas');c.width=c.height=64;var x=c.getContext('2d');for(var i=0;i<8;i++)for(var j=0;j<8;j++){x.fillStyle=(i+j)%2?'#ffffff':'#e8574f';x.fillRect(i*8,j*8,8,8);}
- var t=new T.CanvasTexture(c);t.magFilter=T.NearestFilter;var m=ms(new T.PlaneGeometry(1.6,1.3,4,4),TM(t),0,0.025,0);m.rotation.x=-Math.PI/2;g.add(m);g.add(ms(new T.BoxGeometry(0.4,0.25,0.3),M(0xc98b52),0.4,0.14,-0.2));
- g.add(ms(new T.TorusGeometry(0.15,0.02,6,12,Math.PI),M(0x8a5a34),0.4,0.27,-0.2));g.add(ms(new T.SphereGeometry(0.08,8,6),M(0xe8473f),-0.3,0.08,0.2));g.add(ms(new T.SphereGeometry(0.08,8,6),M(0xf4c542),-0.1,0.08,0.3));return g;}
-// 服務中心佈置：百貨貨架、研發大鍋、招聘板、企牌、鏡
+// 果樹（同 tree() 一樣細尺寸）：kind＝fruit／honey／pine；userData.fr＝熟咗先顯示嘅果／蜜
+function fruitTree(kind,fr){var g=new T.Group(),u={fr:[],hive:null};g.add(ms(gTr,M(0x9a6b45),0,0.15,0));
+ if(kind==='pine'){g.add(ms(gCo,M(0x3f9b6b),0,0.4,0));var b=ms(gCo,M(0x52b27c),0,0.58,0);b.scale.setScalar(0.72);g.add(b);}
+ else{g.add(ms(gLA,M(0x5cba66),0,0.45,0));g.add(ms(gLB,M(0x74cd76),0.1,0.6,0.04));
+  if(kind==='fruit')for(var i=0;i<3;i++){var a=i*2.1+0.5,f=ms(gFr,M(FRCOL[fr]),Math.cos(a)*0.2,0.42+(i%2)*0.1,Math.sin(a)*0.2);f.scale.setScalar(1.2);g.add(f);u.fr.push(f);}
+  else{var hv=new T.Group();hv.position.set(0.17,0.33,0.1);hv.add(ms(new T.CylinderGeometry(0.004,0.004,0.06,4),M(0x5a4632),0,0.07,0));var hb=ms(new T.SphereGeometry(0.055,10,8),M(0xf4c542));hb.scale.y=1.25;hv.add(hb);
+   [-0.025,0.025].forEach(function(y){var r=ms(new T.TorusGeometry(0.055,0.007,4,12),M(0xc99a1e),0,y,0);r.rotation.x=Math.PI/2;hv.add(r);});hv.add(ms(new T.SphereGeometry(0.012,6,4),M(0x3d3f47),0,-0.01,0.055));
+   var dr=ms(new T.SphereGeometry(0.022,8,6),M(0xffb300),0.01,-0.08,0.02);dr.scale.y=1.4;hv.add(dr);u.fr.push(dr);g.add(hv);u.hive=hv;}}
+ g.userData=u;return g;}
+// 捧起用嘅水果／蜂蜜（世界尺寸）
+function fruitItem(k){var g=new T.Group();
+ if(k==='honey'){g.add(ms(new T.CylinderGeometry(0.16,0.17,0.3,16),M(0xf4b400)));g.add(ms(new T.CylinderGeometry(0.175,0.175,0.07,16),M(0xe8574f),0,0.18,0));g.add(ms(new T.BoxGeometry(0.2,0.12,0.01),M(0xfffaeb),0,0,0.168));}
+ else{g.add(ms(new T.SphereGeometry(0.2,18,14),M(FRCOL[k])));g.add(ms(new T.CylinderGeometry(0.012,0.012,0.08,5),M(0x6b4a3a),0,0.22,0));var lf=ms(new T.SphereGeometry(0.06,8,6),M(0x5cba66),0.06,0.23,0);lf.scale.set(1,0.35,0.6);g.add(lf);}
+ return g;}
+// 採摘籃（跟角色身體尺寸）
+function basketModel(t){var g=new T.Group(),m=M(HARVS[t].c);g.add(ms(new T.CylinderGeometry(0.07,0.055,0.07,14),m));var rim=ms(new T.TorusGeometry(0.07,0.009,6,16),M(shade(HARVS[t].c,0.8)),0,0.035,0);rim.rotation.x=Math.PI/2;g.add(rim);
+ g.add(ms(new T.TorusGeometry(0.06,0.008,6,14,Math.PI),m,0,0.035,0));[0xe8473f,0x7fd36b,0xff8a3d].forEach(function(c,i){g.add(ms(new T.SphereGeometry(0.022,8,6),M(c),(i-1)*0.03,0.045,0));});
+ if(t>=4)[-1,1].forEach(function(s){g.add(ms(new T.OctahedronGeometry(0.018,0),M(0xffffff),s*0.075,0,0));});return g;}
 function goodsShelf(){var g=new T.Group(),wd=M(0xc98b52);g.add(ms(new T.BoxGeometry(3.2,1.8,0.08),M(0xb07a45),0,0.9,-0.2));[0,0.6,1.2,1.78].forEach(function(y){g.add(ms(new T.BoxGeometry(3.2,0.06,0.46),wd,0,y+0.03,0));});
  [-1.58,1.58].forEach(function(x){g.add(ms(new T.BoxGeometry(0.06,1.8,0.46),wd,x,0.9,0));});
  CANS.forEach(function(c,i){var m=canModel(i);m.scale.setScalar(2.6);m.position.set(-1.3+i*0.52,1.33,0.02);g.add(m);});
@@ -743,108 +741,149 @@ var sunO=new T.DirectionalLight(0xffffff,0.55);sunO.position.set(6,10,4);scO.add
 var CIR_O=[],BOX_O=[],CIR_I=[],BOX_I=[],CIR_C=[],BOX_C=[];
 function cirO(x,z,r){CIR_O.push([x,z,r]);}function boxO(a,b,c,d){BOX_O.push([a,b,c,d]);}
 function addO(o,x,z,s,ry){o.position.set(x,0,z);if(s)o.scale.setScalar(s);if(ry)o.rotation.y=ry;scO.add(o);return o;}
-// 地面：40×40 格（1px＝1格）。P3 一直伸去東面碼頭；最後一條去服務中心
-var PATH=[[-1,1,-10.6,15],[-8,-3,-2.6,-0.6],[3,18.5,-2.6,-0.6],[-11.5,-1,-10.2,-8.2],[1,11.8,-10.2,-8.2],[3,5.2,2.9,4.9],[-7,-1,6,8]],PLZ=[-3,3,-1,4];
-function inR(x,z,r){return x>=r[0]&&x<=r[1]&&z>=r[2]&&z<=r[3];}
-// 地面顏色跟地形（drawGround）；島邊同海亦跟住轉色
-var GRD=document.createElement('canvas');GRD.width=GRD.height=40;var grdTex=new T.CanvasTexture(GRD);grdTex.magFilter=T.NearestFilter;grdTex.minFilter=T.NearestFilter;grdTex.generateMipmaps=false;
-var islSide=M2(0xe8d29b);
-(function(){var isl=new T.Mesh(new T.BoxGeometry(40,1,40,40,1,40),[islSide,islSide,TM(grdTex),islSide,islSide,islSide]);isl.position.y=-0.5;scO.add(isl);})();
-function drawGround(th){var x=GRD.getContext('2d'),N=40;for(var j=0;j<N;j++)for(var i=0;i<N;i++){var X=i-19.5,Z=j-19.5,a=(i+j)%2,col;
-  if(Math.abs(X)>18.5||Math.abs(Z)>18.5)col=th.b[a?0:1];else if(inR(X,Z,PLZ))col=a?'#dcd6c8':'#d1cbbc';else if(PATH.some(function(r){return inR(X,Z,r);}))col=th.p[a?0:1];else col=th.g[a?0:1];
-  x.fillStyle=col;x.fillRect(i,j,1,1);}
- grdTex.needsUpdate=true;islSide.color.setHex(th.side);sea.material.color.setHex(th.sea);}
+
+// ================= 島嶼地圖（8 款：形狀、建築位置都唔同）=================
+// 48×48 格（每格 1 單位，x、z 由 -24 到 24）。LAND＝陸地、BRIDGE＝橋、PATHC＝小路、PLAZC＝廣場
+var GN=48,GH=24,LAND=new Uint8Array(GN*GN),BRIDGE=new Uint8Array(GN*GN),PATHC=new Uint8Array(GN*GN),PLAZC=new Uint8Array(GN*GN),MAP={};
+function gi(x,z){var i=Math.floor(x+GH),j=Math.floor(z+GH);return (i<0||j<0||i>=GN||j>=GN)?-1:j*GN+i;}
+function isLand(x,z){var k=gi(x,z);return k>=0&&!!(LAND[k]||BRIDGE[k]);}
+function beachIJ(i,j){for(var dj=-1;dj<=1;dj++)for(var di=-1;di<=1;di++){var a=i+di,b=j+dj;if(a<0||b<0||a>=GN||b>=GN||!LAND[b*GN+a])return true;}return false;}
+// 地面顏色（1px＝1格）同島身（逐格砌，海邊會有沙色側面）
+var GRD=document.createElement('canvas');GRD.width=GRD.height=GN;var grdTex=new T.CanvasTexture(GRD);grdTex.magFilter=T.NearestFilter;grdTex.minFilter=T.NearestFilter;grdTex.generateMipmaps=false;
+var islSide=M2(0xe8d29b),islTop=TM(grdTex),islMesh=null;
+function drawGround(){var x=GRD.getContext('2d');for(var j=0;j<GN;j++)for(var i=0;i<GN;i++){var k=j*GN+i,a=(i+j)%2,col;
+  if(!LAND[k])col='#6fcbe6';else if(beachIJ(i,j))col=a?'#f2e2b1':'#eddaa8';else if(PLAZC[k])col=a?'#dcd6c8':'#d1cbbc';else if(PATHC[k])col=a?'#ebd9a6':'#e3cf98';else col=a?'#95d774':'#89ce69';
+  x.fillStyle=col;x.fillRect(i,j,1,1);}grdTex.needsUpdate=true;}
+function buildIslandMesh(){var pos=[],uv=[],it=[],is=[],n=0;function v(x,y,z,u,w){pos.push(x,y,z);uv.push(u,w);return n++;}
+ for(var j=0;j<GN;j++)for(var i=0;i<GN;i++){if(!LAND[j*GN+i])continue;var x0=i-GH,z0=j-GH,x1=x0+1,z1=z0+1,u0=i/GN,u1=(i+1)/GN,w0=1-j/GN,w1=1-(j+1)/GN;
+  var a=v(x0,0,z0,u0,w0),b=v(x1,0,z0,u1,w0),c=v(x1,0,z1,u1,w1),d=v(x0,0,z1,u0,w1);it.push(a,d,b,b,d,c);
+  [[0,-1,x0,z0,x1,z0],[0,1,x1,z1,x0,z1],[-1,0,x0,z1,x0,z0],[1,0,x1,z0,x1,z1]].forEach(function(s){var ni=i+s[0],nj=j+s[1];if(ni>=0&&nj>=0&&ni<GN&&nj<GN&&LAND[nj*GN+ni])return;
+   var p=v(s[2],0,s[3],0,0),q=v(s[4],0,s[5],1,0),r=v(s[4],-1.2,s[5],1,1),t=v(s[2],-1.2,s[3],0,1);is.push(p,q,r,p,r,t);});}
+ var g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(it.concat(is));
+ g.addGroup(0,it.length,0);g.addGroup(it.length,is.length,1);g.computeVertexNormals();
+ if(islMesh){scO.remove(islMesh);islMesh.geometry.dispose();}islMesh=new T.Mesh(g,[islTop,islSide]);islMesh.frustumCulled=false;scO.add(islMesh);}
 // ⚠ 海面要跟住鏡頭 z 移動，而且長度唔可以超過 ±πR/2，否則會彎到捲返上天。
 var sea=new T.Mesh(new T.PlaneGeometry(260,76,26,76),M2(0x6fcbe6));sea.rotation.x=-Math.PI/2;sea.position.y=-0.3;scO.add(sea);
-[[0,-20.15,40.6,0.3],[0,20.15,40.6,0.3],[-20.15,0,0.3,40.6],[20.15,0,0.3,40.6]].forEach(function(f){scO.add(ms(new T.BoxGeometry(f[2],0.04,f[3],f[2]>1?40:1,1,f[3]>1?40:1),M(0xf7fbff),f[0],-0.28,f[1]));});
-// 建築
-// 旅款餐廳：新外型（石基、紅瓦頂、雨篷、花槽窗）＋門口盆栽、餐牌黑板、露天茶座
-var bRest=addO(restaurantBld(),-7,-4);boxO(-8.95,-5.05,-5.55,-2.45);
-[-7.78,-6.22].forEach(function(x){addO(topiary(),x,-2.18);cirO(x,-2.18,0.26);});
-addO(menuStand(),-4.4,-3.0,1,-0.3);cirO(-4.4,-3.0,0.45);
-addO(cafeSet(),-3.9,-4.95,1,0.4);cirO(-3.9,-4.95,0.75);
-var bMkt=addO(marketStall(),7.5,-4.8);boxO(5.8,9.2,-6.0,-3.85);
-// 市場老闆阿福：成隻小熊企喺檔口左前面
-var fu=bear();fu.scale.setScalar(2.6);fu.position.set(6.2,0,-3.2);scO.add(fu);cirO(6.2,-3.2,0.42);shadow(scO,6.2,-3.2,0.5);
-// 服務中心：新外型（拱形綠頂、星球標誌、玻璃門、雨篷、花槽）
-var bSvc=addO(serviceBld(),-5.7,4.3);boxO(-8.2,-3.2,2.6,6.0);boxO(-7.8,-6.7,6.05,6.45);boxO(-4.7,-3.6,6.05,6.45);cirO(-6.55,6.72,0.1);cirO(-4.85,6.72,0.1);
-addO(hotel(),11,-12.3,4.4);boxO(9.64,12.36,-13.4,-11.2);
-addO(wheel(),-11,-12.5,5);boxO(-12.4,-9.6,-13.1,-11.9);
-addO(dome(),0,-13.8,5);cirO(0,-13.8,2.45);boxO(-0.6,0.6,-12.0,-11.2);
-addO(fountain(),0,1.5);cirO(0,1.5,1.25);
-// 碼頭：由東岸伸出海；PIER＝可以企嘅範圍（島邊界以外只有呢度行得）
-addO(pierModel(),18.3,-1.6);var PIER=[18.0,25.2,-2.3,-0.9];
-// 農場（可以擴建）：圍欄西邊留入口，擴建一次多一行 3 格
-var PLOTS=[],farmFence=null,FENCE_BOX=[];
-function plotXZ(i){return [[6.4,8.0,9.6][i%3],2.2+1.6*Math.floor(i/3)];}
-function farmRows(){return 3+S.up.farm;}
-function addPlotVis(i){var p=plotXZ(i),g=new T.Group(),soil=M2(0xc0915f);g.add(ms(new T.BoxGeometry(1.3,0.16,1.3),soil,0,0.05,0));
- var hold=new T.Group();hold.position.y=0.13;hold.scale.setScalar(3.4);g.add(hold);g.position.set(p[0],0,p[1]);noCull(g);scO.add(g);
- PLOTS.push({x:p[0],z:p[1],g:g,soil:soil,hold:hold,crop:null,ck:null,cur:0.3,ind:null,indK:'',drops:[],spr:null});}
-function buildFence(){if(farmFence){scO.remove(farmFence);disposeTree(farmFence);}farmFence=new T.Group();FENCE_BOX=[];var zS=6.6+1.6*(farmRows()-3),wm=M(0xf5ead2);
- function seg(x0,z0,x1,z1){var L=Math.hypot(x1-x0,z1-z0),n=Math.max(1,Math.round(L));for(var i=0;i<=n;i++){var t=i/n;farmFence.add(ms(new T.BoxGeometry(0.12,0.62,0.12),wm,x0+(x1-x0)*t,0.31,z0+(z1-z0)*t));}
-  var ang=Math.atan2(x1-x0,z1-z0);[0.22,0.46].forEach(function(y){var r=ms(new T.BoxGeometry(0.06,0.07,L),wm,(x0+x1)/2,y,(z0+z1)/2);r.rotation.y=ang;farmFence.add(r);});
-  FENCE_BOX.push([Math.min(x0,x1)-0.06,Math.max(x0,x1)+0.06,Math.min(z0,z1)-0.06,Math.max(z0,z1)+0.06]);}
- seg(5.2,1.0,10.8,1.0);seg(10.8,1.0,10.8,zS);seg(5.2,zS,10.8,zS);seg(5.2,1.0,5.2,2.9);seg(5.2,4.9,5.2,zS);noCull(farmFence);scO.add(farmFence);}
 
-
-function syncFarm(){var n=farmRows()*3;while(S.plots.length<n)S.plots.push({c:null,p:0,w:0});while(PLOTS.length<n)addPlotVis(PLOTS.length);buildFence();}
-// 池塘、飛碟站
-// ⚠ 大塊平面要分圈（RingGeometry 0→r），唔好用 CircleGeometry 扇形：地面彎曲時長三角形中間會沉落地底，草地穿出嚟
-(function(){var a=new T.Mesh(new T.RingGeometry(0,3.05,40,8),M(0xe6d6a6));a.rotation.x=-Math.PI/2;a.position.set(-11,0.012,6);scO.add(a);
- var b=new T.Mesh(new T.RingGeometry(0,2.6,40,8),bend(new T.MeshLambertMaterial({color:0x6cc0ea,transparent:true,opacity:0.9})));b.rotation.x=-Math.PI/2;b.position.set(-11,0.024,6);scO.add(b);
- [[-13.3,4.5],[-8.8,7.3],[-10.3,8.6]].forEach(function(r){scO.add(ms(new T.IcosahedronGeometry(0.35,0),M(0xb9b4a8),r[0],0.18,r[1]));});
- cirO(-11,6,2.75);
- scO.add(ms(new T.CylinderGeometry(1.8,1.85,0.1,40),M(0xdcdfe8),0,0.05,16));
- var r=ms(new T.TorusGeometry(1.45,0.06,6,48),M(0xf4c542),0,0.11,16);r.rotation.x=Math.PI/2;scO.add(r);})();
-var ufo=ufoB();ufo.scale.setScalar(4.2);ufo.position.set(0,3,16);scO.add(ufo);
+// ---- 建築（只砌一次；位置由 applyLayout 擺）----
+var bRest=addO(restaurantBld(),0,0),topis=[addO(topiary(),0,0),addO(topiary(),0,0)],menuO=addO(menuStand(),0,0,1,-0.3),cafeO=addO(cafeSet(),0,0,1,0.4);
+var bMkt=addO(marketStall(),0,0);
+// 市場老闆阿福：成隻小熊，喺檔口前面行來行去（p3 updBear）
+var fu=bear();fu.scale.setScalar(2.6);scO.add(fu);var fuSh=shadow(scO,0,0,0.5);
+var bSvc=addO(serviceBld(),0,0);
+var hotelO=addO(hotel(),0,0,4.4),wheelO=addO(wheel(),0,0,5),domeO=addO(dome(),0,0,5),fountO=addO(fountain(),0,0);
+// 噴水池水柱：一粒粒水珠由頂噴出、落返入池（p3 動畫）
+var fountFx=new T.Group(),FDROPS=[];(function(){var gd=new T.SphereGeometry(0.05,6,5),wm=M(0xbfeaff);for(var i=0;i<46;i++){var d=ms(gd,wm);d.frustumCulled=false;fountFx.add(d);FDROPS.push(d);}scO.add(fountFx);})();
+var pierO=addO(pierModel(),0,0);
+var ufoPad=new T.Group();ufoPad.add(ms(new T.CylinderGeometry(1.8,1.85,0.1,40),M(0xdcdfe8),0,0.05,0));(function(){var r=ms(new T.TorusGeometry(1.45,0.06,6,48),M(0xf4c542),0,0.11,0);r.rotation.x=Math.PI/2;ufoPad.add(r);})();scO.add(ufoPad);
+var ufo=ufoB();ufo.scale.setScalar(4.2);scO.add(ufo);
 // 玩家行近飛碟站時飛碟會擋住鏡頭：換成獨立材質，等佢可以變半透明（唔好改共用嘅 M() 材質）
 var ufoMats=[];ufo.traverse(function(n){if(!n.material)return;if(!n.material.transparent&&uL.indexOf(n.material)<0)n.material=bend(new T.MeshLambertMaterial({color:n.material.color.getHex()}));var o=n.material.transparent?n.material.opacity:1;n.material.transparent=true;ufoMats.push({m:n.material,o:o});});
+// 飛碟光柱：遊客由呢度降落／升返上去
+var beam=ms(new T.CylinderGeometry(0.55,1.35,3.0,24,1,true),bend(new T.MeshBasicMaterial({color:0xfff2a8,transparent:true,opacity:0.32,depthWrite:false,side:T.DoubleSide})),0,1.5,0);beam.visible=false;scO.add(beam);
+// 池塘（⚠ 大塊平面要分圈 RingGeometry，唔好用 CircleGeometry 扇形：地面彎曲時長三角形會沉落地底）
+var pondBase=new T.Group();(function(){var a=new T.Mesh(new T.RingGeometry(0,3.05,40,8),M(0xe6d6a6));a.rotation.x=-Math.PI/2;a.position.y=0.012;pondBase.add(a);
+ var b=new T.Mesh(new T.RingGeometry(0,2.6,40,8),bend(new T.MeshLambertMaterial({color:0x6cc0ea,transparent:true,opacity:0.9})));b.rotation.x=-Math.PI/2;b.position.y=0.024;pondBase.add(b);
+ [[-2.3,-1.5],[2.2,1.3],[0.7,2.6]].forEach(function(r){pondBase.add(ms(new T.IcosahedronGeometry(0.35,0),M(0xb9b4a8),r[0],0.18,r[1]));});})();scO.add(pondBase);
+var pondG=new T.Group();scO.add(pondG);
+var lampOs=[0,1,2,3].map(function(){return addO(lamp(),0,0,2.6);});
 // 建築擋住鏡頭會變半透明：先將材質換成獨立一份（唔好改共用 M()；發光窗／燈要跟日夜同步）
 var FADERS=[],GLOWC=[];
 function fadeable(o,cx,cy,cz,r){var mats=[];o.traverse(function(n){if(!n.isMesh)return;var m=n.material,c=bend(new T.MeshLambertMaterial({color:m.color.getHex(),map:m.map||null,side:m.side,transparent:true,opacity:1}));
  if(m.emissive){c.emissive=m.emissive.clone();if(m===winM||m===bulbM)GLOWC.push({c:c,s:m});}n.material=c;mats.push(c);});FADERS.push({o:o,x:cx,y:cy,z:cz,r:r,mats:mats,f:1});}
-fadeable(bRest,-7,1.8,-4,2.5);fadeable(bSvc,-5.7,2.2,4.3,2.9);fadeable(bMkt,7.5,1.6,-4.6,2.3);
-// 飛碟光柱：遊客由呢度降落／升返上去
-var beam=ms(new T.CylinderGeometry(0.55,1.35,3.0,24,1,true),bend(new T.MeshBasicMaterial({color:0xfff2a8,transparent:true,opacity:0.32,depthWrite:false,side:T.DoubleSide})),0,1.5,16);beam.visible=false;scO.add(beam);
-var pondG=new T.Group();scO.add(pondG);
-[[-1.8,8.5],[1.8,8.5],[-1.8,12.5],[1.8,12.5],[-1.8,-5.5],[1.8,-5.5]].forEach(function(l){addO(lamp(),l[0],l[1],2.6);cirO(l[0],l[1],0.22);});
+fadeable(bRest,0,1.8,0,2.5);fadeable(bSvc,0,2.2,0,2.9);fadeable(bMkt,0,1.6,0,2.3);
 
-// ================= 地形（新玩家開局揀；樹、花、地標、顏色都跟住換）=================
-var terrG=new T.Group();scO.add(terrG);var CIR_T=[],TFX=[],snowFx=null,curTerr='';
-// 樹（x,z,大細,款式,果）——位置固定，款式跟地形
-var TREES=[[-12.5,-16.8,0.9,1],[-6,-17,1,0,0xff5a5f],[5.5,-17,0.9,1],[12,-16.5,1,0,0xffb3c1],[16.5,-15,0.9,1],[16.5,-7,1,0,0],[16,0.3,0.9,1],[16.5,6,1,0,0xff9f43],[15.5,12,0.9,1],[11.5,16,1,0,0xff5a5f],[6,17,0.9,1],[-6,16.8,1,0,0xffb3c1],[-12,16,0.9,1],[-16.5,11,1,0,0],[-17,3,0.9,1],[-16.5,-4,1,0,0xff5a5f],[-16.8,-10,0.9,1],
- [-4,-7,0.9,0,0xff5a5f],[4.5,-6.5,0.8,1],[-9.6,11.8,1,0,0xff9f43],[5,10.5,0.9,1],[13,-4.4,0.9,0,0],[-12.5,-6,0.9,1],[-8,13,0.9,0,0xffb3c1],[12.5,9,0.9,0,0],[-3.5,12.5,0.8,1],[5.5,-12.5,0.9,0,0xff9f43],[-6,-13,0.9,1],[13.8,-8.5,0.8,1]];
-var FLOWERS=[[-9.2,9.4],[4.2,6.8],[-9.8,-1.4],[-3.2,-4.2],[3.2,-4.5],[-12,10.5],[8.5,11],[13,-6.5],[-14,-12],[7,-14.5]];
-// 地標位：A 農場東、B 餐廳西、C 西北角（大地標）、D 東南、E 西南
-var TSPOT={A:[14.5,3.5],B:[-14.8,-0.5],C:[-15.8,-15.8],D:[9.5,14],E:[-14.5,13.5]};
+// ---- 農場（可以擴建）：圍欄西邊留入口，擴建一次向南多一行 3 格 ----
+var PLOTS=[],farmFence=null,FENCE_BOX=[];
+function plotXZ(i){return [MAP.farm[0]+(i%3)*1.6,MAP.farm[1]+1.6*Math.floor(i/3)];}
+function farmRows(){return 3+S.up.farm;}
+function addPlotVis(i){var p=plotXZ(i),g=new T.Group(),soil=M2(0xc0915f);g.add(ms(new T.BoxGeometry(1.3,0.16,1.3),soil,0,0.05,0));
+ var hold=new T.Group();hold.position.y=0.13;hold.scale.setScalar(3.4);g.add(hold);g.position.set(p[0],0,p[1]);noCull(g);scO.add(g);
+ PLOTS.push({x:p[0],z:p[1],g:g,soil:soil,hold:hold,crop:null,ck:null,cur:0.3,ind:null,indK:'',drops:[]});}
+function buildFence(){if(farmFence){scO.remove(farmFence);disposeTree(farmFence);}farmFence=new T.Group();FENCE_BOX=[];var fx=MAP.farm[0],fz=MAP.farm[1],x0=fx-1.2,x1=fx+4.4,z0=fz-1.2,zS=fz+1.6*(farmRows()-1)+1.2,wm=M(0xf5ead2);
+ function seg(ax,az,bx,bz){var L=Math.hypot(bx-ax,bz-az),n=Math.max(1,Math.round(L));for(var i=0;i<=n;i++){var t=i/n;farmFence.add(ms(new T.BoxGeometry(0.12,0.62,0.12),wm,ax+(bx-ax)*t,0.31,az+(bz-az)*t));}
+  var ang=Math.atan2(bx-ax,bz-az);[0.22,0.46].forEach(function(y){var r=ms(new T.BoxGeometry(0.06,0.07,L),wm,(ax+bx)/2,y,(az+bz)/2);r.rotation.y=ang;farmFence.add(r);});
+  FENCE_BOX.push([Math.min(ax,bx)-0.06,Math.max(ax,bx)+0.06,Math.min(az,bz)-0.06,Math.max(az,bz)+0.06]);}
+ seg(x0,z0,x1,z0);seg(x1,z0,x1,zS);seg(x0,zS,x1,zS);seg(x0,z0,x0,z0+1.9);seg(x0,z0+3.9,x0,zS);noCull(farmFence);scO.add(farmFence);}
+function syncFarm(){var n=farmRows()*3;while(S.plots.length<n)S.plots.push({c:null,p:0,w:0});while(PLOTS.length<n)addPlotVis(PLOTS.length);buildFence();}
+
+// ---- 路徑搜尋（A*）：由廣場畫小路去每個門口；經過水就變橋 ----
+function astar(sx,sz,tx,tz,block){var s=gi(sx,sz),t=gi(tx,tz);if(s<0||t<0)return null;var N=GN*GN,g=new Float32Array(N).fill(1e9),came=new Int32Array(N).fill(-1),dirA=new Int8Array(N).fill(-1),closed=new Uint8Array(N),hp=[],ti=t%GN,tj=(t/GN)|0;
+ function push(k,f){hp.push([f,k]);var i=hp.length-1;while(i>0){var p=(i-1)>>1;if(hp[p][0]<=hp[i][0])break;var q=hp[p];hp[p]=hp[i];hp[i]=q;i=p;}}
+ function pop(){var top=hp[0],last=hp.pop();if(hp.length){hp[0]=last;var i=0;for(;;){var l=2*i+1,r=l+1,m=i;if(l<hp.length&&hp[l][0]<hp[m][0])m=l;if(r<hp.length&&hp[r][0]<hp[m][0])m=r;if(m===i)break;var q=hp[m];hp[m]=hp[i];hp[i]=q;i=m;}}return top;}
+ var D=[[1,0],[-1,0],[0,1],[0,-1]];g[s]=0;push(s,0);
+ while(hp.length){var cur=pop()[1];if(closed[cur])continue;closed[cur]=1;if(cur===t)break;var ci=cur%GN,cj=(cur/GN)|0;
+  for(var d=0;d<4;d++){var ni=ci+D[d][0],nj=cj+D[d][1];if(ni<1||nj<1||ni>=GN-1||nj>=GN-1)continue;var nk=nj*GN+ni;if(closed[nk]||(block[nk]&&nk!==t))continue;
+   var c=LAND[nk]?(PLAZC[nk]?0.3:PATHC[nk]?0.45:beachIJ(ni,nj)?1.6:1):7;if(dirA[cur]>=0&&dirA[cur]!==d)c+=0.6;
+   var ng=g[cur]+c;if(ng<g[nk]){g[nk]=ng;came[nk]=cur;dirA[nk]=d;push(nk,ng+(Math.abs(ni-ti)+Math.abs(nj-tj))*0.3);}}}
+ if(!closed[t])return null;var out=[],k=t;while(k>=0){out.push(k);k=came[k];}return out.reverse();}
+function paintPath(cells){cells.forEach(function(k){var i=k%GN,j=(k/GN)|0;[[0,0],[1,0],[0,1],[1,1]].forEach(function(o){var a=i+o[0],b=j+o[1];if(a>=GN||b>=GN)return;var q=b*GN+a;if(LAND[q])PATHC[q]=1;});if(!LAND[k]){BRIDGE[k]=1;if(i+1<GN&&!LAND[k+1])BRIDGE[k+1]=1;if(j+1<GN&&!LAND[k+GN])BRIDGE[k+GN]=1;}});}
+function markRect(arr,a,b,c,d){for(var z=Math.floor(c);z<=Math.ceil(d);z++)for(var x=Math.floor(a);x<=Math.ceil(b);x++){var k=gi(x+0.5,z+0.5);if(k>=0&&x+0.5>=a&&x+0.5<=b&&z+0.5>=c&&z+0.5<=d)arr[k]=1;}}
+function cellsToPts(cells){var pts=cells.map(function(k){return [(k%GN)-GH+0.5,((k/GN)|0)-GH+0.5];}),out=[pts[0]];
+ for(var i=1;i<pts.length-1;i++){var a=out[out.length-1],b=pts[i],c=pts[i+1];if((b[0]-a[0])*(c[1]-b[1])!==(b[1]-a[1])*(c[0]-b[0]))out.push(b);}out.push(pts[pts.length-1]);return out;}
+function rng(seed){var a=seed>>>0;return function(){a=(a+0x6D2B79F5)>>>0;var t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296;};}
+
+// ---- 樹、花、地標、橋（每款島唔同，重砌時先清走）----
+var terrG=new T.Group();scO.add(terrG);var CIR_T=[],TFX=[],TREEV=[];
 var SHARED_G=[gTr,gLA,gLB,gCo,gFr,gSm,gBl,shG];
 function disposeSafe(o){o.traverse(function(n){if(n.geometry&&SHARED_G.indexOf(n.geometry)<0)n.geometry.dispose();});}
 function tAdd(o,x,z,s,ry,r){o.position.set(x,0,z);if(s)o.scale.setScalar(s);if(ry)o.rotation.y=ry;terrG.add(o);if(r)CIR_T.push([x,z,r]);return o;}
-function treeFor(id,t,i){if(id==='beach')return i%3===2?tree(0,0):palm();if(id==='forest')return tree(i%2,0);if(id==='snow')return snowPine();
- if(id==='desert')return Math.hypot(t[0]+11,t[1]-6)<8?palm():cactus();if(id==='volcano')return tree(t[3],0);if(id==='maple')return mapleTree(i);return tree(t[3],t[4]);}
-function puffAt(x,y,z,sz,col,rate){var e={t:'puff',x:x,y:y,z:z,sz:sz,rate:rate,acc:0,list:[]};for(var i=0;i<7;i++){var m=ms(new T.SphereGeometry(1,8,6),bend(new T.MeshBasicMaterial({color:col,transparent:true,opacity:0,depthWrite:false})),x,y,z);m.visible=false;terrG.add(m);e.list.push({m:m,t:-1});}TFX.push(e);}
-function buildTerrain(id){var th=terrOf(id),P=TSPOT;curTerr=th.id;
- while(terrG.children.length){var c=terrG.children[0];terrG.remove(c);disposeSafe(c);}CIR_T.length=0;TFX.length=0;
- drawGround(th);
- TREES.forEach(function(t,i){var s=t[2]*(th.id==='forest'?1.25:1);tAdd(treeFor(th.id,t,i),t[0],t[1],3.2*s,t[0]*0.7,0.5*s);shadow(terrG,t[0],t[1],1.05*s);});
- var fi=0,nf=th.id==='flower'?9:(th.id==='desert'||th.id==='snow'||th.id==='volcano')?2:5;
- FLOWERS.forEach(function(c){for(var k=0;k<nf;k++){var an=k*1.3+c[0],rr=0.25+(k%3)*0.25+(k>4?0.45:0);tAdd(flower(th.fl[(fi++)%th.fl.length]),c[0]+Math.cos(an)*rr,c[1]+Math.sin(an)*rr,3);}});
- function at(k,dx,dz){return [P[k][0]+(dx||0),P[k][1]+(dz||0)];}
- function put(o,p,s,ry,r){return tAdd(o,p[0],p[1],s||1,ry||0,r);}
- switch(th.id){
-  case 'beach':put(lighthouse(),at('C'),1,0,0.75);put(beachSet(),at('A'),1,0.5,0.4);put(beachSet(),at('B'),1,-0.6,0.4);put(sandcastle(),at('D'),1,0.3,0.75);put(palm(),at('E'),3.2,0.4,0.3);put(palm(),at('E',1.3,0.8),2.8,1.8,0.3);break;
-  case 'forest':put(giantTree(),at('C'),1,0,0.95);put(mushrooms(),at('A'),1,0);put(logPile(),at('A',0.4,1.4),1,0.5,0.7);[[0,0],[1.1,0.6],[-0.8,0.9]].forEach(function(o){put(tree(1),at('B',o[0],o[1]),3.6,o[0],0.5);});put(mushrooms(),at('D'),1,1.2);put(logPile(),at('E'),1,-0.4,0.7);break;
-  case 'snow':put(snowMountain(),at('C'),1,0.3,2.4);put(snowman(),at('A'),1,-0.3,0.45);put(snowman(),at('B'),1,0.4,0.45);put(rocks(0xe4ecf8,3),at('D'),1,0,0.7);[[0,0],[1.2,0.5],[-0.9,0.9]].forEach(function(o){put(snowPine(),at('E',o[0],o[1]),3.4,o[0],0.5);});break;
-  case 'desert':put(pyramid(),at('C'),1,0,1.9);[[0,0],[1.0,0.7],[-0.8,0.8]].forEach(function(o,i){put(cactus(),at('A',o[0],o[1]),3.2-i*0.4,i,0.3);});put(rocks(0xd9a066,4),at('B'),1,0,0.8);put(cactus(),at('D'),3.0,0.5,0.3);put(cactus(),at('D',1.1,-0.6),2.4,1.5,0.3);put(rocks(0xc98b52,3),at('E'),1,0,0.7);break;
-  case 'volcano':put(volcanoM(),at('C'),1,0,2.4);puffAt(P.C[0],3.2,P.C[1],0.55,0x9a9590,1.2);put(hotSpring(),at('A'),1,0,1.1);puffAt(P.A[0],0.3,P.A[1],0.35,0xffffff,2.2);put(hotSpring(),at('B'),1,0,1.1);puffAt(P.B[0],0.3,P.B[1],0.35,0xffffff,2.2);put(rocks(0x4a4440,4),at('D'),1,0,0.8);put(rocks(0x6e6660,3),at('E'),1,0,0.7);puffAt(P.E[0],0.4,P.E[1],0.25,0xffffff,1.4);break;
-  case 'flower':put(flowerHill(),at('C'),1,0,2.2);put(lavender(5),at('A'),1,0,1.0);put(lavender(5),at('B'),1,0,1.0);put(lavender(4),at('D'),1,0.2,0.9);put(lavender(4),at('E'),1,-0.2,0.9);break;
-  case 'maple':put(torii(),at('C'),1,0.5);CIR_T.push([P.C[0]+Math.cos(0.5)*1.1,P.C[1]-Math.sin(0.5)*1.1,0.2],[P.C[0]-Math.cos(0.5)*1.1,P.C[1]+Math.sin(0.5)*1.1,0.2]);put(leafPile(),at('A'));put(stoneLantern(),at('A',1.1,0.4),1,0,0.35);put(leafPile(),at('B'));put(leafPile(),at('B',1.0,0.8));put(stoneLantern(),at('D'),1,0.3,0.35);put(leafPile(),at('E'));put(mapleTree(1),at('E',1.0,0.6),2.6,0,0.35);break;
-  default:var wm=put(windmill(),at('C'),1,0.6,1.0);TFX.push({t:'spin',o:wm.userData.spin});put(haystack(),at('A'),1,0,0.6);put(haystack(),at('A',1.3,0.9),0.8,0,0.5);put(picnic(),at('B'),1,0.4);put(rocks(0xb9b4a8,3),at('D'),1,0,0.7);put(haystack(),at('E'),0.9,0,0.55);}
- noCull(terrG);
- if(snowFx){scO.remove(snowFx);snowFx.geometry.dispose();snowFx=null;}
- if(th.id==='snow'){var sp=[];for(var i=0;i<500;i++)sp.push((Math.random()-0.5)*44,Math.random()*16,(Math.random()-0.5)*44);var gs=new T.BufferGeometry();gs.setAttribute('position',new T.Float32BufferAttribute(sp,3));
-  snowFx=new T.Points(gs,new T.PointsMaterial({color:0xffffff,size:3,sizeAttenuation:false,transparent:true,opacity:0.9,depthWrite:false}));snowFx.frustumCulled=false;scO.add(snowFx);}}
+function applyLayout(id){var L=layoutOf(id),R=L.rest,Sv=L.svc,Mk=L.mkt,Fm=L.farm,Pd=L.pond,Q=L.plaza,U=L.ufo,Pr=L.pier;
+ MAP={id:L.id,L:L,warn:[],rest:R,svc:Sv,mkt:Mk,farm:Fm,pond:Pd,plaza:Q,ufo:U,hotel:L.hotel,wheel:L.wheel,dome:L.dome};
+ LAND.fill(0);BRIDGE.fill(0);PATHC.fill(0);PLAZC.fill(0);
+ for(var j=0;j<GN;j++)for(var i=0;i<GN;i++)if(L.land(i-GH+0.5,j-GH+0.5))LAND[j*GN+i]=1;
+ // 各建築佔用範圍（小路要避開、樹唔可以種）
+ var OCC=[['rest',R[0]-2.2,R[0]+4.0,R[1]-1.8,R[1]+1.9],['svc',Sv[0]-2.6,Sv[0]+2.6,Sv[1]-1.8,Sv[1]+2.6],['mkt',Mk[0]-1.9,Mk[0]+1.9,Mk[1]-1.3,Mk[1]+2.3],['farm',Fm[0]-1.4,Fm[0]+4.6,Fm[1]-1.4,Fm[1]+7.8],
+  ['pond',Pd[0]-3.1,Pd[0]+3.1,Pd[1]-3.1,Pd[1]+3.1,1],['hotel',L.hotel[0]-1.6,L.hotel[0]+1.6,L.hotel[1]-1.3,L.hotel[1]+1.4],['wheel',L.wheel[0]-1.6,L.wheel[0]+1.6,L.wheel[1]-0.9,L.wheel[1]+1.0],
+  ['dome',L.dome[0]-2.6,L.dome[0]+2.6,L.dome[1]-2.6,L.dome[1]+2.8],['ufo',U[0]-1.9,U[0]+1.9,U[1]-1.9,U[1]+1.9,1],['plaza',Q[0]-3.2,Q[0]+3.2,Q[1]-2.7,Q[1]+2.7]];
+ if(L.mark)OCC.push(['mark',L.mark[1]-1.6,L.mark[1]+1.6,L.mark[2]-1.6,L.mark[2]+1.6]);MAP.occ=OCC;
+ OCC.forEach(function(o){var bad=false;if(o[5]){var cx=(o[1]+o[2])/2,cz=(o[3]+o[4])/2,rr=(o[2]-o[1])/2;for(var a=0;a<16&&!bad;a++)if(!L.land(cx+Math.cos(a/16*6.283)*rr,cz+Math.sin(a/16*6.283)*rr))bad=true;}
+  else for(var x=o[1];x<=o[2]+0.01&&!bad;x+=0.5)for(var z=o[3];z<=o[4]+0.01&&!bad;z+=0.5)if(!L.land(x,z))bad=true;if(bad)MAP.warn.push(o[0]+' 出咗海');});
+ for(var a=0;a<OCC.length;a++)for(var b=a+1;b<OCC.length;b++){var A=OCC[a],B=OCC[b];if(Math.min(A[2],B[2])-Math.max(A[1],B[1])>0.35&&Math.min(A[4],B[4])-Math.max(A[3],B[3])>0.35)MAP.warn.push(A[0]+' 同 '+B[0]+' 重疊');}
+ // 碼頭：方向 E/W/S/N；PIER＝可以企嘅長方形；釣魚位喺碼頭尾
+ var dir={E:[1,0],W:[-1,0],S:[0,1],N:[0,-1]}[Pr[2]],ox=Pr[0],oz=Pr[1];MAP.fdx=dir[0];MAP.fdz=dir[1];MAP.fish=[ox+dir[0]*6.1,oz+dir[1]*6.1];MAP.fface=Math.atan2(dir[0],dir[1]);
+ MAP.pier=dir[0]?[Math.min(ox-0.3*dir[0],ox+6.9*dir[0]),Math.max(ox-0.3*dir[0],ox+6.9*dir[0]),oz-0.7,oz+0.7]:[ox-0.7,ox+0.7,Math.min(oz-0.3*dir[1],oz+6.9*dir[1]),Math.max(oz-0.3*dir[1],oz+6.9*dir[1])];
+ pierO.position.set(ox,0,oz);pierO.rotation.y={E:0,S:-Math.PI/2,W:Math.PI,N:Math.PI/2}[Pr[2]];
+ // 小路：由廣場去每個門口（避開建築；過水＝橋）
+ markRect(PLAZC,Q[0]-3,Q[0]+3,Q[1]-2.5,Q[1]+2.5);var block=new Uint8Array(GN*GN);OCC.forEach(function(o){if(o[0]!=='plaza'&&o[0]!=='ufo')markRect(block,o[1]+0.2,o[2]-0.2,o[3]+0.2,o[4]-0.2);});
+ MAP.doorRest=[R[0],R[1]+2.3];MAP.doorSvc=[Sv[0],Sv[1]+3.0];MAP.gate=[Fm[0]-2.2,Fm[1]+1.7];
+ [MAP.doorRest,MAP.doorSvc,[Mk[0],Mk[1]+2.6],MAP.gate,[ox-dir[0]*0.8,oz-dir[1]*0.8],[U[0],U[1]],[L.hotel[0],L.hotel[1]+1.9],[L.wheel[0],L.wheel[1]+1.5],[L.dome[0],L.dome[1]+3.3],[Pd[0],Pd[1]+(Pd[1]>Q[1]?-3.6:3.6)]].forEach(function(d){
+  var c=astar(Q[0],Q[1]+2.4,d[0],d[1],block);if(c)paintPath(c);else MAP.warn.push('去唔到 '+d[0]+','+d[1]);});
+ // 遊客路線：飛碟站 → 旅款餐廳門口
+ var tc=astar(U[0],U[1],MAP.doorRest[0],MAP.doorRest[1],block);MAP.tour=tc?cellsToPts(tc).concat([[R[0],R[1]+1.45]]):[[U[0],U[1]],[R[0],R[1]+1.45]];MAP.tour[0]=[U[0],U[1]];
+ drawGround();buildIslandMesh();
+ // 擺建築
+ bRest.position.set(R[0],0,R[1]);topis[0].position.set(R[0]-0.78,0,R[1]+1.82);topis[1].position.set(R[0]+0.78,0,R[1]+1.82);menuO.position.set(R[0]+2.6,0,R[1]+1.0);cafeO.position.set(R[0]+3.1,0,R[1]-0.95);
+ bMkt.position.set(Mk[0],0,Mk[1]);bSvc.position.set(Sv[0],0,Sv[1]);hotelO.position.set(L.hotel[0],0,L.hotel[1]);wheelO.position.set(L.wheel[0],0,L.wheel[1]);domeO.position.set(L.dome[0],0,L.dome[1]);
+ fountO.position.set(Q[0],0,Q[1]);fountFx.position.set(Q[0],0,Q[1]);pondBase.position.set(Pd[0],0,Pd[1]);ufoPad.position.set(U[0],0,U[1]);ufo.position.set(U[0],3,U[1]);beam.position.set(U[0],1.5,U[1]);
+ fu.position.set(Mk[0]-1.2,0,Mk[1]+1.6);
+ var LP=[[Q[0]-3.4,Q[1]-2.9],[Q[0]+3.4,Q[1]-2.9],[Q[0]-3.4,Q[1]+2.9],[Q[0]+3.4,Q[1]+2.9]];lampOs.forEach(function(o,i){o.position.set(LP[i][0],0,LP[i][1]);});
+ FADERS[0].x=R[0];FADERS[0].z=R[1];FADERS[1].x=Sv[0];FADERS[1].z=Sv[1];FADERS[2].x=Mk[0];FADERS[2].z=Mk[1]+0.2;
+ // 碰撞
+ CIR_O.length=0;BOX_O.length=0;
+ boxO(R[0]-1.95,R[0]+1.95,R[1]-1.55,R[1]+1.55);cirO(R[0]-0.78,R[1]+1.82,0.26);cirO(R[0]+0.78,R[1]+1.82,0.26);cirO(R[0]+2.6,R[1]+1.0,0.45);cirO(R[0]+3.1,R[1]-0.95,0.75);
+ boxO(Mk[0]-1.7,Mk[0]+1.7,Mk[1]-1.2,Mk[1]+0.95);
+ boxO(Sv[0]-2.5,Sv[0]+2.5,Sv[1]-1.7,Sv[1]+1.7);boxO(Sv[0]-2.1,Sv[0]-1.0,Sv[1]+1.75,Sv[1]+2.15);boxO(Sv[0]+1.0,Sv[0]+2.1,Sv[1]+1.75,Sv[1]+2.15);cirO(Sv[0]-0.85,Sv[1]+2.42,0.1);cirO(Sv[0]+0.85,Sv[1]+2.42,0.1);
+ boxO(L.hotel[0]-1.36,L.hotel[0]+1.36,L.hotel[1]-1.1,L.hotel[1]+1.1);boxO(L.wheel[0]-1.4,L.wheel[0]+1.4,L.wheel[1]-0.6,L.wheel[1]+0.6);cirO(L.dome[0],L.dome[1],2.45);boxO(L.dome[0]-0.6,L.dome[0]+0.6,L.dome[1]+1.8,L.dome[1]+2.6);
+ cirO(Q[0],Q[1],1.25);cirO(Pd[0],Pd[1],2.75);LP.forEach(function(p){cirO(p[0],p[1],0.22);});
+ // 農場搬位
+ PLOTS.forEach(function(v,i){var p=plotXZ(i);v.x=p[0];v.z=p[1];v.g.position.set(p[0],0,p[1]);});buildFence();
+ // 樹、花、地標、橋
+ while(terrG.children.length){var ch=terrG.children[0];terrG.remove(ch);disposeSafe(ch);}CIR_T.length=0;TFX.length=0;TREEV=[];
+ if(L.mark){var mk=L.mark;if(mk[0]==='windmill'){var wm=tAdd(windmill(),mk[1],mk[2],1,0.6,1.0);TFX.push({t:'spin',o:wm.userData.spin});}else if(mk[0]==='lighthouse')tAdd(lighthouse(),mk[1],mk[2],1,0,0.75);else tAdd(giantTree(),mk[1],mk[2],1,0,0.95);}
+ var rnd=rng(L.seed),kinds=['apple','orange','peach'],nf=0;
+ function freeAt(x,z,m){var k=gi(x,z);if(k<0||!LAND[k]||PATHC[k]||PLAZC[k]||beachIJ(k%GN,(k/GN)|0))return false;
+  for(var o=0;o<OCC.length;o++){var O=OCC[o];if(x>O[1]-m&&x<O[2]+m&&z>O[3]-m&&z<O[4]+m)return false;}
+  if(Math.abs(x-ox-dir[0]*3)<4.5&&Math.abs(z-oz-dir[1]*3)<4.5)return false;return true;}
+ for(var tries=0;tries<3000&&TREEV.length<32;tries++){var x=-GH+1+rnd()*(GN-2),z=-GH+1+rnd()*(GN-2);if(!freeAt(x,z,1.0))continue;
+  if(TREEV.some(function(t){return Math.hypot(t.x-x,t.z-z)<2.4;}))continue;var r=rnd(),kind=r<0.55?'fruit':r<0.7?'honey':'pine',fr=kind==='fruit'?kinds[(nf++)%3]:kind==='honey'?'honey':null,sc=0.85+rnd()*0.2;
+  var o=tAdd(fruitTree(kind,fr),x,z,3.2*sc,rnd()*6.28,0.5*sc);shadow(terrG,x,z,1.05*sc);TREEV.push({x:x,z:z,s:sc,kind:kind,fr:fr,o:o,shake:0});}
+ var fi=0;for(var tr=0;tr<600&&fi<60;tr++){var cx=-GH+1+rnd()*(GN-2),cz=-GH+1+rnd()*(GN-2);if(!freeAt(cx,cz,0.6)||TREEV.some(function(t){return Math.hypot(t.x-cx,t.z-cz)<1.3;}))continue;
+  for(var k=0;k<5;k++){var an=k*1.3+cx,rr=0.25+(k%3)*0.25;tAdd(flower(FC[(fi++)%5]),cx+Math.cos(an)*rr,cz+Math.sin(an)*rr,3);}}
+ for(var q=0;q<GN*GN;q++)if(BRIDGE[q]){var bx=(q%GN)-GH+0.5,bz=((q/GN)|0)-GH+0.5;terrG.add(ms(new T.BoxGeometry(1.02,0.12,1.02),M(0xb98a5a),bx,0.02,bz));
+  [[1,0],[-1,0],[0,1],[0,-1]].forEach(function(d){var n2=gi(bx+d[0],bz+d[1]);if(n2>=0&&!LAND[n2]&&!BRIDGE[n2])terrG.add(ms(new T.BoxGeometry(d[0]?0.08:1.02,0.35,d[0]?1.02:0.08),M(0x8a5f3a),bx+d[0]*0.47,0.2,bz+d[1]*0.47));});}
+ noCull(terrG);}
+
 // 天空（跟鏡頭）：星星、雲
 var stars=(function(){var sp=[];for(var i=0;i<260;i++){var az=(Math.random()-0.5)*2.6,el=-0.7+Math.random()*1.7;sp.push(Math.sin(az)*Math.cos(el)*150,Math.sin(el)*150,-Math.cos(az)*Math.cos(el)*150);}
  var g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(sp,3));
@@ -859,8 +898,8 @@ var player=kid(meOpts(S.me,S.wear,S.bag.tier));player.scale.setScalar(2.4);scO.a
 var pSh=shadow(scO,0,0,0.55);
 var P={x:0,z:8,rot:Math.PI,face:Math.PI};
 // 釣魚竿（掛喺角色右手；平時收埋）
-var rodG=new T.Group(),rodTip=new T.Object3D();rodG.position.set(0.1,0.22,0.03);rodG.rotation.x=0.9;
-rodG.add(ms(new T.CylinderGeometry(0.008,0.014,0.8,6),M(0x8a5a34),0,0.4,0));rodTip.position.set(0,0.8,0);rodG.add(rodTip);rodG.visible=false;player.userData.b.add(rodG);
+var rodG=new T.Group(),rodTip=new T.Object3D(),rodMat=M2(RODS[S.rod||0].c);rodG.position.set(0.1,0.22,0.03);rodG.rotation.x=0.9;
+rodG.add(ms(new T.CylinderGeometry(0.008,0.014,0.8,6),rodMat,0,0.4,0));rodTip.position.set(0,0.8,0);rodG.add(rodTip);rodG.visible=false;player.userData.b.add(rodG);
 // 波波：外星遊客（THS 題目示範）
 var bobo=alien({head:0x8fd66b,body:0xb58df0});bobo.scale.setScalar(2.6);scO.add(bobo);var bSh=shadow(scO,0,0,0.55);
 var NP={x:-0.5,z:10,rot:0,face:0,tx:-0.5,tz:10,wait:1.5,stuck:0,happy:0,talk:false};
@@ -931,8 +970,8 @@ function syncChefs(){var n=chefSlots(),X=STOVE_X[n];for(var k=0;k<4;k++){var d=k
  if(d&&!rt){var m=noCull(chefModel(HAIRS[d.h%HAIRS.length]));m.scale.setScalar(2.3);m.position.set(X[k],0,-3.35);scI.add(m);
   var bar=noCull(makeBar());bar.position.set(X[k],2.2,-3.2);bar.visible=false;scI.add(bar);
   var steam=[];for(var s=0;s<3;s++){var p=ms(new T.SphereGeometry(0.07,8,6),M(0xffffff),X[k],1.3,-4.05);p.visible=false;p.frustumCulled=false;scI.add(p);steam.push(p);}
-  var tag=chefTag(d);tag.position.set(X[k],1.75,-3.1);scI.add(tag);chefRT[k]=rt={m:m,bar:bar,steam:steam,tag:tag,nm:d.nm,busy:null,rot:0};}
- if(d&&rt){rt.m.position.x=X[k];rt.bar.position.x=X[k];rt.steam.forEach(function(p){p.position.x=X[k];});rt.tag.position.x=X[k];}}}
+  var tag=chefTag(d);tag.position.set(X[k],1.75,-3.1);scI.add(tag);chefRT[k]=rt={m:m,bar:bar,steam:steam,tag:tag,nm:d.nm,busy:null,rot:0,x:X[k],home:X[k],tx:X[k],wait:Math.random()*2,ph:k};}
+ if(d&&rt){rt.home=X[k];if(Math.abs(rt.x-X[k])>1.2){rt.x=rt.tx=X[k];}}}}
 
 // ================= 服務中心（室內）=================
 var scC=new T.Scene();
@@ -984,8 +1023,8 @@ var mian=sheep();mian.scale.setScalar(2.6);mian.position.set(-3.7,0,1.8);mian.ro
  var rug2=ms(new T.PlaneGeometry(3.0,2.0),M(0xe9b872),0,0.014,0.8);rug2.rotation.x=-Math.PI/2;scC.add(rug2);
  var mat=ms(new T.PlaneGeometry(1.8,0.7),M(0x9a6440),0,0.016,3.05);mat.rotation.x=-Math.PI/2;scC.add(mat);})();
 function drawBoard(){var x=boardCv.getContext('2d');x.fillStyle='#fffaeb';x.fillRect(0,0,512,320);x.fillStyle='#2f6f71';x.textAlign='center';x.textBaseline='middle';x.font='700 38px '+FONT;x.fillText('設施進度',256,40);
- x.textAlign='left';x.font='500 27px '+FONT;x.fillStyle='#5a4632';
- [['🌾 農場',UP.farm.L[S.up.farm].d],['💧 澆水器',CANS[S.can||0].n],['🧊 雪櫃',S.up.fridge?UP.fridge.L[S.up.fridge].d.split('：')[0]:'未有'],['🔥 爐具',UP.stove.L[S.up.stove].d.split('：')[0]]].forEach(function(r,i){x.fillText(r[0],28,105+i*56);x.fillText(r[1],200,105+i*56);});
+ x.textAlign='left';x.font='500 25px '+FONT;x.fillStyle='#5a4632';
+ [['🌾 農場',UP.farm.L[S.up.farm].d],['💧 澆水器',CANS[S.can||0].n],['🧺 採摘器',HARVS[S.harv||0].n],['🎣 魚竿',RODS[S.rod||0].n],['🧊 雪櫃',S.up.fridge?UP.fridge.L[S.up.fridge].d.split('：')[0]:'未有'],['🔥 爐具',UP.stove.L[S.up.stove].d.split('：')[0]]].forEach(function(r,i){x.fillText(r[0],28,92+i*40);x.fillText(r[1],200,92+i*40);});
  boardTex.needsUpdate=true;}
 
 // ================= 通用 UI =================
@@ -1051,15 +1090,25 @@ function updPlots(dt,t){var sc=seedCount();PLOTS.forEach(function(v,i){var p=S.p
  if(v.ind){v.ind.position.copy(bendPt(v.x,1.2+Math.sin(t*3+i)*0.06,v.z-0.25));v.ind.visible=!(HOLD&&Math.hypot(v.x-P.x,v.z-P.z)<1.4);}
  for(var d=v.drops.length-1;d>=0;d--){var m=v.drops[d];m.position.y-=dt*4;if(m.position.y<0.3){v.g.remove(m);v.drops.splice(d,1);}}});}
 function rainOn(i,n){var v=PLOTS[i];for(var k=0;k<n;k++){var d=ms(gDrop,M(0x6ec6ff),(Math.random()-0.5)*0.9,1.6+Math.random()*0.8,(Math.random()-0.5)*0.9);d.scale.y=1.5;d.frustumCulled=false;v.g.add(d);v.drops.push(d);}}
-function harvest(i){var p=S.plots[i],k=p.c,n=CFG.yield;if(bagRoom('ing:'+k)<n){bagFullMsg();return;}
- bagAdd('ing:'+k,n);seen(k);p.c=null;p.p=0;p.w=0;prevSt[i]=plotState(p);save();
- holdUp(cropItem(k),iname(k)+' ×'+n,function(){toast('🎒 '+ICON[k]+' '+iname(k)+' ×'+n+' 放進了背包（'+bagLine()+'）');});}
+// ================= 採摘器（站喺成熟嘅田上按 A）=================
+// 同澆水器一樣：舉起採摘籃 → 轉一圈 → 收成，再捧起放入背包；0.4 秒內再按一下（連按兩下）就按採摘器等級一次過收幾格
+var HARV=null,harvHinted=false,CROPCOL={tomato:0xe8473f,lettuce:0x7fd36b,carrot:0xff8a3d,potato:0xc9a26b};
+function startHarv(i){if(HARV||WATER||HOLD)return;var bm=noCull(basketModel(S.harv||0));bm.position.set(0.02,0.3,0.06);player.userData.b.add(bm);HARV={t:0,i:i,multi:false,r0:P.rot,tool:bm};
+ if(S.harv>0&&!harvHinted){harvHinted=true;toast('🧺 連按兩下 A，'+HARVS[S.harv].n+'可以一次過收成 '+HARVS[S.harv].k+' 格',4200);}}
+function harvPress(){var w=HARV;if(!w||w.multi||w.t>0.4)return;if(S.harv>0)w.multi=true;else if(!harvHinted){harvHinted=true;toast('🧺 普通採摘器一次只可以收成一格：到服務中心的百貨櫃檯可以買更好的採摘器',4500);}}
+function doHarvest(list){var got={},first=null,full=false;list.forEach(function(j){var p=S.plots[j];if(!isReady(p))return;var k=p.c,n=CFG.yield;if(bagRoom('ing:'+k)<n){full=true;return;}
+  bagAdd('ing:'+k,n);seen(k);got[k]=(got[k]||0)+n;if(!first)first=k;p.c=null;p.p=0;p.w=0;prevSt[j]=plotState(p);var v=PLOTS[j];shoot(v.x,0.4,v.z,P.x,1.6,P.z,M(CROPCOL[k]),4,0.3);});
+ save();if(full)bagFullMsg();if(!first)return false;
+ holdUp(cropItem(first),Object.keys(got).map(function(k){return iname(k)+' ×'+got[k];}).join('、'),function(){toast('🎒 '+Object.keys(got).map(function(k){return ICON[k]+' '+iname(k)+' ×'+got[k];}).join('、')+' 放進了背包（'+bagLine()+'）');});return true;}
+function updHarv(dt){if(!HARV)return;var w=HARV,u=player.userData;w.t+=dt;var t=w.t,raise=Math.min(1,t/0.25),az=0.3+2.3*raise;u.am[0].rotation.z=-az;u.am[1].rotation.z=az;u.am[0].rotation.x=u.am[1].rotation.x=0;
+ var k=Math.max(0,Math.min(1,(t-0.25)/0.6)),e=k<0.5?2*k*k:1-Math.pow(-2*k+2,2)/2;P.face=P.rot=w.r0+Math.PI*2*e;w.tool.position.y=0.3+0.36*raise;
+ if(t>=0.85){if(w.tool.parent)w.tool.parent.remove(w.tool);disposeTree(w.tool);var n=w.multi?HARVS[S.harv].k:1;HARV=null;if(!doHarvest(waterTargets(w.i,n))){u.am[0].rotation.z=-0.3;u.am[1].rotation.z=0.3;}}}
 function sow(i,k){if(!bagTake('seed:'+k,1))return;var p=S.plots[i];p.c=k;p.p=0;p.w=0;prevSt[i]=plotState(p);toast('🌱 種下了'+iname(k)+'，記得澆水');save();}
 function plotAct(i){var p=S.plots[i],s=plotState(p);
  if(s==='empty'){var opts=[];bagKeys('seed:').forEach(function(sk){var k=sk.slice(5);opts.push({t:ICON[k]+' '+iname(k)+'種子（'+bagCount(sk)+'）',cb:function(){sow(i,k);}});});
   if(!opts.length){talk('農田','#8a5a34','#ffffff',['背包裏沒有種子。到「星際市場」找阿福買種子吧。']);return;}
   opts.push({t:'取消',cb:function(){}});talk('農田','#8a5a34','#ffffff',['要種甚麼？'],opts);}
- else if(s==='ready')harvest(i);
+ else if(s==='ready')startHarv(i);
  else startWater(i);}
 // ================= 澆水器（站喺農田上按 A）=================
 // 動作：舉起澆水器 → 成個人轉一圈 → 水灑落田。第一下 A 之後 0.4 秒內再按一下（連按兩下），就按澆水器等級一次過澆幾格
@@ -1067,11 +1116,12 @@ var WATER=null,canHinted=false,sprays=[],gSpray=new T.SphereGeometry(0.045,6,5),
 function wetPlot(j){var p=S.plots[j];p.w=Date.now()+CFG.wetSec*1000;prevSt[j]=plotState(p);}
 // 範圍：2 格＝一行兩格、3＝成行、4＝2×2、6＝兩行、9＝3×3；揀一個包住腳下嗰格、又最近玩家嘅位置
 function waterTargets(i,n){var rows=Math.ceil(S.plots.length/3),c=i%3,r=Math.floor(i/3),sh=n>=9?[3,3]:n>=6?[3,2]:n>=4?[2,2]:n>=3?[3,1]:n>=2?[2,1]:[1,1],w=sh[0],h=Math.min(sh[1],rows);
- var gx=(P.x-6.4)/1.6,gz=(P.z-2.2)/1.6,best=[c,r],bd=1e9;
+ var gx=(P.x-MAP.farm[0])/1.6,gz=(P.z-MAP.farm[1])/1.6,best=[c,r],bd=1e9;
  for(var c0=Math.max(0,c-w+1);c0<=Math.min(c,3-w);c0++)for(var r0=Math.max(0,r-h+1);r0<=Math.min(r,rows-h);r0++){var d=Math.hypot(c0+(w-1)/2-gx,r0+(h-1)/2-gz);if(d<bd){bd=d;best=[c0,r0];}}
  var L=[];for(var y=0;y<h;y++)for(var x=0;x<w;x++){var j=(best[1]+y)*3+best[0]+x;if(j<S.plots.length)L.push(j);}return L;}
-function canSpray(j){var v=PLOTS[j],x0=P.x,y0=1.7,z0=P.z;for(var k=0;k<10;k++){var tx=v.x+(Math.random()-0.5)*1.0,tz=v.z+(Math.random()-0.5)*1.0,T0=0.35+Math.random()*0.25,m=ms(gSpray,sprayM,x0,y0,z0);m.visible=false;m.frustumCulled=false;scO.add(m);
- sprays.push({m:m,d:k*0.03,t:0,T:T0,x0:x0,y0:y0,z0:z0,vx:(tx-x0)/T0,vz:(tz-z0)/T0,vy:(0.2-y0)/T0+4.5*T0});}}
+function shoot(x0,y0,z0,x1,y1,z1,mat,n,spread){for(var k=0;k<n;k++){var tx=x1+(Math.random()-0.5)*spread,tz=z1+(Math.random()-0.5)*spread,T0=0.35+Math.random()*0.25,m=ms(gSpray,mat,x0,y0,z0);m.visible=false;m.frustumCulled=false;scO.add(m);
+ sprays.push({m:m,d:k*0.03,t:0,T:T0,x0:x0,y0:y0,z0:z0,vx:(tx-x0)/T0,vz:(tz-z0)/T0,vy:(y1-y0)/T0+4.5*T0});}}
+function canSpray(j){var v=PLOTS[j];shoot(P.x,1.7,P.z,v.x,0.2,v.z,sprayM,10,1.0);}
 function updSprays(dt){for(var i=sprays.length-1;i>=0;i--){var s=sprays[i];if(s.d>0){s.d-=dt;continue;}s.t+=dt;var t=s.t;s.m.visible=true;s.m.position.set(s.x0+s.vx*t,s.y0+s.vy*t-4.5*t*t,s.z0+s.vz*t);if(t>=s.T){scO.remove(s.m);sprays.splice(i,1);}}}
 function startWater(i){if(WATER||HOLD)return;var cm=noCull(canModel(S.can||0));cm.position.set(0.02,0.3,0.06);player.userData.b.add(cm);WATER={t:0,i:i,multi:false,r0:P.rot,done:false,can:cm};
  if(S.can>0&&!canHinted){canHinted=true;toast('💧 連按兩下 A，'+CANS[S.can].n+'可以一次過澆 '+CANS[S.can].k+' 格',4200);}}
@@ -1101,11 +1151,10 @@ function starInfo(){var d=S.deco.cur,bp=0;['floor','wall','table','chair'].forEa
  return {beauty:beauty,variety:variety,n:n,taste:taste,pop:pop,av:av,interval:n?CFG.baseInterval/(0.4+0.3*pop):0};}
 var seatUsed=SEATS.map(function(){return false;}),walkers=[],cust=[],queue=[],floaters=[],spawnT=CFG.baseInterval-4;
 // 遊客路線：飛碟站（光柱）→ 廣場西邊 → 旅款餐廳門口；離開時倒轉，行返飛碟升返上去
-var TOUR=[[0,16],[0,6.2],[-2.3,4.6],[-2.3,-1.6],[-7,-1.6],[-7,-2.4]];
 function animWalk(m,ph,mv){var u=m.userData,sn=Math.sin(ph);
  if(mv){u.b.position.y=Math.abs(sn)*0.03;if(u.legs){u.lg[0].rotation.x=sn*0.6;u.lg[1].rotation.x=-sn*0.6;u.am[0].rotation.x=-sn*0.5;u.am[1].rotation.x=sn*0.5;}}
  else{u.b.position.y=0;if(u.legs){u.lg[0].rotation.x*=0.8;u.lg[1].rotation.x*=0.8;u.am[0].rotation.x*=0.8;u.am[1].rotation.x*=0.8;}}}
-function newWalker(L,dir,seat){var path=dir===1?TOUR:TOUR.slice().reverse(),m=noCull(lookModel(L));scO.add(m);
+function newWalker(L,dir,seat){var path=dir===1?MAP.tour:MAP.tour.slice().reverse(),m=noCull(lookModel(L));scO.add(m);
  var w={m:m,L:L,path:path,pi:1,x:path[0][0],z:path[0][1],seat:seat,dir:dir,sh:shadow(scO,path[0][0],path[0][1],0.5),ph:Math.random()*6,st:dir===1?'down':'walk',t:0,s0:m.scale.x};
  if(dir===1){m.position.set(w.x,2.4,w.z);m.scale.setScalar(w.s0*0.3);}walkers.push(w);}
 function spawnTourist(){var f=[];seatUsed.forEach(function(u,i){if(!u)f.push(i);});if(!f.length)return;var si=pick(f);seatUsed[si]=true;newWalker(randLook(),1,si);}
@@ -1146,11 +1195,18 @@ function updKitchen(dt,t){var slots=chefSlots();
   var best=-1,bc=-1;for(var k=0;k<slots;k++){var ch=chefRT[k],d=S.chefs[k];if(ch&&d&&!ch.busy&&d.ck>bc){best=k;bc=d.ck;}}
   if(best>=0){c.dish.ks.forEach(function(ik){S.inv[ik]-=1;});chefRT[best].busy={c:c,t:0,dur:cookSec(S.chefs[best])};c.st='cook';setBub(c,'⏳ '+c.dish.n);}}
  queue=queue.filter(function(c){return c.st==='order';});
- chefRT.forEach(function(ch,k){if(!ch)return;var u=ch.m.userData,target=ch.busy?Math.PI:0;ch.rot+=(target-ch.rot)*Math.min(1,dt*8);ch.m.rotation.y=ch.rot;
-  if(ch.busy){ch.busy.t+=dt;ch.bar.visible=true;setBar(ch.bar,ch.busy.t/ch.busy.dur);u.am[0].rotation.x=Math.sin(t*10)*0.6-0.4;u.am[1].rotation.x=Math.sin(t*10+1.5)*0.6-0.4;
-   ch.steam.forEach(function(p,j){p.visible=true;var ph=(t*0.8+j/3)%1;p.position.y=1.3+ph*0.9;p.scale.setScalar(0.6+ph);});
-   if(ch.busy.t>=ch.busy.dur){var c=ch.busy.c;ch.busy=null;if(c.st==='cook')serve(c,S.chefs[k]?S.chefs[k].ck:30);}}
-  else{ch.bar.visible=false;u.am[0].rotation.x*=0.8;u.am[1].rotation.x*=0.8;ch.steam.forEach(function(p){p.visible=false;});u.b.position.y=Math.abs(Math.sin(t*2+k))*0.01;}});}
+ // 廚師行來行去：有單就「攞材料（左）→ 爐頭煮（面向爐）→ 出菜檯（右、面向客人）」；冇單就喺自己嗰段慢慢行
+ chefRT.forEach(function(ch,k){if(!ch)return;var u=ch.m.userData,cook=false,face=0,serveP=false;
+  if(ch.busy){var b=ch.busy;b.t+=dt;var p=b.t/b.dur;ch.bar.visible=true;setBar(ch.bar,p);
+   if(p<0.2){ch.tx=ch.home-0.62;face=-Math.PI/2;}else if(p<0.82){ch.tx=ch.home;face=Math.PI;cook=true;}else{ch.tx=ch.home+0.5;serveP=true;}
+   if(b.t>=b.dur){var c=b.c;ch.busy=null;ch.wait=1+Math.random()*2;if(c.st==='cook')serve(c,S.chefs[k]?S.chefs[k].ck:30);}}
+  else{ch.bar.visible=false;if(ch.wait>0)ch.wait-=dt;else if(Math.abs(ch.tx-ch.x)<0.03){ch.wait=1.5+Math.random()*3;ch.tx=ch.home+(Math.random()-0.5)*1.2;}}
+  var dx=ch.tx-ch.x,mv=Math.abs(dx)>0.03;if(mv){ch.x+=(dx>0?1:-1)*Math.min(Math.abs(dx),1.8*dt);face=dx>0?Math.PI/2:-Math.PI/2;cook=serveP=false;}
+  ch.rot=lerpA(ch.rot,face,dt*10);ch.m.rotation.y=ch.rot;ch.m.position.x=ch.x;ch.bar.position.x=ch.x;ch.tag.position.x=ch.x;
+  if(mv){ch.ph+=dt*11;var sn=Math.sin(ch.ph);u.b.position.y=Math.abs(sn)*0.02;u.lg[0].rotation.x=sn*0.6;u.lg[1].rotation.x=-sn*0.6;u.am[0].rotation.x=-sn*0.5;u.am[1].rotation.x=sn*0.5;}
+  else{u.lg[0].rotation.x*=0.8;u.lg[1].rotation.x*=0.8;u.b.position.y=0;
+   if(cook){u.am[0].rotation.x=Math.sin(t*10)*0.6-0.4;u.am[1].rotation.x=Math.sin(t*10+1.5)*0.6-0.4;}else if(serveP){u.am[0].rotation.x=u.am[1].rotation.x=-1.2;}else{u.am[0].rotation.x*=0.8;u.am[1].rotation.x*=0.8;}}
+  ch.steam.forEach(function(sp,j){sp.visible=cook;sp.position.x=ch.home;if(cook){var q=(t*0.8+j/3)%1;sp.position.y=1.3+q*0.9;sp.scale.setScalar(0.6+q);}});});}
 // 解僱煮緊嘢嘅廚師：張單退返去排隊，食材還返
 function releaseChef(k){var rt=chefRT[k];if(rt&&rt.busy){var c=rt.busy.c;rt.busy=null;if(c.st==='cook'){c.dish.ks.forEach(function(ik){S.inv[ik]+=1;});c.st='order';c.t=0;setBub(c,c.dish.ic+' '+c.dish.n);queue.push(c);}}}
 function spawnTick(dt){var si=starInfo();if(!si.n){spawnT=0;return;}spawnT+=dt;if(spawnT>=si.interval){spawnT=0;spawnTourist();}}
@@ -1189,7 +1245,7 @@ var mkT=0;function marketTick(dt){mkT+=dt;if(mkT<1)return;mkT=0;
  pondTick();}
 function buy(cost,fn){if(S.coins<cost){toast('金幣不足');return;}S.coins-=cost;fn();coinsUI();save();renderPanel();}
 function buySeed(k,n){if(bagRoom('seed:'+k)<n){bagFullMsg();return;}buy(CROPS[k].seed*n,function(){bagAdd('seed:'+k,n);toast('🌱 '+iname(k)+'種子 ×'+n+' 放進了背包');});}
-function sellCrop(bk,n){if(!n||!bagTake(bk,n))return;var k=bk.slice(4),amt=n*CROPS[k].sell;S.coins+=amt;coinsUI();toast('🪙 賣出'+iname(k)+' ×'+n+'，+$'+amt);save();renderPanel();}
+function sellCrop(bk,n){if(!n||!bagTake(bk,n))return;var k=bk.slice(4),amt=n*sellPrice(k);S.coins+=amt;coinsUI();toast('🪙 賣出'+iname(k)+' ×'+n+'，+$'+amt);save();renderPanel();}
 // 漁獲：key＝魚種|大細（例如 bream|L）
 function parseKey(key){var a=key.split('|');return {f:fishOf(a[0]),cl:clsOf(a[1]||'S'),k:a[0],c:a[1]||'S'};}
 function fishPrice(key){var p=parseKey(key);return Math.round(p.f.p*p.cl.m);}
@@ -1218,12 +1274,14 @@ function syncPondVis(t,dt){var ids=S.pond.fish.map(function(f){return f.id;}).jo
  if(ids!==syncPondVis.sig){syncPondVis.sig=ids;while(pondG.children.length){var c=pondG.children[0];pondG.remove(c);disposeTree(c);}PF=S.pond.fish.map(function(f,i){
   var m=new T.Mesh(new T.CircleGeometry(1,16),bend(new T.MeshBasicMaterial({color:new T.Color(fishOf(f.k).col).lerp(new T.Color(0x16324a),0.65),transparent:true,opacity:0.6,depthWrite:false})));m.rotation.x=-Math.PI/2;
   var g=new T.Group();g.add(m);noCull(g);pondG.add(g);return {g:g,m:m,f:f,a:Math.random()*6.3,r:0.6+Math.random()*1.3,sp:(0.3+Math.random()*0.4)*(i%2?1:-1)};});}
- PF.forEach(function(p){var s=[0.16,0.24,0.32,0.42][fIdx(p.f)];p.m.scale.set(s,s*0.45,1);p.a+=p.sp*dt;var x=-11+Math.cos(p.a)*p.r,z=6+Math.sin(p.a)*p.r*0.85;p.g.position.set(x,0.04,z);p.g.rotation.y=-p.a+(p.sp>0?0:Math.PI);});}
+ PF.forEach(function(p){var s=[0.16,0.24,0.32,0.42][fIdx(p.f)];p.m.scale.set(s,s*0.45,1);p.a+=p.sp*dt;var x=MAP.pond[0]+Math.cos(p.a)*p.r,z=MAP.pond[1]+Math.sin(p.a)*p.r*0.85;p.g.position.set(x,0.04,z);p.g.rotation.y=-p.a+(p.sp>0?0:Math.PI);});}
 
 // ================= 服務中心：兔兔（設施）、古洛博士（研發）、企鵝經理（勞工署）、綿綿（服裝）=================
 function ccTalk(){var first=!S.met.tt;S.met.tt=1;save();npcHop.tutu=0.8;
- talk('兔兔（百貨櫃檯）','#5b7fd6','#ffffff',first?['歡迎來到服務中心，'+me()+'！我是百貨櫃檯的兔兔。','我這裏有各種澆水器；想擴大農場、升級餐廳的雪櫃和爐具，也可以找我。','研發新菜找古洛博士，請人找勞工署的企鵝經理，衣服和更大的背包就找綿綿。今天想要甚麼？']:['你好，'+me()+'！今天想要甚麼？'],
-  [{t:'買澆水器',cb:function(){openPanel('shop','can');}},{t:'擴大農場',cb:function(){openPanel('build','farm');}},{t:'餐廳設備',cb:function(){openPanel('build','rest');}},{t:'沒事了',cb:function(){}}]);}
+ talk('兔兔（百貨櫃檯）','#5b7fd6','#ffffff',first?['歡迎來到服務中心，'+me()+'！我是百貨櫃檯的兔兔。','我這裏有澆水器、採摘器和魚竿；想擴大農場、升級餐廳的雪櫃和爐具，也可以找我。','研發新菜找古洛博士，請人找勞工署的企鵝經理，衣服和更大的背包就找綿綿。今天想要甚麼？']:['你好，'+me()+'！今天想要甚麼？'],
+  [{t:'買工具',cb:function(){openPanel('shop','can');}},{t:'擴大農場',cb:function(){openPanel('build','farm');}},{t:'餐廳設備',cb:function(){openPanel('build','rest');}},{t:'沒事了',cb:function(){}}]);}
+function buyHarv(i){buy(HARVS[i].p,function(){S.harv=i;harvHinted=false;drawBoard();toast('🧺 買了'+HARVS[i].n+'：站在成熟的農田上連按兩下 A，一次過收成 '+HARVS[i].k+' 格',4500);});}
+function buyRod(i){buy(RODS[i].p,function(){S.rod=i;rodMat.color.setHex(RODS[i].c);drawBoard();toast('🎣 買了'+RODS[i].n+'：更容易釣到大魚',4000);});}
 function buyCan(i){buy(CANS[i].p,function(){S.can=i;canHinted=false;drawBoard();toast('💧 買了'+CANS[i].n+'：站在農田上連按兩下 A，一次過澆 '+CANS[i].k+' 格',4500);});}
 function applyUp(key){if(key==='farm'){syncFarm();prevSt=S.plots.map(plotState);}else if(key==='fridge')syncFridge();else if(key==='stove'){buildStoves();syncChefs();}drawBoard();}
 function upCard(b,key,emo){var u=UP[key],lv=S.up[key],cur=u.L[lv],nx=u.L[lv+1],sub='現在：'+cur.d+(nx?'<br>升級後：'+nx.d:'');
@@ -1287,16 +1345,19 @@ var lineM=ms(new T.CylinderGeometry(0.006,0.006,1,4),M(0xf5f5f5));lineM.visible=
 var bobber=new T.Group();bobber.add(ms(new T.SphereGeometry(0.075,10,8,0,Math.PI*2,0,Math.PI/2),M(0xe8473f)));bobber.add(ms(new T.SphereGeometry(0.075,10,8,0,Math.PI*2,Math.PI/2,Math.PI/2),M(0xffffff)));bobber.visible=false;noCull(bobber);scO.add(bobber);
 var fshG=new T.Group(),fsh=new T.Mesh(new T.CircleGeometry(1,20),bend(new T.MeshBasicMaterial({color:0x1d3b52,transparent:true,opacity:0.45,depthWrite:false})));fsh.rotation.x=-Math.PI/2;fshG.add(fsh);fshG.visible=false;noCull(fshG);scO.add(fshG);
 var splashes=[];
-function pickFish(){var tot=0;FISH.forEach(function(f){tot+=f.w;});var r=Math.random()*tot;for(var i=0;i<FISH.length;i++){r-=FISH[i].w;if(r<=0)return FISH[i];}return FISH[0];}
+// 魚竿等級：珍貴魚權重提高、拉竿時限加長、試咬震得冇咁似真上釣；仲有機會一釣就係中／大魚
+function pickFish(){var rl=S.rod||0,ws=FISH.map(function(f,i){return f.w*(1+rl*0.45*i/(FISH.length-1));}),tot=0;ws.forEach(function(w){tot+=w;});var r=Math.random()*tot;for(var i=0;i<FISH.length;i++){r-=ws[i];if(r<=0)return FISH[i];}return FISH[0];}
+function rodWin(sp){return sp.win*(1+0.12*(S.rod||0));}function rodFake(sp){return sp.fake*(1-0.1*(S.rod||0));}
+function rollClass(){var rl=S.rod||0,r=Math.random();return r<0.03*rl?'L':r<0.1*rl?'M':'S';}
 function splash(x,z,n,pow){for(var i=0;i<n;i++){var m=ms(gDrop,M(0xffffff),x,SEA_Y+0.05,z);m.frustumCulled=false;var a=Math.random()*Math.PI*2,s=0.4+Math.random()*0.8;scO.add(m);splashes.push({m:m,vx:Math.cos(a)*s*pow,vz:Math.sin(a)*s*pow,vy:(1.2+Math.random()*1.2)*pow,t:0});}}
-function startFish(){if(F||HOLD)return;if(bagFree()<1){bagFullMsg();return;}P.face=P.rot=Math.PI/2;rodG.visible=true;rodG.rotation.set(1.05,0,0);
- F={st:'wind',t:0,bx:P.x+3.1,bz:P.z+(Math.random()-0.5)*1.2,sx:0,sz:0,sp:null,nib:0,next:0,dipT:0,dip:0,shake:0};
+function startFish(){if(F||HOLD)return;if(bagFree()<1){bagFullMsg();return;}P.face=P.rot=MAP.fface;rodG.visible=true;rodG.rotation.set(1.05,0,0);var lat=(Math.random()-0.5)*1.2;
+ F={st:'wind',t:0,bx:P.x+MAP.fdx*3.1-MAP.fdz*lat,bz:P.z+MAP.fdz*3.1+MAP.fdx*lat,sx:0,sz:0,sp:null,nib:0,next:0,dipT:0,dip:0,shake:0};
  if(!fishHinted){fishHinted=true;toast('🎣 魚竿大力震動、浮標沉進水裏，才按 A 拉竿！越珍貴的魚越難掌握時機',5200);}}
 function endFish(){if(!F)return;F=null;rodG.visible=false;rodG.rotation.set(1.05,0,0);lineM.visible=false;bobber.visible=false;fshG.visible=false;var u=player.userData;u.am[1].rotation.x=0;}
 function fishFail(msg){toast(msg);F.st='done';F.t=0;F.shake=0;fshG.visible=false;bobber.visible=false;}
-function fishWin(){var s=F.sp,key=s.k+'|S';if(!bagAdd('fish:'+key,1)){bagFullMsg();fishFail('背包滿了，只好把魚放走。');return;}seen('fish');save();
+function fishWin(){var s=F.sp,cl=rollClass(),key=s.k+'|'+cl,cn=clsOf(cl).n;if(!bagAdd('fish:'+key,1)){bagFullMsg();fishFail('背包滿了，只好把魚放走。');return;}seen('fish');save();
  splash(F.bx,F.bz,10,0.8);F.st='hold';F.t=0;F.shake=0;fshG.visible=false;bobber.visible=false;lineM.visible=false;rodG.visible=false;player.userData.am[1].rotation.x=0;
- holdUp(fishModel(s),'釣到了'+s.n+'！',function(){if(F){F.st='done';F.t=0;}toast('🎒 '+s.n+'（小）放進了背包：可以賣 $'+s.p+'，或者放入池塘養大',4200);});}
+ var fm=fishModel(s);fm.scale.setScalar(1+(clsOf(cl).m-1)*0.35);holdUp(fm,'釣到了'+s.n+(cl!=='S'?'（'+cn+'）':'')+'！',function(){if(F){F.st='done';F.t=0;}toast('🎒 '+s.n+'（'+cn+'）放進了背包：可以賣 $'+fishPrice(key)+'，或者放入池塘養大',4200);});}
 function fishPress(){if(!F)return;var st=F.st;
  if(st==='bite')fishWin();
  else if(st==='approach'||st==='nibble')fishFail('太早拉竿，魚被嚇走了！');
@@ -1312,12 +1373,12 @@ function updFish(dt,t){
  else if(st==='throw'){var k2=Math.min(1,F.t/0.16);rx=-0.8+(1.5+0.8)*k2;arm.rotation.x=-3.0+2.1*k2;if(F.t>=0.16){F.st='cast';F.t=0;rodTip.getWorldPosition(_ta);F.cx=_ta.x;F.cy=_ta.y;F.cz=_ta.z;}}
  else{rx=st==='cast'?1.5+(1.15-1.5)*Math.min(1,F.t/0.5):1.15;arm.rotation.x=-0.9;}
  if(st==='cast'){var k3=Math.min(1,F.t/0.55);bobber.visible=true;bobber.position.set(F.cx+(F.bx-F.cx)*k3,F.cy+(SEA_Y-F.cy)*k3+Math.sin(k3*Math.PI)*1.4,F.cz+(F.bz-F.cz)*k3);if(k3>=1){F.st='wait';F.t=0;F.wait=1+Math.random()*2.5;splash(F.bx,F.bz,4,0.5);}}
- else if(st==='wait'&&F.t>F.wait){F.sp=pickFish();var a=(Math.random()-0.5)*Math.PI;F.sx=F.bx+Math.cos(a)*3.2;F.sz=F.bz+Math.sin(a)*3.2;F.st='approach';F.t=0;fshG.visible=true;fsh.scale.set(0.42*F.sp.sz,0.22*F.sp.sz,1);}
+ else if(st==='wait'&&F.t>F.wait){F.sp=pickFish();var a=Math.atan2(MAP.fdz,MAP.fdx)+(Math.random()-0.5)*Math.PI;F.sx=F.bx+Math.cos(a)*3.2;F.sz=F.bz+Math.sin(a)*3.2;F.st='approach';F.t=0;fshG.visible=true;fsh.scale.set(0.42*F.sp.sz,0.22*F.sp.sz,1);}
  else if(st==='approach'){var dx=F.bx-F.sx,dz=F.bz-F.sz,d=Math.hypot(dx,dz);if(d<0.3+0.25*F.sp.sz){F.st='nibble';F.t=0;F.nib=F.sp.nib[0]+Math.floor(Math.random()*(F.sp.nib[1]-F.sp.nib[0]+1));F.next=0.7+Math.random()*0.8;}else{F.sx+=dx/d*0.9*dt;F.sz+=dz/d*0.9*dt+Math.sin(t*4)*0.003;fshG.rotation.y=Math.atan2(dx,dz)-Math.PI/2;}}
- else if(st==='nibble'){if(F.t>F.next){F.t=0;var fk=F.sp.fake;
+ else if(st==='nibble'){if(F.t>F.next){F.t=0;var fk=rodFake(F.sp);
    if(F.nib>0){F.nib--;F.dipT=0.2;F.dip=0.04+0.1*fk;F.shake=0.04+0.16*fk;splash(F.bx,F.bz,2+Math.round(fk*5),0.3+0.4*fk);vib(20+Math.round(60*fk));F.next=fk>=0.55?0.35+Math.random()*1.3:0.6+Math.random()*0.8;}
-   else{F.st='bite';F.t=0;F.dipT=F.sp.win;F.dip=0.26;F.shake=0.2;splash(F.bx,F.bz,12,1);vib([90,40,120]);}}}
- else if(st==='bite'){if(F.t>F.sp.win)fishFail('魚走了……下次快一點！');}
+   else{F.st='bite';F.t=0;F.dipT=rodWin(F.sp);F.dip=0.26;F.shake=0.2;splash(F.bx,F.bz,12,1);vib([90,40,120]);}}}
+ else if(st==='bite'){if(F.t>rodWin(F.sp))fishFail('魚走了……下次快一點！');}
  if(!F)return;
  // 魚竿震動：試咬時短震、真上釣時一路大力震（向前拉低）
  if(F.st==='bite'){F.shake=0.2;rx+=0.28;}else F.shake*=Math.exp(-dt*9);
@@ -1328,10 +1389,23 @@ function updFish(dt,t){
  rodTip.getWorldPosition(_ta);
  if(bobber.visible&&rodG.visible){_dv.subVectors(bobber.position,_ta);var L=_dv.length();lineM.visible=true;lineM.position.copy(_ta).addScaledVector(_dv,0.5);lineM.scale.set(1,L,1);lineM.quaternion.setFromUnitVectors(UPV,_dv.normalize());}else lineM.visible=false;}
 
+// ================= 果樹、蜂巢（站喺樹旁邊按 A 採摘）=================
+// 每棵果樹／蜂巢樹隨機時間結果（CFG.fruitMin～fruitMax 秒）；採到嘅水果、蜂蜜入背包，可以做食材或者賣
+var treeT=0;
+function treeReady(i){var t=S.fruit[i];return t==null||Date.now()>=t;}
+function syncTreeVis(){TREEV.forEach(function(tr,i){var rd=treeReady(i);tr.o.userData.fr.forEach(function(f){f.visible=rd;});});}
+function pickTree(i){var tr=TREEV[i],k=tr.fr,n=k==='honey'?2:3;if(!treeReady(i))return;if(bagRoom('ing:'+k)<n){bagFullMsg();return;}
+ bagAdd('ing:'+k,n);seen(k);S.fruit[i]=Date.now()+(CFG.fruitMin+Math.random()*(CFG.fruitMax-CFG.fruitMin))*1000;tr.shake=0.6;syncTreeVis();save();
+ holdUp(fruitItem(k),iname(k)+' ×'+n,function(){toast('🎒 '+ICON[k]+' '+iname(k)+' ×'+n+' 放進了背包（'+bagLine()+'）');});}
+function updTrees(dt){TREEV.forEach(function(tr){if(tr.shake>0){tr.shake-=dt;tr.o.rotation.z=Math.sin(tr.shake*40)*0.07*Math.max(0,tr.shake);}});if((treeT+=dt)>1){treeT=0;syncTreeVis();}}
+// 噴水池：水珠由頂噴出、落返入池
+function updFount(t){if(where!=='out')return;var n=FDROPS.length;FDROPS.forEach(function(d,i){var k=(t*0.75+i/n)%1,a=i*2.399,cen=i%6===0,r=cen?0.08*k:0.95*k,h=cen?1.35+2.9*k-2.9*k*k:1.35+2.3*k-3.3*k*k;d.position.set(Math.cos(a)*r,h,Math.sin(a)*r);});}
+
 // ================= 提示（澆水、採摘、播種）=================
 var prevSt=[],remT=0,remIdx=0,evT=99;
 function counts(){var c={dry:0,ready:0,empty:0};S.plots.forEach(function(p){var s=plotState(p);if(s==='dry')c.dry++;else if(s==='ready')c.ready++;else if(s==='empty')c.empty++;});return c;}
 function remindMsg(){var c=counts(),L=[];if(c.ready)L.push('🧺 有 '+c.ready+' 格農作物可以採摘');if(c.dry)L.push('💧 有 '+c.dry+' 格農田乾了：站在農田上按 A 澆水'+(S.can>0?'（連按兩下澆 '+CANS[S.can].k+' 格）':''));if(c.empty)L.push(seedCount()?'🌱 有 '+c.empty+' 格空地，可以播種':'🌱 背包沒有種子了，到星際市場找阿福買吧');
+ var rt=0;TREEV.forEach(function(tr,i){if(tr.kind!=='pine'&&treeReady(i))rt++;});if(rt)L.push('🍎 有 '+rt+' 棵樹結了果或者有蜂蜜：站在樹旁邊按 A 採摘');
  if(bagFree()<1)L.push('🎒 背包滿了：可以賣掉東西，或者把農作物交到餐廳');else if(bagKeys('ing:').length&&where!=='in')L.push('📦 背包有農作物，記得交到旅款餐廳出菜檯的「食材交收」');
  if(!hiredChefs().length)L.push('🧑‍🍳 餐廳沒有廚師：到服務中心的勞工署請人');else if(!availDishes().length)L.push('🍽️ 廚房沒有食材可以煮菜，客人不會來');return L.length?L[(remIdx++)%L.length]:'';}
 function remindTick(dt){var ev='';S.plots.forEach(function(p,i){var s=plotState(p);if(prevSt[i]!==s){if(s==='ready')ev='ready';else if(s==='dry'&&ev!=='ready')ev='dry';}prevSt[i]=s;});
@@ -1370,7 +1444,7 @@ var PANELS={
  manage:{t:'🍽️ 旅款餐廳・管理',tabs:[['deco','裝修'],['chef','廚師'],['menu','餐單'],['report','報告']]},
  store:{t:'📦 食材交收',tabs:[['put','交給廚房'],['stock','倉庫存貨']]},
  build:{t:'🏗️ 擴建設施・兔兔',tabs:[['farm','農場'],['rest','餐廳設備']]},
- shop:{t:'🛍️ 百貨櫃檯・兔兔',tabs:[['can','澆水器']]},
+ shop:{t:'🛍️ 百貨櫃檯・兔兔',tabs:[['can','澆水器'],['harv','採摘器'],['rod','魚竿']]},
  lab:{t:'🧪 研發室・古洛博士',tabs:[['new','研發新菜'],['book','菜譜']]},
  staff:{t:'👔 勞工署・企鵝經理',tabs:[['hire','聘請廚師'],['list','現有員工']]},
  wear:{t:'👗 綿綿時裝',tabs:[['top','上衣'],['bot','下裝'],['acc','飾物'],['bag','背包']]},
@@ -1399,9 +1473,9 @@ var RENDER={
   Object.keys(CROPS).forEach(function(k){var c=CROPS[k];b.appendChild(card({emo:ICON[k]},c.n+'種子','每包 $'+c.seed+'　背包：'+bagCount('seed:'+k)+' 包',[
    {t:'買 1 包 $'+c.seed,dis:S.coins<c.seed,fn:function(){buySeed(k,1);}},{t:'買 5 包 $'+c.seed*5,cls:'o',dis:S.coins<c.seed*5,fn:function(){buySeed(k,5);}}]));});},
  market_sell:function(b){var ks=bagKeys('ing:'),fs=bagKeys('fish:');b.appendChild(note('賣的是背包裏的東西。已經交給餐廳廚房的食材，不能在這裏賣。'));
-  b.appendChild(note('🌾 農作物'));
-  ks.forEach(function(bk){var k=bk.slice(4);b.appendChild(card({emo:ICON[k]},CROPS[k].n+' × '+bagCount(bk),'收購價每個 $'+CROPS[k].sell,[{t:'賣 1 個',fn:function(){sellCrop(bk,1);}},{t:'全部賣',cls:'o',fn:function(){sellCrop(bk,bagCount(bk));}}]));});
-  if(!ks.length)b.appendChild(note('背包裏沒有農作物。'));
+  b.appendChild(note('🌾 農作物、水果、蜂蜜'));
+  ks.forEach(function(bk){var k=bk.slice(4);b.appendChild(card({emo:ICON[k]},iname(k)+' × '+bagCount(bk),'收購價每個 $'+sellPrice(k),[{t:'賣 1 個',fn:function(){sellCrop(bk,1);}},{t:'全部賣',cls:'o',fn:function(){sellCrop(bk,bagCount(bk));}}]));});
+  if(!ks.length)b.appendChild(note('背包裏沒有農作物、水果或蜂蜜。'));
   b.appendChild(note('🎣 漁獲（魚越大越值錢：可以先放入池塘養大）'));
   fs.forEach(function(fk0){var fk=fk0.slice(5),p=parseKey(fk);b.appendChild(card({emo:FISH_EMO[p.k]},fishLab(fk)+' × '+bagCount(fk0),'收購價每條 $'+fishPrice(fk),[{t:'賣 1 條',fn:function(){sellFish(fk,1);}},{t:'全部賣',cls:'o',fn:function(){sellFish(fk,bagCount(fk0));}}]));});
   if(!fs.length)b.appendChild(note('背包裏沒有漁獲。到東面的碼頭釣魚吧！'));},
@@ -1438,10 +1512,16 @@ var RENDER={
  store_stock:function(b){var cap=UP.fridge.L[S.up.fridge].cap;b.appendChild(note('廚房倉庫的食材，廚師煮菜時會自動拿來用。'+(S.up.fridge?'🧊 雪櫃 '+chilledCount()+' / '+cap+' 件':'🧊 未有雪櫃：不能存放雞蛋、牛奶、鮮魚')));
   ING_ORDER.forEach(function(k){var n=S.inv[k]||0;b.appendChild(card({emo:ICON[k]},(CHILL[k]?'🧊 ':'')+iname(k)+'・'+GRADE_N[ING[k].g],n+' 個',[]));});},
  build_farm:function(b){b.appendChild(note('擴建費用交給服務中心，工程即時完成。'));upCard(b,'farm','🌾');
-  b.appendChild(note('💡 想一次過澆幾格田：在「百貨」買更好的澆水器，然後站在農田上連按兩下 A。'));},
+  b.appendChild(note('💡 想一次過澆水或收成幾格田：在「百貨」買更好的澆水器、採摘器，然後站在農田上連按兩下 A。'));},
  shop_can:function(b){b.appendChild(note('站在農田上按 A 就會澆水。按一下澆一格；<b>連按兩下 A</b>，就用澆水器的範圍一次過澆幾格。'));
   CANS.forEach(function(c,i){var cur=i===(S.can||0),btn=cur?{t:'使用中',cls:'g',dis:true,fn:function(){}}:i<(S.can||0)?{t:'已有更好',cls:'g',dis:true,fn:function(){}}:{t:'購買 $'+c.p,cls:'o',dis:S.coins<c.p,fn:function(){buyCan(i);}};
    b.appendChild(card({col:'#'+hex(c.c),emo:'💧'},c.n,i?'連按兩下 A：一次過澆 '+c.k+' 格':'開局的澆水器：一次澆一格',[btn],cur));});},
+ shop_harv:function(b){b.appendChild(note('站在成熟的農田上按 A 就會收成。按一下收一格；<b>連按兩下 A</b>，就用採摘器的範圍一次過收成幾格。'));
+  HARVS.forEach(function(c,i){var cur=i===(S.harv||0),btn=cur?{t:'使用中',cls:'g',dis:true,fn:function(){}}:i<(S.harv||0)?{t:'已有更好',cls:'g',dis:true,fn:function(){}}:{t:'購買 $'+c.p,cls:'o',dis:S.coins<c.p,fn:function(){buyHarv(i);}};
+   b.appendChild(card({col:'#'+hex(c.c),emo:'🧺'},c.n,i?'連按兩下 A：一次過收成 '+c.k+' 格':'開局的採摘器：一次收一格',[btn],cur));});},
+ shop_rod:function(b){b.appendChild(note('魚竿越高級：珍貴的魚越常上釣、拉竿的時間越長、試咬越容易分辨，還有機會一釣就是中魚或大魚。'));
+  RODS.forEach(function(c,i){var cur=i===(S.rod||0),btn=cur?{t:'使用中',cls:'g',dis:true,fn:function(){}}:i<(S.rod||0)?{t:'已有更好',cls:'g',dis:true,fn:function(){}}:{t:'購買 $'+c.p,cls:'o',dis:S.coins<c.p,fn:function(){buyRod(i);}};
+   b.appendChild(card({col:'#'+hex(c.c),emo:'🎣'},c.n,i?'拉竿時間 +'+Math.round(12*i)+'%、中魚機會 '+(7*i)+'%、大魚機會 '+(3*i)+'%':'開局的魚竿',[btn],cur));});},
  build_rest:function(b){upCard(b,'fridge','🧊');upCard(b,'stove','🔥');
   b.appendChild(note('💡 雞蛋、牛奶、鮮魚屬冷藏食品：要有雪櫃才可以存放和用來煮菜。爐頭越多，就可以請越多廚師同時煮。'));},
  lab_new:function(b){b.appendChild(note('選兩至三種食材，研發費 $'+CFG.researchFee+'。<b>只要曾經擁有過的食材就可以用，不會用掉食材。</b>食材等級越低，做出來的菜越便宜。'));
@@ -1487,28 +1567,26 @@ var RENDER={
   b.appendChild(card({emo:'🔄'},'重新開始','清除這部裝置上的進度，由頭開始。',[{t:'重新開始',cls:'o',fn:function(){if(confirm('確定清除進度，重新開始？')){noSave=true;try{localStorage.removeItem(CFG.saveKey);}catch(e){}location.reload();}}}]));}};
 
 // ================= 互動點 =================
-var IT_O=[
- {x:-7,z:-2.2,r:1.5,l:'進入',fn:function(){enterRest();}},
- {x:6.2,z:-3.2,r:1.6,l:'對話',fn:marketTalk},
- {x:7.5,z:-3.3,r:1.3,l:'對話',fn:marketTalk},
- {x:-4.4,z:-2.5,r:1.2,l:'查看',fn:function(){var si=starInfo();talk('旅款餐廳','#ec7a5c','#ffffff',['美觀 '+starStr(si.beauty)+'　款式 '+starStr(si.variety)+'　味道 '+starStr(si.taste),si.n?'今日供應 '+si.n+' 款菜式。':'暫停營業：廚房沒有可以煮的菜式。']);}},
- {x:-5.7,z:6.5,r:1.5,l:'進入',fn:function(){enterCC();}},
- {x:-11,z:6,r:3.7,l:'池塘',fn:pondTalk},
- {x:24.4,z:-1.6,r:1.5,l:'釣魚',fn:function(){startFish();}},
- {x:11,z:-10.8,r:1.7,l:'查看',fn:function(){talk('星際酒店','#6f82d9','#ffffff',['星際酒店興建中。','之後的階段開放。']);}},
- {x:-11,z:-11.2,r:1.9,l:'查看',fn:function(){talk('主題樂園','#e0609c','#ffffff',['主題樂園規劃中。','之後的階段開放。']);}},
- {x:0,z:-10.8,r:1.7,l:'查看',fn:function(){talk('展覽廳','#5a8f86','#ffffff',['展覽廳規劃中。','之後的階段開放，可以接辦會議和展覽。']);}},
- {x:0,z:16,r:2.2,l:'查看',fn:function(){talk('飛碟站','#6f7bd0','#ffffff',['外星旅客乘搭飛碟，由這裏進出你的星球。','餐廳越受歡迎，來的旅客就越多。之後的階段，你也可以由這裏出發，探訪其他同學的星球。']);}},
- {np:1,r:1.8,l:'對話',fn:boboTalk}];
+var IT_O=[];
+function buildITO(){var R=MAP.rest,Sv=MAP.svc,Mk=MAP.mkt,U=MAP.ufo;
+ IT_O=[{x:R[0],z:R[1]+1.8,r:1.5,l:'進入',fn:function(){enterRest();}},{bear:1,r:1.6,l:'對話',fn:marketTalk},{x:Mk[0],z:Mk[1]+1.5,r:1.3,l:'對話',fn:marketTalk},
+  {x:R[0]+2.6,z:R[1]+1.5,r:1.2,l:'查看',fn:function(){var si=starInfo();talk('旅款餐廳','#ec7a5c','#ffffff',['美觀 '+starStr(si.beauty)+'　款式 '+starStr(si.variety)+'　味道 '+starStr(si.taste),si.n?'今日供應 '+si.n+' 款菜式。':'暫停營業：廚房沒有可以煮的菜式。']);}},
+  {x:Sv[0],z:Sv[1]+2.2,r:1.5,l:'進入',fn:function(){enterCC();}},{x:MAP.pond[0],z:MAP.pond[1],r:3.7,l:'池塘',fn:pondTalk},{x:MAP.fish[0],z:MAP.fish[1],r:1.5,l:'釣魚',fn:function(){startFish();}},
+  {x:MAP.hotel[0],z:MAP.hotel[1]+1.5,r:1.7,l:'查看',fn:function(){talk('星際酒店','#6f82d9','#ffffff',['星際酒店興建中。','之後的階段開放。']);}},
+  {x:MAP.wheel[0],z:MAP.wheel[1]+1.3,r:1.9,l:'查看',fn:function(){talk('主題樂園','#e0609c','#ffffff',['主題樂園規劃中。','之後的階段開放。']);}},
+  {x:MAP.dome[0],z:MAP.dome[1]+3.0,r:1.7,l:'查看',fn:function(){talk('展覽廳','#5a8f86','#ffffff',['展覽廳規劃中。','之後的階段開放，可以接辦會議和展覽。']);}},
+  {x:U[0],z:U[1],r:2.2,l:'查看',fn:function(){talk('飛碟站','#6f7bd0','#ffffff',['外星旅客乘搭飛碟，由這裏進出你的星球。','餐廳越受歡迎，來的旅客就越多。之後的階段，你也可以由這裏出發，探訪其他同學的星球。']);}},
+  {np:1,r:1.8,l:'對話',fn:boboTalk}];}
 var IT_I=[{x:4.9,z:3.05,r:1.7,l:'管理',fn:function(){openPanel('manage');}},{x:0.55,z:-1.95,r:1.3,l:'交收',fn:function(){openPanel('store');}},{x:0,z:4.3,r:0.9,l:'離開',fn:function(){goOut();}}];
 var IT_C=[{c:0,r:1.5,l:'對話',fn:ccTalk},{c:1,r:1.5,l:'對話',fn:labTalk},{c:2,r:1.5,l:'對話',fn:staffTalk},{c:3,r:1.5,l:'對話',fn:sheepTalk},{x:0,z:3.2,r:0.9,l:'離開',fn:function(){goOut();}}];
 var PLOT_IT=[];
 function plotItem(i){return {r:0.95,l:function(){var s=plotState(S.plots[i]);return s==='empty'?'播種':s==='ready'?'採摘':'澆水';},fn:function(){plotAct(i);}};}
 function nearest(){var fx=P.x+Math.sin(P.rot)*0.5,fz=P.z+Math.cos(P.rot)*0.5,best=null,bd=1e9;
  function chk(it,x,z){var d=Math.hypot(fx-x,fz-z);if(d<it.r&&d<bd){bd=d;best=it;}}
- (where==='in'?IT_I:where==='cc'?IT_C:IT_O).forEach(function(it){chk(it,it.np?NP.x:it.c!=null?CCN[it.c].x:it.x,it.np?NP.z:it.c!=null?CCN[it.c].z:it.z);});
+ (where==='in'?IT_I:where==='cc'?IT_C:IT_O).forEach(function(it){chk(it,it.np?NP.x:it.bear?BEAR.x:it.c!=null?CCN[it.c].x:it.x,it.np?NP.z:it.bear?BEAR.z:it.c!=null?CCN[it.c].z:it.z);});
  if(where==='out'){PLOTS.forEach(function(v,i){chk(PLOT_IT[i]||(PLOT_IT[i]=plotItem(i)),v.x,v.z);});
-  walkers.forEach(function(w){if(w.st==='walk'||w.st==='talk'){if(!w.it)w.it={r:1.4,l:'對話',fn:function(){walkerTalk(w);}};chk(w.it,w.x,w.z);}});}
+  walkers.forEach(function(w){if(w.st==='walk'||w.st==='talk'){if(!w.it)w.it={r:1.4,l:'對話',fn:function(){walkerTalk(w);}};chk(w.it,w.x,w.z);}});
+  TREEV.forEach(function(tr,i){if(tr.kind!=='pine'&&treeReady(i)){if(!tr.it)tr.it={r:1.6,l:'採摘',fn:function(){pickTree(i);}};chk(tr.it,tr.x,tr.z);}});}
  if(where==='in')cust.forEach(function(c){if(!c.it)c.it={r:1.3,l:'對話',fn:function(){custTalk(c);}};chk(c.it,c.x,c.z);});
  return best;}
 
@@ -1518,8 +1596,9 @@ function hit(C,B,x,z,r){for(var i=0;i<C.length;i++){var c=C[i],dx=x-c[0],dz=z-c[
 function blocked(x,z,r,self){
  if(self==='p'&&where==='in'){if(x<-5.6||x>5.6||z<-4.15||z>4.8)return true;if(z>4.25&&Math.abs(x)>1.0)return true;if(FRIDGE_BOX&&hit([],[FRIDGE_BOX],x,z,r))return true;return hit(CIR_I,BOX_I,x,z,r);}
  if(self==='p'&&where==='cc'){if(x<-4.6||x>4.6||z<-3.15||z>3.7)return true;if(z>3.1&&Math.abs(x)>1.0)return true;for(var q=0;q<CCN.length;q++)if(Math.hypot(x-CCN[q].x,z-CCN[q].z)<r+0.35)return true;return hit(CIR_C,BOX_C,x,z,r);}
- var onPier=x>PIER[0]&&x<PIER[1]&&z>PIER[2]&&z<PIER[3];
- if(!onPier&&(Math.abs(x)>19.2-r||Math.abs(z)>19.2-r))return true;
+ var pr=MAP.pier,onPier=x>pr[0]&&x<pr[1]&&z>pr[2]&&z<pr[3],q=r*0.9;
+ if(!onPier&&!(isLand(x,z)&&isLand(x+q,z)&&isLand(x-q,z)&&isLand(x,z+q)&&isLand(x,z-q)))return true;
+ if(self==='p'&&Math.hypot(x-BEAR.x,z-BEAR.z)<r+0.42)return true;
  if(hit(CIR_O,BOX_O,x,z,r)||hit(CIR_T,[],x,z,r)||hit([],FENCE_BOX,x,z,r))return true;
  if(self!=='p'&&where==='out'){var ex=x-P.x,ez=z-P.z;if(ex*ex+ez*ez<(r+0.4)*(r+0.4))return true;}
  if(self!=='n'){var nx=x-NP.x,nz=z-NP.z;if(nx*nx+nz*nz<(r+0.45)*(r+0.45))return true;}
@@ -1528,12 +1607,12 @@ function tryMove(o,dx,dz,r,self){var nx=o.x+dx,nz=o.z+dz;if(!blocked(nx,nz,r,sel
 function lerpA(a,b,t){var d=((b-a+Math.PI*3)%(Math.PI*2))-Math.PI;return a+d*Math.min(1,t);}
 function fadeSwap(fn){fading=true;$('fade').style.opacity='1';setTimeout(function(){fn();$('fade').style.opacity='0';setTimeout(function(){fading=false;},300);},300);}
 function setWhere(w){SCN[where].remove(player);SCN[where].remove(pSh);where=w;SCN[w].add(player);SCN[w].add(pSh);CU.uB.value=w==='out'?1:0;
- $('where').textContent=w==='out'?'星球廣場':w==='in'?'旅款餐廳':'服務中心';var o=w==='out';$('bcam').style.display=o?'':'none';$('bday').style.display=o?'':'none';}
+ $('where').textContent=w==='out'?'星球廣場':w==='in'?'旅款餐廳':'服務中心';var o=w==='out';$('bcam').style.display=o?'':'none';}
 function enterRest(){if(fading)return;endFish();fadeSwap(function(){setWhere('in');P.x=0;P.z=3.6;P.rot=P.face=Math.PI;
  if(!storeHinted&&bagKeys('ing:').length){storeHinted=true;setTimeout(function(){toast('📦 背包有農作物：到出菜檯的「食材交收」交給廚房',4500);},500);}});}
 function enterCC(){if(fading)return;endFish();fadeSwap(function(){setWhere('cc');P.x=0;P.z=2.4;P.rot=P.face=Math.PI;});}
-function goOut(){if(fading)return;var from=where;fadeSwap(function(){setWhere('out');if(from==='cc'){P.x=-5.7;P.z=6.9;}else{P.x=-7;P.z=-1.3;}P.rot=P.face=0;fx=P.x;fz=P.z;});}
-function npcPick(){for(var t=0;t<30;t++){var x=-2+Math.random()*8,z=7+Math.random()*6;if(!blocked(x,z,0.5,'n')){NP.tx=x;NP.tz=z;return;}}}
+function goOut(){if(fading)return;var from=where;fadeSwap(function(){setWhere('out');if(from==='cc'){P.x=MAP.svc[0];P.z=MAP.svc[1]+2.65;}else{P.x=MAP.rest[0];P.z=MAP.rest[1]+2.7;}P.rot=P.face=0;fx=P.x;fz=P.z;});}
+function npcPick(){for(var t=0;t<40;t++){var a=Math.random()*6.283,rr=3.8+Math.random()*4,x=MAP.plaza[0]+Math.cos(a)*rr,z=MAP.plaza[1]+Math.sin(a)*rr;if(!blocked(x,z,0.5,'n')){NP.tx=x;NP.tz=z;return;}}}
 function updBobo(dt){
  if(NP.talk)NP.face=Math.atan2(P.x-NP.x,P.z-NP.z);
  else if(NP.wait>0)NP.wait-=dt;
@@ -1542,7 +1621,7 @@ function updBobo(dt){
  var nb=bobo.userData.b;if(NP.happy>0){NP.happy-=dt;nb.position.y=Math.abs(Math.sin(tm*12))*0.12;}else nb.position.y=Math.abs(Math.sin(tm*2.2))*0.025;}
 // 飛碟擋鏡頭：鏡頭去角色嘅視線穿過飛碟（用彎曲後嘅位置計）就變半透明，所有鏡頭模式都啱
 var ufoF=1,_uc=new T.Vector3();function segDist(p,a,bx,by,bz){var ax=bx-a.x,ay=by-a.y,az=bz-a.z,t=((p.x-a.x)*ax+(p.y-a.y)*ay+(p.z-a.z)*az)/(ax*ax+ay*ay+az*az||1);t=Math.max(0,Math.min(1,t));return Math.hypot(a.x+ax*t-p.x,a.y+ay*t-p.y,a.z+az*t-p.z);}
-function ufoFade(dt){var near=false;if(where==='out'&&!making){_uc.copy(bendPt(0,ufo.position.y,16));near=segDist(_uc,cam.position,P.x,1.1,P.z)<2.3;}var tg=near?0.25:1;if(Math.abs(tg-ufoF)<0.002)return;ufoF+=(tg-ufoF)*Math.min(1,dt*6);ufoMats.forEach(function(u){u.m.opacity=u.o*ufoF;});}
+function ufoFade(dt){var near=false;if(where==='out'&&!making){_uc.copy(bendPt(MAP.ufo[0],ufo.position.y,MAP.ufo[1]));near=segDist(_uc,cam.position,P.x,1.1,P.z)<2.3;}var tg=near?0.25:1;if(Math.abs(tg-ufoF)<0.002)return;ufoF+=(tg-ufoF)*Math.min(1,dt*6);ufoMats.forEach(function(u){u.m.opacity=u.o*ufoF;});}
 // 服務中心 NPC：各自喺自己個區行來行去；玩家行近就停低望住玩家
 var CCN=[{k:'tutu',m:tutu,hx:0,hz:-2.05,r:1.0},{k:'gulo',m:gulo,hx:-3.3,hz:-1.3,r:0.8},{k:'pengu',m:pengu,hx:3.3,hz:-1.3,r:0.8},{k:'mian',m:mian,hx:-3.7,hz:1.8,r:0.55}];
 CCN.forEach(function(n,i){n.x=n.tx=n.hx;n.z=n.tz=n.hz;n.wait=0.5+i*0.7;n.rot=n.face=n.k==='mian'?Math.PI/2:0;n.ph=i;});
@@ -1558,31 +1637,43 @@ function updCCN(dt,t){CCN.forEach(function(n,i){var near=where==='cc'&&Math.hypo
  if(mv){n.ph+=dt*9;b.position.y=Math.abs(Math.sin(n.ph))*0.025;b.rotation.z=Math.sin(n.ph)*0.07;}else{b.rotation.z*=0.85;b.position.y=(h>0?Math.abs(Math.sin(t*12))*0.05:0)+Math.abs(Math.sin(t*1.8+i))*0.01;}});}
 function fadeTick(dt){FADERS.forEach(function(F0){var near=false;if(where==='out'&&!making&&phase==='play'){_uc.copy(bendPt(F0.x,F0.y,F0.z));near=segDist(_uc,cam.position,P.x,1.1,P.z)<F0.r;}
  var tg=near?0.18:1;if(Math.abs(tg-F0.f)<0.002)return;F0.f+=(tg-F0.f)*Math.min(1,dt*7);F0.mats.forEach(function(m){m.opacity=F0.f;m.depthWrite=F0.f>0.95;});});}
-function updNPCs(dt,t){[['fu',fu]].forEach(function(a,i){var h=npcHop[a[0]];if(h>0)npcHop[a[0]]=h-dt;a[1].userData.b.position.y=(h>0?Math.abs(Math.sin(t*12))*0.05:0)+Math.abs(Math.sin(t*1.8+i))*0.01;});}
+// 阿福：喺檔口前面行來行去；玩家行近就停低望住你
+var BEAR={x:0,z:0,tx:0,wait:1,rot:0,face:0,ph:0};
+function resetBear(){BEAR.x=BEAR.tx=MAP.mkt[0]-1.2;BEAR.z=MAP.mkt[1]+1.6;BEAR.wait=1;}
+function updBear(dt,t){var b=BEAR,u=fu.userData,near=where==='out'&&Math.hypot(P.x-b.x,P.z-b.z)<2.2,mv=false;
+ if(near)b.face=Math.atan2(P.x-b.x,P.z-b.z);else if(b.wait>0){b.wait-=dt;b.face=0;}
+ else{var dx=b.tx-b.x;if(Math.abs(dx)<0.03){b.wait=1.5+Math.random()*3;b.tx=MAP.mkt[0]+(Math.random()*2-1)*1.5;}else{b.x+=(dx>0?1:-1)*Math.min(Math.abs(dx),0.8*dt);b.face=dx>0?Math.PI/2:-Math.PI/2;mv=true;}}
+ b.rot=lerpA(b.rot,b.face,dt*6);fu.position.set(b.x,0,b.z);fu.rotation.y=b.rot;fuSh.position.set(b.x,0.03,b.z);
+ var h=npcHop.fu||0;if(h>0)npcHop.fu=h-dt;if(mv){b.ph+=dt*9;u.b.position.y=Math.abs(Math.sin(b.ph))*0.025;u.b.rotation.z=Math.sin(b.ph)*0.06;}else{u.b.rotation.z*=0.85;u.b.position.y=(h>0?Math.abs(Math.sin(t*12))*0.05:0)+Math.abs(Math.sin(t*1.8))*0.01;}}
 
 // ================= 封面、揀地形 =================
 // 每次開遊戲先見封面；未玩過嘅新玩家：揀地形 → 建立角色 → 開場白
-var phase='cover',trSel='grass',orbA=0.6;
+var phase='cover',trSel='square',orbA=0.6,THUMB={};
 function showCover(){phase='cover';$('cover').classList.add('on');$('app').classList.add('cover');CU.uB.value=0;sea.scale.set(3,5,1);sea.position.z=0;
- var old=!!(S.me&&S.me.nm);$('cvGo').textContent=old?'繼續遊戲':'開始遊戲';$('cvHint').textContent=old?'歡迎回來，'+S.me.nm+'！':'第一次玩：先揀星球地形，再建立角色';}
-function leaveCover(){if(phase!=='cover')return;$('cover').classList.remove('on');if(!S.terrain)openTerr();else startPlay();}
-function openTerr(){phase='terrain';trSel=S.terrain||curTerr||'grass';$('terr').classList.add('on');renderTerr();if(curTerr!==trSel)buildTerrain(trSel);}
-function renderTerr(){var g=$('trGrid');g.innerHTML='';TERRAINS.forEach(function(t){var b=el('button','tc'+(t.id===trSel?' on':''),'<b>'+t.emo+'</b>'+esc(t.n));b.onclick=function(){pickTerr(t.id);};g.appendChild(b);});
- var t=terrOf(trSel);$('trInfo').innerHTML='<b>'+t.emo+' '+esc(t.n)+'</b>　'+esc(t.d)+'<small>現實中相似的旅遊地：'+esc(t.ex)+'</small>';}
-function pickTerr(id){trSel=id;renderTerr();buildTerrain(id);}
-function terrDone(){if(phase!=='terrain')return;S.terrain=trSel;save();$('terr').classList.remove('on');startPlay();}
+ var old=!!(S.me&&S.me.nm);$('cvGo').textContent=old?'繼續遊戲':'開始遊戲';$('cvHint').textContent=old?'歡迎回來，'+S.me.nm+'！':'第一次玩：先揀島嶼地形，再建立角色';}
+function leaveCover(){if(phase!=='cover')return;$('cover').classList.remove('on');if(!S.layout)openTerr();else startPlay();}
+function openTerr(){phase='terrain';trSel=S.layout||MAP.id||'square';$('terr').classList.add('on');renderTerr();if(MAP.id!==trSel)setLayout(trSel);}
+// 小地圖（揀島嶼用）：藍＝海、綠＝陸地、紅＝餐廳、深綠＝服務中心、黃＝市場、啡＝農場、藍點＝池塘、灰＝飛碟站
+function thumbOf(L){if(THUMB[L.id])return THUMB[L.id];var c=document.createElement('canvas');c.width=c.height=64;var x=c.getContext('2d');x.fillStyle='#6fcbe6';x.fillRect(0,0,64,64);x.fillStyle='#8fd06a';
+ for(var j=0;j<48;j++)for(var i=0;i<48;i++)if(L.land(i-23.5,j-23.5))x.fillRect(8+i,8+j,1,1);
+ function dot(p,c,s){x.fillStyle=c;x.fillRect(Math.round(32+p[0]-s/2),Math.round(32+p[1]-s/2),s,s);}
+ dot(L.plaza,'#e8e2d4',6);dot(L.rest,'#e8574f',5);dot(L.svc,'#2f8f6a',5);dot(L.mkt,'#f4c542',5);dot([L.farm[0]+1.6,L.farm[1]+2.4],'#9a6b45',6);dot(L.pond,'#2a7fd6',5);dot(L.ufo,'#8a8f9a',4);
+ return THUMB[L.id]=c.toDataURL();}
+function setLayout(id){walkers.forEach(function(w){if(w.dir===1&&w.seat>=0)seatUsed[w.seat]=false;});while(walkers.length)dropWalker(0);
+ applyLayout(id);buildITO();resetBear();syncTreeVis();P.x=MAP.plaza[0];P.z=MAP.plaza[1]+4.6;P.rot=P.face=Math.PI;fx=P.x;fz=P.z;NP.x=NP.tx=MAP.plaza[0]-1.4;NP.z=NP.tz=MAP.plaza[1]+5.6;npcPick();}
+function renderTerr(){var g=$('trGrid');g.innerHTML='';LAYOUTS.forEach(function(L){var b=el('button','tc'+(L.id===trSel?' on':''),'<img src="'+thumbOf(L)+'" alt="">'+esc(L.n));b.onclick=function(){pickTerr(L.id);};g.appendChild(b);});
+ var L=layoutOf(trSel);$('trInfo').innerHTML='<b>'+esc(L.n)+'</b>　'+esc(L.d)+'<small>小地圖：紅 餐廳・深綠 服務中心・黃 市場・啡 農場・藍 池塘・灰 飛碟站</small>';}
+function pickTerr(id){trSel=id;renderTerr();setLayout(id);}
+function terrDone(){if(phase!=='terrain')return;S.layout=trSel;S.fruit={};save();$('terr').classList.remove('on');startPlay();}
 function startPlay(){phase='play';$('app').classList.remove('cover');cam.clearViewOffset();CU.uB.value=where==='out'?1:0;sea.scale.set(1,1,1);fx=P.x;fz=P.z;
  if(!S.me||!S.me.nm)openMaker(true);else if(!S.intro)setTimeout(intro,500);else toast('🌏 歡迎回到你的星球，'+me()+'！');}
 function viewShift(box){var W=innerWidth,H=innerHeight,r=box.getBoundingClientRect(),ox=0,oy=0;if(r.left>W*0.3)ox=Math.round((W-r.left)/2);else oy=Math.round((H-r.top)/2);
  var v=cam.view;if(!v||!v.enabled||v.offsetX!==ox||v.offsetY!==oy||v.fullWidth!==W||v.fullHeight!==H)cam.setViewOffset(W,H,ox,oy,W,H);}
 function camOrbit(dt){orbA+=dt*0.06;var R=cam.aspect<1?64:48,y=cam.aspect<1?36:28;cam.position.set(Math.sin(orbA)*R,y,Math.cos(orbA)*R);cam.lookAt(0,0,0);CU.uCZ.value=0;stars.position.copy(cam.position);sky.position.copy(cam.position);
  if(phase==='terrain')viewShift(document.querySelector('#terr .mk'));else if(cam.view&&cam.view.enabled)cam.clearViewOffset();}
-// 地形動畫：風車、煙／蒸氣、落雪；服務中心大鍋冒泡
+// 地形動畫：風車；服務中心大鍋冒泡
 var CAUL=null;scC.traverse(function(n){if(n.userData&&n.userData.bub)CAUL=n;});
-function updTerr(dt,t){TFX.forEach(function(e){if(e.t==='spin'){e.o.rotation.z+=dt*0.9;return;}
-  e.acc+=dt*e.rate;while(e.acc>=1){e.acc-=1;for(var i=0;i<e.list.length;i++){var p=e.list[i];if(p.t<0){p.t=0;p.ox=(Math.random()-0.5)*e.sz*2;p.oz=(Math.random()-0.5)*e.sz*2;break;}}}
-  e.list.forEach(function(p){if(p.t<0)return;p.t+=dt;var k=p.t/2.4;if(k>=1){p.t=-1;p.m.visible=false;return;}p.m.visible=true;p.m.position.set(e.x+p.ox+Math.sin(p.t*2)*0.12,e.y+k*2.4,e.z+p.oz);p.m.scale.setScalar(e.sz*(0.5+k*1.3));p.m.material.opacity=0.55*(1-k)*Math.min(1,p.t*4);});});
- if(snowFx&&where==='out'){var a=snowFx.geometry.attributes.position,arr=a.array;for(var i=1;i<arr.length;i+=3){arr[i]-=dt*1.6;if(arr[i]<0)arr[i]+=16;}a.needsUpdate=true;snowFx.position.set(fx,0,fz);}
+function updTerr(dt,t){TFX.forEach(function(e){if(e.t==='spin')e.o.rotation.z+=dt*0.9;});
  if(CAUL&&where==='cc')CAUL.userData.bub.forEach(function(b,i){var k=(t*0.8+i*0.25)%1;b.position.y=0.66+k*0.3;b.scale.setScalar(0.6+k*0.8);b.visible=k<0.9;});}
 
 // ================= 鏡頭、日夜、時鐘 =================
@@ -1603,18 +1694,18 @@ function camUpdate(dt){
   cam.position.set(fx+cO.x,cO.y*por,fz+cO.z*por);cam.lookAt(fx+cL.x,cL.y,fz+cL.z);CU.uCZ.value=fz;sea.position.z=fz;stars.position.copy(cam.position);sky.position.copy(cam.position);}
  else if(where==='in'){var ax=cam.aspect<1?0.85:0.3,dist=cam.aspect<1?1.35:1;cam.position.set(P.x*ax,9.3*dist,4.6+6.6*dist);cam.lookAt(P.x*ax,0.3,-0.3);}
  else{var ax2=cam.aspect<1?0.8:0.3,dist2=cam.aspect<1?1.6:1;cam.position.set(P.x*ax2,8.0*dist2,3.2+6.4*dist2);cam.lookAt(P.x*ax2,0.3,-0.7);}}
-var nt=0,nk=0,ovr=false;
+var nt=0,nk=0;
 var hD=new T.Color(0xffffff),hN=new T.Color(0x9aa6f0),gD=new T.Color(0x9d8fd6),gN=new T.Color(0x2e2b5c),wE=new T.Color(0xffc766),bE=new T.Color(0xffe39a),rE=new T.Color(0xff5fae),SKY=new T.Color(0xbde7ff),SKN=new T.Color(0x1d2142),skyC=new T.Color(),INB=new T.Color(0x3a2e25);
 function dayNight(dt){nk+=((making||phase!=='play'?0:nt)-nk)*Math.min(1,dt*2.5);
  if(where==='out'||phase!=='play'){skyC.copy(SKY).lerp(SKN,nk);rd.setClearColor(skyC,1);}else rd.setClearColor(INB,1);
  hemiO.color.copy(hD).lerp(hN,nk);hemiO.groundColor.copy(gD).lerp(gN,nk);hemiO.intensity=0.62-0.08*nk;sunO.intensity=0.55-0.35*nk;
  winM.emissive.copy(wE).multiplyScalar(nk*0.9);bulbM.emissive.copy(bE).multiplyScalar(nk);GLOWC.forEach(function(g){g.c.emissive.copy(g.s.emissive);});ringM.emissive.copy(rE).multiplyScalar(nk*0.6);
  uL.forEach(function(lm,i){lm.emissive.copy(lm.color).multiplyScalar((0.25+0.25*Math.sin(tm*5+i*1.3))*(0.6+0.8*nk));});stars.material.opacity=nk;clM.opacity=1-nk*0.85;}
-function clk(){var d=new Date(),h=d.getHours(),m=d.getMinutes();$('clock').textContent=(h<12?'上午 ':'下午 ')+(h%12||12)+':'+(m<10?'0':'')+m+'　'+(d.getMonth()+1)+'月'+d.getDate()+'日';if(!ovr)nt=(h>=19||h<6)?1:0;$('bday').textContent=nt?'☀️':'🌙';}
+function clk(){var d=new Date(),h=d.getHours(),m=d.getMinutes();$('clock').textContent=(h<12?'上午 ':'下午 ')+(h%12||12)+':'+(m<10?'0':'')+m+'　'+(d.getMonth()+1)+'月'+d.getDate()+'日';nt=(h>=19||h<6)?1:0;}
 
 // ================= 輸入 =================
 var K={},KM={ArrowUp:'u',ArrowDown:'d',ArrowLeft:'l',ArrowRight:'r',w:'u',W:'u',s:'d',S:'d',a:'l',A:'l',d:'r',D:'r'};
-function act(){if(phase==='cover'){leaveCover();return;}if(fading||panelKind||making||phase!=='play')return;if(HOLD){if(HOLD.t<1.35)HOLD.t=1.35;return;}if(WATER){waterPress();return;}if(D0){adv();return;}if(F){fishPress();return;}if(cur)cur.fn();}
+function act(){if(phase==='cover'){leaveCover();return;}if(fading||panelKind||making||phase!=='play')return;if(HOLD){if(HOLD.t<1.35)HOLD.t=1.35;return;}if(WATER){waterPress();return;}if(HARV){harvPress();return;}if(D0){adv();return;}if(F){fishPress();return;}if(cur)cur.fn();}
 window.addEventListener('keydown',function(e){if(making||phase==='terrain')return;var k=e.key;if(phase==='cover'){if(k===' '||k==='Enter'){e.preventDefault();leaveCover();}return;}
  if(k==='Escape'){if(panelKind)closePanel();return;}
  if(panelKind)return;
@@ -1630,10 +1721,16 @@ joy.addEventListener('pointerdown',function(e){jid=e.pointerId;try{joy.setPointe
 joy.addEventListener('pointermove',function(e){if(e.pointerId===jid)jmove(e);});
 function jend(e){if(e.pointerId!==jid)return;jid=null;jv.x=jv.y=0;knob.style.transform='translate(0px,0px)';}
 joy.addEventListener('pointerup',jend);joy.addEventListener('pointercancel',jend);
-['abtn','bcam','bday','bphone'].forEach(function(id){$(id).addEventListener('pointerdown',function(e){e.preventDefault();});});
-$('abtn').addEventListener('click',function(e){e.stopPropagation();act();});
+['bcam','bphone'].forEach(function(id){$(id).addEventListener('pointerdown',function(e){e.preventDefault();});});
+// A 掣用 pointerdown：即時反應，連按兩下亦唔會被瀏覽器食咗
+$('abtn').addEventListener('pointerdown',function(e){e.preventDefault();e.stopPropagation();act();});
+// ⚠ iPhone Safari：雙按畫面會放大網頁（放大咗搖桿、A 掣會走出畫面，玩唔到），要封住；按鈕同輸入格唔封
+var lastTouchEnd=0;
+document.addEventListener('touchend',function(e){var tg=e.target;if(tg&&tg.closest&&tg.closest('button,input,textarea,select,label,a'))return;var now=Date.now();if(now-lastTouchEnd<400)e.preventDefault();lastTouchEnd=now;},{passive:false});
+document.addEventListener('dblclick',function(e){e.preventDefault();},{passive:false});
+['gesturestart','gesturechange','gestureend'].forEach(function(n){document.addEventListener(n,function(e){e.preventDefault();},{passive:false});});
+document.addEventListener('touchmove',function(e){if(e.touches&&e.touches.length>1)e.preventDefault();},{passive:false});
 $('bcam').addEventListener('click',camNext);
-$('bday').addEventListener('click',function(){ovr=true;nt=nt?0:1;$('bday').textContent=nt?'☀️':'🌙';});
 $('bphone').addEventListener('click',function(){if(panelKind==='phone')closePanel();else{if(D0||making)return;openPanel('phone');}});
 $('pClose').addEventListener('click',closePanel);
 $('mkGo').addEventListener('click',makerDone);$('cover').addEventListener('click',function(){leaveCover();});$('trGo').addEventListener('click',terrDone);$('mkNo').addEventListener('click',makerCancel);
@@ -1647,18 +1744,18 @@ window.addEventListener('pagehide',save);
 // ================= 主迴圈 =================
 var testFreeze=false,last=performance.now(),tm=0,ph=0,cur=null,saveT=0,moved=false,hintT=0,lastLab='',rsT=1;
 function loop(now){var dt=Math.min(0.05,Math.max(0,(now-last)/1000));last=now;tm+=dt;
- var busy=!!D0||!!panelKind||fading||making||!!HOLD||!!WATER||phase!=='play';
+ var busy=!!D0||!!panelKind||fading||making||!!HOLD||!!WATER||!!HARV||phase!=='play';
  var ix=(K.r?1:0)-(K.l?1:0)+jv.x,iz=(K.d?1:0)-(K.u?1:0)+jv.y,L=Math.hypot(ix,iz),mv=false;if(L>1){ix/=L;iz/=L;L=1;}
  if(!busy&&L>0.12){if(F)endFish();var sp=4.2*L*dt;tryMove(P,ix*sp,iz*sp,0.4,'p');P.face=Math.atan2(ix,iz);mv=true;if(!moved){moved=true;$('hint').style.opacity='0';}}
  hintT+=dt;if(hintT>12)$('hint').style.opacity='0';
  P.rot=lerpA(P.rot,P.face,dt*12);
- var onPad=where==='out'&&Math.hypot(P.x,P.z-16)<1.8?0.1:0,onPier=where==='out'&&P.x>18.4?0.07:0;
+ var pr=MAP.pier,onPad=where==='out'&&Math.hypot(P.x-MAP.ufo[0],P.z-MAP.ufo[1])<1.8?0.1:0,onPier=where==='out'&&P.x>pr[0]&&P.x<pr[1]&&P.z>pr[2]&&P.z<pr[3]&&!isLand(P.x,P.z)?0.07:0;
  player.position.set(P.x,onPad+onPier,P.z);player.rotation.y=P.rot;pSh.position.set(P.x,0.03+onPad+onPier,P.z);if(mv)ph+=dt*11;animWalk(player,ph,mv);
  if(!fading&&!making&&((where==='in'&&P.z>4.55&&Math.abs(P.x)<1.05)||(where==='cc'&&P.z>3.45&&Math.abs(P.x)<1.05)))goOut();
- growFarm();updPlots(dt,tm);if(!making)updBobo(dt);bobo.visible=bSh.visible=!making;updNPCs(dt,tm);updWalkers(dt);updCust(dt);updKitchen(dt,tm);if(!making&&phase==='play')spawnTick(dt);remindTick(dt);marketTick(dt);if(!testFreeze){updFish(dt,tm);updHold(dt);updWater(dt);}updSprays(dt);updCCN(dt,tm);updTerr(dt,tm);syncPondVis(tm,dt);
+ growFarm();updPlots(dt,tm);if(!making)updBobo(dt);bobo.visible=bSh.visible=!making;updWalkers(dt);updCust(dt);updKitchen(dt,tm);if(!making&&phase==='play')spawnTick(dt);remindTick(dt);marketTick(dt);if(!testFreeze){updFish(dt,tm);updHold(dt);updWater(dt);updHarv(dt);}updSprays(dt);updCCN(dt,tm);updTerr(dt,tm);updBear(dt,tm);updTrees(dt);updFount(tm);syncPondVis(tm,dt);
  hub.rotation.z+=dt*0.35;cabins.forEach(function(c){c.rotation.z=-hub.rotation.z;});ufo.position.y=3+Math.sin(tm*1.6)*0.18;ufo.rotation.y+=dt*(beam.visible?3:0.8);ufoFade(dt);fadeTick(dt);
  dayNight(dt);
- cur=busy?null:nearest();var lab=D0?(D0.opts&&D0.optsShown?'選擇':'繼續'):HOLD?'—':WATER?(WATER.t<0.4&&!WATER.multi&&S.can>0?'再按':'—'):F?fishLabel():(cur?(typeof cur.l==='function'?cur.l():cur.l):'—');if(lab!==lastLab){lastLab=lab;$('alab').textContent=lab;}
+ cur=busy?null:nearest();var lab=D0?(D0.opts&&D0.optsShown?'選擇':'繼續'):HOLD?'—':WATER?(WATER.t<0.4&&!WATER.multi&&S.can>0?'再按':'—'):HARV?(HARV.t<0.4&&!HARV.multi&&S.harv>0?'再按':'—'):F?fishLabel():(cur?(typeof cur.l==='function'?cur.l():cur.l):'—');if(lab!==lastLab){lastLab=lab;$('alab').textContent=lab;}
  camUpdate(dt);
  if(D0&&D0.shown<D0.full.length){D0.shown=Math.min(D0.full.length,D0.shown+dt*30);$('dlgT').textContent=D0.full.slice(0,Math.floor(D0.shown));if(D0.shown>=D0.full.length)endLine();}
  rsT+=dt;if(rsT>0.5){rsT=0;var si=starInfo();$('rstat').innerHTML='美觀 <span class="stars">'+starStr(si.beauty)+'</span>　款式 <span class="stars">'+starStr(si.variety)+'</span>　味道 <span class="stars">'+starStr(si.taste)+'</span>';drawMenu(si.av);}
@@ -1666,13 +1763,13 @@ function loop(now){var dt=Math.min(0.05,Math.max(0,(now-last)/1000));last=now;tm
  rd.render(SCN[where],cam);requestAnimationFrame(loop);}
 
 // ================= 開始 =================
-syncFarm();
+setLayout(S.layout||'square');syncFarm();
 if(!S.mk.list.length||Date.now()>=S.mk.next)restock();
 if(!S.jobs.list.length||Date.now()>=S.jobs.next)refreshJobs();
 growFarm();pondTick();prevSt=S.plots.map(plotState);
 applyDeco();buildStoves();syncFridge();syncChefs();drawBoard();drawMenu(availDishes());coinsUI();clk();nk=nt;setInterval(clk,15000);resize();npcPick();
 noCull(scO);noCull(scI);noCull(scC);
-buildTerrain(S.terrain||'grass');showCover();
+showCover();
 requestAnimationFrame(loop);
 })();
 </script>
