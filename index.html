@@ -146,7 +146,8 @@ button.hb:active{transform:translateY(2px);box-shadow:inset 0 0 0 2px rgba(255,2
 .rvt{font-size:14px;line-height:1.65;margin-top:3px;}.rvg{font-size:12px;color:#8a7560;margin-top:4px;}
 .bt{display:flex;flex-wrap:wrap;gap:4px;margin:0 0 10px;}.bts{flex:1;min-width:60px;text-align:center;font-size:13px;padding:6px 4px;border-radius:10px;background:#f1e6c8;color:#8a7560;}.bts.on{background:#f4a53c;color:#fff;font-weight:700;}
 .cond{background:#fff;border-radius:12px;padding:7px 12px;margin:0 0 6px;font-size:14px;}.cond.ok{background:#e9f6e2;}
-#login{position:absolute;inset:0;display:none;z-index:15;background:rgba(40,30,20,.25);}#login.on{display:block;}#login .mk{left:50%;right:auto;transform:translate(-50%,-50%);}.lgnote{display:none;margin:4px 0 10px;padding:9px 12px;border-radius:14px;background:#fff1d6;color:#8a5a34;font-size:13px;line-height:1.55;}.lgnote.on{display:block;}.lgg{background:#fff!important;color:#5a4632!important;box-shadow:0 3px 0 #e1d6bb!important;}
+#login{position:absolute;inset:0;display:none;z-index:15;background:rgba(40,30,20,.25);}#login.on{display:block;}#login .mk{left:50%;right:auto;transform:translate(-50%,-50%);}#lgErr{font-size:14.5px;font-weight:700;line-height:1.55;margin:8px 2px 0;min-height:1.5em;}
+.lgnote{display:none;margin:4px 0 10px;padding:9px 12px;border-radius:14px;background:#fff1d6;color:#8a5a34;font-size:13px;line-height:1.55;}.lgnote.on{display:block;}.lgg{background:#fff!important;color:#5a4632!important;box-shadow:0 3px 0 #e1d6bb!important;}
 @media (max-width:700px) and (orientation:portrait){#login .mk{left:12px;right:12px;transform:none;top:auto;bottom:calc(12px + env(safe-area-inset-bottom));}}
 #visitbar{position:absolute;left:50%;bottom:calc(104px + env(safe-area-inset-bottom));transform:translateX(-50%);display:none;align-items:center;gap:8px;background:rgba(111,130,217,.95);color:#fff;border-radius:999px;padding:5px 6px 5px 14px;z-index:6;font-size:14px;white-space:nowrap;}#visitbar.on{display:flex;}
 #tip{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(40,30,20,.35);z-index:20;}#tip.on{display:flex;}.tipb{background:#fffaeb;border-radius:20px;padding:18px 20px;width:min(360px,88vw);box-shadow:0 8px 0 rgba(90,70,50,.22);}.tipb b{font-size:18px;}#tipX{margin:8px 0 4px;font-size:15px;line-height:1.7;}
@@ -2125,7 +2126,7 @@ function updBear(dt,t){var b=BEAR,u=fu.userData,near=where==='out'&&Math.hypot(P
 
 // ================= 封面、揀地形 =================
 // 每次開遊戲先見封面；未玩過嘅新玩家：揀地形 → 建立角色 → 開場白
-var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v14（2026-09-28）';
+var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v15（2026-09-28）';
 function showCover(){phase='cover';$('cover').classList.add('on');$('app').classList.add('cover');CU.uB.value=0;sea.scale.set(4,7,1);sea.position.z=(MAP.bc||[0,0])[1];
  var old=!!(S.me&&S.me.nm);$('cvVer').textContent='版本 '+VERSION;$('cvGo').textContent=old?'繼續遊戲':'開始遊戲';$('cvHint').textContent=old?'歡迎回來，'+S.me.nm+'！':'第一次玩：先揀島嶼地形，再建立角色';}
 function leaveCover(){if(phase!=='cover')return;$('cover').classList.remove('on');if(!S.layout){if(!S.story)openStory();else openTerr();}else startPlay();}
@@ -3064,12 +3065,15 @@ function netStart(){if(!netAvail())return;var go=function(){AUTHI.onChange(funct
 // Google 唔准喺 App 內置瀏覽器（Instagram、Facebook、WhatsApp、微信等）登入；由主畫面圖示開（冇 Safari 工具列）有機會開唔到登入視窗
 function inAppWeb(){var u=navigator.userAgent||'';return /FBAN|FBAV|Instagram|Line\/|MicroMessenger|WhatsApp|Snapchat|Twitter|TikTok|musical_ly|Bytedance|; wv\)/i.test(u)||(/(iPhone|iPod|iPad)/.test(u)&&!/Safari/.test(u)&&!navigator.standalone);}
 function standaloneApp(){try{return navigator.standalone===true||matchMedia('(display-mode: standalone)').matches;}catch(e){return false;}}
-function authErr(e){var c=(e&&e.code)||'',m=c.indexOf('popup-blocked')>=0?'登入視窗被瀏覽器擋住了：請再撳一次「用 Google 帳戶登入」。':c.indexOf('popup-closed')>=0||c.indexOf('cancelled-popup')>=0?'登入視窗關閉了，未完成登入。想登入請再撳一次。':c.indexOf('network')>=0?'網絡有問題，請再試。':c.indexOf('unauthorized-domain')>=0?'這個網址未獲准登入（請老師在 Firebase 加入授權網域）。':c.indexOf('operation-not-allowed')>=0||c.indexOf('admin-restricted')>=0?'Google 登入未開放（請老師在 Firebase「Authentication → 登入方式」開啟 Google）。':c.indexOf('too-many-requests')>=0?'試得太多次，請等幾分鐘再試。':c.indexOf('user-disabled')>=0?'這個帳戶已被停用，請找老師。':c.indexOf('web-storage')>=0||c.indexOf('not-supported')>=0?'這個瀏覽器用不到 Google 登入：請用 Safari 或者 Chrome 開遊戲網址。':'登入失敗（'+(c||'未知原因')+'），請再試。';
+function authErr(e){var c=(e&&e.code)||'',m=c.indexOf('popup-blocked')>=0?'登入視窗被瀏覽器擋住了：請再撳一次「用 Google 帳戶登入」；仍然唔得就去 iPhone「設定 → Safari」關閉「阻擋彈出式視窗」。':c.indexOf('popup-closed')>=0||c.indexOf('cancelled-popup')>=0?'登入視窗關閉了，未完成登入。想登入請再撳一次。':c.indexOf('network')>=0?'網絡有問題，請再試。':c.indexOf('unauthorized-domain')>=0?'這個網址未獲准登入（請老師在 Firebase 加入授權網域）。':c.indexOf('operation-not-allowed')>=0||c.indexOf('admin-restricted')>=0?'Google 登入未開放（請老師在 Firebase「Authentication → 登入方式」開啟 Google）。':c.indexOf('too-many-requests')>=0?'試得太多次，請等幾分鐘再試。':c.indexOf('user-disabled')>=0?'這個帳戶已被停用，請找老師。':c.indexOf('web-storage')>=0||c.indexOf('not-supported')>=0?'這個瀏覽器用不到 Google 登入：請用 Safari 或者 Chrome 開遊戲網址。':'登入失敗（'+(c||'未知原因')+'），請再試。';
  if(standaloneApp()&&c.indexOf('network')<0)m+='（由主畫面圖示開遊戲登入唔到，請改用 Safari 開遊戲網址）';return m;}
 function openLogin(){if(!netAvail()){toast('雲端功能設定中，暫時只可以存喺呢部機',4000);return;}$('login').classList.add('on');$('lgErr').textContent='';
- var n=$('lgNote');n.textContent=inAppWeb()?'你而家喺 App 內置瀏覽器（例如 Instagram、WhatsApp）開緊遊戲，Google 唔准喺呢度登入：請撳右上角「⋯」或者分享掣，揀「用 Safari 開啟」／「用瀏覽器開啟」。':'';n.classList.toggle('on',!!n.textContent);}
+ var n=$('lgNote');n.textContent=inAppWeb()?'你而家喺 App 內置瀏覽器（例如 Instagram、WhatsApp）開緊遊戲，Google 唔准喺呢度登入：請撳右上角「⋯」或者分享掣，揀「用 Safari 開啟」／「用瀏覽器開啟」。':standaloneApp()?'你而家由主畫面圖示開緊遊戲，iPhone 唔俾喺度彈出 Google 登入視窗。請用 Safari 開 pi-ths.github.io/travelplanet 再登入（主畫面版本同 Safari 版本嘅進度係分開儲存）。':'';n.classList.toggle('on',!!n.textContent);}
 function closeLogin(){$('login').classList.remove('on');}
-function lgGoogle(){if(!AUTHI){$('lgErr').textContent=NET.mode==='off'?'雲端連接中，請等幾秒再試。':'未能連接雲端，請檢查網絡。';return;}$('lgErr').textContent='開啟 Google 登入……';AUTHI.google().then(function(){closeLogin();}).catch(function(e){$('lgErr').textContent=authErr(e);});}
+var LGW=null;
+function lgGoogle(){if(!AUTHI){$('lgErr').textContent=NET.mode==='off'?'雲端連接中，請等幾秒再試。':'未能連接雲端，請檢查網絡。';return;}$('lgErr').textContent='開啟 Google 登入視窗……（會開一個新分頁，喺嗰度揀你嘅 Google 帳戶）';
+ clearTimeout(LGW);LGW=setTimeout(function(){if(!NET.user&&$('login').classList.contains('on'))$('lgErr').textContent='仲未收到 Google 登入結果。如果冇彈出登入視窗：①請用 Safari 開遊戲網址（唔好由主畫面圖示或者其他 App 開）；②去 iPhone「設定 → Safari」關閉「阻擋彈出式視窗」；③再撳一次「用 Google 帳戶登入」。';},12000);
+ AUTHI.google().then(function(){clearTimeout(LGW);closeLogin();}).catch(function(e){clearTimeout(LGW);$('lgErr').textContent=authErr(e);});}
 function acctName(){var u=NET.user;if(!u)return '';return (u.displayName?u.displayName+'・':'')+(u.email||'Google 帳戶');}
 // ---- 登入後：比較雲端同本機存檔（取較新），之後定時上載 ----
 function codeOf(uid){var A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',h=2166136261;for(var i=0;i<uid.length;i++){h^=uid.charCodeAt(i);h=Math.imul(h,16777619)>>>0;}var s='';for(var k=0;k<6;k++){s+=A[h%A.length];h=Math.floor(h/A.length)^(k*7919+uid.length);if(h<=0)h=h+2654435761>>>0;}return s;}
