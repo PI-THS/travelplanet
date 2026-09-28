@@ -1281,11 +1281,12 @@ function applyLayout(id){var L=layoutOf(id),R=L.rest,Sv=L.svc,Mk=L.mkt,Fm=L.farm
  while(terrG.children.length){var ch=terrG.children[0];terrG.remove(ch);disposeSafe(ch);}CIR_T.length=0;TFX.length=0;TREEV=[];
  if(L.mark){var mk=L.mark;if(mk[0]==='windmill'){var wm=tAdd(windmill(),mk[1],mk[2],1,0.6,1.0);TFX.push({t:'spin',o:wm.userData.spin});mergeRigid(wm);}else if(mk[0]==='lighthouse')mergeRigid(tAdd(lighthouse(),mk[1],mk[2],1,0,0.75));else mergeRigid(tAdd(giantTree(),mk[1],mk[2],1,0,0.95));}
  var rnd=rng(L.seed),kinds=['apple','orange','peach'],nf=0;
- function freeAt(x,z,m){var k=gi(x,z);if(k<0||!LAND[k]||PATHC[k]||PLAZC[k]||sdAt(x,z)>-1.9||!L.land(x,z))return false;
+ function freeAt(x,z,m){var k=gi(x,z);if(k<0||!LAND[k]||PATHC[k]||PLAZC[k]||sdAt(x,z)>-1.9||!L.land(x,z))return false;if(spawnZone(x,z,m))return false;
   for(var o=0;o<OCC.length;o++){var O=OCC[o];if(x>O[1]-m&&x<O[2]+m&&z>O[3]-m&&z<O[4]+m)return false;}
   if(Math.abs(x-ox-dir[0]*3)<4.5&&Math.abs(z-oz-dir[1]*3)<4.5)return false;return true;}
  // 樹位第一次砌就記入存檔（之後填海、改路都唔會令樹搬位，果樹狀態對得返）
  var TL=(S.treeL&&S.treeL.id===L.id)?S.treeL.list:null;
+ if(TL){var TL2=TL.filter(function(t){return !spawnZone(t[0],t[1],1.0);});if(TL2.length!==TL.length){TL=TL2;S.treeL.list=TL2;S.fruit={};}}
  if(!TL){TL=[];for(var tries=0;tries<6000&&TL.length<Math.round(32*WS*WS);tries++){var x=-GH+1+rnd()*(GN-2),z=-GH+1+rnd()*(GN-2);if(!freeAt(x,z,1.0))continue;
    if(TL.some(function(t){return Math.hypot(t[0]-x,t[1]-z)<2.4;}))continue;var r=rnd(),kind=r<0.55?'fruit':r<0.7?'honey':'pine',fr=kind==='fruit'?kinds[(nf++)%3]:kind==='honey'?'honey':null,sc=0.85+rnd()*0.2;
    TL.push([+x.toFixed(2),+z.toFixed(2),kind,fr,+sc.toFixed(3),+(rnd()*6.28).toFixed(3)]);}S.treeL={id:L.id,list:TL};}
@@ -2082,6 +2083,10 @@ function npcStep(o,tx,tz,sp,same,ok){var dx=tx-o.x,dz=tz-o.z,d=Math.hypot(dx,dz)
  // 會撞到玩家：等一陣；等太耐就試另一邊
  if(nd<R&&nd<pd){o.wt=(o.wt||0)+st;if(o.wt>1.2){o.wt=0;o.side=-(o.side||1);}return 0;}
  o.wt=0;o.x=nx;o.z=nz;return st;}
+// 出生走廊（廣場南面：主角出世位＋建立角色時嘅鏡頭）：唔種樹、唔起屋（v16：心形島曾經有棵樹種喺出世位，主角一出世就卡死）
+function spawnZone(x,z,m){var Q=MAP.plaza;m=m||0;return !!Q&&Math.abs(x-Q[0])<2.2+m&&z>Q[1]+2.2-m&&z<Q[1]+11.5+m;}
+// 就近搵一個企得落嘅位（主角俾嘢卡住時用）
+function freeNear(x,z,r,maxR){if(!blocked(x,z,r,'p'))return [x,z];for(var rr=0.3;rr<=maxR;rr+=0.3)for(var a=0;a<16;a++){var an=a/16*6.2832+rr,nx=x+Math.cos(an)*rr,nz=z+Math.sin(an)*rr;if(!blocked(nx,nz,r,'p'))return [nx,nz];}return null;}
 function lerpA(a,b,t){var d=((b-a+Math.PI*3)%(Math.PI*2))-Math.PI;return a+d*Math.min(1,t);}
 function fadeSwap(fn){fading=true;$('fade').style.opacity='1';setTimeout(function(){fn();$('fade').style.opacity='0';setTimeout(function(){fading=false;},300);},300);}
 function setWhere(w){SCN[where].remove(player);SCN[where].remove(pSh);where=w;SCN[w].add(player);SCN[w].add(pSh);CU.uB.value=w==='out'?1:0;
@@ -2089,7 +2094,7 @@ function setWhere(w){SCN[where].remove(player);SCN[where].remove(pSh);where=w;SC
 function enterRest(){if(fading)return;endFish();fadeSwap(function(){setWhere('in');P.x=0;P.z=3.6;P.rot=P.face=Math.PI;
  if(!storeHinted&&bagKeys('ing:').length){storeHinted=true;setTimeout(function(){toast('📦 背包有農作物：到出菜檯的「食材交收」交給廚房',4500);},500);}});}
 function enterCC(){if(fading)return;endFish();fadeSwap(function(){setWhere('cc');P.x=0;P.z=2.4;P.rot=P.face=Math.PI;});}
-function goOut(){if(fading)return;var from=where;fadeSwap(function(){setWhere('out');var hh=from==='home'&&MAP.houses&&MAP.houses[HCUR];if(hh){P.x=hh[0];P.z=hh[1]+2.3;}else if(from==='cc'){P.x=MAP.svc[0];P.z=MAP.svc[1]+2.65;}else{P.x=MAP.rest[0];P.z=MAP.rest[1]+2.7;}P.rot=P.face=0;fx=P.x;fz=P.z;});}
+function goOut(){if(fading)return;var from=where;fadeSwap(function(){setWhere('out');var hh=from==='home'&&MAP.houses&&MAP.houses[HCUR];if(hh){P.x=hh[0];P.z=hh[1]+2.3;}else if(from==='cc'){P.x=MAP.svc[0];P.z=MAP.svc[1]+2.65;}else{P.x=MAP.rest[0];P.z=MAP.rest[1]+2.7;}var gf=freeNear(P.x,P.z,0.4,3);if(gf){P.x=gf[0];P.z=gf[1];}P.rot=P.face=0;fx=P.x;fz=P.z;});}
 function npcPick(){for(var t=0;t<40;t++){var a=Math.random()*6.283,rr=3.8+Math.random()*4,x=MAP.plaza[0]+Math.cos(a)*rr,z=MAP.plaza[1]+Math.sin(a)*rr;if(!blocked(x,z,0.5,'n')){NP.tx=x;NP.tz=z;return;}}}
 function updBobo(dt){
  if(NP.talk)NP.face=Math.atan2(P.x-NP.x,P.z-NP.z);
@@ -2126,7 +2131,7 @@ function updBear(dt,t){var b=BEAR,u=fu.userData,near=where==='out'&&Math.hypot(P
 
 // ================= 封面、揀地形 =================
 // 每次開遊戲先見封面；未玩過嘅新玩家：揀地形 → 建立角色 → 開場白
-var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v15（2026-09-28）';
+var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v16（2026-09-28）';
 function showCover(){phase='cover';$('cover').classList.add('on');$('app').classList.add('cover');CU.uB.value=0;sea.scale.set(4,7,1);sea.position.z=(MAP.bc||[0,0])[1];
  var old=!!(S.me&&S.me.nm);$('cvVer').textContent='版本 '+VERSION;$('cvGo').textContent=old?'繼續遊戲':'開始遊戲';$('cvHint').textContent=old?'歡迎回來，'+S.me.nm+'！':'第一次玩：先揀島嶼地形，再建立角色';}
 function leaveCover(){if(phase!=='cover')return;$('cover').classList.remove('on');if(!S.layout){if(!S.story)openStory();else openTerr();}else startPlay();}
@@ -2138,7 +2143,7 @@ function thumbOf(L){if(THUMB[L.id])return THUMB[L.id];var c=document.createEleme
  dot(L.plaza,'#e8e2d4',6);dot(L.rest,'#e8574f',5);dot(L.svc,'#2f8f6a',5);dot(L.mkt,'#f4c542',5);dot([L.farm[0]+1.6,L.farm[1]+2.4],'#9a6b45',6);dot(L.pond,'#2a7fd6',5);dot(L.ufo,'#8a8f9a',4);
  return THUMB[L.id]=c.toDataURL();}
 function setLayout(id){walkers.forEach(function(w){if(w.dir===1&&w.seat>=0)seatUsed[w.seat]=false;});while(walkers.length)dropWalker(0);
- applyLayout(id);buildITO();resetBear();syncTreeVis();P.x=MAP.plaza[0];P.z=MAP.plaza[1]+4.6;P.rot=P.face=Math.PI;fx=P.x;fz=P.z;NP.x=NP.tx=MAP.plaza[0]-1.4;NP.z=NP.tz=MAP.plaza[1]+5.6;npcPick();}
+ applyLayout(id);buildITO();resetBear();syncTreeVis();P.x=MAP.plaza[0];P.z=MAP.plaza[1]+4.6;var sp0=freeNear(P.x,P.z,0.45,4);if(sp0){P.x=sp0[0];P.z=sp0[1];}P.rot=P.face=Math.PI;fx=P.x;fz=P.z;NP.x=NP.tx=MAP.plaza[0]-1.4;NP.z=NP.tz=MAP.plaza[1]+5.6;npcPick();}
 function renderTerr(){var g=$('trGrid');g.innerHTML='';LAYOUTS.forEach(function(L){var b=el('button','tc'+(L.id===trSel?' on':''),'<img src="'+thumbOf(L)+'" alt="">'+esc(L.n));b.onclick=function(){pickTerr(L.id);};g.appendChild(b);});
  var L=layoutOf(trSel);$('trInfo').innerHTML='<b>'+esc(L.n)+'</b>　'+esc(L.d)+'<small>小地圖：紅 餐廳・深綠 服務中心・黃 市場・啡 農場・藍 池塘・灰 飛碟站</small>';}
 function pickTerr(id){trSel=id;renderTerr();setLayout(id);}
@@ -2359,7 +2364,7 @@ function loop(now){var dt=Math.min(0.05,Math.max(0,(now-last)/1000));last=now;tm
  if(!busy&&L>0.12)idleT=0;else idleT+=dt;
  if(AUTO&&(L>0.12||D0||panelKind||making||phase!=='play'))AUTO=null;
  if(!busy&&AUTO){if(autoStep(dt)){mv=true;idleT=0;}}
- if(!busy&&L>0.12){if(F)endFish();var sp=4.2*walkMul()*L*dt;tryMove(P,ix*sp,iz*sp,0.4,'p');P.face=Math.atan2(ix,iz);mv=true;if(!moved){moved=true;$('hint').style.opacity='0';}}
+ if(!busy&&L>0.12){if(F)endFish();var sp=4.2*walkMul()*L*dt;if(!tryMove(P,ix*sp,iz*sp,0.4,'p')&&blocked(P.x,P.z,0.4,'p')){var uf=freeNear(P.x,P.z,0.4,3);if(uf){P.x=uf[0];P.z=uf[1];}}P.face=Math.atan2(ix,iz);mv=true;if(!moved){moved=true;$('hint').style.opacity='0';}}
  hintT+=dt;if(hintT>12)$('hint').style.opacity='0';
  P.rot=lerpA(P.rot,P.face,dt*12);
  var pr=MAP.pier,onPad=where==='out'&&Math.hypot(P.x-MAP.ufo[0],P.z-MAP.ufo[1])<1.8?0.1:0,onPier=where==='out'&&P.x>pr[0]&&P.x<pr[1]&&P.z>pr[2]&&P.z<pr[3]&&!isLand(P.x,P.z)?0.07:0;
@@ -3422,6 +3427,7 @@ function housePlan(L,OCC,ox,oz,dir){if(S.houseL&&S.houseL.id===L.id&&S.houseL.li
   var HR0=Math.round(22*WS);for(z=-HR0;z<=HR0;z+=0.5)for(x=-HR0;x<=HR0;x+=0.5){var ok=true,dx,dz;for(dx=-ps[0];dx<=ps[0]+0.01&&ok;dx+=ps[0]/4)for(dz=-ps[1];dz<=ps[2]+0.01&&ok;dz+=(ps[1]+ps[2])/10)if(!L.land(x+dx,z+dz))ok=false;
    for(var o=0;o<OCC.length&&ok;o++){var O=OCC[o];if(x+1.5>O[1]-mg&&x-1.5<O[2]+mg&&z+2.6>O[3]-mg&&z-1.5<O[4]+mg)ok=false;}
    if(ok&&Math.hypot(x-(ox+dir[0]*3),z-(oz+dir[1]*3))<5.5)ok=false;
+   if(ok&&x+1.5+mg>L.plaza[0]-2.2&&x-1.5-mg<L.plaza[0]+2.2&&z+2.6+mg>L.plaza[1]+2.2&&z-1.5-mg<L.plaza[1]+11.5)ok=false;
    for(var t=0;t<trees.length&&ok;t++)if(Math.abs(trees[t][0]-x)<2.2&&trees[t][1]>z-2.0&&trees[t][1]<z+3.0)ok=false;if(ok)C.push([x,z]);}
   var r=rng(L.seed*31+5),Q=L.plaza;
   while(out.length<3&&C.length){var best=null,bs=-Infinity;C.forEach(function(c){var d=out.length?1e9:Math.abs(Math.hypot(c[0]-Q[0],c[1]-Q[1])-11*WS);out.forEach(function(o2){d=Math.min(d,Math.hypot(c[0]-o2[0],c[1]-o2[1]));});var sc=out.length?d:-d;sc+=r()*0.5;if(sc>bs){bs=sc;best=c;}});
