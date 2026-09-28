@@ -146,7 +146,7 @@ button.hb:active{transform:translateY(2px);box-shadow:inset 0 0 0 2px rgba(255,2
 .rvt{font-size:14px;line-height:1.65;margin-top:3px;}.rvg{font-size:12px;color:#8a7560;margin-top:4px;}
 .bt{display:flex;flex-wrap:wrap;gap:4px;margin:0 0 10px;}.bts{flex:1;min-width:60px;text-align:center;font-size:13px;padding:6px 4px;border-radius:10px;background:#f1e6c8;color:#8a7560;}.bts.on{background:#f4a53c;color:#fff;font-weight:700;}
 .cond{background:#fff;border-radius:12px;padding:7px 12px;margin:0 0 6px;font-size:14px;}.cond.ok{background:#e9f6e2;}
-#login{position:absolute;inset:0;display:none;z-index:15;background:rgba(40,30,20,.25);}#login.on{display:block;}#login .mk{left:50%;right:auto;transform:translate(-50%,-50%);}.lgrow{display:flex;gap:10px;}.lgrow label,.lgrow button{flex:1;}.lgg{background:#fff!important;color:#5a4632!important;box-shadow:0 3px 0 #e1d6bb!important;}.lgu{background:#7fc66e!important;box-shadow:0 3px 0 #5a9e4a!important;}
+#login{position:absolute;inset:0;display:none;z-index:15;background:rgba(40,30,20,.25);}#login.on{display:block;}#login .mk{left:50%;right:auto;transform:translate(-50%,-50%);}.lgnote{display:none;margin:4px 0 10px;padding:9px 12px;border-radius:14px;background:#fff1d6;color:#8a5a34;font-size:13px;line-height:1.55;}.lgnote.on{display:block;}.lgg{background:#fff!important;color:#5a4632!important;box-shadow:0 3px 0 #e1d6bb!important;}
 @media (max-width:700px) and (orientation:portrait){#login .mk{left:12px;right:12px;transform:none;top:auto;bottom:calc(12px + env(safe-area-inset-bottom));}}
 #visitbar{position:absolute;left:50%;bottom:calc(104px + env(safe-area-inset-bottom));transform:translateX(-50%);display:none;align-items:center;gap:8px;background:rgba(111,130,217,.95);color:#fff;border-radius:999px;padding:5px 6px 5px 14px;z-index:6;font-size:14px;white-space:nowrap;}#visitbar.on{display:flex;}
 #tip{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(40,30,20,.35);z-index:20;}#tip.on{display:flex;}.tipb{background:#fffaeb;border-radius:20px;padding:18px 20px;width:min(360px,88vw);box-shadow:0 8px 0 rgba(90,70,50,.22);}.tipb b{font-size:18px;}#tipX{margin:8px 0 4px;font-size:15px;line-height:1.7;}
@@ -229,13 +229,11 @@ button{touch-action:manipulation;}
 <div id="panel"><div class="ph"><div><h2 id="pTitle"></h2><div class="sub" id="pSub"></div></div><button class="x" id="pClose" aria-label="關閉">✕</button></div><div class="tabs" id="pTabs"></div><div class="pb" id="pBody"></div></div>
 <div id="make"><div class="mk"><h2 id="mkTitle">建立你的角色</h2><div class="sub" id="mkSub">先決定名字和樣子。之後可以到服務中心找芷華改變造型。</div><label for="mkName">名字（最多 8 個字）</label><input id="mkName" maxlength="12" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done"><div class="mkerr" id="mkErr"></div><div id="mkPwBox" style="display:none"><label for="mkPw">老師密碼（YHP 專用）</label><input id="mkPw" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done"></div><label>膚色</label><div class="sws" id="mkSkin"></div><label>髮色</label><div class="sws" id="mkHair"></div><label>髮型</label><div class="chips" id="mkHs"></div><label>眼睛</label><div class="chips" id="mkEye"></div><button class="mkgo" id="mkGo">完成</button><button class="mkno" id="mkNo">取消</button></div></div>
 <div id="terr"><div class="mk"><h2>選擇你的島嶼</h2><div class="sub">點選看看，後面會即時顯示。每個新星球只可以揀一次。</div><div class="tg" id="trGrid"></div><div class="ti" id="trInfo"></div><button class="mkgo" id="trGo">就選這個地形</button></div></div>
-<div id="cover"><div class="cv-logo"><div class="cv-planet"></div><div class="cv-sub">旅遊與款待・經營遊戲</div><h1>真．旅遊星球</h1></div><div class="cv-bot"><button class="cv-go" id="cvGo">開始遊戲</button><div class="cv-hint" id="cvHint">&nbsp;</div><button class="cv-login" id="cvLogin">☁️ 登入／註冊（雲端存檔）</button></div><div class="cv-ver" id="cvVer"></div></div>
+<div id="cover"><div class="cv-logo"><div class="cv-planet"></div><div class="cv-sub">旅遊與款待・經營遊戲</div><h1>真．旅遊星球</h1></div><div class="cv-bot"><button class="cv-go" id="cvGo">開始遊戲</button><div class="cv-hint" id="cvHint">&nbsp;</div><button class="cv-login" id="cvLogin">用 Google 帳戶登入（雲端存檔）</button></div><div class="cv-ver" id="cvVer"></div></div>
 <div id="story"><div class="st-cap"><div class="st-tag" id="stTag"></div><div class="st-txt" id="stTxt"></div><div class="st-row"><button class="st-skip" id="stSkip">略過</button><button class="st-next" id="stNext">繼續</button></div></div></div>
-<div id="login"><div class="mk"><h2>☁️ 登入／註冊</h2><div class="sub">登入之後，遊戲進度會存到雲端，換部機都玩得返；仲可以加朋友、互相探訪星球。</div>
-<button class="mkgo lgg" id="lgG">用 Google 帳戶登入</button><div class="sub" style="margin:12px 0 2px">或者用班別學號：</div>
-<div class="lgrow"><label>班別<input id="lgCls" maxlength="2" placeholder="4A" autocomplete="off" autocapitalize="characters"></label><label>學號<input id="lgNo" maxlength="2" inputmode="numeric" placeholder="01" autocomplete="off"></label></div>
-<label>密碼（最少 6 個字元）<input id="lgPw" type="password" autocomplete="current-password"></label><div class="mkerr" id="lgErr"></div>
-<div class="lgrow"><button class="mkgo" id="lgIn">登入</button><button class="mkgo lgu" id="lgUp">第一次用：註冊</button></div><button class="mkno" id="lgCancel">唔登入（進度只存喺呢部機）</button></div></div>
+<div id="login"><div class="mk"><h2>登入／註冊</h2><div class="sub">用 Google 帳戶登入就得，第一次登入會自動註冊。登入之後，遊戲進度會存到雲端，換部機都玩得返；仲可以加朋友、互相探訪星球。</div>
+<div class="lgnote" id="lgNote"></div><button class="mkgo lgg" id="lgG">用 Google 帳戶登入</button><div class="mkerr" id="lgErr"></div>
+<button class="mkno" id="lgCancel">唔登入（進度只存喺呢部機）</button></div></div>
 <div id="visitbar"><span>👀 參觀緊 <b id="vbName"></b> 的星球</span><button class="pill" id="vbBack">返回我的星球</button></div>
 <div id="tip"><div class="tipb"><b id="tipT"></b><div id="tipX"></div><button class="mkgo" id="tipOk">明白</button></div></div>
 <div id="fade"></div>
@@ -1580,10 +1578,11 @@ function updWalkers(dt){var beaming=false;for(var i=walkers.length-1;i>=0;i--){v
  if(w.st==='down'||w.st==='up'){w.t+=dt;var k=Math.min(1,w.t/1.4),f=w.st==='down'?k:1-k;w.m.position.set(w.x,2.4*(1-f),w.z);w.m.scale.setScalar(w.s0*(0.3+0.7*f));w.m.rotation.y+=dt*6;beaming=true;
   if(k>=1){if(w.st==='down'){w.st='walk';w.m.rotation.y=Math.PI;}else{dropWalker(i);}}continue;}
  if(w.st==='talk'){w.m.rotation.y=lerpA(w.m.rotation.y,Math.atan2(P.x-w.x,P.z-w.z),dt*8);animWalk(w.m,0,false);continue;}
- var tg=w.path[w.pi],dx=tg[0]-w.x,dz=tg[1]-w.z,d=Math.hypot(dx,dz),sp=2.4*dt;
- if(d<=sp){w.x=tg[0];w.z=tg[1];w.pi++;if(w.pi>=w.path.length){if(w.dir===1){var L=w.L,se=w.seat;dropWalker(i);if(L.insp)inspArrive();else if(FIRE||se<0){if(se>=0)seatUsed[se]=false;newWalker(L,-1,-1);}else enterCustomer(L,se);}else{w.st='up';w.t=0;}continue;}}
- else{w.x+=dx/d*sp;w.z+=dz/d*sp;w.m.rotation.y=Math.atan2(dx,dz);}
- w.m.position.set(w.x,0,w.z);w.sh.position.set(w.x,0.03,w.z);w.ph+=dt*10;animWalk(w.m,w.ph,true);}
+ var tg=w.path[w.pi],dx=tg[0]-w.x,dz=tg[1]-w.z,d=Math.hypot(dx,dz),sp=2.4*dt,same=where==='out',wm=true;
+ // 路線點俾玩家企住：行到附近就當到咗（唔會企喺度等）
+ if(d<=sp||same&&d<1.3&&Math.hypot(P.x-tg[0],P.z-tg[1])<0.95){if(d<=sp){w.x=tg[0];w.z=tg[1];}w.pi++;if(w.pi>=w.path.length){if(w.dir===1){var L=w.L,se=w.seat;dropWalker(i);if(L.insp)inspArrive();else if(FIRE||se<0){if(se>=0)seatUsed[se]=false;newWalker(L,-1,-1);}else enterCustomer(L,se);}else{w.st='up';w.t=0;}continue;}}
+ else{var ox=w.x,oz=w.z;if(npcStep(w,tg[0],tg[1],sp,same,okOut)>0)w.m.rotation.y=Math.atan2(w.x-ox,w.z-oz);else wm=false;}
+ w.m.position.set(w.x,0,w.z);w.sh.position.set(w.x,0.03,w.z);if(wm)w.ph+=dt*10;animWalk(w.m,w.ph,wm);}
  beam.visible=beaming;if(beaming)beam.material.opacity=0.25+Math.sin(tm*12)*0.08;}
 function enterCustomer(L,si){var m=noCull(lookModel(L));scI.add(m);var s=SEATS[si];
  cust.push({m:m,L:L,P:L.P||rollProfile(),seat:si,path:[[0,4.9],[0,3.9],[s.cx,3.9],[s.cx,s.z],[s.x,s.z]],pi:1,x:0,z:4.9,st:'in',t:0,dish:null,bub:null,plate:null,ph:0,ck:30,angry:false});}
@@ -1600,11 +1599,11 @@ function pay(c){var wk=Math.min(1,(c.wait||0)/(c.pat||CFG.patience)),sv=satOf(c,
  if(c.plate){scI.remove(c.plate);disposeTree(c.plate);c.plate=null;}setBub(c,null);floatText({ico:'coin',t:'+'+amt},c.x,1.9,c.z);standUp(c);save();}
 function floatText(txt,x,y,z){var s=bubble(txt,'#fff4cf','#8a5a00',0.42);s.position.set(x,y,z);scI.add(s);floaters.push({s:s,t:0,y:y});}
 function updCust(dt){for(var i=cust.length-1;i>=0;i--){var c=cust[i];
- if(c.st==='in'||c.st==='out'){var tg=c.path[c.pi],dx=tg[0]-c.x,dz=tg[1]-c.z,d=Math.hypot(dx,dz),sp=1.9*dt,gone=false;
-  if(d<=sp){c.x=tg[0];c.z=tg[1];c.pi++;if(c.pi>=c.path.length){if(c.st==='in')sitDown(c);else{setBub(c,null);scI.remove(c.m);disposeTree(c.m);cust.splice(i,1);newWalker(c.L,-1,-1);gone=true;}}}
-  else{c.x+=dx/d*sp;c.z+=dz/d*sp;c.m.rotation.y=Math.atan2(dx,dz);}
+ if(c.st==='in'||c.st==='out'){var tg=c.path[c.pi],dx=tg[0]-c.x,dz=tg[1]-c.z,d=Math.hypot(dx,dz),sp=1.9*dt,gone=false,same=where==='in',cm=true;
+  if(d<=sp||same&&c.pi<c.path.length-1&&d<1.2&&Math.hypot(P.x-tg[0],P.z-tg[1])<0.9){if(d<=sp){c.x=tg[0];c.z=tg[1];}c.pi++;if(c.pi>=c.path.length){if(c.st==='in')sitDown(c);else{setBub(c,null);scI.remove(c.m);disposeTree(c.m);cust.splice(i,1);newWalker(c.L,-1,-1);gone=true;}}}
+  else{var ox=c.x,oz=c.z;if(npcStep(c,tg[0],tg[1],sp,same,okIn)>0)c.m.rotation.y=Math.atan2(c.x-ox,c.z-oz);else cm=false;}
   if(gone)continue;
-  if(c.st==='in'||c.st==='out'){c.m.position.set(c.x,0,c.z);c.ph+=dt*10;animWalk(c.m,c.ph,true);}}
+  if(c.st==='in'||c.st==='out'){c.m.position.set(c.x,0,c.z);if(cm)c.ph+=dt*10;animWalk(c.m,c.ph,cm);}}
  else if(c.st==='order'){c.t+=dt;if(c.t>(c.pat||CFG.patience)){var qi=queue.indexOf(c);if(qi>=0)queue.splice(qi,1);angry(c);}}
  else if(c.st==='eat'){c.t+=dt;if(c.t>=CFG.eatSec)pay(c);}
  if(c.bub)c.bub.position.set(c.x,c.m.position.y+(c.m.userData.bh||1.4),c.z);}
@@ -1994,7 +1993,7 @@ var RENDER={
   S.plots.forEach(function(p,i){var s=plotState(p),txt=s==='empty'?'空地':s==='ready'?'<span class="ok">可以採摘</span>':'生長中 '+Math.floor(p.p/(3*CFG.stageSec)*100)+'%　'+(s==='wet'?'💧 濕潤（還有 '+Math.ceil((p.w-Date.now())/1000)+' 秒）':'<span class="bad">乾了，要澆水</span>');
    b.appendChild(card({ico:p.c?'item:'+p.c:'soil'},'第 '+(i+1)+' 格'+(p.c?'：'+iname(p.c):''),txt,[]));});},
  phone_set:function(b){b.appendChild(note(NET.user?'遊戲進度會自動儲存在這部裝置，並同步到雲端。':'遊戲進度自動儲存在這部裝置的瀏覽器。'));
-  if(netAvail())b.appendChild(card({emo:'☁️'},NET.user?'已登入':'未登入',NET.user?esc(acctName())+'<br>好友碼：'+(S.fcode||''):'登入之後，進度會存到雲端，換部機都玩得返；仲可以交朋友。',[NET.user?{t:'登出',cls:'g',fn:function(){AUTHI.out();}}:{t:'登入／註冊',cls:'o',fn:function(){closePanel();openLogin();}}]));
+  if(netAvail())b.appendChild(card({emo:'☁️'},NET.user?'已登入':'未登入',NET.user?esc(acctName())+'<br>好友碼：'+(S.fcode||''):'登入之後，進度會存到雲端，換部機都玩得返；仲可以交朋友。',[NET.user?{t:'登出',cls:'g',fn:function(){AUTHI.out();}}:{t:'用 Google 登入',cls:'o',fn:function(){closePanel();openLogin();}}]));
   b.appendChild(card({emo:'🎨'},'畫質：'+(FINE?'精美模式':'流暢模式'),FINE?'仿真材質、陰影、光暈和移軸效果。手機覺得慢，可以轉做流暢模式。':'舊畫法，比較慳電。想要陰影和光暈，可以轉做精美模式。',[{t:FINE?'轉做流暢模式':'轉做精美模式',cls:'o',fn:function(){try{localStorage.setItem(GFXK,FINE?'fast':'fine');}catch(e){}save();location.reload();}}]));
   b.appendChild(card({emo:'🪞'},'改變造型','改名字、膚色、髮色、髮型和眼睛。',[{t:'改變造型',fn:function(){closePanel();openMaker(false);}}]));
   b.appendChild(card({emo:'❓'},'玩法說明','農田播種、澆水、採摘；把農作物交到餐廳，廚師會自動煮菜；賺到的錢可以裝修、請廚師、研發新菜，或者擴建設施。',[{t:'再看一次',fn:function(){closePanel();intro();}}]));
@@ -2042,17 +2041,46 @@ function nearest(){var fx=P.x+Math.sin(P.rot)*0.5,fz=P.z+Math.cos(P.rot)*0.5,bes
 var where='out',fading=false,SCN={out:scO,in:scI,cc:scC};
 function hit(C,B,x,z,r){for(var i=0;i<C.length;i++){var c=C[i],dx=x-c[0],dz=z-c[1],rr=r+c[2];if(dx*dx+dz*dz<rr*rr)return true;}for(var k=0;k<B.length;k++){var b=B[k];if(x>b[0]-r&&x<b[1]+r&&z>b[2]-r&&z<b[3]+r)return true;}return false;}
 function blocked(x,z,r,self){
- if(self==='p'&&where==='in'){if(x<-5.6||x>5.6||z<-4.15||z>4.8)return true;if(z>4.25&&Math.abs(x)>1.0)return true;if(FRIDGE_BOX&&hit([],[FRIDGE_BOX],x,z,r))return true;return hit(CIR_I,BOX_I,x,z,r);}
+ if(self==='p'&&where==='in'){if(x<-5.6||x>5.6||z<-4.15||z>4.8)return true;if(z>4.25&&Math.abs(x)>1.0)return true;if(FRIDGE_BOX&&hit([],[FRIDGE_BOX],x,z,r))return true;if(crowdHit(x,z,r))return true;return hit(CIR_I,BOX_I,x,z,r);}
  if(self==='p'&&where==='home'){if(x<-3.6||x>3.6||z<-2.55||z>3.1)return true;if(z>2.55&&Math.abs(x)>0.85)return true;if(Math.hypot(x-NATP.x,z-NATP.z)<r+0.35)return true;return hit(CIR_H,BOX_H,x,z,r);}
  if(self==='p'&&where==='cc'){if(x<-4.6||x>4.6||z<-3.15||z>3.7)return true;if(z>3.1&&Math.abs(x)>1.0)return true;for(var q=0;q<CCN.length;q++)if(Math.hypot(x-CCN[q].x,z-CCN[q].z)<r+0.35)return true;return hit(CIR_C,BOX_C,x,z,r);}
  var pr=MAP.pier,onPier=x>pr[0]&&x<pr[1]&&z>pr[2]&&z<pr[3],q=r*0.9;
  if(!onPier&&!(isLand(x,z)&&isLand(x+q,z)&&isLand(x-q,z)&&isLand(x,z+q)&&isLand(x,z-q)))return true;
  if(self==='p'&&Math.hypot(x-BEAR.x,z-BEAR.z)<r+0.42)return true;
+ if(self==='p'&&crowdHit(x,z,r))return true;
  if(hit(CIR_O,BOX_O,x,z,r)||hit(CIR_T,[],x,z,r)||hit([],FENCE_BOX,x,z,r))return true;
  if(self!=='p'&&where==='out'){var ex=x-P.x,ez=z-P.z;if(ex*ex+ez*ez<(r+0.4)*(r+0.4))return true;}
  if(self!=='n'){var nx=x-NP.x,nz=z-NP.z;if(nx*nx+nz*nz<(r+0.45)*(r+0.45))return true;}
  return false;}
 function tryMove(o,dx,dz,r,self){var nx=o.x+dx,nz=o.z+dz;if(!blocked(nx,nz,r,self)){o.x=nx;o.z=nz;return true;}if(dx&&!blocked(nx,o.z,r,self)){o.x=nx;return true;}if(dz&&!blocked(o.x,nz,r,self)){o.z=nz;return true;}return false;}
+// ---- 人群：玩家唔可以穿過 NPC；行緊路嘅 NPC 見到玩家擋路，會向側邊繞過再返原路（唔會穿過玩家） ----
+var NPC_R=0.3;
+// 玩家新位置會唔會撞到人（遠離緊嗰個人就放行，唔會卡死）
+function crowdHit(x,z,r){var R=r+NPC_R,R2=R*R;function h(ox,oz){var a=(ox-x)*(ox-x)+(oz-z)*(oz-z);if(a>=R2)return false;return a<(ox-P.x)*(ox-P.x)+(oz-P.z)*(oz-P.z)-1e-4;}
+ if(where==='out'){var i,o;for(i=0;i<walkers.length;i++){o=walkers[i];if((o.st==='walk'||o.st==='talk')&&h(o.x,o.z))return true;}
+  for(i=0;i<GD.length;i++){o=GD[i];if(o.st!=='arrive'&&o.st!=='bye'&&h(o.x,o.z))return true;if(o.st==='walk'||o.st==='stop')for(var j=0;j<o.fol.length;j++){var f=o.fol[j];if(f.x!=null&&h(f.x,f.z))return true;}}
+  if(INSP&&inspM&&h(INSP.x,INSP.z))return true;}
+ else if(where==='in')for(var k=0;k<cust.length;k++){var c=cust[k];if((c.st==='in'||c.st==='out')&&h(c.x,c.z))return true;}
+ return false;}
+// NPC 可以企嘅位（繞路時先檢查；照原路行就唔檢查，同以前一樣）
+function okOut(x,z){return isLand(x,z)&&!hit(CIR_O,BOX_O,x,z,0.25)&&!hit(CIR_T,[],x,z,0.25)&&!hit([],FENCE_BOX,x,z,0.25);}
+function okIn(x,z){return x>-5.5&&x<5.5&&z>-4.1&&z<4.85&&!(z>4.25&&Math.abs(x)>0.95)&&!hit(CIR_I,BOX_I,x,z,0.22);}
+// 行一步去 (tx,tz)：玩家喺前面就向側邊繞（揀咗一邊就唔會左右擺）；新位置會撞到玩家就等一等；回傳行咗幾遠
+function npcStep(o,tx,tz,sp,same,ok){var dx=tx-o.x,dz=tz-o.z,d=Math.hypot(dx,dz);if(d<1e-4)return 0;var st=Math.min(sp,d),ux=dx/d,uz=dz/d;
+ if(!same){o.x+=ux*st;o.z+=uz*st;o.side=0;o.wt=0;return st;}
+ var R=0.4+NPC_R+0.1,px=P.x-o.x,pz=P.z-o.z,pd=Math.hypot(px,pz)||1e-4,vx=ux,vz=uz,av=false;
+ if(pd<R+1.4&&px*ux+pz*uz>-0.3&&pd<d+R){av=true;if(!o.side)o.side=(ux*pz-uz*px)>0?-1:1;var sx=-uz*o.side,sz=ux*o.side;
+  if(pd<R+0.45){// 貼近玩家：沿住玩家外圍行（切線方向，再向外少少），唔會再行近
+   var rx=-px/pd,rz=-pz/pd,tx1=-rz,tz1=rx;if(tx1*(sx+ux)+tz1*(sz+uz)<0){tx1=-tx1;tz1=-tz1;}vx=tx1+rx*0.35;vz=tz1+rz*0.35;}
+  else{var w=Math.min(1,(R+1.4-pd)/1.4)*1.9;vx=ux+sx*w;vz=uz+sz*w;}
+  var L=Math.hypot(vx,vz);vx/=L;vz/=L;}
+ else o.side=0;
+ var nx=o.x+vx*st,nz=o.z+vz*st;
+ if(av&&ok&&!ok(nx,nz)){nx=o.x+ux*st;nz=o.z+uz*st;}
+ var nd=Math.hypot(P.x-nx,P.z-nz);
+ // 會撞到玩家：等一陣；等太耐就試另一邊
+ if(nd<R&&nd<pd){o.wt=(o.wt||0)+st;if(o.wt>1.2){o.wt=0;o.side=-(o.side||1);}return 0;}
+ o.wt=0;o.x=nx;o.z=nz;return st;}
 function lerpA(a,b,t){var d=((b-a+Math.PI*3)%(Math.PI*2))-Math.PI;return a+d*Math.min(1,t);}
 function fadeSwap(fn){fading=true;$('fade').style.opacity='1';setTimeout(function(){fn();$('fade').style.opacity='0';setTimeout(function(){fading=false;},300);},300);}
 function setWhere(w){SCN[where].remove(player);SCN[where].remove(pSh);where=w;SCN[w].add(player);SCN[w].add(pSh);CU.uB.value=w==='out'?1:0;
@@ -2097,7 +2125,7 @@ function updBear(dt,t){var b=BEAR,u=fu.userData,near=where==='out'&&Math.hypot(P
 
 // ================= 封面、揀地形 =================
 // 每次開遊戲先見封面；未玩過嘅新玩家：揀地形 → 建立角色 → 開場白
-var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v11（2026-09-28）';
+var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v14（2026-09-28）';
 function showCover(){phase='cover';$('cover').classList.add('on');$('app').classList.add('cover');CU.uB.value=0;sea.scale.set(4,7,1);sea.position.z=(MAP.bc||[0,0])[1];
  var old=!!(S.me&&S.me.nm);$('cvVer').textContent='版本 '+VERSION;$('cvGo').textContent=old?'繼續遊戲':'開始遊戲';$('cvHint').textContent=old?'歡迎回來，'+S.me.nm+'！':'第一次玩：先揀島嶼地形，再建立角色';}
 function leaveCover(){if(phase!=='cover')return;$('cover').classList.remove('on');if(!S.layout){if(!S.story)openStory();else openTerr();}else startPlay();}
@@ -2287,7 +2315,7 @@ function walkPath(tx,tz,reach){var st=0.5,x0=Math.min(P.x,tx)-5,x1=Math.max(P.x,
 function autoStep(dt){var c=AUTO.c,p=tapPos(c),dx=p[0]-P.x,dz=p[1]-P.z,d=Math.hypot(dx,dz),reach=c.it.r+0.3;
  if(d<reach){if(d>0.01)P.face=P.rot=Math.atan2(dx,dz);AUTO=null;c.it.fn();return false;}
  AUTO.plan-=dt;if(!AUTO.path||AUTO.plan<=0&&Math.hypot(p[0]-AUTO.tp[0],p[1]-AUTO.tp[1])>0.8){AUTO.path=walkPath(p[0],p[1],reach-0.15);AUTO.pi=0;AUTO.plan=1.2;AUTO.tp=[p[0],p[1]];if(!AUTO.path){AUTO=null;toast('行唔到過去：試吓自己行近啲再撳',2600);return false;}}
- if(!dt)return true;AUTO.t+=dt;if(d<AUTO.best-0.03){AUTO.best=d;AUTO.t=0;}else if(AUTO.t>1.2){AUTO=null;toast('行唔到過去：試吓自己行近啲再撳',2600);return false;}
+ if(!dt)return true;AUTO.t+=dt;if(d<AUTO.best-0.03){AUTO.best=d;AUTO.t=0;}else if(AUTO.t>0.7&&!AUTO.re){AUTO.re=1;AUTO.t=0;AUTO.plan=0;AUTO.tp=[1e9,1e9];}else if(AUTO.t>1.4){AUTO=null;toast('行唔到過去：試吓自己行近啲再撳',2600);return false;}
  var wp=AUTO.path[AUTO.pi]||p,wx=wp[0]-P.x,wz=wp[1]-P.z,wd=Math.hypot(wx,wz);if(wd<0.2&&AUTO.pi<AUTO.path.length-1){AUTO.pi++;wp=AUTO.path[AUTO.pi];wx=wp[0]-P.x;wz=wp[1]-P.z;wd=Math.hypot(wx,wz);}
  if(wd<0.02){wx=dx;wz=dz;wd=d;}if(F)endFish();var sp=Math.min(wd,4.2*walkMul()*dt);tryMove(P,wx/wd*sp,wz/wd*sp,0.4,'p');P.face=Math.atan2(wx,wz);return true;}
 ['bcam','bphone'].forEach(function(id){$(id).addEventListener('pointerdown',function(e){e.preventDefault();});});
@@ -2465,11 +2493,35 @@ var HELP=[
  {t:'🎣 釣魚同池塘',say:['站在任何海邊、面向大海按 A 就可以釣魚，碼頭也可以。','魚竿大力震、浮標沉進水裏才拉竿。先撒魚餌，更容易引到大魚。','池塘可以養魚：魚會長大、會繁殖。池塘面板有「全部放入」和「全部撈起」，會由貴到平處理。']},
  {t:'🏗️ 擴建同填海',say:['服務中心的方DD可以幫你擴大農場、擴大池塘、升級餐廳設備。','想島嶼大一點，可以付錢申請填海：之後走到海邊、面向大海按 A，就會填出一塊新土地。','農作物、水果可以放入池塘邊或農場入口的「食材交收箱」，直接送到餐廳廚房。']},
  {t:'❓ 我而家應該做乜？',tips:true},
+ {t:'優惠碼',promo:true},
  {t:'重新開始遊戲',restart:true},
  {t:'沒事了',end:true}];
 function yhpTalk(){npcHop.yhp=0.8;var first=!S.met.yhp;S.met.yhp=1;save();
  talk('YHP（星球管理員）','#6f82d9','#ffffff',first?['你好，'+me()+'！我是 YHP，這個星球的管理員。','經營上有甚麼不明白，隨時來飛碟站找我。你想問甚麼？']:['你好，'+me()+'！有甚麼想問？'],
-  HELP.map(function(h){return {t:h.t,cb:function(){if(h.end)return;if(h.restart){talk('YHP（星球管理員）','#6f82d9','#ffffff',['真的要重新開始嗎？','所有進度（金錢、農田、餐廳、背包、衣服）都會清除，由頭玩過，不能復原。'+(NET.user?'雲端存檔都會一併清除。':'')],[{t:'確定，重新開始',cb:doRestart},{t:'取消',cb:function(){}}]);return;}if(h.tips){var L=[];for(var i=0;i<4;i++){var m=remindMsg();if(m&&L.indexOf(m)<0)L.push(m);}talk('YHP（星球管理員）','#6f82d9','#ffffff',L.length?L:['一切都很好！繼續努力經營你的星球吧。']);return;}talk('YHP（星球管理員）','#6f82d9','#ffffff',h.say);}};}));}
+  HELP.map(function(h){return {t:h.t,cb:function(){if(h.end)return;if(h.promo){if(visitBlock('參觀期間唔可以用優惠碼'))return;openPanel('promo','in');return;}if(h.restart){talk('YHP（星球管理員）','#6f82d9','#ffffff',['真的要重新開始嗎？','所有進度（金錢、農田、餐廳、背包、衣服）都會清除，由頭玩過，不能復原。'+(NET.user?'雲端存檔都會一併清除。':'')],[{t:'確定，重新開始',cb:doRestart},{t:'取消',cb:function(){}}]);return;}if(h.tips){var L=[];for(var i=0;i<4;i++){var m=remindMsg();if(m&&L.indexOf(m)<0)L.push(m);}talk('YHP（星球管理員）','#6f82d9','#ffffff',L.length?L:['一切都很好！繼續努力經營你的星球吧。']);return;}talk('YHP（星球管理員）','#6f82d9','#ffffff',h.say);}};}));}
+// ---- 優惠碼（YHP「優惠碼」）：6 個英文字母或數字，唔分大細楷；每個存檔每個碼用一次（重新開始可以再用） ----
+// ⚠ 原始碼只放 PBKDF2 雜湊（20 萬次，網頁公開都唔易逐個試出嚟）；優惠碼本身寫喺 iCloud「優惠碼（YHP專用・唔好上載）.txt」
+// 加新碼：用同一個 PROMO_SALT、PROMO_IT 計 PBKDF2-SHA256（32 bytes，hex），喺 PROMOS 加一行 {h,c,n}
+var PROMO_SALT='ths-promo-f493f5f0273a',PROMO_IT=200000,PROMOS=[{h:'0ad9a4be63bec467f7b67c39cfb33caf402216d58e8edb25349904ca11b4275c',c:999999,n:'測試獎勵'}],PROMO_TRY={n:0,until:0,busy:false};
+function promoHash(code){var te=new TextEncoder();return crypto.subtle.importKey('raw',te.encode(code),'PBKDF2',false,['deriveBits']).then(function(k){return crypto.subtle.deriveBits({name:'PBKDF2',hash:'SHA-256',salt:te.encode(PROMO_SALT),iterations:PROMO_IT},k,256);}).then(function(b){return Array.from(new Uint8Array(b)).map(function(x){return ('0'+x.toString(16)).slice(-2);}).join('');});}
+function promoRedeem(v){var msg=$('pmMsg');function say(t){if(msg)msg.textContent=t;}
+ if(VISIT){say('參觀期間唔可以用優惠碼。');return;}if(PROMO_TRY.busy)return;var now=Date.now();
+ if(now<PROMO_TRY.until){say('試錯太多次：請等 '+Math.ceil((PROMO_TRY.until-now)/1000)+' 秒再試。');return;}
+ var code=(v||'').toUpperCase().replace(/[^A-Z0-9]/g,'');if(code.length!==6){say('優惠碼係 6 個英文字母或數字。');return;}
+ if(!(window.crypto&&crypto.subtle)){say('呢部裝置未能核對優惠碼：請用 Safari 或者 Chrome 開遊戲網址。');return;}
+ PROMO_TRY.busy=true;say('核對中……');
+ promoHash(code).then(function(h){PROMO_TRY.busy=false;var P0=null;PROMOS.forEach(function(p){if(p.h===h)P0=p;});
+  if(!P0){PROMO_TRY.n++;if(PROMO_TRY.n>=5){PROMO_TRY.n=0;PROMO_TRY.until=Date.now()+60000;say('優惠碼不正確。試錯太多次，請等 60 秒再試。');}else say('優惠碼不正確，請再檢查。');return;}
+  S.promo=S.promo||[];var key=h.slice(0,16);if(S.promo.some(function(u){return u.h===key;})){say('呢個優惠碼喺呢個存檔已經用過了。');return;}
+  PROMO_TRY.n=0;S.promo.push({h:key,t:Date.now(),c:P0.c});S.coins+=P0.c;coinsUI();save();closePanel();vib([30,40,30]);
+  talk('YHP（星球管理員）','#6f82d9','#ffffff',['優惠碼兌換成功！','獎勵（'+P0.n+'）：$'+fmtC(P0.c)+' 已經入帳。']);},
+ function(){PROMO_TRY.busy=false;say('呢部裝置未能核對優惠碼：請用 Safari 或者 Chrome 開遊戲網址。');});}
+PANELS.promo={t:'優惠碼・YHP',tabs:[['in','輸入優惠碼']]};
+RENDER.promo_in=function(b){b.appendChild(note('輸入 6 個英文字母或數字的優惠碼（唔分大細楷），就可以兌換獎勵。每個優惠碼喺每個遊戲存檔只可以用一次。'));
+ var row=el('div','pq');row.innerHTML='<input id="pmIn" maxlength="6" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" style="width:170px;text-transform:uppercase;letter-spacing:3px" placeholder="例如 AB12CD"><button class="act o" id="pmGo">兌換</button>';b.appendChild(row);
+ var m=el('div','note');m.id='pmMsg';m.style.minHeight='1.6em';b.appendChild(m);
+ var used=S.promo||[];if(used.length)b.appendChild(note('呢個存檔已經兌換：'+used.map(function(u){var d=new Date(u.t);return (d.getMonth()+1)+'月'+d.getDate()+'日 $'+fmtC(u.c);}).join('、')));
+ setTimeout(function(){var bt=$('pmGo'),inp=$('pmIn');if(bt)bt.onclick=function(){promoRedeem(inp&&inp.value);};if(inp)inp.onkeydown=function(e){if(e.key==='Enter'){e.preventDefault();promoRedeem(inp.value);}};},30);};
 // 兩位 NPC 望住行近嘅玩家，平時輕輕跳
 function updUfoNPC(dt,t){[[yhpO,'yhp',MAP.yhp],[cmO,'comm',MAP.comm]].forEach(function(o,i){var m=o[0],p=o[2],near=where==='out'&&Math.hypot(P.x-p[0],P.z-p[1])<2.6,b=m.userData.b,h=npcHop[o[1]]||0;
  var tgt=near?Math.atan2(P.x-p[0],P.z-p[1]):0;m.rotation.y=lerpA(m.rotation.y,tgt,dt*6);if(h>0)npcHop[o[1]]=h-dt;b.position.y=(h>0?Math.abs(Math.sin(t*12))*0.05:0)+Math.abs(Math.sin(t*1.9+i))*0.012;});}
@@ -2833,7 +2885,7 @@ function inspSpawn(){var D=MAP.doorRest;INSP={st:'out',t:0,x:D[0]+1.3,z:D[1]+1.4
 function inspArrive(){}
 function inspWander(dt){if(!inspM)return;var I=INSP,D=MAP.doorRest,near=where==='out'&&Math.hypot(P.x-I.x,P.z-I.z)<2.4,mv=false;
  if(near||I.st==='quiz')I.face=Math.atan2(P.x-I.x,P.z-I.z);else if(I.wait>0)I.wait-=dt;
- else{var dx=I.tx-I.x,dz=I.tz-I.z,d=Math.hypot(dx,dz);if(d<0.05){I.wait=1+Math.random()*2.5;var a=Math.random()*Math.PI,r=0.6+Math.random()*1.6,tx=D[0]+Math.cos(a)*r*1.4,tz=D[1]+1.1+Math.sin(a)*r;if(!blocked(tx,tz,0.4,'n')){I.tx=tx;I.tz=tz;}}else{var st=Math.min(d,0.9*dt);I.x+=dx/d*st;I.z+=dz/d*st;I.face=Math.atan2(dx,dz);mv=true;}}
+ else{var dx=I.tx-I.x,dz=I.tz-I.z,d=Math.hypot(dx,dz);if(d<0.05){I.wait=1+Math.random()*2.5;var a=Math.random()*Math.PI,r=0.6+Math.random()*1.6,tx=D[0]+Math.cos(a)*r*1.4,tz=D[1]+1.1+Math.sin(a)*r;if(!blocked(tx,tz,0.4,'n')){I.tx=tx;I.tz=tz;}}else{var st=Math.min(d,0.9*dt),nx=I.x+dx/d*st,nz=I.z+dz/d*st;if(where==='out'&&Math.hypot(P.x-nx,P.z-nz)<0.8){I.wait=0.8;I.tx=I.x;I.tz=I.z;}else{I.x=nx;I.z=nz;I.face=Math.atan2(dx,dz);mv=true;}}}
  I.rot=lerpA(I.rot,I.face,dt*6);inspM.position.set(I.x,standY(I.x,I.z),I.z);inspM.rotation.y=I.rot;if(mv)I.ph+=dt*9;animWalk(inspM,I.ph,mv);if(inspBub){inspBub.visible=I.st==='out';inspBub.position.copy(bendPt(I.x,2.75+Math.sin(tm*4)*0.05,I.z));}}
 function inspLeave(msg){if(inspM){scO.remove(inspM);disposeTree(inspM);inspM=null;}killSprite(inspBub);inspBub=null;INSP=null;if(msg)toast(msg,4500);save();}
 function inspTalk(){if(!INSP||INSP.st!=='out')return;talk('漢融（衛生督察）','#2f5d8a','#ffffff',['你好，我是衛生督察漢融，今日來巡查旅款餐廳的食物衛生。','我會問你三條問題，關於化學性、生物性、物理性食物污染，以及食物安全五要點。答中兩題或以上，就可以獲頒衛生獎章。準備好了嗎？'],[{t:'準備好了',cb:function(){inspQuiz();}},{t:'等一陣',cb:function(){}}]);}
@@ -2933,16 +2985,45 @@ function endTour(d){var g=d.g,sc=tourScore(g),n=d.fol.length,amt=Math.round(n*28
  addRev({L:{nm:d.fol[0]?d.fol[0].L.nm:'旅客',pl:'旅行團'},P:{co:'tour',gen:d.fol[0]?d.fol[0].L.P.gen:'',rel:''}},'fun',1+sc*4,'導遊'+g.nm+'：'+tx);
  gBub(d,'謝謝參加！評分 '+starStr(1+sc*4));toast('🚩 導遊'+g.nm+'帶完一團（'+n+' 位旅客），評分 '+starStr(1+sc*4)+'，賺了 $'+amt,4200);d.st='bye';d.t=0;save();}
 var _gv=new T.Vector3();
+// ---- 旅客（v14）：各自有位置，慢慢行向自己嘅目標——平時排隊（導遊行過嘅路），講解時散開，企喺導遊面前半圓聽 ----
+var FOL_SP=2.4,GD_STOP=7.5;
+function spotCenter(k){if(k==='mkt')return MAP.mkt;if(k==='pond')return MAP.pond;if(k==='pier'){var pr=MAP.pier;return [(pr[0]+pr[1])/2,(pr[2]+pr[3])/2];}if(k==='wheel')return MAP.wheel;if(k==='gate')return [MAP.farm[0]+1.6,MAP.farm[1]+2.4];if(k==='dome')return MAP.dome;if(k==='hotel')return MAP.hotel;if(/^house/.test(k))return (MAP.houses||[])[+k.slice(5)]||null;return null;}
+// 半圓：喺景點嘅相反方向（導遊背住景點、面向團友），前排 1.45、後排 2.2、再後 2.9
+function spreadSpots(d,k){var c=spotCenter(k),ax=0,az=-1;if(c){var vx=c[0]-d.x,vz=c[1]-d.z,L=Math.hypot(vx,vz);if(L>0.3){ax=vx/L;az=vz/L;}}
+ var base=Math.atan2(-ax,-az),out=[];d.face=base;
+ [[1.45,[0,-0.55,0.55,-1.05,1.05]],[2.2,[-0.28,0.28,-0.8,0.8,-1.25,1.25]],[2.9,[0,-0.5,0.5,-1.0,1.0]]].forEach(function(rw){rw[1].forEach(function(da){var a=base+da,x=d.x+Math.sin(a)*rw[0],z=d.z+Math.cos(a)*rw[0];if(okOut(x,z))out.push([x,z]);});});
+ return out;}
+function assignSpots(d,spots){var free=spots.slice(0,Math.max(d.fol.length,1)+2);d.fol.forEach(function(f){var bi=-1,bd=1e9;free.forEach(function(p,i){if(!p)return;var q=Math.hypot(p[0]-f.x,p[1]-f.z);if(q<bd){bd=q;bi=i;}});f.spot=bi>=0?free[bi]:null;if(bi>=0)free[bi]=null;});}
+// 講解分句：每句大約 3 秒
+function tourLines(k){var t=TOUR_SPOTS[k]||'',p=t.split(/[：:]/);if(p.length<2)p=t.split(/，/);var L=[];p.forEach(function(x){x=x.trim();if(x)L.push(x.length>16?x.slice(0,15)+'…':x);});return L.length?L:[t.slice(0,15)];}
+function tryPush(o,px,pz){var nx=o.x+px,nz=o.z+pz;if(okOut(nx,nz)){o.x=nx;o.z=nz;}}
+function folTick(d,dt){var F=d.fol,same=where==='out';
+ F.forEach(function(f,j){var tx=f.x,tz=f.z,look=null,mv=false;
+  if(d.st==='stop'&&f.spot){tx=f.spot[0];tz=f.spot[1];look=Math.atan2(d.x-f.x,d.z-f.z);}
+  else{var tr=d.trail[(j+1)*GD_GAP];if(tr){tx=tr[0];tz=tr[1];}}
+  var dist=Math.hypot(tx-f.x,tz-f.z);
+  if(dist>0.06){var ox=f.x,oz=f.z;if(npcStep(f,tx,tz,Math.min(dist,FOL_SP*dt*(dist>2.5?1.35:1)),same,okOut)>0){mv=true;f.rot=lerpA(f.rot,Math.atan2(f.x-ox,f.z-oz),dt*10);}}
+  else if(look!=null)f.rot=lerpA(f.rot,look,dt*6);
+  f.mv=mv;});
+ // 唔好疊埋：旅客之間、旅客同導遊（導遊行過會讓路）、旅客同玩家
+ for(var a=0;a<F.length;a++){var A=F[a];
+  for(var b=a+1;b<F.length;b++){var B=F[b],ex=B.x-A.x,ez=B.z-A.z,ed=Math.hypot(ex,ez);if(ed<0.55&&ed>1e-4){var pu=(0.55-ed)/2;ex/=ed;ez/=ed;tryPush(A,-ex*pu,-ez*pu);tryPush(B,ex*pu,ez*pu);}}
+  var gx=A.x-d.x,gz=A.z-d.z,gd=Math.hypot(gx,gz);if(gd<0.62&&gd>1e-4)tryPush(A,gx/gd*(0.62-gd),gz/gd*(0.62-gd));
+  if(same){var qx=A.x-P.x,qz=A.z-P.z,qd=Math.hypot(qx,qz),RR=0.4+NPC_R+0.05;if(qd<RR&&qd>1e-4)tryPush(A,qx/qd*(RR-qd),qz/qd*(RR-qd));}}
+ F.forEach(function(f){f.m.position.set(f.x,0,f.z);f.m.rotation.y=f.rot;if(f.mv)f.ph+=dt*10;animWalk(f.m,f.ph,f.mv);});}
 function guideTick(dt,t){if(!S.guides)S.guides=[];if(GD.length!==(S.guides||[]).filter(function(g){return Date.now()<g.until;}).length||GD.some(function(d){return Date.now()>=d.g.until&&d.st==='idle';})){var ex=GD.filter(function(d){return Date.now()>=d.g.until;});ex.forEach(function(d){toast('🚩 導遊'+d.g.nm+'的 24 小時合約完結了，可以到勞工處再請',4500);});syncGuides();}
  GD.forEach(function(d,i){var mv=false,spd=GD_SP*dt;
   if(d.st==='idle'){var h=homeOf(i);d.x+=(h[0]-d.x)*Math.min(1,dt*2);d.z+=(h[1]-d.z)*Math.min(1,dt*2);d.cool-=dt;if(d.cool<=0&&where==='out'&&phase==='play'&&!making)startTour(d);}
-  else if(d.st==='arrive'){d.t+=dt;var k=Math.min(1,d.t/1.4);d.fol.forEach(function(f){f.m.position.y=2.4*(1-k);f.m.scale.setScalar(f.s0*(0.3+0.7*k));f.m.rotation.y+=dt*6;});beam.visible=true;if(k>=1){d.st='walk';gBub(d,null);var r0=d.route[0]||{x:d.x,z:d.z+1},bx=d.x-r0.x,bz=d.z-r0.z,bl=Math.hypot(bx,bz)||1;d.trail=[];for(var q=0;q<(d.fol.length+1)*GD_GAP+2;q++)d.trail.push([d.x+bx/bl*q*0.12,d.z+bz/bl*q*0.12,Math.atan2(-bx,-bz)]);}}
-  else if(d.st==='walk'){var tg=d.route[d.ri];if(!tg){endTour(d);return;}var dx=tg.x-d.x,dz=tg.z-d.z,dd=Math.hypot(dx,dz);if(dd<=spd){d.x=tg.x;d.z=tg.z;d.ri++;if(tg.stop){d.st='stop';d.t=0;gBub(d,{ico:'pin',t:TOUR_SPOTS[tg.stop].slice(0,14)+'…'});}}else{d.x+=dx/dd*spd;d.z+=dz/dd*spd;d.rot=Math.atan2(dx,dz);mv=true;}}
-  else if(d.st==='stop'){d.t+=dt;d.rot=lerpA(d.rot,Math.PI,dt*4);if(d.t>3.2){d.st='walk';gBub(d,null);}}
+  else if(d.st==='arrive'){d.t+=dt;var k=Math.min(1,d.t/1.4);d.fol.forEach(function(f){f.m.position.y=2.4*(1-k);f.m.scale.setScalar(f.s0*(0.3+0.7*k));f.m.rotation.y+=dt*6;});beam.visible=true;if(k>=1){d.st='walk';gBub(d,null);d.fol.forEach(function(f){f.x=f.m.position.x;f.z=f.m.position.z;f.rot=f.m.rotation.y;f.m.position.y=0;f.m.scale.setScalar(f.s0);});var r0=d.route[0]||{x:d.x,z:d.z+1},bx=d.x-r0.x,bz=d.z-r0.z,bl=Math.hypot(bx,bz)||1;d.trail=[];for(var q=0;q<(d.fol.length+1)*GD_GAP+2;q++)d.trail.push([d.x+bx/bl*q*0.12,d.z+bz/bl*q*0.12,Math.atan2(-bx,-bz)]);}}
+  else if(d.st==='walk'){var tg=d.route[d.ri];if(!tg){endTour(d);return;}var dx=tg.x-d.x,dz=tg.z-d.z,dd=Math.hypot(dx,dz),sameG=where==='out';
+   if(dd<=spd||sameG&&dd<1.3&&Math.hypot(P.x-tg.x,P.z-tg.z)<0.95){if(dd<=spd){d.x=tg.x;d.z=tg.z;}d.ri++;if(tg.stop){d.st='stop';d.t=0;d.lines=tourLines(tg.stop);d.li=0;assignSpots(d,spreadSpots(d,tg.stop));gBub(d,{ico:'pin',t:d.lines[0]});}}
+   else{var gox=d.x,goz=d.z;if(npcStep(d,tg.x,tg.z,spd,sameG,okOut)>0){d.rot=Math.atan2(d.x-gox,d.z-goz);mv=true;}}}
+  else if(d.st==='stop'){d.t+=dt;d.rot=lerpA(d.rot,d.face!=null?d.face:Math.PI,dt*4);var li=Math.min(d.lines.length-1,Math.floor(d.t/(GD_STOP/d.lines.length)));if(li!==d.li){d.li=li;gBub(d,{ico:'pin',t:d.lines[li]});}
+   if(d.t>GD_STOP){d.st='walk';gBub(d,null);d.fol.forEach(function(f){f.spot=null;});d.fol.sort(function(a,b){return Math.hypot(a.x-d.x,a.z-d.z)-Math.hypot(b.x-d.x,b.z-d.z);});d.trail=[[d.x,d.z,d.rot]];}}
   else if(d.st==='bye'){d.t+=dt;var kk=Math.min(1,d.t/1.4);d.fol.forEach(function(f){f.m.position.y=2.4*kk;f.m.scale.setScalar(f.s0*(1-0.7*kk));f.m.rotation.y+=dt*6;});beam.visible=true;if(kk>=1){d.fol.forEach(function(f){scO.remove(f.m);disposeTree(f.m);});d.fol=[];d.st='idle';d.cool=90+Math.random()*60;gBub(d,null);}}
   var t0=d.trail[0];if(!t0||Math.hypot(d.x-t0[0],d.z-t0[1])>=0.12){d.trail.unshift([d.x,d.z,d.rot]);if(d.trail.length>160)d.trail.pop();}
   d.m.position.set(d.x,0,d.z);d.m.rotation.y=d.rot;if(mv)d.ph+=dt*10;animWalk(d.m,d.ph,mv);
-  if(d.st==='walk'||d.st==='stop')d.fol.forEach(function(f,j){var tr=d.trail[(j+1)*GD_GAP];if(!tr)return;var fm=f.m.position.x!==tr[0]||f.m.position.z!==tr[1];f.m.position.set(tr[0],0,tr[1]);f.m.rotation.y=tr[2];f.ph+=dt*10;animWalk(f.m,f.ph,fm&&d.st==='walk');});
+  if(d.st==='walk'||d.st==='stop')folTick(d,dt);
   if(d.bub)d.bub.position.copy(bendPt(d.x,2.6,d.z));});}
 function guideTalk(d){var g=d.g,left=g.until-Date.now();talk('導遊'+g.nm,'#2f8f6a','#ffffff',['你好，'+me()+'！我是導遊'+g.nm+'。',d.st==='idle'?'我在飛碟站等旅行團，一到就帶他們遊覽星球。':'我正在帶團，一陣再傾！','我的合約還有 '+Math.floor(left/3600000)+' 小時。已經帶了 '+g.tours+' 團，賺了 $'+g.earned+'。']);}
 
@@ -2956,7 +3037,7 @@ function netAvail(){return !!(FB_CONFIG||MOCK);}
 function fbLoad(cb){if(window.firebase&&firebase.database)return cb();var v='10.12.2',L=['app','auth','database'],i=0;
  (function next(){if(i>=L.length)return cb();var s=document.createElement('script');s.src='https://www.gstatic.com/firebasejs/'+v+'/firebase-'+L[i]+'-compat.js';s.onload=function(){i++;next();};s.onerror=function(){cb(new Error('load'));};document.head.appendChild(s);})();}
 function fbInit(){firebase.initializeApp(FB_CONFIG);var a=firebase.auth(),d=firebase.database();
- AUTHI={google:function(){return a.signInWithPopup(new firebase.auth.GoogleAuthProvider());},emailIn:function(e,p){return a.signInWithEmailAndPassword(e,p);},emailUp:function(e,p){return a.createUserWithEmailAndPassword(e,p);},out:function(){return a.signOut();},onChange:function(cb){a.onAuthStateChanged(cb);}};
+ AUTHI={google:function(){return a.signInWithPopup(new firebase.auth.GoogleAuthProvider());},out:function(){return a.signOut();},onChange:function(cb){a.onAuthStateChanged(cb);}};
  function safe(fn,p){try{return fn();}catch(e){console.warn('雲端寫入失敗',p,e);return Promise.reject(e);}}
  DBI={get:function(p){return d.ref(p).once('value').then(function(s){return s.val();});},set:function(p,v){return safe(function(){return d.ref(p).set(fbClean(v));},p);},update:function(p,o){return safe(function(){return d.ref(p).update(fbClean(o));},p);},remove:function(p){return safe(function(){return d.ref(p).remove();},p);},
   on:function(p,cb){var r=d.ref(p),f=function(s){cb(s.val());};r.on('value',f,function(e){console.warn('雲端讀取失敗',p,e);});return function(){r.off('value',f);};},onDisc:function(p){try{d.ref(p).onDisconnect().remove();}catch(e){}}};}
@@ -2976,21 +3057,20 @@ function mockInit(){var K='ths-mockdb';function load(){try{return JSON.parse(loc
   on:function(p,cb){var s={p:p,cb:cb,last:undefined};subs.push(s);setTimeout(notify,0);return function(){var i=subs.indexOf(s);if(i>=0)subs.splice(i,1);};},onDisc:function(p){window.addEventListener('pagehide',function(){var o=load();setP(o,p,null);store(o);});}};
  var cur=null,lis=[];function fire(){lis.forEach(function(cb){cb(cur);});}function keep(){try{if(cur)sessionStorage.setItem('ths-mockuser',JSON.stringify(cur));else sessionStorage.removeItem('ths-mockuser');}catch(e){}}
  AUTHI={google:function(){cur={uid:'g_'+Math.random().toString(36).slice(2,8),email:'student@gmail.com',displayName:'Google 測試'};keep();fire();return Promise.resolve({user:cur});},
-  emailIn:function(e,p){var u=null;try{u=JSON.parse(localStorage.getItem('ths-mockacct-'+e)||'null');}catch(x){}if(!u)return Promise.reject({code:'auth/user-not-found'});if(u.pw!==p)return Promise.reject({code:'auth/wrong-password'});cur={uid:u.uid,email:e};keep();fire();return Promise.resolve({user:cur});},
-  emailUp:function(e,p){if(localStorage.getItem('ths-mockacct-'+e))return Promise.reject({code:'auth/email-already-in-use'});if(p.length<6)return Promise.reject({code:'auth/weak-password'});var uid='u_'+Math.random().toString(36).slice(2,10);localStorage.setItem('ths-mockacct-'+e,JSON.stringify({uid:uid,pw:p}));cur={uid:uid,email:e};keep();fire();return Promise.resolve({user:cur});},
   out:function(){cur=null;keep();fire();return Promise.resolve();},onChange:function(cb){lis.push(cb);try{cur=JSON.parse(sessionStorage.getItem('ths-mockuser')||'null');}catch(e){}setTimeout(function(){cb(cur);},0);}};}
 function netStart(){if(!netAvail())return;var go=function(){AUTHI.onChange(function(u){if(u&&(!NET.user||NET.user.uid!==u.uid))onLogin(u);else if(!u&&NET.user)onLogout();});};
  if(MOCK){NET.mode='mock';mockInit();go();}else fbLoad(function(err){if(err){toast('☁️ 未能連接雲端（請檢查網絡）');return;}try{fbInit();NET.mode='fb';go();}catch(e){toast('☁️ 雲端設定有問題');}});}
-// ---- 帳戶：Google、班別學號＋密碼 ----
-function stuEmail(cls,no){return (cls+no).toLowerCase().replace(/[^a-z0-9]/g,'')+'@travelplanet.app';}
-function authErr(e){var c=(e&&e.code)||'';return c.indexOf('wrong-password')>=0?'密碼不正確（忘記密碼請找老師）。':c.indexOf('invalid-credential')>=0||c.indexOf('invalid-login')>=0?'班別學號或密碼不正確。第一次玩請按「註冊」；忘記密碼請找老師。':c.indexOf('user-not-found')>=0?'未有這個帳戶：第一次用請按「註冊」。':c.indexOf('operation-not-allowed')>=0||c.indexOf('admin-restricted')>=0?'這種登入方式未開放（請老師在 Firebase「Authentication → 登入方式」開啟）。':c.indexOf('too-many-requests')>=0?'試得太多次，請等幾分鐘再試。':c.indexOf('web-storage')>=0||c.indexOf('not-supported')>=0?'這個瀏覽器用不到這種登入方式：請用 Safari／Chrome 開，或者改用班別學號登入。':c.indexOf('email-already-in-use')>=0?'這個班別學號已經註冊了：請直接登入（忘記密碼請找老師）。':c.indexOf('weak-password')>=0?'密碼最少要 6 個字元。':c.indexOf('popup')>=0?'登入視窗被關閉或者被封鎖了，請再試。':c.indexOf('network')>=0?'網絡有問題，請再試。':c.indexOf('unauthorized-domain')>=0?'這個網址未獲准登入（請老師在 Firebase 加入授權網域）。':'登入失敗（'+c+'）';}
-function openLogin(){if(!netAvail()){toast('☁️ 雲端功能設定中，暫時只可以存喺呢部機',4000);return;}$('login').classList.add('on');$('lgErr').textContent='';$('lgCls').value=(S.acct&&S.acct.cls)||'';$('lgNo').value=(S.acct&&S.acct.no)||'';$('lgPw').value='';}
+// ---- 帳戶：只用 Google（2026-09-28 用戶指示：唔要班別學號＋密碼）；第一次登入即係註冊 ----
+// Google 唔准喺 App 內置瀏覽器（Instagram、Facebook、WhatsApp、微信等）登入；由主畫面圖示開（冇 Safari 工具列）有機會開唔到登入視窗
+function inAppWeb(){var u=navigator.userAgent||'';return /FBAN|FBAV|Instagram|Line\/|MicroMessenger|WhatsApp|Snapchat|Twitter|TikTok|musical_ly|Bytedance|; wv\)/i.test(u)||(/(iPhone|iPod|iPad)/.test(u)&&!/Safari/.test(u)&&!navigator.standalone);}
+function standaloneApp(){try{return navigator.standalone===true||matchMedia('(display-mode: standalone)').matches;}catch(e){return false;}}
+function authErr(e){var c=(e&&e.code)||'',m=c.indexOf('popup-blocked')>=0?'登入視窗被瀏覽器擋住了：請再撳一次「用 Google 帳戶登入」。':c.indexOf('popup-closed')>=0||c.indexOf('cancelled-popup')>=0?'登入視窗關閉了，未完成登入。想登入請再撳一次。':c.indexOf('network')>=0?'網絡有問題，請再試。':c.indexOf('unauthorized-domain')>=0?'這個網址未獲准登入（請老師在 Firebase 加入授權網域）。':c.indexOf('operation-not-allowed')>=0||c.indexOf('admin-restricted')>=0?'Google 登入未開放（請老師在 Firebase「Authentication → 登入方式」開啟 Google）。':c.indexOf('too-many-requests')>=0?'試得太多次，請等幾分鐘再試。':c.indexOf('user-disabled')>=0?'這個帳戶已被停用，請找老師。':c.indexOf('web-storage')>=0||c.indexOf('not-supported')>=0?'這個瀏覽器用不到 Google 登入：請用 Safari 或者 Chrome 開遊戲網址。':'登入失敗（'+(c||'未知原因')+'），請再試。';
+ if(standaloneApp()&&c.indexOf('network')<0)m+='（由主畫面圖示開遊戲登入唔到，請改用 Safari 開遊戲網址）';return m;}
+function openLogin(){if(!netAvail()){toast('雲端功能設定中，暫時只可以存喺呢部機',4000);return;}$('login').classList.add('on');$('lgErr').textContent='';
+ var n=$('lgNote');n.textContent=inAppWeb()?'你而家喺 App 內置瀏覽器（例如 Instagram、WhatsApp）開緊遊戲，Google 唔准喺呢度登入：請撳右上角「⋯」或者分享掣，揀「用 Safari 開啟」／「用瀏覽器開啟」。':'';n.classList.toggle('on',!!n.textContent);}
 function closeLogin(){$('login').classList.remove('on');}
-function lgStu(up){var cls=$('lgCls').value.trim().toUpperCase(),no=('0'+$('lgNo').value.trim()).slice(-2),pw=$('lgPw').value;
- if(!/^[1-6][A-Z]$/.test(cls)){$('lgErr').textContent='班別請填例如 4A。';return;}if(!/^\d\d$/.test(no)||no==='00'){$('lgErr').textContent='學號請填例如 01。';return;}if(pw.length<6){$('lgErr').textContent='密碼最少 6 個字元。';return;}
- if(!AUTHI){$('lgErr').textContent=NET.mode==='off'?'雲端連接中，請等幾秒再試。':'未能連接雲端，請檢查網絡。';return;}$('lgErr').textContent='登入中……';S.acct={cls:cls,no:no};(up?AUTHI.emailUp:AUTHI.emailIn)(stuEmail(cls,no),pw).then(function(){closeLogin();}).catch(function(e){$('lgErr').textContent=authErr(e);});}
-function lgGoogle(){if(!AUTHI){$('lgErr').textContent='雲端連接中，請等幾秒再試。';return;}$('lgErr').textContent='開啟 Google 登入……';AUTHI.google().then(function(){closeLogin();}).catch(function(e){$('lgErr').textContent=authErr(e);});}
-function acctName(){var u=NET.user;if(!u)return '';var e=u.email||'';return /@travelplanet\.app$/.test(e)?e.split('@')[0].toUpperCase()+'（班別學號）':(u.displayName?u.displayName+'・':'')+e+'（Google）';}
+function lgGoogle(){if(!AUTHI){$('lgErr').textContent=NET.mode==='off'?'雲端連接中，請等幾秒再試。':'未能連接雲端，請檢查網絡。';return;}$('lgErr').textContent='開啟 Google 登入……';AUTHI.google().then(function(){closeLogin();}).catch(function(e){$('lgErr').textContent=authErr(e);});}
+function acctName(){var u=NET.user;if(!u)return '';return (u.displayName?u.displayName+'・':'')+(u.email||'Google 帳戶');}
 // ---- 登入後：比較雲端同本機存檔（取較新），之後定時上載 ----
 function codeOf(uid){var A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',h=2166136261;for(var i=0;i<uid.length;i++){h^=uid.charCodeAt(i);h=Math.imul(h,16777619)>>>0;}var s='';for(var k=0;k<6;k++){s+=A[h%A.length];h=Math.floor(h/A.length)^(k*7919+uid.length);if(h<=0)h=h+2654435761>>>0;}return s;}
 function onLogin(u){NET.user=u;var uid=u.uid;
@@ -3065,7 +3145,7 @@ function makeCard(cb){loadQR(function(){var W=1080,H=1350,c=document.createEleme
 function shareCard(){if(!CARD_URL)return;fetch(CARD_URL).then(function(r){return r.blob();}).then(function(bl){var f=new File([bl],'旅遊星球名片.png',{type:'image/png'});if(navigator.canShare&&navigator.canShare({files:[f]}))navigator.share({files:[f],title:'真．旅遊星球',text:'加我做朋友！好友碼 '+S.fcode+'　'+inviteLink()}).catch(function(){});else toast('呢部機唔支援直接分享：請按「下載名片」，再喺 IG 上載');});}
 // ---- 面板：好友（通訊員 526）----
 PANELS.friends={t:'📡 通訊站・526',tabs:[['list','好友'],['add','加好友'],['card','我的名片'],['invite','邀請朋友']]};
-RENDER.friends_list=function(b){if(!NET.user){b.appendChild(note('要先登入才可以使用交友功能。'));b.appendChild(card({emo:'☁️'},'登入／註冊','可以用 Google 帳戶，或者班別學號＋密碼。',[{t:'登入',cls:'o',fn:function(){closePanel();openLogin();}}]));return;}
+RENDER.friends_list=function(b){if(!NET.user){b.appendChild(note('要先登入才可以使用交友功能。'));b.appendChild(card({emo:'☁️'},'登入／註冊','用 Google 帳戶登入就得，第一次登入會自動註冊。',[{t:'用 Google 登入',cls:'o',fn:function(){closePanel();openLogin();}}]));return;}
  if(VISIT)b.appendChild(card({emo:'🏠'},'正在參觀 '+VISIT.nm+' 的星球','',[{t:'返回我的星球',cls:'o',fn:function(){closePanel();leaveVisit();}}]));
  if(FR.busy){b.appendChild(note('讀取中……'));return;}if(!FR.list.length){b.appendChild(note('未有好友：到「加好友」輸入朋友的好友碼，或者把你的邀請連結傳給朋友。'));return;}
  FR.list.forEach(function(f){var st=f.p.stage?(BUTLER[f.p.stage]||BUTLER[1]).n:'';b.appendChild(card({emo:'🧑‍🚀'},f.p.nm||'朋友','好友碼 '+(f.p.code||'')+(st?'　'+st:''),[{t:'參觀',cls:'o',dis:!!VISIT,fn:function(){closePanel();visitFriend(f);}}]));});};
@@ -3078,7 +3158,7 @@ RENDER.friends_card=function(b){if(!NET.user){b.appendChild(note('登入之後�
 RENDER.friends_invite=function(b){if(!NET.user){b.appendChild(note('登入之後才有邀請連結。'));return;}var L0=inviteLink();b.appendChild(note('把這條連結貼到 WhatsApp 等交友軟件，朋友打開並登入後，就會問他要不要加你做朋友。'));
  b.appendChild(card({emo:'🔗'},'我的邀請連結','<span style="word-break:break-all">'+esc(L0)+'</span>',[{t:'複製連結',cls:'o',fn:function(){copyText(L0);}}]));};
 function commTalk(){npcHop.comm=0.8;if(!netAvail()){talk('526（通訊員）','#f4a53c','#3b2a07',['你好，我是通訊員 526！','交友系統快將開放：登入之後可以加朋友、製作名片、互相探訪星球。']);return;}
- if(!NET.user){talk('526（通訊員）','#f4a53c','#3b2a07',['你好，我是通訊員 526！要用交友功能，先要登入。','可以用 Google 帳戶，或者班別學號加密碼。登入之後，遊戲進度會存到雲端，換部機都玩得返。'],[{t:'登入／註冊',cb:function(){openLogin();}},{t:'下次先',cb:function(){}}]);return;}
+ if(!NET.user){talk('526（通訊員）','#f4a53c','#3b2a07',['你好，我是通訊員 526！要用交友功能，先要登入。','用 Google 帳戶登入就得，第一次登入會自動註冊。登入之後，遊戲進度會存到雲端，換部機都玩得返。'],[{t:'用 Google 登入',cb:function(){openLogin();}},{t:'下次先',cb:function(){}}]);return;}
  loadFriends();talk('526（通訊員）','#f4a53c','#3b2a07',[VISIT?'你正在參觀 '+VISIT.nm+' 的星球。':'你好，'+me()+'！你的好友碼是 '+S.fcode+'。要做甚麼？'],
   (VISIT?[{t:'返回我的星球',cb:function(){leaveVisit();}}]:[]).concat([{t:'好友名單（參觀星球）',cb:function(){openPanel('friends','list');}},{t:'加好友',cb:function(){openPanel('friends','add');}},{t:'我的名片',cb:function(){openPanel('friends','card');}},{t:'邀請朋友',cb:function(){openPanel('friends','invite');}},{t:'沒事了',cb:function(){}}]));}
 
@@ -3519,7 +3599,7 @@ growFarm();pondTick();prevSt=S.plots.map(plotState);
 applyDeco();buildStoves();syncFridge();syncChefs();drawBoard();drawMenu(availDishes());coinsUI();clk();nk=nt;setInterval(clk,15000);resize();npcPick();
 noCull(scO);noCull(scI);noCull(scC);
 initComposer();resize();hudIcons();coinsUI();syncSenseDeco();syncPOS();syncMgr();magDot();syncGuides();netStart();
-$('cvLogin').addEventListener('click',function(e){e.stopPropagation();openLogin();});$('lgG').addEventListener('click',lgGoogle);$('lgIn').addEventListener('click',function(){lgStu(false);});$('lgUp').addEventListener('click',function(){lgStu(true);});$('lgCancel').addEventListener('click',closeLogin);$('vbBack').addEventListener('click',leaveVisit);
+$('cvLogin').addEventListener('click',function(e){e.stopPropagation();openLogin();});$('lgG').addEventListener('click',lgGoogle);$('lgCancel').addEventListener('click',closeLogin);$('vbBack').addEventListener('click',leaveVisit);
 if(!netAvail())$('cvLogin').style.display='none';showCover();
 requestAnimationFrame(loop);
 })();
