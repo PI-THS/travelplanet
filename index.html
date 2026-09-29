@@ -2,7 +2,7 @@
 <html lang="zh-Hant-HK">
 <head>
 <meta charset="utf-8">
-<meta name="ths-build" content="2609292033">
+<meta name="ths-build" content="2609292056">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="color-scheme" content="light">
 <!-- iPhone Safari 冇 element fullscreen API：由「分享 → 加入主畫面」開就會冇工具列（同旅款亂Upper 一樣）-->
@@ -3259,7 +3259,7 @@ function updMac(dt,t){var m=MAC,u=macO.userData;macO.visible=macSh.visible=!maki
 
 // ================= 封面、揀地形 =================
 // 每次開遊戲先見封面；未玩過嘅新玩家：揀地形 → 建立角色 → 開場白
-var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v35',BUILD='2609292033';
+var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v36',BUILD='2609292056';
 function showCover(){phase='cover';$('cover').classList.add('on');$('app').classList.add('cover');CU.uB.value=0;sea.scale.set(4,7,1);sea.position.z=(MAP.bc||[0,0])[1];
  var old=!!(S.me&&S.me.nm);$('cvVer').textContent=BUILD+'V'+VERSION.slice(1);$('cvGo').textContent=old?'繼續遊戲':'開始遊戲';$('cvHint').textContent=old?'歡迎回來，'+S.me.nm+'！':'第一次玩：先揀島嶼地形，再建立角色';}
 function leaveCover(){if(phase!=='cover')return;$('cover').classList.remove('on');if(!S.layout){if(!S.story)openStory();else openTerr();}else startPlay();}
@@ -8754,8 +8754,7 @@ function coopSub(){if(!NET.user)return;var me0=NET.user.uid;COOP.me=me0;
  DBI.get('coop/'+me0+'/acc').then(function(a){a=a||{};for(var k in a){if(!COOP.mem[k])coopSettle(k,+a[k]||0,true);else COOP.acc[k]=(COOP.acc[k]||0)+(+a[k]||0);}}).catch(function(){});
  atmCheck(true);}
 // ================= 島主 =================
-function coopInvite(f){if(!NET.user||VISIT){toast('要喺自己個島先可以邀請',2500);return;}if(coopN()>=COOP_MAX){toast('每個島最多同時有 '+COOP_MAX+' 位好友',3000);return;}
- DBI.set('coopinv/'+f.uid+'/'+NET.user.uid,{nm:me(),t:Date.now()}).then(function(){toast('已經邀請 '+((f.p&&f.p.nm)||'朋友')+' 嚟你個島一齊建設：對方接受就會坐飛碟過嚟',4500);}).catch(coopErr);}
+// coopInvite：v36 改咗（見 v36 一齊建設）
 function coopKick(uid){if(!NET.user)return;DBI.remove('coop/'+NET.user.uid+'/mem/'+uid).catch(function(){});}
 function coopMembers(o){var prev=COOP.mem||{},now=Date.now(),me0=COOP.me;COOP.mem={};var n=0;
  Object.keys(o).sort(function(a,b){return (o[a].t||0)-(o[b].t||0);}).forEach(function(uid){if(n>=COOP_MAX){DBI.remove('coop/'+me0+'/mem/'+uid).catch(function(){});return;}n++;COOP.mem[uid]=o[uid];if(!prev[uid]){COOP.acc[uid]=COOP.acc[uid]||0;COOP.seen=COOP.seen||{};COOP.seen[uid]=now;toast((o[uid].nm||'朋友')+' 嚟咗你個島一齊建設！佢喺度期間，島上收益會平分',5500);addNews('好友嚟一齊建設',(o[uid].nm||'朋友')+'坐飛碟嚟到星球，同你一齊釣魚、耕種、種花。','ev');}});
@@ -9461,7 +9460,7 @@ function tramSummon(k){var key='hold:'+k;if(TRAM.q.indexOf(key)<0){if(k==='hub')
  else toast('電車收到召喚：車上有其他玩家，電車會照原本速度駛嚟'+TRAM_N[k]+'站',4200);}
 // ---- 一齊建設連唔到（用戶圖 1）：資料庫規則未發佈。學生見到淺白提示；老師／創作者先見到規則提示；每次開遊戲只提一次 ----
 var COOPE=0;
-function coopErr(e){console.warn(e);if(COOPE)return;COOPE=1;toast(testerOn()?'一齊建設未能連線：要喺 Firebase 主控台「Realtime Database → 規則」貼上遊戲資料夾嘅 firebase-資料庫規則.json，再撳「發布」':'一齊建設功能暫時未開放，請遲啲再試',7000);}
+// coopErr：v36 改咗（每次都提示，15 秒內唔重複同一句）
 // ---- 池塘漣漪（用戶指示）：水面 shader 最多同時四圈（uRip：x、z、開始時間、強度）；隨機喺池入面出現 ----
 var RIP={t:0,i:0};
 function ripTick(dt){if(where!=='out'||!pondWater||!MAP.pond)return;var u=pondWater.material.uniforms;if(!u||!u.uRip)return;RIP.t-=dt;if(RIP.t>0)return;RIP.t=0.45+Math.random()*1.5;
@@ -9689,6 +9688,33 @@ RENDER.market_sell=function(b){MS34(b);var ks=bagKeys('shore:');b.appendChild(no
  ks.forEach(function(bk){var k=bk.slice(6);if(!SHORE_K[k])return;b.appendChild(card({ico:'shore:'+k},shoreName(k)+' × '+bagCount(bk),'收購價每個 $'+SHORE_K[k].p,[{t:'賣 1 個',fn:function(){sellShore(k,1);}},{t:'全部賣',cls:'o',fn:function(){sellShore(k,bagCount(bk));}}]));});
  if(!ks.length)b.appendChild(note('背包裏沒有海星或貝殼：去海邊沙灘行吓，見到就按 A 拾起。'));};
 function dynITO(){return dynITO35().concat(shoreITO());}
+// ================= v36 一齊建設：撳「邀請一齊建設」一定有回應（用戶指示：撳咗冇反應）=================
+// 原因：資料庫規則未發佈 → 寫入俾伺服器拒絕；v35 嘅錯誤提示「每次開遊戲只提一次」，之後再撳就冇提示，好似冇反應
+// 修正：① 撳掣即刻提示「發出緊邀請」② 9 秒未有結果就講連唔到伺服器 ③ 拒絕／網絡錯誤每次都講（15 秒內唔重複同一句）④ 好友頁頂顯示一齊建設可唔可以用
+var COOPOK={st:'',t:0,busy:false};   // st：''＝未知、'ok'＝用得、'deny'＝伺服器拒絕（規則未發佈）、'net'＝連唔到
+function coopErrKind(e){var s=String((e&&(e.code||e.message))||e||'');return /permission/i.test(s)?'deny':'net';}
+function coopDenyTxt(){return testerOn()?'一齊建設用唔到：伺服器拒絕（Firebase 資料庫規則未發佈）。請喺 Firebase 主控台「Realtime Database → 規則」貼上遊戲資料夾嘅 firebase-資料庫規則.json，再撳「發布」':'一齊建設功能暫時未開放（老師未更新伺服器設定），請遲啲再試';}
+var COOPE_L={t:0,m:''};
+function coopErrShow(e,act,force){var k=coopErrKind(e),msg;console.warn(e);if(k==='deny'){COOPOK.st='deny';COOPOK.t=Date.now();msg=coopDenyTxt();}else msg=(act||'一齊建設')+'失敗：網絡唔穩定，請再試';
+ var now=Date.now();if(!force&&COOPE_L.m===msg&&now-COOPE_L.t<15000)return;COOPE_L={t:now,m:msg};toast(msg,7000);if(panelKind==='friends')renderPanel();}
+function coopErr(e){coopErrShow(e,'一齊建設');}
+function coopInvite(f){if(!NET.user||VISIT){toast('要喺自己個島先可以邀請',2500);return;}if(coopN()>=COOP_MAX){toast('每個島最多同時有 '+COOP_MAX+' 位好友',3000);return;}
+ var nm=(f.p&&f.p.nm)||'朋友',done=false;toast('發出緊邀請俾 '+nm+'……',2500);
+ var tm=setTimeout(function(){if(done)return;done=true;COOPOK.st='net';toast('連唔到伺服器：邀請未發出（請檢查網絡，或者遲啲再試）',6000);if(panelKind==='friends')renderPanel();},9000);
+ DBI.set('coopinv/'+f.uid+'/'+NET.user.uid,{nm:me(),t:Date.now()}).then(function(){if(done)return;done=true;clearTimeout(tm);COOPOK.st='ok';COOPOK.t=Date.now();toast('已經邀請 '+nm+' 嚟你個島一齊建設：對方接受就會坐飛碟過嚟',4500);if(panelKind==='friends')renderPanel();})
+  .catch(function(e){if(done)return;done=true;clearTimeout(tm);coopErrShow(e,'邀請',true);});}
+// 好友頁一打開就試讀自己嘅一齊建設資料：讀得到＝規則已經發佈
+function coopProbe(){if(!NET.user||VISIT||COOPOK.busy)return;if(COOPOK.st==='ok'&&Date.now()-COOPOK.t<600000)return;if(COOPOK.st&&COOPOK.st!=='ok'&&Date.now()-COOPOK.t<20000)return;COOPOK.busy=true;
+ var done=false,tm=setTimeout(function(){if(done)return;done=true;COOPOK.busy=false;COOPOK.st='net';COOPOK.t=Date.now();if(panelKind==='friends')renderPanel();},9000);
+ DBI.get('coop/'+NET.user.uid+'/mem').then(function(){if(done)return;done=true;clearTimeout(tm);COOPOK.busy=false;COOPOK.st='ok';COOPOK.t=Date.now();if(panelKind==='friends')renderPanel();})
+  .catch(function(e){if(done)return;done=true;clearTimeout(tm);COOPOK.busy=false;COOPOK.st=coopErrKind(e);COOPOK.t=Date.now();if(panelKind==='friends')renderPanel();});}
+var FL36=RENDER.friends_list;
+RENDER.friends_list=function(b){if(NET.user&&!VISIT){coopProbe();var st=COOPOK.st;
+  if(st==='deny')b.appendChild(note('<b>一齊建設：未開通</b>——'+(testerOn()?'伺服器拒絕（Firebase 資料庫規則未發佈）：請喺 Firebase 主控台「Realtime Database → 規則」貼上遊戲資料夾嘅 firebase-資料庫規則.json，再撳「發布」。':'功能暫時未開放（老師未更新伺服器設定），請遲啲再試。')));
+  else if(st==='net')b.appendChild(note('<b>一齊建設：連唔到伺服器</b>——請檢查網絡，遲啲再試。'));
+  else if(st==='ok')b.appendChild(note('<b>一齊建設：可以用</b>（每個島最多同時 '+COOP_MAX+' 位好友）'));
+  else b.appendChild(note('一齊建設：檢查緊伺服器……'));}
+ FL36(b);};
 // ---- 模組載入完：開始砌大型設施、牧場外型 ----
 LF_OK=true;if(MAP&&MAP.L&&typeof lfSync==='function')lfSync(true);
 requestAnimationFrame(loop);
