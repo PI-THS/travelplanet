@@ -2,7 +2,7 @@
 <html lang="zh-Hant-HK">
 <head>
 <meta charset="utf-8">
-<meta name="ths-build" content="2609292204">
+<meta name="ths-build" content="2609292247">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="color-scheme" content="light">
 <!-- iPhone Safari 冇 element fullscreen API：由「分享 → 加入主畫面」開就會冇工具列（同旅款亂Upper 一樣）-->
@@ -810,7 +810,7 @@ function fishModel(sp){var f=sp&&sp.sh?sp:(fishOf(sp&&sp.k)||FISH[0]),g=new T.Gr
 // ---- 選魚：時間、天氣、地點、拋竿距離、魚竿、魚餌 ----
 function fishPick(ctx){var night=typeof nk==='number'&&nk>0.55,rain=typeof RAIN!=='undefined'&&RAIN.i>0.3,rod=S.rod||0,bait=ctx.bait||0,L=[],tot=0;
  FISH.forEach(function(f){if(f.tm==='day'&&night)return;if(f.tm==='night'&&!night)return;if(f.rain&&!rain)return;if(f.rar===3&&rod<2)return;if(f.rar===4&&rod<4)return;
-  var w=f.w;if(f.rar>=2)w*=(0.8+0.4*ctx.dist)*(ctx.pier?1.25:1)*(1+0.06*rod);if(f.rar>=3)w*=1+0.1*rod;if(f.rar===4)w*=1+0.12*rod;if(f.rar>=1)w*=1+0.15*bait;if(f.rar>=3)w*=1+0.25*bait;if(f.deep)w*=ctx.pier||ctx.dist>0.75?1.3:0.4;
+  var w=f.w;if(f.rar>=2)w*=(0.8+0.4*ctx.dist)*(ctx.pier?1.25:1)*fsRare38(rod);if(f.rar>=3)w*=1+0.15*rod;if(f.rar===4)w*=1+0.12*rod;if(f.rar>=1)w*=1+0.15*bait;if(f.rar>=3)w*=1+0.25*bait;if(f.deep)w*=ctx.pier||ctx.dist>0.75?1.3:0.4;
   L.push([f,w]);tot+=w;});var r=Math.random()*tot;for(var i=0;i<L.length;i++){r-=L[i][1];if(r<=0)return L[i][0];}return L[0][0];}
 function fishRollKg(f){var r=Math.pow(Math.random(),1.6)*Math.min(1,0.75+0.05*(S.rod||0));if(f.rar>=2)r*=0.69;var kg=f.kg[0]+(f.kg[1]-f.kg[0])*r,q=(kg-f.kg[0])/(f.kg[1]-f.kg[0]||1);return {kg:+kg.toFixed(kg<0.1?3:kg<1?2:1),cl:q<0.35?'S':q<0.7?'M':q<0.92?'L':'XL'};}
 
@@ -2551,7 +2551,7 @@ function plotAct(i){if(!coopOk()&&visitBlock('呢啲係朋友嘅農田'))return;
 // ================= 澆水器（站喺農田上按 A）=================
 // 動作：舉起澆水器 → 成個人轉一圈 → 水灑落田。第一下 A 之後 0.4 秒內再按一下（連按兩下），就按澆水器等級一次過澆幾格
 var WATER=null,canHinted=false,sprays=[],gSpray=new T.SphereGeometry(0.045,6,5),sprayM=M(0x7fd0ff);
-function wetPlot(j){var p=S.plots[j];if(p&&p.c&&typeof tutDo==='function')tutDo('water');p.w=Date.now()+CFG.wetSec*1000;prevSt[j]=plotState(p);if(coopGuest()&&p.c)coopAct({op:'water',i:j});}
+function wetPlot(j){var p=S.plots[j];if(p&&p.c&&typeof tutDo==='function')tutDo('water');p.w=Date.now()+CFG.wetSec*1000;prevSt[j]=plotState(p);if(coopGuest()&&p.c)coopAct({op:'water',i:j});if(typeof fastWet38==='function')fastWet38(j);}
 // 範圍：2 格＝一行兩格、3＝成行、4＝2×2、6＝兩行、9＝3×3；揀一個包住腳下嗰格、又最近玩家嘅位置
 function waterTargets(i,n){var rows=Math.ceil(S.plots.length/3),c=i%3,r=Math.floor(i/3),sh=n>=15?[3,5]:n>=12?[3,4]:n>=9?[3,3]:n>=6?[3,2]:n>=4?[2,2]:n>=3?[3,1]:n>=2?[2,1]:[1,1],w=sh[0],h=Math.min(sh[1],rows);
  var gx=(P.x-MAP.farm[0])/1.6,gz=(P.z-MAP.farm[1])/1.6,best=[c,r],bd=1e9;
@@ -2724,7 +2724,7 @@ function ccTalk(){var first=!S.met.tt;S.met.tt=1;save();npcHop.tutu=0.8;var nm='
  talk(nm,'#5b7fd6','#ffffff',first?['歡迎來到服務中心，'+me()+'！我是百貨櫃檯的方DD。','我這裏有澆水器、採摘器、播種器、魚竿和消防用品；餐廳的雪櫃、爐具和銷售點系統，也可以找我。','想升級農場、池塘，或者興建酒店、主題樂園、主題餐廳等大型設施，就找市長林庫。研發新菜找大地博士，請人找勞工處的勞工主任啟聰，衣服和更大的背包就找芷華。今天想要甚麼？']:['你好，'+me()+'！今天想要甚麼？'],
   [{t:'買工具',cb:function(){openPanel('shop','can');}},{t:'餐廳設備',cb:function(){openPanel('equip','rest');}},{t:'擴建',cb:function(){talk(nm,'#5b7fd6','#ffffff',['升級設施、增建社區設施同大型設施，都要向市長林庫申請，佢就喺服務中心後面嘅辦公桌。']);}},{t:'沒事了',cb:function(){}}]);}
 function buyHarv(i){buy(HARVS[i].p,function(){S.harv=i;if(typeof qAdd==='function')qAdd('upgrade',1);harvHinted=false;drawBoard();toast('🧺 買了'+HARVS[i].n+'：站在成熟的農田上連按兩下 A，一次過收成 '+HARVS[i].k+' 格',4500);});}
-function buyRod(i){buy(RODS[i].p,function(){S.rod=i;if(typeof qAdd==='function')qAdd('upgrade',1);setCol(rodMat,RODS[i].c);drawBoard();toast('🎣 買了'+RODS[i].n+'：更容易釣到大魚',4000);});}
+function buyRod(i){buy(RODS[i].p,function(){S.rod=i;if(typeof qAdd==='function')qAdd('upgrade',1);setCol(rodMat,RODS[i].c);drawBoard();toast('買了'+RODS[i].n+'：收線限時更長、更容易釣到珍貴魚同大魚',4000);});}
 function buyCan(i){buy(CANS[i].p,function(){S.can=i;if(typeof qAdd==='function')qAdd('upgrade',1);canHinted=false;drawBoard();toast('💧 買了'+CANS[i].n+'：站在農田上連按兩下 A，一次過澆 '+CANS[i].k+' 格',4500);});}
 function applyUp(key){var u=UP[key],c0=u&&u.L[S.up[key]]&&u.L[S.up[key]].c;if(c0)noteInvest(c0,key);if(key==='pond'||key==='farm')S.flags.capFix=Date.now();if(key==='pond')syncPond();if(key==='farm'){syncFarm();prevSt=S.plots.map(plotState);}else if(key==='fridge')syncFridge();else if(key==='stove'){buildStoves();syncChefs();}drawBoard();}
 function upCard(b,key,emo){var u=UP[key],lv=S.up[key],cur=u.L[lv],nx=u.L[lv+1],sub='現在：'+cur.d+(nx?'<br>升級後：'+nx.d:'');
@@ -3259,7 +3259,7 @@ function updMac(dt,t){var m=MAC,u=macO.userData;macO.visible=macSh.visible=!maki
 
 // ================= 封面、揀地形 =================
 // 每次開遊戲先見封面；未玩過嘅新玩家：揀地形 → 建立角色 → 開場白
-var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v37',BUILD='2609292204';
+var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v38',BUILD='2609292247';
 function showCover(){phase='cover';$('cover').classList.add('on');$('app').classList.add('cover');CU.uB.value=0;sea.scale.set(4,7,1);sea.position.z=(MAP.bc||[0,0])[1];
  var old=!!(S.me&&S.me.nm);$('cvVer').textContent=BUILD+'V'+VERSION.slice(1);$('cvGo').textContent=old?'繼續遊戲':'開始遊戲';$('cvHint').textContent=old?'歡迎回來，'+S.me.nm+'！':'第一次玩：先揀島嶼地形，再建立角色';}
 function leaveCover(){if(phase!=='cover')return;$('cover').classList.remove('on');if(!S.layout){if(!S.story)openStory();else openTerr();}else startPlay();}
@@ -3577,11 +3577,11 @@ function updSow(dt){if(!SOW)return;var w=SOW,u=player.userData;w.t+=dt;var t=w.t
  u.am[0].rotation.z=-az;u.am[1].rotation.z=az;u.am[0].rotation.x=u.am[1].rotation.x=0;
  var k=Math.max(0,Math.min(1,(t-0.25)/0.6)),e=k<0.5?2*k*k:1-Math.pow(-2*k+2,2)/2;P.face=P.rot=w.r0+Math.PI*2*e;w.tool.position.y=0.3+0.36*raise*(1-low);w.tool.rotation.y+=dt*(t<0.85?14:4);
  if(!w.done&&t>=0.85){w.done=true;var n=w.multi?SEEDRS[S.sow].k:1,tg=waterTargets(w.i,n).filter(function(j){return plotState(S.plots[j])==='empty';}),cnt=0;
-  tg.forEach(function(j){if(!bagTake('seed:'+w.k,1))return;var p=S.plots[j];p.c=w.k;p.p=0;p.w=0;prevSt[j]=plotState(p);cnt++;var v=PLOTS[j];shoot(P.x,1.7,P.z,v.x,0.2,v.z,SEEDM,8,0.9);});
-  save();if(cnt)toast('🌱 種下了 '+cnt+' 格'+iname(w.k)+(bagCount('seed:'+w.k)?'':'（'+iname(w.k)+'種子用完了）')+'，記得澆水');else toast('🌱 '+iname(w.k)+'種子不夠了');}
+  tg.forEach(function(j){if(!bagTake('seed:'+w.k,1))return;sowPlot38(j,w.k);cnt++;var v=PLOTS[j];shoot(P.x,1.7,P.z,v.x,0.2,v.z,SEEDM,8,0.9);});
+  if(cnt&&typeof tutDo==='function')tutDo('sow');save();if(cnt)toast('🌱 種下了 '+cnt+' 格'+iname(w.k)+(bagCount('seed:'+w.k)?'':'（'+iname(w.k)+'種子用完了）')+'，記得澆水');else toast('🌱 '+iname(w.k)+'種子不夠了');}
  if(t>=1.25){if(w.tool.parent)w.tool.parent.remove(w.tool);disposeTree(w.tool);u.am[0].rotation.z=-0.3;u.am[1].rotation.z=0.3;SOW=null;}}
 // 空田按 A：只得一款種子就直接播；多款就問（上次用開嗰款排第一）
-function sowAsk(i){var ks=bagKeys('seed:').map(function(sk){return sk.slice(5);});
+function sowAskV37(i){var ks=bagKeys('seed:').map(function(sk){return sk.slice(5);});
  if(!ks.length){talk('農田','#8a5a34','#ffffff',['背包裏沒有種子。到「星際市場」找阿康買種子吧。']);return;}
  if(ks.length===1){startSow(i,ks[0]);return;}
  if(lastSeed&&ks.indexOf(lastSeed)>0){ks.splice(ks.indexOf(lastSeed),1);ks.unshift(lastSeed);}
@@ -4449,7 +4449,7 @@ function visitFriend(f){if(VISIT){toast('你正在參觀朋友的星球');return
   if(pl.chefs)V.chefs=fbArr(pl.chefs,4,null);if(pl.recipes)V.recipes=fbArr(pl.recipes).filter(nn);V.menu=pl.menu?fbArr(pl.menu).filter(nn):V.recipes.map(function(r){return r.id;}).slice(0,6);
   V.story=1;if(pl.built)V.built={wheel:pl.built.wheel||0,hotel:pl.built.hotel||0,dome:pl.built.dome||0};V.build={};if(pl.build)['wheel','hotel','dome'].forEach(function(k){if(pl.build[k]&&pl.build[k].t0)V.build[k]={t0:pl.build[k].t0};});V.bnb=fbArr(pl.bnb,3,0);V.houseL=pf===1?pl.houseL||null:null;V.fbedL=pf===1?pl.fbedL||null:null;V.fac=pl.fac||{};V.shopL=pf===1&&pl.shopL&&pl.shopL.list?{id:pl.shopL.id,v:pl.shopL.v,list:fbArr(pl.shopL.list)}:null;V.fg=fbArr(pl.fg,6,0).map(function(q){return q&&q.k?{k:q.k,t0:q.t0,by:q.by||''}:null;});V.medals=[];for(var mi=0;mi<(pl.medals||0);mi++)V.medals.push({t:0,s:0});V.belly={n:pl.belly||0};if(pl.park)V.park={r:pl.park.r||{wheel:1},a:pl.park.a||{},s:pl.park.s||{},toys:[0,0,0],t:0,earn:0,stars:-1};if(pl.htl)V.htl={type:pl.htl.type,f:pl.htl.f||{},tram:pl.htl.tram||0,exp:pl.htl.exp||0,fo:pl.htl.fo||0,hk:pl.htl.hk||0,srr:pl.htl.srr!=null?pl.htl.srr:1,price:Object.assign({biz:900,btq:1700,rst:1100},pl.htl.price||{}),plan:pl.htl.plan||'EP',corp:pl.htl.corp||0,last:'',hist:[],grade:'',earn:0};V.lf=typeof lfFromPub==='function'?lfFromPub(fbArr(pl.lf),pf):[];V.fbedLv=pl.fbedLv||0;V.ranchL=pf===1&&pl.ranchL&&pl.ranchL.p?{id:pl.ranchL.id,p:[+pl.ranchL.p[0],+pl.ranchL.p[1]]}:null;if(pl.ranch)V.ranch={lv:pl.ranch.lv||0,a:fbArr(pl.ranch.a).filter(nn).map(function(a,i){return {id:'v'+i,k:a.k,b:a.b,f:Date.now(),pt:Date.now(),acc:0,w:a.w||0};}),feed:0,box:{milk:0,egg:0}};if(pl.mus)V.mus={ext:pl.mus.ext||0,int:pl.mus.int||0,cap:pl.mus.cap||0,disp:pl.mus.disp||{},got:{}};V.pos=pl.pos||0;V.gw=pl.gw||50;V.butler={st:pl.stage||1,since:Date.now(),hist:[]};
   if(typeof coopVisitPatch==='function')coopVisitPatch(V);V.me=OWN_S.me;V.wear=OWN_S.wear;V.own=OWN_S.own;V.bag=JSON.parse(JSON.stringify(OWN_S.bag));V.shoe=OWN_S.shoe;V.coins=OWN_S.coins;V.intro=true;V.fcode=OWN_S.fcode;['sense','gw','stats','rev','news','butler','medals','menu','pos','ext','fire','insp','labN','mgmt','flags','invest','guides','gjobs'].forEach(function(k){if(V[k]==null)V[k]=OWN_S[k]!=null&&k!=='guides'?JSON.parse(JSON.stringify(OWN_S[k])):null;});V.guides=[];V.fire={last:Date.now(),next:0};V.insp={last:Date.now()};
-  fadeSwap(function(){pFree37();S=V;VISIT={uid:f.uid,nm:pl.nm||f.p.nm};rebuildWorld();beamDown37();presenceJoin(f.uid);$('visitbar').classList.add('on');$('vbName').textContent=VISIT.nm;if(typeof COOP!=='undefined'&&COOP.role==='guest')coopArrived();else toast('🛸 歡迎來到 '+VISIT.nm+' 的星球！（參觀期間唔會存檔、唔可以改嘢）',5000);});}).catch(function(e){console.warn(e);toast('未能讀取朋友的星球，請再試',4000);});}
+  fadeSwap(function(){visitArrive38(f,pl,V);});}).catch(function(e){console.warn(e);toast('未能讀取朋友的星球，請再試',4000);});}
 // v21 用戶指示：按「返回我的星球」→ 主角企喺飛碟下面，一道光將佢帶上飛碟，之後先返自己星球
 var BEAMUP=null;
 function leaveVisit(){if(!VISIT||BEAMUP)return;if(panelKind)closePanel();if(D0)closeDlg();AUTO=null;if(typeof endFish==='function')endFish();pFree37();BEAMUP={t:0,st:'go'};
@@ -4782,7 +4782,7 @@ function siteTalk(k){var B=BLD[k],st=buildStage(k),left=Math.max(0,buildDur()-bu
  talk('工地・'+B.n,'#e8793f','#ffffff',[VISIT?'這是朋友星球正在興建的「'+B.n+'」。':'工程進度：第 '+(st+1)+'／6 階段（約 '+Math.round(st/6*100)+'%）。','預計還有 '+fmtLeft(left)+'落成。工程每 4 小時更新一次進度。','工人：「安全第一！工地重地，閒人免進。」']);}
 function attrITO(){var L=[];
  if(bld('hotel'))L.push({x:MAP.hotel[0],z:MAP.hotel[1]+1.5,r:1.7,l:'入去',th:3.0,tr:1.5,fn:function(){hotelTalk();}});
- if(bld('wheel'))L.push({x:MAP.wheel[0],z:MAP.wheel[1]+1.3,r:1.9,th:4.5,tr:1.8,l:function(){return '入去';},fn:function(){wheelTalk();}});
+ if(bld('wheel'))L.push({x:MAP.wheel[0],z:MAP.wheel[1]+4.6,r:1.7,th:2.6,tr:1.3,l:function(){return '入樂園';},fn:function(){wheelTalk();}});
  if(bld('dome'))L.push({x:MAP.dome[0],z:MAP.dome[1]+3.0,r:1.7,l:'入去',th:3.2,tr:2.2,fn:function(){museumTalk();}});
  ['hotel','wheel','dome'].forEach(function(k){if(!bld(k)&&S.build&&S.build[k]){var p=MAP[k],h=HOARD[k];L.push({x:p[0],z:p[1]+h[1]+0.4,r:1.6,l:'查看',th:2.5,tr:h[0],fn:function(){siteTalk(k);}});}});
  return typeof lfITO==='function'?L.concat(lfITO()):L;}
@@ -5572,7 +5572,7 @@ function fsTick(dt){var t=FS.uT+=dt;FS.t+=dt;FS.sea.uniforms.uT.value=t;var cam=
  if(st==='charge'){FS.pow=1-Math.abs(((FS.t/0.8)%2)-1);$('fsPowI').style.width=Math.round(FS.pow*100)+'%';FS.rod.rotation.x=-0.95-0.5*FS.pow;}
  else if(st==='fly'){var k=Math.min(1,FS.t/0.9);FS.rod.rotation.x=-0.95+0.35*Math.sin(k*Math.PI);FS.tip.getWorldPosition(_ta);FS.bob.visible=true;var ex=FS.bx,ez=FS.bz;FS.bob.position.set(_ta.x+(ex-_ta.x)*k,_ta.y+(0.05-_ta.y)*k+Math.sin(k*Math.PI)*(3+FS.D*0.12),_ta.z+(ez-_ta.z)*k);fsBobS(0);
   if(k>=1){fsSplash(ex,ez,6,0.6);FS.st='wait';FS.t=0;FS.wait=(3+Math.random()*5)*(FS.baitLv?0.8:1);FS.nib=0.8+Math.random();}}
- else if(st==='wait'){FS.nib-=dt;if(FS.nib<=0){FS.nib=0.6+Math.random()*1.4;FS.dip=0.12;fsSplash(FS.bx,FS.bz,2,0.25);}if(FS.t>FS.wait){FS.f=fishPick({pier:FS.pier,dist:(FS.D-6)/26,bait:FS.baitLv||0});FS.st='bite';FS.t=0;FS.win=0.9+0.06*(S.rod||0)+(FS.f.rar<2?0.3:0);fsBtnTxt('拉！',true);fsMsg('浮標沉落了！快撳「拉！」',FS.win);fsSplash(FS.bx,FS.bz,10,0.8);vib([80,40,80]);}}
+ else if(st==='wait'){FS.nib-=dt;if(FS.nib<=0){FS.nib=0.6+Math.random()*1.4;FS.dip=0.12;fsSplash(FS.bx,FS.bz,2,0.25);}if(FS.t>FS.wait){FS.f=fishPick({pier:FS.pier,dist:(FS.D-6)/26,bait:FS.baitLv||0});FS.st='bite';FS.t=0;FS.win=fsWin38(S.rod||0)+(FS.f.rar<2?0.3:0);fsBtnTxt('拉！',true);fsMsg('浮標沉落了！快撳「拉！」',FS.win);fsSplash(FS.bx,FS.bz,10,0.8);vib([80,40,80]);}}
  else if(st==='bite'){FS.dip=0.5;sh=0.08;if(FS.t>FS.win)fsFail('太遲了，魚走咗……');}
  else if(st==='fight'){if(fsTimeTick(dt))return;var f=FS.f,str=f.str/10,rod=S.rod||0;FS.ph+=dt;FS.rushNext-=dt;if(FS.rush>0)FS.rush-=dt;else if(FS.rushNext<=0){FS.rush=0.8+Math.random()*0.7*str;FS.rushNext=(2.5+Math.random()*3.5)*(1-0.05*f.rar);fsMsg('魚大力掙扎！放手！',FS.rush);
    if(!FS.jump&&Math.random()<0.55){var jm=fishModel(f);var bb=new T.Box3().setFromObject(jm),bs=bb.getBoundingSphere(new T.Sphere()).radius;jm.scale.multiplyScalar((f.rar>=3?2.4:1.5)*(1+FS.D*0.03)/Math.max(0.2,bs));FS.sc.add(jm);FS.jump={m:jm,t:0,x:FS.bx,z:FS.bz};fsSplash(FS.bx,FS.bz,12,1);}}
@@ -6055,7 +6055,7 @@ function fsSim(f,rod,D){var str=f.str/10,rar=f.rar,T=0.25,t=0,ph=0,rush=0,rn=2.5
   if(hold&&(T>0.78||rush>0))hold=false;else if(!hold&&T<0.3&&rush<=0)hold=true;
   if(hold){D-=3.9*(1+0.12*rod)*(1-0.45*Math.min(1,pull))*dt;T+=(0.25+0.9*pull)/(1+0.1*rod)*dt;}else{T=Math.max(0,T-0.55*dt);D+=pull*2.2*dt;}}
  return t;}
-function fsLim(f,rod,D){return Math.round((fsSim(f,rod,D)*FS_SLACK[f.rar]+4)*2)/2;}
+// fsLim：v38 改咗（見 v38 魚竿）
 // 珍貴魚要第 3 級魚竿、傳說魚要第 5 級先會上釣（fishPick）：未夠級就用最低要求嘅魚竿計，並註明
 function fsMinRod(f){return f.rar===4?4:f.rar===3?2:0;}
 function fsLimTxt(f){var r0=fsMinRod(f),mine=S.rod||0,rod=Math.max(mine,r0),a=fsLim(f,rod,10),b=fsLim(f,rod,26);return Math.round(a)+'–'+Math.round(b)+' 秒'+(mine<r0?'（要用「'+RODS[r0].n+'」或以上魚竿先會上釣）':'');}
@@ -7822,7 +7822,7 @@ function parkSceneTick(dt,t){if(where!=='park')return;if(typeof pkCrowdTick==='f
  var mp=PARK.mp,m2=PARK.masc;if(m2){var near=Math.hypot(P.x-mp.x,P.z-mp.z)<2.2,mv=false;if(near)mp.face=Math.atan2(P.x-mp.x,P.z-mp.z);else if(mp.wait>0)mp.wait-=dt;else{var dx=mp.tx-mp.x,dz=mp.tz-mp.z,d=Math.hypot(dx,dz);if(d<0.08){mp.wait=2+Math.random()*3;var w=PK_WP[Math.floor(Math.random()*PK_WP.length)];mp.tx=w[0];mp.tz=w[1];}else{var s=Math.min(d,1.0*dt);mp.x+=dx/d*s;mp.z+=dz/d*s;mp.face=Math.atan2(dx,dz);mv=true;}}
   mp.rot=lerpA(mp.rot,mp.face,dt*6);m2.position.set(mp.x,mv?Math.abs(Math.sin(t*8))*0.08:0,mp.z);m2.rotation.y=mp.rot;ROOMS.park.items.forEach(function(it){if(it.mk){it.x=mp.x;it.z=mp.z;}});}
  if(PARK.par){PARK.parT-=dt;var fl=PARK.par;if(PARK.parT<=0){fl.visible=true;var z=-6+(-PARK.parT)*1.1;fl.position.set(0,0,z);fl.rotation.y=Math.PI;if(z>8.5){fl.visible=false;PARK.parT=45;}}}}
-roomDef('park',{sc:scPK,b:[-15,15,-12,9],door:{x:0,w:1.6},nm:'星際樂園裏面',camK:1.25,out:function(){return [MAP.wheel[0],MAP.wheel[1]+2.4];},mapPos:function(){return [MAP.wheel[0],MAP.wheel[1],'星際樂園裏面'];},onEnter:function(){pkBuild();},tick:function(dt,t){parkSceneTick(dt,t);},
+roomDef('park',{sc:scPK,b:[-15,15,-12,9],door:{x:0,w:1.6},nm:'星際樂園裏面',camK:1.25,out:function(){return [MAP.wheel[0],MAP.wheel[1]+5.2];},mapPos:function(){return [MAP.wheel[0],MAP.wheel[1],'星際樂園裏面'];},onEnter:function(){pkBuild();},tick:function(dt,t){parkSceneTick(dt,t);},
  npc:function(){return PARK.masc?[[PARK.mp.x,PARK.mp.z,0.5]]:[];}});
 function parkEnter(){if(!parkBuilt()){wheelTalkV27();return;}roomEnter('park',0,7.4,Math.PI);var o=parkSt();if(!o.hi){o.hi=1;save();setTimeout(function(){toast('歡迎嚟到星際樂園！坐機動遊戲、玩攤位遊戲；向市長林庫申請「主題樂園改善」可以加設施',6000);},700);}}
 function wheelTalk(){if(!parkBuilt()){wheelTalkV27();return;}var night=typeof nk==='number'&&nk>=0.55;if(!VISIT&&S.fw&&night&&!fwActive()){talk('星際樂園','#e0609c','#ffffff',['你有 '+S.fw+' 個煙花。要喺摩天輪放煙花，定係入樂園玩？'],[{t:'放煙花',cb:function(){wheelTalkV27();}},{t:'入樂園',cb:function(){parkEnter();}},{t:'下次先',cb:function(){}}]);return;}parkEnter();}
@@ -8827,7 +8827,7 @@ var TUT={x:null,z:null,rot:0,face:0,path:null,pi:0,tk:null,t:0,bub:null,bubT:0,h
 function tutOn(){var o=S&&S.tut;return !!(o&&o.on&&!VISIT&&S.intro&&MAP&&MAP.yhp);}
 function tutCur(){var o=S.tut;for(var i=0;i<TUT_T.length;i++)if(!o.d[TUT_T[i].k])return TUT_T[i];return null;}
 function tutN(){return Object.keys((S.tut&&S.tut.d)||{}).length;}
-function tutStart(){if(VISIT||!S)return;if(S.tut&&(S.tut.on||S.tut.fin))return;S.tut={on:1,d:{},t0:Date.now()};save();TUT.tk=null;
+function tutStartV37(){if(VISIT||!S)return;if(S.tut&&(S.tut.on||S.tut.fin))return;S.tut={on:1,d:{},t0:Date.now()};save();TUT.tk=null;
  setTimeout(function(){talk(TUT_NM,'#6f82d9','#ffffff',['師兄！等我帶你完成新手任務：播種、澆水、收穫、交收箱、釣魚、摘果、請人、買嘢、賣嘢、加好友、去餐廳同服務中心、邀請開民宿。','我會行去每項任務嘅地點等你（我頭上有提示）；每完成一項都有獎金，做晒仲有額外 $'+TUT_BONUS+'！跟住我啦！']);tutBar();},600);}
 function tutDo(k){var o=S&&S.tut;if(!o||o.fin||VISIT||o.d[k])return;var T0=TUT_T.filter(function(t){return t.k===k;})[0];if(!T0)return;o.d[k]=Date.now();S.coins+=T0.r;coinsUI();save();
  var n=tutN();toast('新手任務完成：'+T0.n+'（'+n+'／'+TUT_T.length+'）獎金 +$'+T0.r,4200);if(o.on)tutSay('做得好！+$'+T0.r,2.4);TUT.tk=null;tutBar();
@@ -9171,7 +9171,7 @@ function xyPos(){var sv=MAP.svc,C=[[-2.6,3.3],[2.7,3.4],[-2.9,4.5],[3.0,4.6],[-1
 function xyHide(){if(XY.m){scO.remove(XY.m);disposeTree(XY.m);XY.m=null;}if(XY.cr){scO.remove(XY.cr);disposeTree(XY.cr);XY.cr=null;}if(XY.bub){killSprite(XY.bub);XY.bub=null;}XY.id=null;}
 function xyTick(dt,t){var v=xyNow();if(!v){if(XY.m)xyHide();return;}
  if(!XY.m||XY.id!==v.id){xyHide();var p=xyPos();XY.id=v.id;XY.x=p[0];XY.z=p[1];XY.m=xyModel();XY.m.position.set(p[0],0,p[1]);scO.add(XY.m);XY.cr=xyCrate();XY.cr.position.set(p[0]+0.8,0,p[1]+0.15);XY.cr.rotation.y=-0.3;scO.add(XY.cr);
-  XY.bub=bubble('邦邦：引入動物','#fffaeb','#7a5a2a',0.34);scO.add(XY.bub);
+  XY.bub=null;
   if(S.xyN!==v.id&&phase==='play'&&(zaE('zoo')||zaE('aqua'))){S.xyN=v.id;save();toast('動物引薦商邦邦嚟咗服務中心附近：可以引入動物去動物園、水族館（留到 '+hhmm(v.e)+'）',6500);}}
  if(where!=='out')return;var d=Math.hypot(P.x-XY.x,P.z-XY.z);XY.rot=lerpA(XY.rot,d<7?Math.atan2(P.x-XY.x,P.z-XY.z):0.3,dt*4);XY.m.rotation.y=XY.rot;XY.m.position.y=Math.abs(Math.sin(t*2.2))*0.02;
  if(XY.bub){XY.bub.visible=d<16;XY.bub.position.copy(bendPt(XY.x,2.2,XY.z));}var ko=XY.cr&&XY.cr.userData.ko;if(ko&&ko.userData.head)ko.userData.head.rotation.y=Math.sin(t*0.7)*0.6;}
@@ -9663,11 +9663,11 @@ RENDER.friends_list=function(b){if(NET.user&&!VISIT){coopProbe();var st=COOPOK.s
 // 修正：① 離開／到達朋友星球前先起身、落車、收竿、離開機動遊戲 ② 切換畫面出錯都會褪返白幕 ③ 每格檢查：坐緊嘅長椅唔存在、
 //       電車唔存在、機動遊戲唔喺樂園就自動解除 ④ 主迴圈出錯唔會成個遊戲停低（測試者會見到錯誤訊息）
 var ERRN={t:0,m:''};
-function errNote(e,wh){try{console.warn('[v37]',wh||'',e);var m=String((e&&e.message)||e||'').slice(0,90),now=Date.now();if(m===ERRN.m&&now-ERRN.t<60000)return;ERRN.m=m;ERRN.t=now;
+function errNote(e,wh){try{console.warn('[v38]',wh||'',e);if(typeof elogAdd==='function')elogAdd(wh,e);var m=String((e&&e.message)||e||'').slice(0,90),now=Date.now();if(m===ERRN.m&&now-ERRN.t<60000)return;ERRN.m=m;ERRN.t=now;
  if(typeof testerOn==='function'&&testerOn()&&typeof toast==='function')toast('遊戲出咗錯（'+(wh||'')+'）：'+m+'。已自動略過，可以截圖報告',6000);}catch(x){}}
 window.addEventListener('error',function(ev){errNote(ev.error||ev.message,'程式');});
 // 主迴圈：出錯都照樣畫畫面、排下一格（以前一出錯成個遊戲凍結）
-function loop(now){try{loopV36(now);}catch(e){errNote(e,'主迴圈');try{renderScene(SCN[where]);}catch(e2){}requestAnimationFrame(loop);}}
+// loop：v38 改咗（見 v38 防卡死）
 // 解除所有「綁住主角」嘅狀態（坐長椅、坐電車、機動遊戲、釣魚、攤位遊戲）
 function pFree37(){try{if(SIT)sitStand();}catch(e){SIT=null;}
  try{if(TRAM.ride)tramAlight(true);}catch(e){TRAM.ride=null;}TRAM.want=null;TRAM.fast=null;TRAM.q=[];if(typeof TRQ!=='undefined')TRQ.req=null;
@@ -9683,9 +9683,10 @@ function leaveVisitNow(){try{presenceOff();}catch(e){errNote(e,'返屋企1');}tr
 function beamDown37(){if(where!=='out')setWhere('out');var U=MAP.ufo;if(!U){BEAMUP=null;return;}P.x=U[0];P.z=U[1];P.rot=P.face=0;fx=P.x;fz=P.z;BEAMUP={t:0,st:'down'};
  player.position.set(P.x,2.55,P.z);player.scale.setScalar(2.4*0.28);pSh.scale.setScalar(0.05);}
 function beamTick(dt){var B=BEAMUP;
+ if(B&&B.st==='step'){B.t+=dt;var ks=Math.min(1,B.t/0.5);P.x=B.x0+(B.x1-B.x0)*ks;P.z=B.z0+(B.z1-B.z0)*ks;P.rot=P.face=Math.atan2(B.x1-B.x0,B.z1-B.z0);ph+=dt*11;animWalk(player,ph,true);if(ks>=1){BEAMUP=null;P.rot=P.face=0;}return;}
  if(B&&B.st==='down'){B.t+=dt;var k=Math.min(1,B.t/1.9),e=k*k*(3-2*k);beam.visible=true;beam.material.opacity=0.45+Math.sin(tm*12)*0.1;
   P.rot=P.face=P.rot+dt*(3+6*(1-e));player.rotation.y=P.rot;player.position.y=(1-e)*2.55;player.scale.setScalar(2.4*(0.28+0.72*e));pSh.scale.setScalar(Math.max(0.05,e));
-  if(k>=1){BEAMUP=null;P.rot=P.face=0;player.scale.setScalar(2.4);pSh.scale.setScalar(1);}return;}
+  if(k>=1){BEAMUP=null;P.rot=P.face=0;player.scale.setScalar(2.4);pSh.scale.setScalar(1);if(typeof beamStep38==='function')beamStep38();}return;}
  // 保險：「返緊屋企」卡咗超過 5 秒 → 直接完成
  if(B&&B.st==='home'){B.ht=(B.ht||0)+dt;if(B.ht>5){BEAMUP=null;player.scale.setScalar(2.4);pSh.scale.setScalar(1);if(VISIT)leaveVisitNow();return;}}
  beamTickV36(dt);}
@@ -9696,7 +9697,7 @@ function tick37(dt,t){
  if(SIT&&(where!=='out'||BENCHES.indexOf(SIT.b)<0)){try{if(SIT.b)SIT.b.occ=null;}catch(e){}SIT=null;var u=player.userData;if(u.legs){u.lg[0].rotation.x=u.lg[1].rotation.x=0;}if(u.b)u.b.position.y=0;var f=freeNear(P.x,P.z,0.4,4);if(f){P.x=f[0];P.z=f[1];}}
  if(TRAM.ride&&!TRAM.m)tramAlight(true);
  if(PARK.ride&&where!=='park'&&!PARK.ride.cin){PARK.ride=null;pSh.visible=true;var u2=player.userData;if(u2.legs){u2.lg[0].rotation.x=u2.lg[1].rotation.x=0;}if(where==='out'){var f2=freeNear(P.x,P.z,0.4,4);if(f2){P.x=f2[0];P.z=f2[1];}}}
- if(typeof tick37b==='function')tick37b(dt,t);}
+ if(typeof tick38==='function')tick38(dt,t);}
 // ================= v37 電車（用戶指示）=================
 // ① 喺站牌先揀目的地，再召喚電車；電車一到站，玩家自動上車（唔使再撳）；途中唔停，直接去目的地
 // ② 一齊建設／探訪：電車由島主部機話事（同場資料 tm），好友部機跟住島主嘅電車行；好友請島主部機召喚電車（tq）；
@@ -9861,6 +9862,81 @@ function raTick(dt,t){raSync();if(VISIT||!S)return;var lv=raLv(),p=typeof ranchP
    if(where==='ranch'||where==='out'&&Math.hypot(P.x-p[0],P.z-p[1])<14)toast('牧場人員'+(fed?'餵咗 '+fed+' 隻動物':'')+(fed&&sh?'、':'')+(sh?'剪咗 '+sh+' 件羊毛入倉庫':''),3000);
    if(fed){if(ks.cow)rnwJob('cowF');if(ks.sheep)rnwJob('shpF');if(ks.chick)rnwJob('chkF');}if(sh)rnwJob('shear');}}
  if(where==='ranch')rnwTick(dt,t);}
+// ================= v38 按「參觀」卡住（用戶指示）＋全面防卡死 =================
+// 本機模擬（兩個分頁、手機大小、好友喺線／唔喺線、好友有齊酒店動物園水族館）重現唔到；所以改做：
+// ① 每一樣每格工作獨立保護：一樣出錯只係嗰樣停，其他（包括行路、鏡頭、光柱降落、對話）照做
+// ② 監察：畫面超過 3 秒冇更新就自動重新開始；白幕、光柱卡住都會自動解除
+// ③ 去朋友星球載入失敗：自動留返自己星球，講俾玩家知
+// ④ 錯誤紀錄（最多 30 條，存喺呢部機）：設定頁「錯誤紀錄（測試）」睇得到，方便截圖
+var ELOG=[],ELOGL={m:'',t:0};try{ELOG=JSON.parse(localStorage.getItem('ths-errlog')||'[]')||[];}catch(e){ELOG=[];}
+function elogAdd(wh,e){try{var m=String((e&&e.message)||e||'').slice(0,160),now=Date.now(),last=ELOG[ELOG.length-1];
+ if(last&&last.m===m&&last.w===(wh||'')&&now-last.t<600000){last.n=(last.n||1)+1;last.t2=now;if(now-ELOGL.t<5000)return;}
+ else{ELOG.push({t:now,v:VERSION+BUILD,w:wh||'',m:m,s:String((e&&e.stack)||'').split('\n').slice(0,3).join(' | ').slice(0,300),vis:VISIT?1:0,at:where,n:1});if(ELOG.length>30)ELOG=ELOG.slice(-30);}
+ ELOGL.t=now;localStorage.setItem('ths-errlog',JSON.stringify(ELOG));}catch(x){}}
+// 主迴圈：同一格唔會行兩次（監察重新開始時唔會變成兩條迴圈）
+var LOOPN=-1,LOOPT=0;
+function loop(now){if(now===LOOPN)return;LOOPN=now;LOOPT=performance.now();try{loopV36(now);}catch(e){errNote(e,'主迴圈');try{renderScene(SCN[where]);}catch(e2){}requestAnimationFrame(loop);}}
+// ---- ① 每格工作逐樣保護 ----
+// ⚠ 遊戲程式包喺一個函數範圍入面（唔係全域），所以要喺同一範圍直接重新指定（下面嗰串由 patch 自動產生）
+function guardW(f,n){if(typeof f!=='function'||f.g38)return f;var w=function(){try{return f.apply(this,arguments);}catch(e){errNote(e,n);}};Object.keys(f).forEach(function(k){w[k]=f[k];});w.g38=1;return w;}
+if(typeof benchTick==='function')benchTick=guardW(benchTick,'benchTick');if(typeof sitApply==='function')sitApply=guardW(sitApply,'sitApply');if(typeof tramSeatApply==='function')tramSeatApply=guardW(tramSeatApply,'tramSeatApply');if(typeof bdayTick==='function')bdayTick=guardW(bdayTick,'bdayTick');if(typeof tick26==='function')tick26=guardW(tick26,'tick26');if(typeof growFarm==='function')growFarm=guardW(growFarm,'growFarm');if(typeof updPlots==='function')updPlots=guardW(updPlots,'updPlots');if(typeof updBobo==='function')updBobo=guardW(updBobo,'updBobo');if(typeof updWalkers==='function')updWalkers=guardW(updWalkers,'updWalkers');if(typeof updCust==='function')updCust=guardW(updCust,'updCust');if(typeof updKitchen==='function')updKitchen=guardW(updKitchen,'updKitchen');if(typeof spawnTick==='function')spawnTick=guardW(spawnTick,'spawnTick');if(typeof remindTick==='function')remindTick=guardW(remindTick,'remindTick');if(typeof marketTick==='function')marketTick=guardW(marketTick,'marketTick');if(typeof updFish==='function')updFish=guardW(updFish,'updFish');if(typeof updHold==='function')updHold=guardW(updHold,'updHold');if(typeof updWater==='function')updWater=guardW(updWater,'updWater');if(typeof updHarv==='function')updHarv=guardW(updHarv,'updHarv');if(typeof updSow==='function')updSow=guardW(updSow,'updSow');if(typeof beeTick==='function')beeTick=guardW(beeTick,'beeTick');if(typeof fwTick==='function')fwTick=guardW(fwTick,'fwTick');if(typeof wishTick==='function')wishTick=guardW(wishTick,'wishTick');if(typeof bpopTick==='function')bpopTick=guardW(bpopTick,'bpopTick');if(typeof siteTick==='function')siteTick=guardW(siteTick,'siteTick');if(typeof rainTick==='function')rainTick=guardW(rainTick,'rainTick');if(typeof bugTick==='function')bugTick=guardW(bugTick,'bugTick');if(typeof mkTick==='function')mkTick=guardW(mkTick,'mkTick');if(typeof mapTick==='function')mapTick=guardW(mapTick,'mapTick');if(typeof shotTick==='function')shotTick=guardW(shotTick,'shotTick');if(typeof fgTick==='function')fgTick=guardW(fgTick,'fgTick');if(typeof footTick==='function')footTick=guardW(footTick,'footTick');if(typeof resTick==='function')resTick=guardW(resTick,'resTick');if(typeof kcTick==='function')kcTick=guardW(kcTick,'kcTick');if(typeof shopTick==='function')shopTick=guardW(shopTick,'shopTick');if(typeof perfTick==='function')perfTick=guardW(perfTick,'perfTick');if(typeof wandTick==='function')wandTick=guardW(wandTick,'wandTick');if(typeof cmpTick==='function')cmpTick=guardW(cmpTick,'cmpTick');if(typeof cmpVisTick==='function')cmpVisTick=guardW(cmpVisTick,'cmpVisTick');if(typeof facTick==='function')facTick=guardW(facTick,'facTick');if(typeof emoTick==='function')emoTick=guardW(emoTick,'emoTick');if(typeof plvTick==='function')plvTick=guardW(plvTick,'plvTick');if(typeof mailTick==='function')mailTick=guardW(mailTick,'mailTick');if(typeof beamTick==='function')beamTick=guardW(beamTick,'beamTick');if(typeof natTick==='function')natTick=guardW(natTick,'natTick');if(typeof bnbTick==='function')bnbTick=guardW(bnbTick,'bnbTick');if(typeof mgrTick==='function')mgrTick=guardW(mgrTick,'mgrTick');if(typeof stageWatch==='function')stageWatch=guardW(stageWatch,'stageWatch');if(typeof updUfoNPC==='function')updUfoNPC=guardW(updUfoNPC,'updUfoNPC');if(typeof butlerTick==='function')butlerTick=guardW(butlerTick,'butlerTick');if(typeof newsTick==='function')newsTick=guardW(newsTick,'newsTick');if(typeof fireTick==='function')fireTick=guardW(fireTick,'fireTick');if(typeof inspTick==='function')inspTick=guardW(inspTick,'inspTick');if(typeof mgmtTick==='function')mgmtTick=guardW(mgmtTick,'mgmtTick');if(typeof updSenseDeco==='function')updSenseDeco=guardW(updSenseDeco,'updSenseDeco');if(typeof guideTick==='function')guideTick=guardW(guideTick,'guideTick');if(typeof netTick==='function')netTick=guardW(netTick,'netTick');if(typeof updOthers==='function')updOthers=guardW(updOthers,'updOthers');if(typeof updSprays==='function')updSprays=guardW(updSprays,'updSprays');if(typeof updCCN==='function')updCCN=guardW(updCCN,'updCCN');if(typeof updTerr==='function')updTerr=guardW(updTerr,'updTerr');if(typeof updBear==='function')updBear=guardW(updBear,'updBear');if(typeof updMac==='function')updMac=guardW(updMac,'updMac');if(typeof updTrees==='function')updTrees=guardW(updTrees,'updTrees');if(typeof updFount==='function')updFount=guardW(updFount,'updFount');if(typeof syncPondVis==='function')syncPondVis=guardW(syncPondVis,'syncPondVis');if(typeof ufoFade==='function')ufoFade=guardW(ufoFade,'ufoFade');if(typeof fadeTick==='function')fadeTick=guardW(fadeTick,'fadeTick');if(typeof fingerTick==='function')fingerTick=guardW(fingerTick,'fingerTick');if(typeof dayNight==='function')dayNight=guardW(dayNight,'dayNight');if(typeof camUpdate==='function')camUpdate=guardW(camUpdate,'camUpdate');if(typeof drawMenu==='function')drawMenu=guardW(drawMenu,'drawMenu');if(typeof coinTick==='function')coinTick=guardW(coinTick,'coinTick');if(typeof fpsTick==='function')fpsTick=guardW(fpsTick,'fpsTick');if(typeof cullTick==='function')cullTick=guardW(cullTick,'cullTick');if(typeof fsTick==='function')fsTick=guardW(fsTick,'fsTick');if(typeof autoStep==='function')autoStep=guardW(autoStep,'autoStep');if(typeof save==='function')save=guardW(save,'save');if(typeof zhwTick==='function')zhwTick=guardW(zhwTick,'zhwTick');if(typeof museumTick==='function')museumTick=guardW(museumTick,'museumTick');if(typeof musExtSync==='function')musExtSync=guardW(musExtSync,'musExtSync');if(typeof nameRecheck==='function')nameRecheck=guardW(nameRecheck,'nameRecheck');if(typeof creatorTick==='function')creatorTick=guardW(creatorTick,'creatorTick');if(typeof tick27==='function')tick27=guardW(tick27,'tick27');if(typeof tick28==='function')tick28=guardW(tick28,'tick28');if(typeof tick30==='function')tick30=guardW(tick30,'tick30');if(typeof tick32==='function')tick32=guardW(tick32,'tick32');if(typeof coopTick==='function')coopTick=guardW(coopTick,'coopTick');if(typeof tick34==='function')tick34=guardW(tick34,'tick34');if(typeof tick35==='function')tick35=guardW(tick35,'tick35');if(typeof tick37==='function')tick37=guardW(tick37,'tick37');if(typeof tick38==='function')tick38=guardW(tick38,'tick38');if(typeof htlTick==='function')htlTick=guardW(htlTick,'htlTick');if(typeof htlExtSync==='function')htlExtSync=guardW(htlExtSync,'htlExtSync');if(typeof parkTick==='function')parkTick=guardW(parkTick,'parkTick');if(typeof parkRideTick==='function')parkRideTick=guardW(parkRideTick,'parkRideTick');if(typeof ranchExtTick==='function')ranchExtTick=guardW(ranchExtTick,'ranchExtTick');if(typeof chatTick==='function')chatTick=guardW(chatTick,'chatTick');if(typeof tutTick==='function')tutTick=guardW(tutTick,'tutTick');if(typeof zaTick==='function')zaTick=guardW(zaTick,'zaTick');if(typeof ripTick==='function')ripTick=guardW(ripTick,'ripTick');if(typeof tut35Tick==='function')tut35Tick=guardW(tut35Tick,'tut35Tick');if(typeof autoTick==='function')autoTick=guardW(autoTick,'autoTick');if(typeof shoreTick==='function')shoreTick=guardW(shoreTick,'shoreTick');if(typeof tramTick==='function')tramTick=guardW(tramTick,'tramTick');if(typeof presenceTick==='function')presenceTick=guardW(presenceTick,'presenceTick');
+(function(){for(var k in ROOMS){(function(R,k){if(typeof R.tick!=='function')return;var f=R.tick;R.tick=function(dt,t){try{f(dt,t);}catch(e){errNote(e,'房間 '+k);}};})(ROOMS[k],k);}})();
+// ---- ② 監察（唔靠主迴圈，每秒一次）----
+var WD38={f:0,b:0,st:0};
+setInterval(function(){try{if(document.hidden||phase==='cover')return;
+ if(LOOPT&&performance.now()-LOOPT>3000){WD38.st++;if(WD38.st===1)errNote('畫面停咗超過 3 秒，自動重新開始','監察');LOOPT=performance.now();requestAnimationFrame(loop);}else WD38.st=0;
+ if(fading){WD38.f++;if(WD38.f>=5){WD38.f=0;fading=false;$('fade').style.opacity='0';errNote('白幕超過 5 秒，自動解除','監察');}}else WD38.f=0;
+ if(BEAMUP){WD38.b++;if(WD38.b>=8){WD38.b=0;var B=BEAMUP;BEAMUP=null;player.scale.setScalar(2.4);pSh.scale.setScalar(1);beam.visible=false;errNote('飛碟光柱超過 8 秒，自動完成','監察');if(B.st==='home'&&VISIT)leaveVisitNow();}}else WD38.b=0;
+ }catch(e){}},1000);
+// ---- ③ 到咗朋友星球（visitFriend 淡出之後叫）：每步獨立；砌唔到朋友個島就留返自己星球 ----
+function visitArrive38(f,pl,V){pFree37();S=V;VISIT={uid:f.uid,nm:pl.nm||f.p.nm};
+ try{rebuildWorld();}catch(e){errNote(e,'參觀');var coop=typeof COOP!=='undefined'&&COOP.role==='guest';try{if(coop)coopLeaveFix();}catch(e2){}S=OWN_S;OWN_S=null;VISIT=null;try{rebuildWorld();}catch(e3){errNote(e3,'參觀還原');}try{presenceHome();}catch(e4){}
+  toast('未能載入 '+(pl.nm||f.p.nm||'朋友')+' 嘅星球（'+String(e&&e.message||e).slice(0,40)+'），已經留返喺自己星球。'+(testerOn()?'設定頁「錯誤紀錄（測試）」有詳情':'可以截圖話俾老師知'),7000);return;}
+ try{beamDown37();}catch(e){BEAMUP=null;}try{presenceJoin(f.uid);}catch(e){errNote(e,'參觀同場');}
+ $('visitbar').classList.add('on');$('vbName').textContent=VISIT.nm;
+ try{if(typeof COOP!=='undefined'&&COOP.role==='guest')coopArrived();else toast('歡迎來到 '+VISIT.nm+' 的星球！（參觀期間唔會存檔、唔可以改嘢）',5000);}catch(e){errNote(e,'參觀提示');}}
+// 降落完：行前一步，離開飛碟正下面（唔會企喺飛碟底、唔擋住落機嘅旅客）
+function beamStep38(){var U=MAP.ufo;if(!U)return;var f=freeNear(U[0],U[1]+1.9,0.4,2);if(!f)return;BEAMUP={st:'step',t:0,x0:P.x,z0:P.z,x1:f[0],z1:f[1]};}
+// ---- ④ 錯誤紀錄（老師／創作者先見到）----
+var PS38=RENDER.phone_set;
+RENDER.phone_set=function(b){PS38(b);if(!testerOn())return;var L=ELOG.slice().reverse();
+ b.appendChild(card({ico:'storm'},'錯誤紀錄（測試）',L.length?'最近 '+L.length+' 條（最新喺頂）：<br>'+L.slice(0,8).map(function(q){var d=new Date(q.t);return '<small>'+hhmm(q.t)+' '+(d.getMonth()+1)+'/'+d.getDate()+'・'+esc(q.v)+'・'+esc(q.w)+(q.vis?'・參觀中':'')+'・'+esc(q.at||'')+(q.n>1?'・×'+q.n:'')+'<br>'+esc(q.m)+'</small>';}).join('<br>'):'未有錯誤。',
+  [{t:'清除',cls:'o',dis:!L.length,fn:function(){ELOG=[];try{localStorage.removeItem('ths-errlog');}catch(e){}renderPanel();}}]));};
+// ---- 主題樂園：去到閘口就入去（用戶指示：唔使行入去摩天輪）----
+var PK38={armed:true};
+function parkGateTick(){if(where!=='out'||!MAP.wheel||!bld('wheel')||fading||making||phase!=='play'||D0||panelKind||BEAMUP||TRAM.ride||SIT){return;}
+ var dx=P.x-MAP.wheel[0],dz=P.z-MAP.wheel[1];if(dz>4.3||Math.abs(dx)>2.2){PK38.armed=true;return;}
+ if(PK38.armed&&Math.abs(dx)<1.05&&dz<3.75&&dz>2.6){PK38.armed=false;AUTO=null;parkEnter();}}
+function tick38(dt,t){parkGateTick();if(typeof tick38b==='function')tick38b(dt,t);}
+// ================= v38 新手任務：播種（用戶指示：播完種，YHP 冇叫我淋水、任務冇顯示完成）=================
+// 原因：真正播種係「播種器」動畫（updSow）入面做，冇經過有新手任務掛鈎嘅 sow()；一齊建設時好友播種都冇通知島主（一併修正）
+function sowPlot38(j,k){var p=S.plots[j];p.c=k;p.p=0;p.w=0;if(!VISIT&&fastUse38(k))p.fast=1;if(coopGuest()){p.by=COOP.me;coopAct({op:'sow',i:j,c:k});}prevSt[j]=plotState(p);}
+// ---- 快速番茄種子（用戶指示：新玩家一開始送一粒，淋水之後即刻結果，可以即刻收成）----
+function fastUse38(k){if(k==='tomato'&&(S.fastSeed||0)>0){S.fastSeed--;return true;}return false;}
+function fastGive38(){if(!S||VISIT||S.fastSeedG)return false;S.fastSeedG=1;S.fastSeed=(S.fastSeed||0)+1;bagAdd('seed:tomato',1);save();return true;}
+function tutStart(){if(VISIT||!S)return;if(S.tut&&(S.tut.on||S.tut.fin))return;S.tut={on:1,d:{},t0:Date.now()};fastGive38();save();TUT.tk=null;
+ setTimeout(function(){talk(TUT_NM,'#6f82d9','#ffffff',['師兄！等我帶你完成新手任務：播種、澆水、收穫、交收箱、釣魚、摘果、請人、買嘢、賣嘢、加好友、去餐廳同服務中心、邀請開民宿。','送你一粒「快速番茄種子」：種落田、淋水之後即刻結果，可以即刻收成！','我會行去每項任務嘅地點等你（我頭上有提示）；每完成一項都有獎金，做晒仲有額外 $'+TUT_BONUS+'！跟住我啦！']);tutBar();},600);}
+// 做緊新手任務（未收成過）嘅舊玩家：都送一粒
+function fastOld38(){var o=S&&S.tut;if(!o||!o.on||o.fin||VISIT||S.fastSeedG||(o.d&&o.d.harv))return;if(fastGive38())setTimeout(function(){toast('YHP 送你一粒快速番茄種子：種落田、淋水之後即刻結果，可以即刻收成',6000);},2500);}
+// 空田按 A：有快速番茄種子就排第一，寫明「快速」
+function sowAsk(i){var ks=bagKeys('seed:').map(function(sk){return sk.slice(5);}),fast=(S.fastSeed||0)>0&&ks.indexOf('tomato')>=0;
+ if(!ks.length){talk('農田','#8a5a34','#ffffff',['背包裏沒有種子。到「星際市場」找阿康買種子吧。']);return;}
+ if(ks.length===1&&!fast){startSow(i,ks[0]);return;}
+ if(fast){ks.splice(ks.indexOf('tomato'),1);ks.unshift('tomato');}else if(lastSeed&&ks.indexOf(lastSeed)>0){ks.splice(ks.indexOf(lastSeed),1);ks.unshift(lastSeed);}
+ var opts=ks.map(function(k){var fk=fast&&k==='tomato';return {t:ICON[k]+' '+(fk?'快速番茄種子（淋水即熟）':iname(k)+'種子（'+bagCount('seed:'+k)+'）'),cb:function(){startSow(i,k);}};});opts.push({t:'取消',cb:function(){}});
+ talk('農田','#8a5a34','#ffffff',['要種甚麼？'+(S.sow>0?'（揀完之後快快再按一下 A，可以一次過播 '+SEEDRS[S.sow].k+' 格）':'')],opts);}
+// 淋水：快速番茄即刻成熟
+function fastWet38(j){var p=S.plots[j];if(!p||!p.c||!p.fast)return;p.p=3*cropStage(p.c);delete p.fast;save();setTimeout(function(){toast('快速番茄即刻結果！企喺田上面按 A 收成',4000);},900);}
+var F38={old:0};
+function tick38b(dt,t){if(!F38.old&&phase==='play'&&S&&!VISIT){F38.old=1;fastOld38();}}
+// ================= v38 魚竿（用戶指示）：愈高級，收線限時愈長、上釣反應時間愈長、愈易釣到珍貴魚；愈低級就愈短、愈難 =================
+// 以前限時按「用緊嗰支魚竿」嘅理想收線時間計，魚竿愈好、收線愈快、限時反而愈短；而家改用「呢條魚最低要求嘅魚竿」計基準，再按你支魚竿乘倍數
+function fsRodT(r){return 0.85+0.09*(r||0);}           // 收線限時倍數：普通 ×0.85 … 彩虹 ×1.48
+function fsWin38(r){return 0.75+0.1*(r||0);}            // 浮標沉落之後嘅反應時間（秒）：普通 0.75 … 彩虹 1.45
+function fsRare38(r){return 0.55+0.21*(r||0);}          // 稀有或以上嘅魚上釣機會：普通 ×0.55 … 彩虹 ×2.0
+function fsLim(f,rod,D){return Math.round((fsSim(f,fsMinRod(f),D)*FS_SLACK[f.rar]+4)*fsRodT(rod)*2)/2;}
+RENDER.shop_rod=function(b){b.appendChild(note('魚竿越高級：<b>收線限時越長</b>、浮標沉落之後反應時間越長、<b>珍貴嘅魚越常上釣</b>、越易釣到大魚；越低級就越短、越難釣到珍貴魚。第 3 級起先會有珍貴魚上釣，第 5 級起先有傳說魚。工具要<b>逐級購買</b>。'));
+ RODS.forEach(function(c,i){b.appendChild(card({ico:'rod:'+i},c.n,'收線限時 ×'+fsRodT(i).toFixed(2)+'、反應時間 '+fsWin38(i).toFixed(2)+' 秒、稀有魚機會 ×'+fsRare38(i).toFixed(1)+(i>=4?'（可以釣傳說魚）':i>=2?'（可以釣珍貴魚）':'')+(i?'　$'+c.p:'　開局的魚竿'),[tierBtn(S.rod||0,i,c.p,function(){buyRod(i);})],i===(S.rod||0)));});};
 // ---- 模組載入完：開始砌大型設施、牧場外型 ----
 LF_OK=true;if(MAP&&MAP.L&&typeof lfSync==='function')lfSync(true);
 requestAnimationFrame(loop);
