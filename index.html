@@ -2,7 +2,7 @@
 <html lang="zh-Hant-HK">
 <head>
 <meta charset="utf-8">
-<meta name="ths-build" content="2609301614">
+<meta name="ths-build" content="2609301811">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="color-scheme" content="light">
 <!-- iPhone Safari 冇 element fullscreen API：由「分享 → 加入主畫面」開就會冇工具列（同旅款亂Upper 一樣）-->
@@ -3318,7 +3318,7 @@ function updMac(dt,t){var m=MAC,u=macO.userData;macO.visible=macSh.visible=!maki
 
 // ================= 封面、揀地形 =================
 // 每次開遊戲先見封面；未玩過嘅新玩家：揀地形 → 建立角色 → 開場白
-var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v44',BUILD='2609301614';
+var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v45',BUILD='2609301811';
 function showCoverV42(){phase='cover';$('cover').classList.add('on');$('app').classList.add('cover');CU.uB.value=0;sea.scale.set(4,7,1);sea.position.z=(MAP.bc||[0,0])[1];
  var old=!!(S.me&&S.me.nm);$('cvVer').textContent=BUILD+'V'+VERSION.slice(1);$('cvGo').textContent=old?'繼續遊戲':'開始遊戲';$('cvHint').textContent=old?'歡迎回來，'+S.me.nm+'！':'第一次玩：先揀島嶼地形，再建立角色';}
 function leaveCoverV42(){if(phase!=='cover')return;$('cover').classList.remove('on');if(!S.layout){if(!S.story)openStory();else openTerr();}else startPlay();}
@@ -11891,6 +11891,42 @@ function sq44Tick(dt,t){var show=where==='out'&&phase==='play'&&!making&&nk<0.5&
   u.hd.rotation.y=q.st==='rest'?Math.sin(q.ph*0.9+q.cd)*0.6:0;u.hd.rotation.x=q.up*0.5;});}
 // ================= v44 每格（由 tick42 叫）=================
 function tick44(dt,t){try{tickV44(dt);}catch(e){errNote(e,'探訪');}try{vw44Tick(dt);}catch(e){errNote(e,'好友島人員');}try{th44Tick(dt);}catch(e){errNote(e,'捉小偷畫面');}try{sq44Tick(dt,t);}catch(e){errNote(e,'小松鼠');}}
+// ================= v45 小松鼠修正（用戶指示：有松鼠喺海上；條尾好奇怪，設計好啲）=================
+// ① 喺海上：松鼠記住舊位置——去好友個島、返屋企、填海之後成個島重砌，舊座標可能變咗海（主角 18 米內唔會重新揀位）
+//    修正：島一變就全部重新揀位；每半秒檢查腳下仲係唔係陸地（離海岸 1.2 米以上）；跳之前連中途都要係草地（唔會跳過水）
+//    草蜢同一個問題，一齊修正
+// ② 條尾：以前係一串波波疊高；改做一條平滑、粗幼有變化、頂部向前捲嘅蓬鬆大尾（好似問號），內側淺色、尾尖淺色，表面有少少毛簇起伏
+var SQ45={sig:'',chk:0,geo:null};
+function sq45TailGeo(){if(SQ45.geo)return SQ45.geo;
+ var pts=[[0,0,0],[0,0.03,-0.06],[0,0.1,-0.105],[0,0.185,-0.11],[0,0.255,-0.075],[0,0.29,-0.015],[0,0.275,0.04],[0,0.235,0.05]].map(function(p){return new T.Vector3(p[0],p[1],p[2]);});
+ var cu=new T.CatmullRomCurve3(pts,false,'catmullrom',0.5),N=48,R=14,fr=cu.computeFrenetFrames(N,false),pos=[],col=[],idx=[],v=new T.Vector3(),n=new T.Vector3();
+ var cBase=lc(0xc8743a),cMid=lc(0xd98a4c),cTip=lc(0xf0b47c),cIn=lc(0xf6dfc0),c=new T.Color();
+ function rad(t){return 0.011+0.013*(1-t)+0.052*Math.pow(Math.sin(Math.PI*Math.pow(t,0.9)),0.7);}
+ for(var i=0;i<=N;i++){var t=i/N,p=cu.getPointAt(t),r=rad(t);
+  for(var j=0;j<=R;j++){var a=j/R*Math.PI*2,ca=Math.cos(a),sa=Math.sin(a),fl=1+(0.07*Math.sin(6*a+13*t)+0.05*Math.sin(11*a-7*t))*Math.min(1,t*4)*(1-0.6*Math.max(0,t-0.8)/0.2);
+   n.copy(fr.normals[i]).multiplyScalar(ca).addScaledVector(fr.binormals[i],sa*1.15);v.copy(p).addScaledVector(n,r*fl);pos.push(v.x,v.y,v.z);
+   c.copy(cBase).lerp(cMid,Math.min(1,t*4));if(t>0.7)c.lerp(cTip,Math.min(1,(t-0.7)/0.3));var inn=Math.max(0,(ca-0.62)/0.38)*Math.min(1,t*2.5)*0.5;c.lerp(cIn,inn);col.push(c.r,c.g,c.b);}}
+ for(var i2=0;i2<N;i2++)for(var j2=0;j2<R;j2++){var a0=i2*(R+1)+j2,b0=a0+R+1;idx.push(a0,b0,a0+1,b0,b0+1,a0+1);}
+ // 兩頭封口：尾根收入身體；尾尖加一粒圓頂
+ var g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setAttribute('color',new T.Float32BufferAttribute(col,3));g.setIndex(idx);g.computeVertexNormals();
+ var tipP=cu.getPointAt(1),tipT=cu.getTangentAt(1),cap=new T.SphereGeometry(rad(1)*1.0,10,6);cap.translate(tipP.x+tipT.x*0.004,tipP.y+tipT.y*0.004,tipP.z+tipT.z*0.004);
+ var cc=[];for(var k=0;k<cap.attributes.position.count;k++)cc.push(cTip.r,cTip.g,cTip.b);cap.setAttribute('color',new T.Float32BufferAttribute(cc,3));
+ SQ45.geo={tube:g,cap:cap};return SQ45.geo;}
+var sq44ModelV44=sq44Model;sq44Model=function(){var g=sq44ModelV44(),u=g.userData,tl=u.tl;
+ try{while(tl.children.length){var ch=tl.children[0];tl.remove(ch);if(ch.geometry)ch.geometry.dispose();}
+  var G=sq45TailGeo(),mat=std({c:0xffffff,vc:true,r:0.95});var tm=new T.Mesh(G.tube,mat),cm=new T.Mesh(G.cap,mat);
+  tl.position.set(0,0.07,-0.07);tl.scale.setScalar(0.8);tl.add(tm);tl.add(cm);tm.castShadow=cm.castShadow=true;noCull(tl);}catch(e){errNote(e,'松鼠尾巴');}return g;};
+// ---- 唔好喺海上 ----
+function sq45Sig(){return (MAP&&MAP.id||'')+'|'+(VISIT?VISIT.uid:'')+'|'+((S&&S.recl)||[]).length+'|'+(typeof WS!=='undefined'?WS:1);}
+function sq45Ok(x,z){return isLand(x,z)&&sdAt(x,z)<-1.2;}
+function sq45Mid(ax,az,bx,bz){for(var k=1;k<4;k++){var t=k/4;if(!hopGrass(ax+(bx-ax)*t,az+(bz-az)*t))return false;}return true;}
+var sq44TickV44=sq44Tick;sq44Tick=function(dt,t){var sig=sq45Sig();
+ if(sig!==SQ45.sig){SQ45.sig=sig;SQ44.list.forEach(function(q){q.on=false;q.st='rest';q.m.visible=false;});if(typeof HOP!=='undefined')HOP.list.forEach(function(h){h.on=false;h.m.visible=false;});}
+ SQ45.chk-=dt;if(SQ45.chk<=0){SQ45.chk=0.5;SQ44.list.forEach(function(q){if(q.on&&q.st!=='jump'&&!sq45Ok(q.x,q.z)){q.on=false;q.m.visible=false;}});
+  if(typeof HOP!=='undefined')HOP.list.forEach(function(h){if(h.on&&h.st!=='jump'&&!sq45Ok(h.x,h.z)){h.on=false;h.m.visible=false;}});}
+ // 跳之前檢查中途：唔啱就即刻取消呢一跳
+ SQ44.list.forEach(function(q){if(q.st==='jump'&&q.jt<0.001&&!sq45Mid(q.sx,q.sz,q.ex,q.ez)){q.st='rest';q.t=0.3;q.x=q.sx;q.z=q.sz;}});
+ sq44TickV44(dt,t);};
 // ---- 模組載入完：開始砌大型設施、牧場外型 ----
 LF_OK=true;if(MAP&&MAP.L&&typeof lfSync==='function')lfSync(true);
 requestAnimationFrame(loop);
