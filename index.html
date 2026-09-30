@@ -2,7 +2,7 @@
 <html lang="zh-Hant-HK">
 <head>
 <meta charset="utf-8">
-<meta name="ths-build" content="2609300111">
+<meta name="ths-build" content="2609300813">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="color-scheme" content="light">
 <!-- iPhone Safari 冇 element fullscreen API：由「分享 → 加入主畫面」開就會冇工具列（同旅款亂Upper 一樣）-->
@@ -3272,7 +3272,7 @@ function updMac(dt,t){var m=MAC,u=macO.userData;macO.visible=macSh.visible=!maki
 
 // ================= 封面、揀地形 =================
 // 每次開遊戲先見封面；未玩過嘅新玩家：揀地形 → 建立角色 → 開場白
-var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v40',BUILD='2609300111';
+var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v41',BUILD='2609300813';
 function showCover(){phase='cover';$('cover').classList.add('on');$('app').classList.add('cover');CU.uB.value=0;sea.scale.set(4,7,1);sea.position.z=(MAP.bc||[0,0])[1];
  var old=!!(S.me&&S.me.nm);$('cvVer').textContent=BUILD+'V'+VERSION.slice(1);$('cvGo').textContent=old?'繼續遊戲':'開始遊戲';$('cvHint').textContent=old?'歡迎回來，'+S.me.nm+'！':'第一次玩：先揀島嶼地形，再建立角色';}
 function leaveCover(){if(phase!=='cover')return;$('cover').classList.remove('on');if(!S.layout){if(!S.story)openStory();else openTerr();}else startPlay();}
@@ -3984,7 +3984,7 @@ var BUTLER=[null,
 function investSince(t){var s=0;(S.invest||[]).forEach(function(v){if(v.t>=t)s+=v.a;});return s;}
 function noteInvest(a,kind){S.invest.push({t:Date.now(),a:a,k:kind||''});if(typeof qAdd==='function'){if(/^(farm|pond|fount|fac|bld|recl)$/.test(kind))qAdd('build',1);else if(/^(fridge|stove|pos|sense)$/.test(kind))qAdd('upgrade',1);else if(kind==='mgmt')qAdd('hire',1);}while(S.invest.length>80)S.invest.shift();}
 // 判斷準則（課本三把尺）：旅客人數及增幅、當地設施的情況及投資者、旅客對當地人的影響
-function butlerInfo(){var st=S.butler.st,a=sumDays(7,0).n,b=sumDays(7,7).n,g=b?(a-b)/b:(a>0?1:0),since=S.butler.since,C=[],to=0;
+function butlerInfoV40(){var st=S.butler.st,a=sumDays(7,0).n,b=sumDays(7,7).n,g=b?(a-b)/b:(a>0?1:0),since=S.butler.since,C=[],to=0;
  function c(t,ok){C.push({t:t,ok:!!ok});}
  if(st===1){to=2;c('近 7 日旅客達 40 人（現在 '+a+' 人）',a>=40);c('旅客人數急速上升：比之前 7 日增長 20% 或以上（現在 '+Math.round(g*100)+'%）',g>=0.2);c('外來投資者進場或開始對外宣傳（聘請過管理合約公司，或者放過煙花）',S.flags.invest||S.flags.promo);}
  else if(st===2){to=3;c('近 7 日旅客達 120 人（現在 '+a+' 人）',a>=120);c('增長速度開始放緩：增長介乎 0% 至 20%（現在 '+Math.round(g*100)+'%）',g>=0&&g<0.2);c('旅遊業制度化：安裝了銷售點系統（POS）',S.pos);c('旅遊業制度化：取得最少一個衛生獎章',S.medals.length>=1);}
@@ -3994,7 +3994,7 @@ function butlerInfo(){var st=S.butler.st,a=sumDays(7,0).n,b=sumDays(7,7).n,g=b?(
 function setStage(st,why){var old=S.butler.st;if(old===st)return;S.butler.st=st;S.butler.since=Date.now();S.butler.hist.push({t:Date.now(),st:st});S.flags.capFix=0;
  addNews('🌏 星球進入「'+BUTLER[st].n+'」','根據巴特勒旅遊目的地的生命週期，你的星球'+(why||'')+'進入了「'+BUTLER[st].n+'」：'+BUTLER[st].d,'stage');
  toast('🌏 你的星球進入「'+BUTLER[st].n+'」！到「📖 雜誌」看看',5200);save();}
-var butT=50;function butlerTick(dt){butT+=dt;if(butT<60)return;butT=0;var I=butlerInfo(),st=I.st,day=Date.now()-S.butler.since>=20*3600000;if(!day)return;
+var butT=50;function butlerTickV40(dt){butT+=dt;if(butT<60)return;butT=0;var I=butlerInfo(),st=I.st,day=Date.now()-S.butler.since>=20*3600000;if(!day)return;
  if((st===4)&&I.b>=40&&(I.a<=I.b*0.7||S.gw<30)){setStage(5,'失去競爭力，');return;}
  if(I.to&&I.C.length&&I.C.every(function(c){return c.ok;}))setStage(I.to);}
 
@@ -4082,7 +4082,7 @@ SENSES.forEach(function(se){RENDER['sense_'+se.k]=senseRender(se.k);});
 var JIAN_NM='嘉禧（建材行）',JIAN_BG='#b8672f';
 function jianTalk(){var first=!S.met.jh2;S.met.jh2=1;save();npcHop.jian=0.8;
  talk(JIAN_NM,JIAN_BG,'#ffffff',first?['你好，'+me()+'！我是建材行的嘉禧。','由今日起，工具同設備都喺我度買：澆水器、採摘器、播種器、魚竿、消防用品，同埋餐廳的雪櫃、爐具、銷售點系統；餐廳裝修（五種感官）都係搵我。','想擴建或者興建設施，就先向市長林庫申請，批准之後我的工程隊就會開工。今日想買甚麼？']:['你好，'+me()+'！今日想買甚麼？'],
-  [{t:'農場、牧場人手',cb:function(){openPanel('auto','farm');}},{t:'買工具',cb:function(){openPanel('shop','can');}},{t:'餐廳設備',cb:function(){openPanel('equip','rest');}},{t:'餐廳裝修（五感）',cb:jianRest},{t:'擴建？',cb:function(){talk(JIAN_NM,JIAN_BG,'#ffffff',['升級農場、池塘、花圃、噴水池、填海，增建電車、長椅、街燈、主道路，同埋興建住宿、博物館、主題樂園、主題餐廳，要先向市長林庫申請。','佢就喺服務中心後面嘅辦公桌。批准之後，我的工程隊會即刻開工！']);}},{t:'沒事了',cb:function(){}}]);}
+  [{t:'農場、牧場人手',cb:function(){openPanel('auto','farm');}},{t:'聘請花王',cb:function(){openPanel('auto','fbed');}},{t:'買工具',cb:function(){openPanel('shop','can');}},{t:'餐廳設備',cb:function(){openPanel('equip','rest');}},{t:'餐廳裝修（五感）',cb:jianRest},{t:'擴建？',cb:function(){talk(JIAN_NM,JIAN_BG,'#ffffff',['升級農場、池塘、花圃、噴水池、填海，增建電車、長椅、街燈、主道路，同埋興建住宿、博物館、主題樂園、主題餐廳，要先向市長林庫申請。','佢就喺服務中心後面嘅辦公桌。批准之後，我的工程隊會即刻開工！']);}},{t:'沒事了',cb:function(){}}]);}
 function jianRest(){var first=!S.met.jr;S.met.jr=1;save();
  talk(JIAN_NM,JIAN_BG,'#ffffff',first?['餐廳的氣氛，由客人的五種感官決定：視覺、觸覺、聽覺、嗅覺、溫度。','地板、牆身、燈飾是視覺；餐檯、椅子、餐具、地氈是觸覺；音響、吸音設備是聽覺；減油煙和空氣清新系統是嗅覺；空調和抽濕機是溫度。想改善哪一方面？']:['想改善餐廳哪一方面？'],
   SENSES.map(function(se){return {t:se.ic+' '+se.n,cb:function(){openPanel('sense',se.k);}};}).concat([{t:'返回',cb:jianTalk}]));}
@@ -4445,11 +4445,11 @@ function presenceOff(){if(PRES.unsub){PRES.unsub();PRES.unsub=null;}if(PRES.host
 function presenceJoin(host){if(!NET.user)return;presenceOff();PRES.host=host;DBI.onDisc(presPath());PRES.last='';presenceTick(1);
  PRES.unsub=DBI.on('presence/'+host,function(o){o=o||{};var now=Date.now(),seen={};for(var uid in o){if(uid===NET.user.uid)continue;var p=o[uid];if(!p||now-(p.t||0)>30000)continue;seen[uid]=1;upOther(uid,p);}for(var k in OTHERS)if(!seen[k])dropOther(k);});}
 function presenceHome(){if(NET.user&&!VISIT)presenceJoin(NET.user.uid);}
-function presenceTick(dt){if(!PRES.host||!NET.user)return;PRES.t+=dt;var tm=typeof trmPub==='function'?trmPub():null,tq=typeof TRQ!=='undefined'?TRQ.req:null,rd=TRAM&&TRAM.ride?TRAM.ride.dest:'';var key=Math.round(P.x*10)+','+Math.round(P.z*10)+','+where+','+(SIT?1:0)+','+rd+','+(EMO.out?EMO.out.id:'')+(SAY?SAY.id:'')+'|'+(tm?tm.c+tm.st+Math.round(tm.s*2)+(tm.v>0?1:0):'')+'|'+(tq?tq.t:'')+'|'+(typeof misKey==='function'?misKey():'');if(PRES.t<0.3||(key===PRES.last&&PRES.t<8))return;PRES.t=0;PRES.last=key;
- DBI.set(presPath(),{nm:me(),look:lookOf(VISIT?OWN_S:S),x:+P.x.toFixed(2),z:+P.z.toFixed(2),r:+P.rot.toFixed(2),w:where,s:SIT?1:0,tr:rd?1:0,td:rd||null,tq:tq||null,tm:tm||null,ms:typeof misPubS==='function'?misPubS():null,ma:typeof misPubA==='function'?misPubA():null,mp:typeof misPubP==='function'?misPubP():null,e:(EMO.out&&Date.now()-EMO.out.t<6000)?EMO.out:null,sy:(SAY&&Date.now()-SAY.t<6000)?SAY:null,t:Date.now()}).catch(function(){});}
+function presenceTick(dt){if(!PRES.host||!NET.user)return;PRES.t+=dt;var tm=typeof trmPub==='function'?trmPub():null,tq=typeof TRQ!=='undefined'?TRQ.req:null,rd=TRAM&&TRAM.ride?TRAM.ride.dest:'';var key=Math.round(P.x*10)+','+Math.round(P.z*10)+','+where+','+(SIT?1:0)+','+rd+','+(EMO.out?EMO.out.id:'')+(SAY?SAY.id:'')+'|'+(tm?tm.c+tm.st+Math.round(tm.s*2)+(tm.v>0?1:0):'')+'|'+(tq?tq.t:'')+'|'+(typeof misKey==='function'?misKey():'')+'|'+(typeof thfKey==='function'?thfKey():'');if(PRES.t<0.3||(key===PRES.last&&PRES.t<8))return;PRES.t=0;PRES.last=key;
+ DBI.set(presPath(),{nm:me(),look:lookOf(VISIT?OWN_S:S),x:+P.x.toFixed(2),z:+P.z.toFixed(2),r:+P.rot.toFixed(2),w:where,s:SIT?1:0,tr:rd?1:0,td:rd||null,tq:tq||null,tm:tm||null,ms:typeof misPubS==='function'?misPubS():null,ma:typeof misPubA==='function'?misPubA():null,mp:typeof misPubP==='function'?misPubP():null,mt:typeof thfPub==='function'?thfPub():null,mc:typeof thfPubC==='function'?thfPubC():null,e:(EMO.out&&Date.now()-EMO.out.t<6000)?EMO.out:null,sy:(SAY&&Date.now()-SAY.t<6000)?SAY:null,t:Date.now()}).catch(function(){});}
 function upOther(uid,p){var o=OTHERS[uid];if(!o){var L=p.look||{},m=kid(meOpts(L.me,L.wear,L.bag||0));m.scale.setScalar(2.4);noCull(m);var tag=bubble('👤 '+(p.nm||'朋友'),'rgba(111,130,217,.92)','#ffffff',0.36);o=OTHERS[uid]={m:m,tag:tag,x:p.x,z:p.z,r:p.r,tx:p.x,tz:p.z,tr:p.r,w:p.w,ph:0,nm:p.nm};(SCN[p.w]||scO).add(m);(SCN[p.w]||scO).add(tag);
   if(!NET.seenMsg||!NET.seenMsg[uid]){NET.seenMsg=NET.seenMsg||{};NET.seenMsg[uid]=1;toast('👋 '+(p.nm||'朋友')+(VISIT&&uid===VISIT.uid?'（島主）':'')+' 都喺呢個星球！',4000);}}
- o.tx=p.x;o.tz=p.z;o.tr=p.r;o.sit=!!p.s;o.tram=!!p.tr;o.td=p.td||null;o.tq=p.tq||null;if(p.tm){o.tm=p.tm;o.tmT=Date.now();}else o.tm=null;o.ms=p.ms||null;if(p.ms)o.msT=Date.now();o.ma=p.ma||null;o.mp=p.mp||null;o.look=p.look||o.look;if(p.e&&typeof emoRecv==='function')emoRecv(uid,p.e);if(p.sy&&typeof chatRecv==='function')chatRecv(uid,p.sy);if(o.w!==p.w){(SCN[o.w]||scO).remove(o.m);(SCN[o.w]||scO).remove(o.tag);o.w=p.w;(SCN[o.w]||scO).add(o.m);(SCN[o.w]||scO).add(o.tag);o.x=o.tx;o.z=o.tz;}}
+ o.tx=p.x;o.tz=p.z;o.tr=p.r;o.sit=!!p.s;o.tram=!!p.tr;o.td=p.td||null;o.tq=p.tq||null;if(p.tm){o.tm=p.tm;o.tmT=Date.now();}else o.tm=null;o.ms=p.ms||null;if(p.ms)o.msT=Date.now();o.ma=p.ma||null;o.mp=p.mp||null;o.mt=p.mt||null;o.mc=p.mc||null;o.look=p.look||o.look;if(p.e&&typeof emoRecv==='function')emoRecv(uid,p.e);if(p.sy&&typeof chatRecv==='function')chatRecv(uid,p.sy);if(o.w!==p.w){(SCN[o.w]||scO).remove(o.m);(SCN[o.w]||scO).remove(o.tag);o.w=p.w;(SCN[o.w]||scO).add(o.m);(SCN[o.w]||scO).add(o.tag);o.x=o.tx;o.z=o.tz;}}
 function dropOther(uid){var o=OTHERS[uid];if(!o)return;if(o.m.parent)o.m.parent.remove(o.m);disposeTree(o.m);killSprite(o.tag);delete OTHERS[uid];}
 function updOthersV36(dt){for(var k in OTHERS){var o=OTHERS[k],dx=o.tx-o.x,dz=o.tz-o.z,d=Math.hypot(dx,dz),mv=d>0.03;if(d>6){o.x=o.tx;o.z=o.tz;}else{var f=Math.min(1,dt*8);o.x+=dx*f;o.z+=dz*f;}o.r=lerpA(o.r,o.tr,dt*10);
  o.m.position.set(o.x,o.w==='out'?standY(o.x,o.z):0,o.z);o.m.rotation.y=o.r;if(mv)o.ph+=dt*10;animWalk(o.m,o.ph,mv);if(o.sit&&o.m.userData.legs){var ou=o.m.userData;ou.lg[0].rotation.x=ou.lg[1].rotation.x=-1.35;o.m.position.y+=0.22;}o.m.visible=o.w===where;o.tag.visible=o.w===where;
@@ -7661,7 +7661,7 @@ roomDef('h3',{sc:scH3,b:[-9,9,-3,4.4],door:null,noExit:1,nm:'星際酒店 3 樓�
 roomDef('hr',{sc:scHR,b:[-4.5,4.5,-3,3],door:{x:0,w:0.8},nm:'酒店客房',camK:1.22,out:function(){return htlOutPt();},mapPos:function(){var p=htlPos();return [p[0],p[1],'星際'+htlT().n+'客房'];},onEnter:function(){HTLS.wat=[];hrBuild();},tick:function(dt,t){hfTick(dt,t);},
  exitTo:function(){var q=HTLS.rm||{fl:'h2',x:0};roomGo(q.fl||'h2',q.x||0,ROOMS[q.fl||'h2'].b[2]+1.1,0);}});
 roomDef('hfac',{sc:scHF,b:[-10,10,-6,5],door:{x:0,w:1.2},nm:'渡假村康樂設施',camK:1,out:function(){return htlOutPt();},mapPos:function(){var p=htlPos();return [p[0],p[1],'渡假村康樂設施'];},onEnter:function(){hfBuild();},tick:function(dt,t){hfTick(dt,t);},
- exitTo:function(){roomGo('hlob',-5.6,1.0,-Math.PI/2);}});
+ exitTo:function(){roomGo('hlob',-5.5,1.0,Math.PI/2);}});
 // ---- 入口 ----
 function hotelTalk(){htlUse(null);if(!bld('hotel')){hotelTalkV26();return;}var o=htlSt();if(!o.type&&VISIT){toast('朋友嘅酒店仲未開業',2500);return;}if(!o.type){htlChoose(function(){roomEnter('hlob',0,3.7,Math.PI);});return;}roomEnter('hlob',0,3.7,Math.PI);}
 // ================= v28 主題樂園（用戶指示）：可以入去；機動遊戲參考迪士尼樂園、環球影城，每項都可以升級；
@@ -9644,7 +9644,7 @@ var MS34=RENDER.market_sell;
 RENDER.market_sell=function(b){MS34(b);var ks=bagKeys('shore:');b.appendChild(note('沙灘拾到嘅海星、貝殼'));
  ks.forEach(function(bk){var k=bk.slice(6);if(!SHORE_K[k])return;b.appendChild(card({ico:'shore:'+k},shoreName(k)+' × '+bagCount(bk),'收購價每個 $'+SHORE_K[k].p,[{t:'賣 1 個',fn:function(){sellShore(k,1);}},{t:'全部賣',cls:'o',fn:function(){sellShore(k,bagCount(bk));}}]));});
  if(!ks.length)b.appendChild(note('背包裏沒有海星或貝殼：去海邊沙灘行吓，見到就按 A 拾起。'));};
-function dynITO(){return dynITO35().concat(shoreITO(),typeof misITO==='function'?misITO():[]);}
+function dynITO(){return dynITO35().concat(shoreITO(),typeof misITO==='function'?misITO():[],typeof ito41==='function'?ito41():[]);}
 // ================= v36 一齊建設：撳「邀請一齊建設」一定有回應（用戶指示：撳咗冇反應）=================
 // 原因：資料庫規則未發佈 → 寫入俾伺服器拒絕；v35 嘅錯誤提示「每次開遊戲只提一次」，之後再撳就冇提示，好似冇反應
 // 修正：① 撳掣即刻提示「發出緊邀請」② 9 秒未有結果就講連唔到伺服器 ③ 拒絕／網絡錯誤每次都講（15 秒內唔重複同一句）④ 好友頁頂顯示一齊建設可唔可以用
@@ -10337,9 +10337,9 @@ var MIS={s:null,cool:6,ti:0,acc:null,my:0,got:{},told:{},bb:null,bub:null,hud:nu
 function misTK(k){for(var i=0;i<MIS_T.length;i++)if(MIS_T[i].k===k)return MIS_T[i];return MIS_T[0];}
 function misMembers(){var L=[];for(var u in (COOP.mem||{}))if(OTHERS[u])L.push(u);return L;}
 function misHostOn(){return !!(NET.user&&!VISIT&&COOP.role==='host'&&misMembers().length>0);}
-function misDesc(s){var T0=misTK(s.k);return Math.round(s.T/60*10)/10+' 分鐘內，大家一共'+(s.k==='fish'?'釣到 ':s.k==='fruit'?'摘 ':s.k==='water'?'淋 ':'拾 ')+s.n+' '+T0.unit;}
+function misDesc(s){var T0=misTK(s.k);return Math.round(s.T/60*10)/10+' 分鐘內，大家一共'+(s.k==='fish'?'釣到 ':s.k==='fruit'?'摘 ':s.k==='water'?'淋 ':s.k==='thief'?'捉 ':'拾 ')+s.n+' '+T0.unit;}
 function misCan(k){if(k==='water')return (S.plots||[]).filter(function(p){return p&&p.c;}).length>=2;if(k==='fruit')return TREEV.filter(function(tr){return tr.kind!=='pine';}).length>=2;return true;}
-function misNew(){for(var q=0;q<MIS_T.length&&!misCan(MIS_T[MIS.ti%MIS_T.length].k);q++)MIS.ti++;var T0=MIS_T[MIS.ti%MIS_T.length],np=1+misMembers().length,n=Math.round(T0.n2*(1+0.5*(np-2)));
+function misNew(){for(var q=0;q<MIS_T.length&&!misCan(MIS_T[MIS.ti%MIS_T.length].k);q++)MIS.ti++;var T0=MIS_T[MIS.ti%MIS_T.length],np=1+misMembers().length,n=T0.k==='thief'?2*np+1:Math.round(T0.n2*(1+0.5*(np-2)));
  MIS.s={id:'m'+Date.now().toString(36),k:T0.k,n:Math.max(2,n),T:T0.T,rw:T0.rw,st:'ad',acc:[],tot:0,left:T0.T};MIS.acc=null;MIS.my=0;}
 // 島主：管任務
 function misHostTick(dt){if(!misHostOn()){if(MIS.s&&!VISIT)MIS.s=null;MIS.cool=6;return;}var s=MIS.s,me=NET.user.uid;
@@ -10397,14 +10397,14 @@ function misTick(dt,t){try{if(!VISIT)misHostTick(dt);else misGuestTick(dt);}catc
  if(where==='out'&&MAP&&MAP.plaza){var id=MAP.id+'|'+(MAP.plaza[0]-2.3).toFixed(1)+','+(MAP.plaza[1]-3.0).toFixed(1);if(MIS.mapId!==id||CIR_O.indexOf(MIS.cir)<0)misPlace();}
  if(MIS.s&&MIS.s.st==='run'&&MIS.s.k==='shore'&&typeof SHORE!=='undefined'&&SHORE.t>6)SHORE.t=6;
  var s=MIS.s,h=misHud(),mine=s&&MIS.acc===s.id,show=s&&(s.st==='run'||(s.st==='ad'&&mine));
- if(show){var tl=Math.ceil(s.left),txt=s.st==='run'?'【'+misTK(s.k).n+'】一共 '+s.tot+'／'+s.n+' '+misTK(s.k).unit+'・剩 '+Math.floor(tl/60)+':'+('0'+tl%60).slice(-2):'【'+misTK(s.k).n+'】已接受：等緊隊友接受…';if(h.textContent!==txt)h.textContent=txt;h.style.display=phase==='play'?'block':'none';}else h.style.display='none';
+ if(show){var tl=Math.ceil(s.left),txt=s.st==='run'?'【'+misTK(s.k).n+'】一共 '+s.tot+'／'+s.n+' '+misTK(s.k).unit+'・剩 '+Math.floor(tl/60)+':'+('0'+tl%60).slice(-2)+(s.k==='thief'&&typeof THF!=='undefined'&&THF.hint?'・'+THF.hint:''):'【'+misTK(s.k).n+'】已接受：等緊隊友接受…';if(h.textContent!==txt)h.textContent=txt;h.style.display=phase==='play'?'block':'none';}else h.style.display='none';
  if(MIS.bb){var key=s?s.id+s.st+s.tot:'none';if(MIS.bb.key!==key){MIS.bb.key=key;var old=MIS.bb.pm.material.map;MIS.bb.pm.material.map=misPoster(s,s&&s.st==='ad');MIS.bb.pm.material.needsUpdate=true;if(old)old.dispose();}MIS.bb.star.visible=!!(s&&s.st==='ad');if(MIS.bb.star.visible)MIS.bb.star.rotation.y+=dt*2;}
  // 麥仔頭上提示
  var want=!!(s&&s.st==='ad'&&!mine&&where==='out');if(want&&!MIS.bub){MIS.bub=bubble('廣告板有新任務！','#e8574f','#ffffff',0.36);scO.add(MIS.bub);}if(MIS.bub){MIS.bub.visible=want;if(want&&typeof MAC!=='undefined')MIS.bub.position.copy(bendPt(MAC.x,2.75,MAC.z));}
  if(s&&s.st==='ad'&&!mine&&!MIS.told['a'+s.id]){MIS.told['a'+s.id]=1;var sid=s.id;setTimeout(function(){var q=MIS.s;if(q&&q.id===sid&&q.st==='ad'&&MIS.acc!==sid)toast('麥仔：噴水池旁邊嘅廣告板貼咗新嘅多人任務！',4500);},800);}}
 function misITO(){return where==='out'&&MIS.bb?[MIS_IT]:[];}
 // ================= v40 每格（由 tick39 叫）=================
-function tick40(dt,t){try{int40Tick(dt,t);}catch(e){errNote(e,'室內美化');}try{misTick(dt,t);}catch(e){errNote(e,'多人任務');}try{pv40Sync();}catch(e){}}
+function tick40(dt,t){try{int40Tick(dt,t);}catch(e){errNote(e,'室內美化');}try{misTick(dt,t);}catch(e){errNote(e,'多人任務');}try{pv40Sync();}catch(e){}if(typeof tick41==='function')tick41(dt,t);}
 // ================= v40 行人路（用戶指示：市長林庫「升級設施」加設行人路，可以揀唔同款式嘅階磚）=================
 // 砌法：路中間係「主道路」（泥路／碎石／石板／紅磚，跟社區設施嘅主道路等級），兩邊加一條行人路（有石壆），噴水池廣場成個鋪同款階磚
 // 地面 shader：遮罩藍色 channel 畫窄啲嘅「車路」，行人路＝小路範圍減車路；uSide＝揀咗嘅階磚款式（0＝未有行人路）
@@ -10692,6 +10692,374 @@ function pk40Booth(k,label,c1){var g=new T.Group();pkA(g,pkBX(2.0,1.0,1.1),M(0xf
  else{pk40Fig(g,0x7cc6ff,'bunny',0.45,1.06,0.05,0.42);pk40Fig(g,0x7cc6ff,'bunny',0.78,1.06,0.28,0.22);pk40Fig(g,0xff9ec4,'cat',-0.55,1.06,0.1,0.36);pk40Fig(g,0xffe066,'bear',-0.2,1.06,0.3,0.2);
   var q=pkSign('?','#ffffff','#e8574f',0.3,0.3);q.position.set(0.78,1.52,0.3);g.add(q);}
  return g;}
+// ================= v41 室內設施都可以直接行入去（用戶指示：好似正門咁自由出入，唔使按 A）=================
+// 酒店大堂 → 康樂設施（西面門）、電梯（北面）；各樓層 → 電梯（西面）、每間客房門（北面）
+// 做法同 v39 室外門口一樣：向住門口行入感應位就入；電梯會自動彈出揀樓層；入咗一次，要行開再行返入去先會再觸發
+var DOOR41={w:'',px:null,pz:null,arm:{},cool:0};
+// 感應位：x,z＝門口位置、ax,az＝要向邊個方向行先算入（指向門口）、hw＝門口半闊、dep＝感應位深度
+function door41List(){var R=ROOMS[where];if(!R||!R.items)return [];var L=[];
+ R.items.forEach(function(it,i){var l=typeof it.l==='function'?it.l():it.l;if(!l||!it.fn)return;
+  if(l==='康樂設施')L.push({id:'hfac',x:-6.97,z:it.z,ax:-1,az:0,hw:0.7,dep:0.95,fn:it.fn});
+  else if(l==='搭電梯'){if(where==='hlob')L.push({id:'lift',x:it.x,z:-4.9,ax:0,az:-1,hw:0.6,dep:1.25,fn:it.fn});else L.push({id:'lift',x:R.b[0],z:it.z,ax:-1,az:0,hw:0.7,dep:1.15,fn:it.fn});}
+  else if(/^參觀 /.test(l)||/（有客）$/.test(l))L.push({id:'rm'+i,x:it.x,z:R.b[2],ax:0,az:-1,hw:0.45,dep:1.2,fn:it.fn});});
+ return L;}
+function door41Tick(dt){if(DOOR41.w!==where){DOOR41.w=where;DOOR41.px=null;DOOR41.arm={};DOOR41.cool=0.6;}
+ if(where==='out'||!ROOMS[where]||phase!=='play'||fading||making||D0||panelKind||BEAMUP||FS.on||MG||(PARK&&PARK.ride)){DOOR41.px=P.x;DOOR41.pz=P.z;return;}
+ var L=door41List(),mx=DOOR41.px==null?0:P.x-DOOR41.px,mz=DOOR41.pz==null?0:P.z-DOOR41.pz,sp=Math.hypot(mx,mz);DOOR41.px=P.x;DOOR41.pz=P.z;
+ if(DOOR41.cool>0){DOOR41.cool-=dt;}
+ L.forEach(function(d){var rx=P.x-d.x,rz=P.z-d.z,along=-(rx*d.ax+rz*d.az),lat=Math.abs(rx*d.az-rz*d.ax),inZ=along<d.dep&&along>-0.3&&lat<d.hw;
+  if(!inZ){if(along>d.dep+0.5||lat>d.hw+0.5)DOOR41.arm[d.id]=true;return;}
+  if(DOOR41.arm[d.id]===false||DOOR41.cool>0)return;
+  if(sp<0.004||(mx*d.ax+mz*d.az)<0.35*sp)return;   // 要向住門口行緊
+  DOOR41.arm[d.id]=false;DOOR41.cool=0.8;AUTO=null;try{d.fn();}catch(e){errNote(e,'行入室內門口');}});}
+// ================= v41 主角唔可以再穿過 NPC（用戶指示：同好多 NPC 碰面仍然會穿過）=================
+// 以前只有少數 NPC 有碰撞（旅客、導遊、餐廳客人、店員、麥仔、阿福）；而家每半秒掃一次而家個場景入面所有角色模型
+// （kid／外星人／動物等等，userData 有 b 同 legs 嘅就係角色；好友同主角自己唔計；企喺高處嘅唔計，例如坐緊電車、機動遊戲）
+// ① 主角行埋去會被擋住（向遠離嗰邊行就放行，唔會卡死）② NPC 行埋嚟撞到主角，會輕輕推開主角（唔再穿過身）
+var COL41={L:[],P:[],t:0,sc:null,v:null};
+function col41Scan(){var sc=SCN[where]||null,L=[];COL41.sc=sc;if(!sc){COL41.L=L;return;}var skip={};if(typeof player!=='undefined'&&player)skip[player.uuid]=1;for(var u in OTHERS){var o=OTHERS[u];if(o&&o.m)skip[o.m.uuid]=1;}
+ (function walk(o,d){var ch=o.children;for(var i=0;i<ch.length;i++){var c=ch[i];if(!c.visible)continue;var ud=c.userData;if(ud&&ud.b&&('legs' in ud)){if(!skip[c.uuid]&&!ud.noCol)L.push(c);continue;}if(d<5&&!c.isMesh&&c.children.length)walk(c,d+1);}})(sc,0);COL41.L=L;}
+function col41Pos(){var v=COL41.v||(COL41.v=new T.Vector3()),P0=[];COL41.L.forEach(function(c){if(!c.parent||!c.visible)return;c.getWorldPosition(v);if(v.y>0.55)return;var s=c.scale.x||1,r=(c.userData.bh||1.3)>2?0.42:s>2.6?0.36:0.3;P0.push([v.x,v.z,r]);});COL41.P=P0;}
+// 新位置會唔會撞到 NPC（行近先擋；企喺原位或者行開就唔擋）
+function col41Hit(x,z){var P0=COL41.P;for(var i=0;i<P0.length;i++){var n=P0[i],R=0.3+n[2],dx=x-n[0],dz=z-n[1],d2=dx*dx+dz*dz;if(d2>=R*R)continue;var ox=P.x-n[0],oz=P.z-n[1];if(d2<ox*ox+oz*oz-1e-4)return true;}return false;}
+var tryMoveV40=tryMove;
+tryMove=function(o,dx,dz,r,self){if(self!=='p'||o!==P||!COL41.P.length)return tryMoveV40(o,dx,dz,r,self);
+ if(!col41Hit(o.x+dx,o.z+dz))return tryMoveV40(o,dx,dz,r,self);
+ // 撞到人：試下沿住佢身邊滑過去
+ if(dx&&!col41Hit(o.x+dx,o.z)&&tryMoveV40(o,dx,0,r,self))return true;
+ if(dz&&!col41Hit(o.x,o.z+dz)&&tryMoveV40(o,0,dz,r,self))return true;return false;};
+function col41Tick(dt){COL41.t-=dt;if(COL41.t<=0||COL41.sc!==(SCN[where]||null)){COL41.t=0.5;col41Scan();}col41Pos();
+ if(phase!=='play'||fading||making||SIT||BEAMUP||FS.on||MG||(TRAM&&TRAM.ride)||(PARK&&PARK.ride)||HOLD)return;
+ // NPC 撞埋嚟：推開主角（最多每格 0.08，唔會推入牆／水）
+ COL41.P.forEach(function(n){var dx=P.x-n[0],dz=P.z-n[1],d=Math.hypot(dx,dz),R=0.26+n[2];if(d>=R)return;if(d<1e-3){dx=Math.sin(P.rot);dz=Math.cos(P.rot);d=1;}
+  var k=Math.min(0.08,R-d),nx=P.x+dx/d*k,nz=P.z+dz/d*k;if(!blocked(nx,nz,0.4,'p')){P.x=nx;P.z=nz;}});}
+// ================= v41 花王（用戶指示：可以聘請花王打理花圃，種到嘅花全部賣俾花店）=================
+// 喺建材行嘉禧「農場、牧場、花圃人手」→「花圃」聘請；花王喺花圃行嚟行去：開花就摘，即刻送去伊伊花店賣（錢直接入你個錢包）；
+// 空咗嘅花圃自動補種（種子錢由你個錢包扣）；好友一齊建設時佢哋種嘅花唔會郁
+var GARD_UP=[{n:'未有花王',d:'自己種花、摘花、賣花'},
+ {n:'花王（一位）',d:'花王衍文幫你打理花圃：開花自動摘，全部送去伊伊花店賣；空咗嘅花圃自動補種（種子錢由收入扣）',c:3000,w:1,mul:1},
+ {n:'花王（兩位）',d:'多一位花王舒玲，做嘢快一倍；伊伊花店長期訂花，每枝花價錢高一成',c:8000,w:2,mul:1.1},
+ {n:'自動化花圃',d:'加自動灑水同定時系統：你唔喺度，花王都照打理（返嚟時補計你唔喺度期間開咗嘅花）；花價再高一成',c:18000,w:2,mul:1.2,off:1}];
+var GARD_NM=[['衍文','m'],['舒玲','f']];
+var GARD={list:[],sig:'',init:false,msg:{n:0,amt:0,t:0,k:{}}};
+function gardSt(){var o=S.gard;if(!o||typeof o!=='object')o=S.gard={lv:0,pick:'',earn:0,n:0};return o;}
+function gardLv(){return Math.max(0,Math.min(3,(S&&S.gard&&S.gard.lv)||0));}
+// 種邊款：你揀咗就種嗰款；未揀就種「每分鐘賺得最多」嘅（有得買種子先揀）
+function gardPick(){var o=gardSt(),L=typeof flowerSeedList==='function'?flowerSeedList():['cosmos'];if(o.pick&&L.indexOf(o.pick)>=0)return o.pick;var best=L[0],bv=-1;L.forEach(function(k){var F=FLOWERS[k];if(!F)return;var v=F.sell/F.min;if(v>bv){bv=v;best=k;}});return best;}
+function gardLook(nm,sx,i){var f=sx==='f',r=rng(0x5a17+i*977);return {t:'h',nm:nm,hs:hsFor(nm,r),eye:eyeFor(nm,r),skin:[0xf0c8a0,0xf5d0b0][i%2],hair:[0x2a2020,0x5a3a2a][i%2],top:{st:'shirt',c:[0x4f8a4a,0x7aa84a][i%2]},bot:{st:'pants',c:0x6b5236},hat:{st:'straw',c:0xd8b870}};}
+function gardModel(i){var q=GARD_NM[i],m=autoModel(gardLook(q[0],q[1],i)),u=m.userData;
+ // 手挽花籃
+ var bk=new T.Group(),wd=M(0xc98a4a);bk.add(ms(new T.CylinderGeometry(0.06,0.045,0.05,12),wd,0,0,0));var hd=ms(new T.TorusGeometry(0.05,0.006,5,12,Math.PI),wd,0,0.02,0);bk.add(hd);
+ [0xff9ccf,0xffd23f,0xff5a6e].forEach(function(c,j){bk.add(ms(new T.SphereGeometry(0.018,8,6),M(c),-0.025+j*0.025,0.03,0.005*(j%2)));});bk.position.set(0,-0.2,0.04);if(u.am&&u.am[1])u.am[1].add(bk);
+ return m;}
+function gardSync(){var lv=gardLv(),n=VISIT||!MAP.fbed||typeof FG_P==='undefined'||!FG_P.length?0:(GARD_UP[lv].w||0),sig=n+'|'+(MAP.fbed?MAP.fbed.join(','):'');if(GARD.sig===sig)return;GARD.sig=sig;
+ GARD.list.forEach(function(w){if(w.m.parent)w.m.parent.remove(w.m);disposeTree(w.m);});GARD.list=[];
+ for(var i=0;i<n;i++){var m=gardModel(i),x=MAP.fbed[0]-1.2+i*2.4,z=MAP.fbed[1]+2.0;m.position.set(x,0,z);scO.add(m);
+  var w={m:m,nm:GARD_NM[i][0],sx:GARD_NM[i][1],x:x,z:z,tx:x,tz:z,st:'idle',job:null,t:1+i*1.5,ph:0,rot:0,face:Math.PI,act:0};w.it={x:x,z:z,r:1.2,th:1.8,l:'對話',fn:(function(w0){return function(){gardTalk(w0);};})(w)};GARD.list.push(w);}}
+function gardJob(w){var fg=fgArr(),taken={};GARD.list.forEach(function(o){if(o!==w&&o.job)taken[o.job.i]=1;});var best=null,bd=1e9;
+ for(var i=0;i<6&&i<FG_P.length;i++){if(taken[i])continue;var p=fg[i],st=fgStage(p),kind=null;
+  if(p&&st===3&&!p.by)kind='pick';else if(st<0){var k=gardPick(),F=FLOWERS[k];if(F&&S.coins>=F.seed)kind='plant';}
+  if(!kind)continue;var q=FG_P[i],d=Math.hypot(q[0]-w.x,q[1]+0.75-w.z)+(kind==='pick'?0:3);if(d<bd){bd=d;best={i:i,k:kind};}}return best;}
+function gardSell(k,n){var o=gardSt(),F=FLOWERS[k];if(!F||n<=0)return;var amt=Math.round(F.sell*(GARD_UP[gardLv()].mul||1))*n;S.coins+=amt;o.earn=(o.earn||0)+amt;o.n=(o.n||0)+n;coinsUI();
+ var G=GARD.msg;G.n+=n;G.amt+=amt;G.k[F.n]=(G.k[F.n]||0)+n;}
+function gardDo(w){var fg=fgArr(),j=w.job,p=fg[j.i],st=fgStage(p);
+ if(j.k==='pick'&&p&&st===3&&!p.by){var F=FLOWERS[p.k],n=fbedDbl()?2:1;gardSell(p.k,n);p.t0=Date.now()-0.25*F.min*fbedSp()*60000;save();}
+ else if(j.k==='plant'&&st<0){var k=gardPick(),F2=FLOWERS[k];if(F2&&S.coins>=F2.seed){S.coins-=F2.seed;coinsUI();fg[j.i]={k:k,t0:Date.now(),by:''};save();}}}
+// 自動化花圃：返嚟時補計你唔喺度期間開咗幾次花（每次摘完要再生長四分三時間）
+function gardOffline(){if(gardLv()<3)return;var fg=fgArr(),now=Date.now(),tot=0;
+ for(var i=0;i<6;i++){var p=fg[i];if(!p||p.by||!FLOWERS[p.k])continue;var F=FLOWERS[p.k],cyc=F.min*fbedSp()*60000,bloom=p.t0+cyc;if(now<bloom)continue;
+  var k=Math.min(30,Math.floor((now-bloom)/(0.75*cyc))+1),n=0;for(var q=0;q<k;q++)n+=fbedDbl()?2:1;gardSell(p.k,n);tot+=n;p.t0=bloom+(k-1)*0.75*cyc-0.25*cyc;}
+ if(tot){save();setTimeout(function(){toast('你唔喺度嘅時候，花王摘咗 '+tot+' 枝花送去伊伊花店，收入 +$'+fmtC(GARD.msg.amt),5500);GARD.msg={n:0,amt:0,t:0,k:{}};},2500);}}
+function gardTick(dt,t){if(!S||phase!=='play')return;gardSync();if(VISIT||!GARD.list.length)return;
+ if(!GARD.init){GARD.init=true;try{gardOffline();}catch(e){errNote(e,'花王');}}
+ GARD.list.forEach(function(w,wi){var mv=false,u=w.m.userData;
+  if(w.st==='idle'){w.t-=dt;if(w.t<=0){w.job=gardJob(w);if(w.job){var q=FG_P[w.job.i],back=w.job.i<3;w.tx=q[0]+(wi?0.25:-0.25);w.tz=q[1]+(back?-0.8:0.8);w.jf=back?0:Math.PI;w.st='go';}
+    else{w.t=2.5+Math.random()*3;w.tx=MAP.fbed[0]+(Math.random()-0.5)*3.6;w.tz=MAP.fbed[1]+1.95+Math.random()*0.5;w.st='wander';}}}
+  if(w.st==='go'||w.st==='wander'){var dx=w.tx-w.x,dz=w.tz-w.z,d=Math.hypot(dx,dz);
+   if(d>0.05){var s0=Math.min(d,1.3*(gardLv()>=2?1.25:1)*dt),nx=w.x+dx/d*s0,nz=w.z+dz/d*s0;if(where!=='out'||Math.hypot(P.x-nx,P.z-nz)>0.75){w.x=nx;w.z=nz;w.face=Math.atan2(dx,dz);mv=true;}else w.face=Math.atan2(P.x-w.x,P.z-w.z);}
+   else if(w.st==='go'){w.st='act';w.act=1.3;w.face=w.jf!=null?w.jf:Math.PI;}else{w.st='idle';w.face=Math.PI;}}
+  else if(w.st==='act'){w.act-=dt;if(w.act<=0){try{gardDo(w);}catch(e){errNote(e,'花王');}w.job=null;w.st='idle';w.t=0.6+Math.random();}}
+  w.rot=lerpA(w.rot,w.face,dt*6);w.m.position.set(w.x,where==='out'?standY(w.x,w.z):0,w.z);w.m.rotation.y=w.rot;if(mv)w.ph+=dt*9;animWalk(w.m,w.ph,mv);
+  if(w.st==='act'&&u.am&&u.b){var k=Math.sin(t*9);u.am[0].rotation.x=-1.2+k*0.25;u.am[1].rotation.x=-0.9-k*0.2;u.b.position.y=-0.03;}
+  w.it.x=w.x;w.it.z=w.z;});
+ var G=GARD.msg;G.t+=dt;if(G.n&&G.t>25){G.t=0;var kk=Object.keys(G.k).map(function(nm){return nm+' ×'+G.k[nm];}).join('、');if(where==='out'||where==='shop')toast('花王將 '+kk+' 送咗去伊伊花店，收入 +$'+fmtC(G.amt),4200);G.n=0;G.amt=0;G.k={};}}
+function gardITO(){return where==='out'?GARD.list.map(function(w){return w.it;}):[];}
+function gardTalk(w){var o=gardSt(),k=gardPick(),F=FLOWERS[k];w.face=Math.atan2(P.x-w.x,P.z-w.z);
+ talkPt('gard:'+w.nm,function(){var m=gardModel(GARD_NM[0][0]===w.nm?0:1);return m;});
+ talk('花王'+w.nm,'#4f8a4a','#ffffff',['你好！我係花王'+w.nm+'，幫你打理花圃。','開咗嘅花我會即刻摘，送去伊伊花店賣；空咗嘅花圃我會補種「'+(F?F.n:'花')+'」（種子錢喺收入度扣）。','到而家我哋一共賣咗 '+(o.n||0)+' 枝花，收入 $'+fmtC(o.earn||0)+'。'],
+  [{t:'揀種邊款花',cb:function(){openPanel('auto','fbed');}},{t:'沒事了',cb:function(){}}]);}
+PANELS.auto.t='農場、牧場、花圃人手・建材行嘉禧';PANELS.auto.tabs.push(['fbed','花圃']);
+RENDER.auto_fbed=function(b){var o=gardSt(),lv=gardLv();
+ b.appendChild(note('花王會喺花圃行嚟行去：<b>開花就摘，即刻送去伊伊花店賣</b>（錢直接入你個錢包）；空咗嘅花圃會自動補種。花圃升級（市長林庫）令花開得快啲，花王都會做得快啲。'+(o.n?'<br>花王已經幫你賣咗 '+o.n+' 枝花，收入 $'+fmtC(o.earn||0)+'。':'')));
+ if(!MAP.fbed){b.appendChild(note('你個島未有花圃，未可以請花王。'));return;}
+ var cur=GARD_UP[lv],nx=GARD_UP[lv+1],vb=lv>=2?'升級':'聘請';b.appendChild(card({ico:'flw:'+gardPick()},cur.n+'（Lv'+lv+'）','而家：'+esc(cur.d)+(nx?'<br>'+vb+'「'+nx.n+'」：'+esc(nx.d)+'　$'+fmtC(nx.c):'<br><span class="good">已經係最高級</span>'),
+  [nx?{t:vb+' $'+fmtC(nx.c),cls:'o',dis:S.coins<nx.c||!!VISIT,fn:function(){buy(nx.c,function(){o.lv=lv+1;GARD.sig='';noteInvest(nx.c,'build');save();toast('「'+nx.n+'」開始工作',3500);});}}:{t:'最高級',cls:'g',dis:true,fn:function(){}}]));
+ if(lv){var cur=gardPick();b.appendChild(note('花王補種：<b>'+FLOWERS[cur].n+'</b>'+(o.pick?'':'（自動揀每分鐘賺得最多嘅款）')+'。想改種：'));
+  (typeof flowerSeedList==='function'?flowerSeedList():[]).forEach(function(k){var F=FLOWERS[k];if(!F)return;
+   b.appendChild(card({ico:'flw:'+k},F.n+(k===cur?'（種緊）':''),'種子 $'+F.seed+'・花店每枝 $'+Math.round(F.sell*(GARD_UP[lv].mul||1))+'・大約 '+Math.max(1,Math.round(F.min*fbedSp()))+' 分鐘開花',[k===cur&&o.pick?{t:'種緊',cls:'g',dis:true,fn:function(){}}:{t:'改種',cls:'o',dis:!!VISIT,fn:function(){o.pick=k;save();renderPanel();}}]));});
+  if(o.pick)b.appendChild(card({ico:'flw:'+gardPick()},'交返俾花王自己揀','自動揀每分鐘賺得最多嘅花',[{t:'自動揀',fn:function(){o.pick='';save();renderPanel();}}]));}};
+// ================= v41 一齊建設多人任務：捉小偷（用戶指示）=================
+// 小偷外星人（黑白間條衫、黑眼罩、揹住袋錢）喺島上鬼鬼鼠鼠咁行；玩家同好友 1 分鐘內捉晒佢哋
+// 小偷數目＝玩家人數 × 2 ＋ 1（兩個人 5 個、三個人 7 個、四個人 9 個）；行埋去掂到佢就捉到；有人行近佢會走佬（但行得冇你快）
+// 島主部機話事：小偷位置經同場資料「mt」傳俾好友；好友捉到就經「mc」話俾島主知
+MIS_T.splice(1,0,{k:'thief',n:'捉小偷',n2:5,T:60,rw:800,unit:'個小偷',how:'島上有著黑白間條衫嘅小偷外星人，行埋去掂到佢就捉到；有人行近佢會走佬，要包抄'});
+var THF={list:[],id:null,hint:'',mc:[],mcId:null,stripe:null,sayT:0};
+function thfStripeTex(){if(THF.stripe)return THF.stripe;var c=document.createElement('canvas');c.width=64;c.height=64;var x=c.getContext('2d');for(var i=0;i<8;i++){x.fillStyle=i%2?'#f4f4f0':'#1d1b22';x.fillRect(0,i*8,64,8);}THF.stripe=texEnc(new T.CanvasTexture(c));THF.stripe.wrapS=THF.stripe.wrapT=T.RepeatWrapping;return THF.stripe;}
+// 小偷外星人：綠色大頭、兩條觸角、黑眼罩、黑白間條衫、黑褲、揹住個麻布袋（有 $ 字）
+function thfModel(){var g=new T.Group(),b=new T.Group();g.add(b);var sk=M(0x8fd06a),blk=M(0x1d1b22),st=std({map:thfStripeTex(),r:0.85});
+ b.add(ms(new T.CylinderGeometry(0.1,0.13,0.26,14),st,0,0.25,0));
+ var lg=[-1,1].map(function(s){var l=new T.Group();l.position.set(s*0.05,0.13,0);b.add(l);l.add(ms(new T.CylinderGeometry(0.03,0.03,0.12,8),blk,0,-0.06,0));l.add(ms(new T.SphereGeometry(0.038,8,6),blk,0,-0.12,0.02));return l;});
+ var am=[-1,1].map(function(s){var a=new T.Group();a.position.set(s*0.12,0.35,0);b.add(a);var sl=ms(new T.CylinderGeometry(0.03,0.028,0.12,8),st,0,-0.06,0);a.add(sl);a.add(ms(new T.SphereGeometry(0.03,8,6),sk,0,-0.13,0));a.rotation.z=s*0.3;return a;});
+ var hd=new T.Group();hd.position.y=0.53;b.add(hd);hd.add(ms(new T.SphereGeometry(0.17,18,14),sk,0,0.02,0));
+ var mask=ms(new T.TorusGeometry(0.168,0.034,6,28),blk,0,0.045,0);mask.rotation.x=Math.PI/2;hd.add(mask);
+ [-1,1].forEach(function(s){var ey=ms(new T.SphereGeometry(0.042,12,10),M(0xffffff),s*0.068,0.048,0.178);ey.scale.set(1,1,0.55);hd.add(ey);hd.add(ms(new T.SphereGeometry(0.021,8,6),M(0x111111),s*0.066,0.046,0.198));
+  var an=ms(new T.CylinderGeometry(0.008,0.008,0.14,5),blk,s*0.06,0.2,0);an.rotation.z=-s*0.35;hd.add(an);hd.add(ms(new T.SphereGeometry(0.025,8,6),M(0xe8574f),s*0.085,0.27,0));});
+ hd.add(ms(new T.BoxGeometry(0.07,0.01,0.01),blk,0,-0.05,0.155));
+ // 麻布袋
+ var bag=new T.Group();bag.position.set(0,0.34,-0.16);b.add(bag);var sm=M(0xb89a6a);var sb=ms(new T.SphereGeometry(0.13,12,10),sm,0,0,0);sb.scale.set(1,1.1,0.8);bag.add(sb);bag.add(ms(new T.CylinderGeometry(0.03,0.05,0.06,8),sm,0,0.15,0));
+ var tc=document.createElement('canvas');tc.width=tc.height=64;var tx=tc.getContext('2d');tx.fillStyle='#b89a6a';tx.fillRect(0,0,64,64);tx.fillStyle='#5a3a1a';tx.font='900 50px '+FONT;tx.textAlign='center';tx.textBaseline='middle';tx.fillText('$',32,34);
+ var dl=ms(new T.PlaneGeometry(0.12,0.12),std({map:texEnc(new T.CanvasTexture(tc)),r:0.9}),0,0.02,-0.105);dl.rotation.y=Math.PI;bag.add(dl);
+ g.userData={b:b,legs:false,bh:1.25,lg:lg,am:am,hd:hd,noCol:1};g.scale.setScalar(2.3);shadowAll(g,true,false);noCull(g);return g;}
+function thfNew(i,x,z){var m=thfModel();m.position.set(x,0,z);scO.add(m);var bub=bubble('小偷！','#e8574f','#ffffff',0.3);scO.add(bub);
+ return {i:i,x:x,z:z,tx:x,tz:z,st:0,m:m,bub:bub,face:Math.random()*6.283,rot:0,ph:Math.random()*6,t:0,gx:x,gz:z};}
+function thfDrop(q){if(q.m&&q.m.parent)q.m.parent.remove(q.m);if(q.m)disposeTree(q.m);if(q.bub&&typeof killSprite==='function')killSprite(q.bub);else if(q.bub&&q.bub.parent)q.bub.parent.remove(q.bub);}
+function thfClear(){THF.list.forEach(thfDrop);THF.list=[];THF.id=null;THF.hint='';THF.mc=[];THF.mcId=null;}
+// 出生位：廣場附近 5–17 格，陸地、唔撞嘢、離主角同其他小偷遠啲
+function thfSpawn(n){var Q=MAP.plaza||[0,0],L=[],tries=0;while(L.length<n&&tries<600){tries++;var a=Math.random()*6.283,r=5+Math.random()*12,x=Q[0]+Math.cos(a)*r,z=Q[1]+Math.sin(a)*r;
+  if(!okOut(x,z)||Math.hypot(x-P.x,z-P.z)<4.5)continue;if(L.some(function(q){return Math.hypot(q[0]-x,q[1]-z)<3;}))continue;L.push([x,z]);}return L;}
+function thfStart(s){thfClear();THF.id=s.id;if(VISIT)return;thfSpawn(s.n).forEach(function(p,i){THF.list.push(thfNew(i,p[0],p[1]));});
+ setTimeout(function(){toast('小偷外星人出現咗！佢哋著黑白間條衫，頭頂有「小偷！」，行埋去掂到佢就捉到',5000);},600);}
+// 玩家位置（島主自己＋喺室外嘅好友）
+function thfPlayers(){var L=[];if(where==='out')L.push([P.x,P.z,'me']);for(var u in OTHERS){var o=OTHERS[u];if(o&&o.w==='out'&&COOP.mem&&COOP.mem[u])L.push([o.tx,o.tz,u]);}return L;}
+function thfWalk(q,tx,tz,sp,dt){var dx=tx-q.x,dz=tz-q.z,d=Math.hypot(dx,dz);if(d<0.05)return false;var st=Math.min(d,sp*dt),nx=q.x+dx/d*st,nz=q.z+dz/d*st;if(!okOut(nx,nz))return false;q.x=nx;q.z=nz;q.face=Math.atan2(dx,dz);return true;}
+function thfHostTick(dt,t,s){var PL=thfPlayers(),got=0;
+ // 好友捉到（經 mc 報）
+ for(var u in OTHERS){var o=OTHERS[u];if(o&&o.mc&&o.mc.id===s.id)fbArr(o.mc.c).forEach(function(i){var q=THF.list[i|0];if(q&&q.st!==2){q.st=2;q.by=u;thfCaught(q,(o.nm||'好友'));}});}
+ THF.list.forEach(function(q){if(q.st===2){got++;return;}
+  var near=null,nd=1e9;PL.forEach(function(p){var d=Math.hypot(p[0]-q.x,p[1]-q.z);if(d<nd){nd=d;near=p;}});
+  if(near&&near[2]==='me'&&nd<0.95){q.st=2;q.by='me';got++;thfCaught(q,'你');return;}
+  var moved=false;
+  if(near&&nd<3.4){q.st=1;var ax=q.x-near[0],az=q.z-near[1],al=Math.hypot(ax,az)||1;ax/=al;az/=al;var ok=false;
+   for(var k=0;k<9&&!ok;k++){var ang=(k===0?0:(k%2?1:-1)*Math.ceil(k/2)*0.45),cx=ax*Math.cos(ang)-az*Math.sin(ang),cz=ax*Math.sin(ang)+az*Math.cos(ang);if(okOut(q.x+cx*0.9,q.z+cz*0.9)){ok=true;moved=thfWalk(q,q.x+cx*2,q.z+cz*2,2.9,dt);}}
+   if(!ok)moved=false;}
+  else{q.st=0;q.t-=dt;if(q.t<=0||Math.hypot(q.gx-q.x,q.gz-q.z)<0.2){q.t=2.5+Math.random()*3;var tries=0;do{var a=Math.random()*6.283,r=2+Math.random()*4;q.gx=q.x+Math.cos(a)*r;q.gz=q.z+Math.sin(a)*r;tries++;}while(tries<12&&!okOut(q.gx,q.gz));if(!okOut(q.gx,q.gz)){q.gx=q.x;q.gz=q.z;}}
+   moved=thfWalk(q,q.gx,q.gz,1.1,dt);if(!moved)q.t=0;}
+  q.mv=moved;});
+ MIS.my=got;}
+function thfCaught(q,who){if(typeof perfPuff==='function')perfPuff(q.x,q.z);if(q.m)q.m.visible=false;if(q.bub)q.bub.visible=false;toast((who==='你'?'你':who)+'捉到一個小偷！',2200);}
+// 好友：跟島主傳嚟嘅位置畫小偷；自己掂到就報俾島主
+function thfGuestTick(dt,t,s,o){var A=o&&o.mt?fbArr(o.mt):[];if(THF.id!==s.id){thfClear();THF.id=s.id;}
+ A.forEach(function(v,i){if(!v)return;v=fbArr(v,3,0);var x=(+v[0]||0)/10,z=(+v[1]||0)/10,st=+v[2]||0,q=THF.list[i];
+  if(!q){q=THF.list[i]=thfNew(i,x,z);}
+  if(st===2&&q.st!==2){if(THF.mc.indexOf(i)<0&&q.m&&q.m.visible){thfCaught(q,'好友');}q.st=2;if(q.m)q.m.visible=false;if(q.bub)q.bub.visible=false;return;}
+  if(q.st!==2&&q.pend)return;q.tx=x;q.tz=z;if(q.st!==2)q.st=st;});
+ THF.list.forEach(function(q){if(!q||q.st===2||q.pend)return;var dx=q.tx-q.x,dz=q.tz-q.z,d=Math.hypot(dx,dz);if(d>4){q.x=q.tx;q.z=q.tz;}else if(d>0.02){var st=Math.min(d,Math.max(3.2,d*4)*dt);q.x+=dx/d*st;q.z+=dz/d*st;q.face=Math.atan2(dx,dz);q.mv=true;}else q.mv=false;
+  if(where==='out'&&Math.hypot(P.x-q.x,P.z-q.z)<0.95){q.pend=1;if(THF.mcId!==s.id){THF.mcId=s.id;THF.mc=[];}if(THF.mc.indexOf(q.i)<0)THF.mc.push(q.i);thfCaught(q,'你');}});}
+function thfTick(dt,t){var s=MIS.s;if(!s||s.k!=='thief'||s.st!=='run'){if(THF.list.length||THF.id)thfClear();return;}
+ if(!VISIT)thfHostTick(dt,t,s);else thfGuestTick(dt,t,s,coopGuest()?OTHERS[COOP.host]:null);
+ // 畫：鬼鬼鼠鼠（踮腳、縮身、左右望）；走佬就跑同擰手
+ var best=null,bd=1e9;THF.list.forEach(function(q){if(!q||q.st===2||!q.m)return;q.rot=lerpA(q.rot||0,q.face,dt*8);var u=q.m.userData,fl=q.st===1;
+  q.m.position.set(q.x,standY(q.x,q.z),q.z);q.m.rotation.y=q.rot;if(q.mv)q.ph+=dt*(fl?14:7);var sn=Math.sin(q.ph);
+  u.b.position.y=q.mv?Math.abs(sn)*(fl?0.05:0.02):0;u.b.rotation.x=fl?0.25:0.18;u.lg[0].rotation.x=q.mv?sn*0.7:0;u.lg[1].rotation.x=q.mv?-sn*0.7:0;
+  u.am[0].rotation.x=fl?-1.2+sn*0.8:-0.4;u.am[1].rotation.x=fl?-1.2-sn*0.8:-0.4;u.hd.rotation.y=fl?0:Math.sin(t*2.2+q.i)*0.7;
+  if(q.bub){q.bub.visible=where==='out';q.bub.position.copy(bendPt(q.x,2.25,q.z));}
+  var d=Math.hypot(q.x-P.x,q.z-P.z);if(d<bd){bd=d;best=q;}});
+ if(best&&where==='out'){var ang=Math.atan2(best.x-P.x,-(best.z-P.z)),sec=['北','東北','東','東南','南','西南','西','西北'][((Math.round(ang/(Math.PI/4))%8)+8)%8];THF.hint='最近嘅小偷：'+sec+'面 '+Math.round(bd)+' 米';}else THF.hint=where==='out'?'':'小偷喺室外';}
+// 同場資料：島主傳小偷位置；好友傳自己捉到邊幾個
+function thfPub(){var s=MIS.s;if(VISIT||!s||s.k!=='thief'||s.st!=='run'||!THF.list.length)return null;return THF.list.map(function(q){return [Math.round(q.x*10),Math.round(q.z*10),q.st];});}
+function thfPubC(){var s=MIS.s;return VISIT&&s&&s.k==='thief'&&THF.mcId===s.id&&THF.mc.length?{id:s.id,c:THF.mc.slice()}:null;}
+function thfKey(){var s=MIS.s;if(!s||s.k!=='thief'||s.st!=='run')return '';return VISIT?THF.mc.join(','):THF.list.map(function(q){return Math.round(q.x*2)+':'+Math.round(q.z*2)+':'+q.st;}).join(',');}
+var misGoV40=misGo;misGo=function(s){misGoV40(s);if(s&&s.k==='thief')thfStart(s);};
+// ================= v41 旅遊目的地生命週期跟大型設施計（用戶指示）＋觀光旅客 NPC =================
+// 階段（課本巴特勒：發掘、投入、發展、鞏固、停滯，之後重生或衰落；遊戲由「投入」開始）：
+//   發展指數＝大型設施數目 ×（1＋平均升級級數）÷ 2（每樣設施升級 0–3 級）：投入 1 以下　發展 1–4　鞏固 4–8　停滯 8 或以上（旅客最多）
+//   停滯之後 3 日冇新投資 → 衰落；停滯／衰落期間 2 日內投資 $20,000 或以上 → 重生
+// 每個階段都有足夠外星旅客嚟觀光：投入 6、發展 12、鞏固 18、停滯 24、衰落 10、重生 22 位（唔計去餐廳食飯嘅客人同郵輪旅客）
+var LIFE41={t:0,R:null,B:null,bt:0};
+function lfById41(id){var L=(S&&S.lf)||[];for(var i=0;i<L.length;i++)if(String(L[i].id)===String(id))return L[i];return null;}
+// 大型設施清單同升級程度（每樣 0–3 級）
+function big41(){var L=[];function add(k,n,lv){L.push({k:k,n:n,lv:Math.max(0,Math.min(3,lv||0))});}
+ try{if(bld('wheel'))add('wheel','星際樂園',(typeof parkCalc==='function'?parkCalc().stars:0)/5*3);}catch(e){add('wheel','星際樂園',0);}
+ try{if(bld('hotel'))add('hotel',S.htl&&S.htl.type?'星際'+htlT(S.htl).n:'星際酒店',S.htl&&S.htl.type?htlCalc(S.htl).Q*3:0);}catch(e){add('hotel','星際酒店',0);}
+ try{if(bld('dome')){var m=musSt();add('dome','星球博物館',((m.ext||0)+(m.int||0)+(m.cap||0))/6*3);}}catch(e){add('dome','星球博物館',0);}
+ ((S&&S.lf)||[]).forEach(function(e){if(!e.done)return;var n='大型設施';try{n=lfName(e);}catch(er){}
+  try{if(e.k==='stay')add('lf_'+e.id,n,e.h&&e.h.type?htlCalc(e.h).Q*3:0);else if(e.k==='tr')add('lf_'+e.id,n,trCalc(e).sum/15*3);else if(e.k==='zoo'||e.k==='aqua')add('lf_'+e.id,n,zaLv(e));else add('lf_'+e.id,n,0);}catch(er){add('lf_'+e.id,n,0);}});
+ var n=L.length,u=n?L.reduce(function(a,q){return a+q.lv;},0)/n:0;return {L:L,n:n,u:u,idx:n*(1+u)/2};}
+function big41c(){var now=Date.now();if(!LIFE41.B||now-LIFE41.bt>8000){LIFE41.B=big41();LIFE41.bt=now;}return LIFE41.B;}
+function stage41(){var B=big41(),L=S.life41;if(!L||typeof L!=='object')L=S.life41={peakT:0,low:0};var now=Date.now(),dev=B.idx>=8?4:B.idx>=4?3:B.idx>=1?2:1;
+ if(dev<4){L.peakT=0;return {st:dev,B:B,dev:dev};}
+ if(!L.peakT)L.peakT=now;var inv48=investSince(now-48*3600000),last=0;(S.invest||[]).forEach(function(v){if(v.t>last)last=v.t;});var quiet=now-Math.max(last,L.peakT),st=4;
+ if(L.low&&inv48>=20000)st=6;else if(quiet>=72*3600000)st=5;if(st!==6)L.low=1;
+ return {st:st,B:B,dev:dev,inv48:inv48,quiet:quiet};}
+// 取代舊嘅「旅客人數」判斷：每 20 秒按大型設施計一次
+function butlerTick(dt){if(VISIT||!S||!S.butler)return;LIFE41.t-=dt;if(LIFE41.t>0)return;LIFE41.t=20;var R=stage41();LIFE41.R=R;
+ if(R.st!==S.butler.st)setStage(R.st,R.st===5?'三日冇新投資、設施老化，':R.st===6?'有新投資同更換設備，':'有 '+R.B.n+' 個大型設施、平均升級 '+R.B.u.toFixed(1)+' 級（發展指數 '+R.B.idx.toFixed(1)+'），');}
+function butlerInfo(){var I=butlerInfoV40(),R=LIFE41.R||stage41(),B=R.B,C=[],to=0,st=S.butler.st;function c(t,ok){C.push({t:t,ok:!!ok});}
+ if(st===1){to=2;c('發展指數達 1（而家 '+B.idx.toFixed(1)+'）：例如興建 2 個大型設施',B.idx>=1);}
+ else if(st===2){to=3;c('發展指數達 4（而家 '+B.idx.toFixed(1)+'）：多起大型設施，或者升級現有設施',B.idx>=4);}
+ else if(st===3){to=4;c('發展指數達 8（而家 '+B.idx.toFixed(1)+'）：大型設施又多又升級到高級',B.idx>=8);}
+ else if(st===4||st===5){to=6;c('兩日內有新投資、更換設備 $20,000 或以上（而家 $'+fmtC(R.inv48||0)+'）',(R.inv48||0)>=20000);}
+ I.C=C;I.to=to;I.st=st;I.B=B;return I;}
+// ---- 雜誌「生命週期」頁 ----
+RENDER.mag_cycle=function(b){var I=butlerInfo(),B=I.B,st=I.st;
+ b.appendChild(note('課本：巴特勒把旅遊目的地的生命週期分為六個階段——發掘、投入、發展、鞏固、停滯，最後是重生或衰落。判斷階段有三把尺：<b>旅客人數及增幅、當地設施的情況及投資者、旅客對當地人的影響</b>。你的星球按<b>大型設施的數目同升級程度</b>判斷階段，由「投入階段」開始。'));
+ var path=el('div','bt');[1,2,3,4].forEach(function(k){var d=el('span','bts'+(st===k?' on':''));d.textContent=BUTLER[k].n.replace('階段','');path.appendChild(d);});var d2=el('span','bts'+(st===5||st===6?' on':''));d2.textContent=st===5?'衰落':st===6?'重生':'重生／衰落';path.appendChild(d2);b.appendChild(path);
+ b.appendChild(card({ico:'bld:wheel'},'現在：'+BUTLER[st].n,esc(BUTLER[st].d)+'<br>觀光旅客大約 '+(SEE_TGT[st]||6)+' 位喺島上遊覽（未計去餐廳食飯嘅客人同郵輪旅客）；近 7 日餐廳旅客 '+I.a+' 位。',[]));
+ b.appendChild(note('大型設施 '+B.n+' 個，平均升級 '+B.u.toFixed(1)+'／3 級。<b>發展指數＝設施數目 ×（1＋平均升級）÷ 2＝'+B.idx.toFixed(1)+'</b>'));
+ if(!B.L.length)b.appendChild(note('未有大型設施：向市長林庫申請「增建大型設施」（住宿、博物館、主題樂園、主題餐廳、動物園、水族館）。'));
+ B.L.forEach(function(q){var s='';for(var i=1;i<=3;i++)s+=q.lv>=i-0.25?'★':'☆';b.appendChild(el('div','cond ok',esc(q.n)+'　'+s+'（'+q.lv.toFixed(1)+' 級）'));});
+ b.appendChild(note('階段條件（發展指數）：投入＝1 以下；發展＝1 至 4；鞏固＝4 至 8；停滯＝8 或以上（旅客人數到達最高點）。停滯之後 3 日冇新投資就會衰落；停滯或者衰落期間，2 日內再投資 $20,000 或以上就會重生。'));
+ if(I.to){b.appendChild(note('進入「'+BUTLER[I.to].n+'」的條件：'));I.C.forEach(function(c){b.appendChild(el('div','cond'+(c.ok?' ok':''),(c.ok?'✅ ':'⬜ ')+esc(c.t)));});}
+ if(S.butler.hist.length){b.appendChild(note('紀錄：'+S.butler.hist.slice(-8).map(function(h){return new Date(h.t).toLocaleDateString('zh-HK')+' '+BUTLER[h.st].n;}).join('、')));}};
+// ================= 觀光旅客 NPC =================
+var SEE_TGT={1:6,2:12,3:18,4:24,5:10,6:22};
+var SEE41={list:[],spawnT:1.5,t:0,sig:''};
+function seeTarget(){if(!MAP||!MAP.pathTo||!MAP.ufo||phase!=='play')return 0;var st=(S&&S.butler&&S.butler.st)||1;return SEE_TGT[st]||6;}
+var SEE_NM={rest:'旅款餐廳',svc:'服務中心',mkt:'星際市場',pier:'碼頭',hotel:'星際酒店',wheel:'星際樂園',dome:'星球博物館',pond:'池塘',fbed:'花圃',shop0:'芷華時裝',shop1:'伊伊花店',ranch:'牧場',plaza:'中央廣場'};
+function seeName(k){if(SEE_NM[k])return SEE_NM[k];if(k.indexOf('house')===0){var N=(typeof NATV!=='undefined'?NATV:[])[+k.slice(5)];return N&&N.nm?N.nm+'嘅屋':'原居民嘅屋';}if(k.indexOf('lf_')===0){var e=lfById41(k.slice(3));try{return e?lfName(e):'大型設施';}catch(er){return '大型設施';}}return '景點';}
+function seePOIs(){var L=[],T0=MAP.pathTo||{};for(var k in T0){if(k==='ufo'||k==='gate')continue;var p=T0[k];if(!p||p.length<2)continue;
+  if((k==='hotel'||k==='wheel'||k==='dome')&&!bld(k))continue;if(k.indexOf('lf_')===0){var e=lfById41(k.slice(3));if(!e||!e.done)continue;}
+  var w=/^(wheel|dome|hotel|ranch)$/.test(k)||k.indexOf('lf_')===0?3:k==='pier'||k==='fbed'||k==='pond'?1.6:1.2;L.push({k:k,w:w});}
+ L.push({k:'plaza',w:2.2});return L;}
+function seePlan(n,noPier){var P0=seePOIs().filter(function(q){return !(noPier&&q.k==='pier');}),out=[];for(var i=0;i<n&&P0.length;i++){var q=wpick(P0);out.push(q.k);P0=P0.filter(function(x){return x!==q;});}return out;}
+function seeHub(){var Q=MAP.plaza;return [Q[0],Q[1]+2.4];}
+function seeSpot(k){if(k==='plaza'){var Q=MAP.plaza;for(var i=0;i<12;i++){var a=Math.random()*6.283,r=2.6+Math.random()*1.2,x=Q[0]+Math.cos(a)*r,z=Q[1]+Math.sin(a)*r;if(okOut(x,z))return [x,z,Math.atan2(Q[0]-x,Q[1]-z)];}return [Q[0],Q[1]+3,Math.PI];}
+ var p=MAP.pathTo[k];if(!p||p.length<2)return null;var e=p[p.length-1],f=p[Math.max(0,p.length-3)],dx=e[0]-f[0],dz=e[1]-f[1],d=Math.hypot(dx,dz)||1;dx/=d;dz/=d;var back=1.4+Math.random()*1.0,lat=(Math.random()<0.5?-1:1)*(1.1+Math.random()*0.8),x=e[0]-dx*back-dz*lat,z=e[1]-dz*back+dx*lat;   // 企喺門口兩邊，唔好擋住入口
+ if(!okOut(x,z)){x=e[0]-dx*(back+0.8);z=e[1]-dz*(back+0.8);}return [x,z,Math.atan2(e[0]-x,e[1]-z)];}
+// 由 a 行去 b：a→廣場（沿路倒轉）＋廣場→b
+function seePath(a,b){var T0=MAP.pathTo,L=[],pa=a&&a!=='plaza'?T0[a]:null,pb=b!=='plaza'?T0[b]:null,i;
+ if(pa)for(i=pa.length-1;i>=0;i--)L.push([pa[i][0],pa[i][1]]);else L.push(seeHub());
+ if(pb)for(i=0;i<pb.length;i++)L.push([pb[i][0],pb[i][1]]);
+ var sp=b==='ufo'?null:seeSpot(b);if(sp)L.push([sp[0],sp[1]]);return {pts:L,face:sp?sp[2]:null};}
+function seeModel(L){var m=noCull(lookModel(L));m.traverse(function(n){if(n.isMesh){n.castShadow=false;n.receiveShadow=false;}});return m;}
+function seeNew(src,x,z,pre){var L=randLook();L.P=typeof rollProfile==='function'?rollProfile():null;var m=seeModel(L),s0=m.scale.x;m.position.set(x,0,z);scO.add(m);
+ var o={m:m,L:L,src:src,x:x,z:z,st:src==='ufo'?'beam':'walk',t:0,s0:s0,sh:shadow(scO,x,z,0.45),ph:Math.random()*6,spd:1.05+Math.random()*0.4,pts:[],pi:0,face:0,rot:0,poi:src==='ufo'?'ufo':'pier',stay:0,act:'',plan:[],spent:0};
+ o.plan=seePlan(src==='cruise'?1+Math.floor(Math.random()*2):2+Math.floor(Math.random()*3),src==='cruise');o.plan.push(src==='cruise'?'pier':'ufo');
+ if(src==='ufo'){m.position.y=2.4;m.scale.setScalar(s0*0.3);}
+ o.it={r:1.3,l:'對話',fn:function(){seeTalk(o);}};
+ if(pre)o.pre=pre.slice();seeNext(o);SEE41.list.push(o);return o;}
+function seeNext(o){var nx=o.plan.shift();if(!nx){o.st='gone';return;}var R=seePath(o.poi,nx),pts=R.pts;if(o.pre){pts=o.pre.concat(pts);o.pre=null;}
+ if(nx==='pier'&&o.src==='cruise'&&typeof crzBoardPts==='function')pts=pts.concat(crzBoardPts());
+ o.pts=pts;o.pi=0;o.to=nx;o.faceT=R.face;if(o.st!=='beam')o.st='walk';}
+function seeDrop(i){var o=SEE41.list[i];if(o.m.parent)o.m.parent.remove(o.m);disposeTree(o.m);if(o.sh&&o.sh.parent)o.sh.parent.remove(o.sh);SEE41.list.splice(i,1);}
+function seeClear(){for(var i=SEE41.list.length-1;i>=0;i--)seeDrop(i);}
+function life41Tick(dt,t){
+ var sig=MAP&&MAP.id?MAP.id+'|'+(VISIT?VISIT.uid:''):'';if(sig!==SEE41.sig){SEE41.sig=sig;seeClear();}
+ var tgt=seeTarget(),n=0;SEE41.list.forEach(function(o){if(o.src==='ufo')n++;});
+ SEE41.spawnT-=dt;if(n<tgt&&SEE41.spawnT<=0&&MAP.ufo){SEE41.spawnT=n<tgt*0.5?1.2:2.8;var U=MAP.ufo,sx=U[0],sz=U[1];for(var tr=0;tr<8;tr++){var a=Math.random()*6.283,rr=1.6+Math.random()*0.7,cx=U[0]+Math.cos(a)*rr,cz=U[1]+Math.sin(a)*rr;if(okOut(cx,cz)&&Math.hypot(cx-P.x,cz-P.z)>1.2){sx=cx;sz=cz;break;}}seeNew('ufo',sx,sz);}
+ else if(n>tgt+2){for(var q=0;q<SEE41.list.length;q++){var oo=SEE41.list[q];if(oo.src==='ufo'&&oo.st==='stay'){oo.plan=['ufo'];oo.stay=0;break;}}}
+ var ux=P.x,uz=P.z,far=where!=='out',zf=PHONE?-17:-21;
+ for(var i=SEE41.list.length-1;i>=0;i--){var o=SEE41.list[i],u=o.m.userData,mv=false,ddx=o.x-ux,ddz0=o.z-uz,vis=!far&&Math.abs(ddx)<14&&ddz0>zf&&ddz0<7;   // 只畫鏡頭睇到嘅範圍（鏡頭喺主角南面向北望）
+  if(o.st==='beam'||o.st==='up'){o.t+=dt;var k=Math.min(1,o.t/1.4),f=o.st==='beam'?k:1-k;o.m.position.set(o.x,2.4*(1-f),o.z);o.m.scale.setScalar(o.s0*(0.3+0.7*f));o.m.rotation.y+=dt*6;o.m.visible=vis;o.sh.visible=vis&&f>0.5;
+   if(k>=1){if(o.st==='beam'){o.st='walk';o.m.scale.setScalar(o.s0);}else{seeDrop(i);continue;}}continue;}
+  if(o.st==='gone'){seeDrop(i);continue;}
+  if(o.st==='board'){o.t+=dt;var kb=Math.min(1,o.t/0.8);o.m.scale.setScalar(o.s0*(1-kb*0.9));o.m.visible=vis;if(kb>=1){seeDrop(i);continue;}continue;}
+  if(o.st==='walk'){var tg=o.pts[o.pi];if(!tg){o.st='arrive';}
+   else{var st0=vis?npcStep0(o,tg[0],tg[1],o.spd*dt,true,okOut):Math.min(o.spd*dt,Math.hypot(tg[0]-o.x,tg[1]-o.z));if(!vis){var ddx=tg[0]-o.x,ddz=tg[1]-o.z,dd=Math.hypot(ddx,ddz);if(dd>1e-4){o.x+=ddx/dd*st0;o.z+=ddz/dd*st0;}}
+    if(st0>0){mv=true;o.face=Math.atan2(tg[0]-o.x+1e-6,tg[1]-o.z);}
+    if(Math.hypot(tg[0]-o.x,tg[1]-o.z)<0.18)o.pi++;else{var r=npcWatch(o,tg[0],tg[1],dt,2.5);if(r==='snap'){o.x=tg[0];o.z=tg[1];}else if(r==='skip')o.pi++;}}}
+  if(o.st==='arrive'){o.poi=o.to;if(o.to==='ufo'){o.st='up';o.t=0;continue;}if(o.to==='pier'&&o.src==='cruise'){o.st='board';o.t=0;if(typeof crzPaxBack==='function')crzPaxBack(o);continue;}
+   o.st='stay';o.stay=5+Math.random()*7;o.act=pick(['photo','look','wave','look']);if(o.faceT!=null)o.face=o.faceT;o.spent+=o.to==='plaza'?0:15;}
+  if(o.st==='stay'){o.stay-=dt;if(o.stay<=0)seeNext(o);}
+  if(o.st==='pause'){o.face=Math.atan2(P.x-o.x,P.z-o.z);if(!D0)o.st='walk';}
+  o.rot=lerpA(o.rot,o.face,dt*6);o.m.visible=vis;o.sh.visible=vis;if(vis){var y0=isLand(o.x,o.z)?standY(o.x,o.z):(o.x>MAP.pier[0]&&o.x<MAP.pier[1]&&o.z>MAP.pier[2]&&o.z<MAP.pier[3]?0.07:0.22);o.m.position.set(o.x,y0,o.z);o.m.rotation.y=o.rot;o.sh.position.set(o.x,Math.max(0,y0)+0.03,o.z);
+   if(mv)o.ph+=dt*9;animWalk(o.m,o.ph,mv);
+   if(o.st==='stay'&&u.legs&&u.am){if(o.act==='photo'){u.am[0].rotation.x=u.am[1].rotation.x=-1.45;}else if(o.act==='wave'){u.am[1].rotation.x=-2.6+Math.sin(t*8+i)*0.3;}}
+   if(o.st==='stay'&&o.act==='look'&&u.b)u.b.rotation.y=Math.sin(t*1.6+i)*0.5;else if(u.b)u.b.rotation.y*=0.8;}
+  o.it.x=o.x;o.it.z=o.z;}}
+function seeITO(){if(where!=='out')return [];var L=[];SEE41.list.forEach(function(o){if((o.st==='walk'||o.st==='stay'||o.st==='pause')&&Math.abs(o.x-P.x)<6&&Math.abs(o.z-P.z)<6)L.push(o.it);});return L;}
+var SEE_SAY={1:['呢度仲好少遊客，好有原始風味，當地人好親切！','我鍾意呢啲未俾人發現嘅地方，自己一個嚟探險。'],
+ 2:['聽講呢個星球近排多咗好多新設施，好多旅客都嚟，所以我都嚟睇下！','好多外來投資者喺度起嘢，發展得好快。'],
+ 3:['設施好齊全，好多旅行團，好方便；不過好似越嚟越商業化。','酒店、樂園乜都有，行程好容易安排。'],
+ 4:['人多到迫爆，景點都要排長龍……我係第三次嚟嘅回頭客。','啲設施開始有啲舊，好似冇乜新意。'],
+ 5:['啲設施有啲殘舊，冇以前咁多人，好多旅客都去咗第二個星球。','旅客少咗好多，啲舖頭都冇以前咁旺。'],
+ 6:['翻新之後好正！新設施好好玩，又多返好多人嚟。','聽講星球有新投資，更換咗好多設備，所以再嚟一次！']};
+function seeTalk(o){var L=o.L,st=(S.butler&&S.butler.st)||1;if(o.st==='walk')o.st='pause';else if(o.st==='stay')o.stay=Math.max(o.stay,3);o.face=Math.atan2(P.x-o.x,P.z-o.z);if(typeof qAdd==='function'&&!o.chat){o.chat=1;qAdd('chat',1);}
+ talkPt(lookKey(L),function(){return lookModel(L);});
+ var lines=['你好！我係'+(L.pl||'外星')+'嘅'+L.nm+'，'+(o.src==='cruise'?'坐郵輪嚟':'坐飛碟嚟')+'觀光。'+(typeof profLine==='function'&&L.P?profLine(L):''),pick(SEE_SAY[st]||SEE_SAY[1])];
+ if(o.poi&&o.poi!=='ufo'&&o.poi!=='pier')lines.push('我啱啱去咗'+seeName(o.poi)+'，'+pick(['好好玩！','好靚，影咗好多相！','值得一嚟！'])+(o.plan.length&&o.plan[0]!=='ufo'&&o.plan[0]!=='pier'?'跟住去'+seeName(o.plan[0])+'。':''));
+ else if(o.plan.length&&o.plan[0]!=='ufo'&&o.plan[0]!=='pier')lines.push('我而家去'+seeName(o.plan[0])+'。');
+ talk(L.nm+'（旅客）','#6f82d9','#ffffff',lines,null,function(){if(o.st==='pause')o.st='walk';});}
+// ================= v41 郵輪（用戶指示：建咗兩個或以上大型設施，會隨機有郵輪喺碼頭泊岸，大量旅客落船上島遊覽）=================
+// 「星海號」由遠處駛入，喺碼頭出面泊定、放低舷梯；旅客沿碼頭上岸，去一至兩個景點，夠鐘就返船；響號之後開船
+// 第一次：條件一達到，大約 1–2.5 分鐘後嚟；之後每 10–20 分鐘一班；泊 4 分鐘。旅客喺島上消費，開船時計埋入你個錢包
+var CRZ={st:'none',t:0,next:0,g:null,gw:null,D:null,pax:0,out:0,back:0,spend:0,horn:0,lit:null,wake:null};
+function crzOK(){return !VISIT&&phase==='play'&&MAP&&MAP.pier&&MAP.fish&&MAP.pathTo&&MAP.pathTo.pier&&typeof big41c==='function'&&big41c().n>=2;}
+// 泊位：碼頭盡頭再出啲，船身同海岸平行；船身每一點都要喺海度（唔夠就再推出啲）
+function crzDock(){var dx=MAP.fdx,dz=MAP.fdz,bx=MAP.fish[0]-dx*6.1,bz=MAP.fish[1]-dz*6.1,ex=bx+dx*6.9,ez=bz+dz*6.9,px=-dz,pz=dx,W=3.4,off=2.1+W/2;
+ function clear(o){for(var s=-7.4;s<=7.4;s+=1.2)for(var w=-W/2-0.3;w<=W/2+0.31;w+=W/2+0.3){var x=ex+dx*o+px*s+dx*w,z=ez+dz*o+pz*s+dz*w;if(sdAt(x,z)<0.8)return false;}return true;}
+ while(off<14&&!clear(off))off+=1;var cx=ex+dx*off,cz=ez+dz*off,ry=Math.atan2(-pz,px);
+ // 船嘅左舷（本地 +z）要向住碼頭
+ if(Math.sin(ry)*(-dx)+Math.cos(ry)*(-dz)<0)ry+=Math.PI;
+ // 駛入方向：沿船身方向由遠處嚟，揀冇陸地嗰邊
+ function lane(sg){for(var s=6;s<=60;s+=4){var x=cx+px*s*sg,z=cz+pz*s*sg;if(sdAt(x,z)<1.5)return false;}return true;}
+ var bw=Math.cos(ry)*px-Math.sin(ry)*pz,pref=bw>0?-1:1,from=lane(pref)?pref:lane(-pref)?-pref:0;
+ return {cx:cx,cz:cz,ry:ry,ex:ex,ez:ez,bx:bx,bz:bz,dx:dx,dz:dz,px:px,pz:pz,off:off,W:W,from:from,gx:cx-dx*(W/2),gz:cz-dz*(W/2)};}
+// 上船／落船路線：舷梯頂 → 碼頭盡頭 → 碼頭頭
+function crzBoardPts(){var D=CRZ.D;if(!D)return [];return [[D.bx+D.dx*0.4,D.bz+D.dz*0.4],[D.ex-D.dx*0.3,D.ez-D.dz*0.3],[D.gx-D.dx*0.2,D.gz-D.dz*0.2]];}
+function crzLandPts(){return crzBoardPts().slice().reverse();}
+function crzWinTex(){var c=document.createElement('canvas');c.width=256;c.height=32;var x=c.getContext('2d');x.fillStyle='#f4f6f8';x.fillRect(0,0,256,32);for(var i=0;i<32;i++){x.fillStyle=i%5===4?'#f4f6f8':'#2f5f8f';x.fillRect(i*8+1,9,6,14);}return texEnc(new T.CanvasTexture(c));}
+function crzModel(){var g=new T.Group(),b=new T.Group();g.add(b);var navy=M(0x1f3a6a),red=M(0xc0392b),wht=M(0xf6f7f9),gry=M(0x9aa3ad),glass=std({c:0x2a4a6a,r:0.25,mt:0.3});
+ function hullShape(){var s=new T.Shape();s.moveTo(-6.6,-1.7);s.lineTo(4.4,-1.7);s.quadraticCurveTo(6.4,-1.5,7.4,0);s.quadraticCurveTo(6.4,1.5,4.4,1.7);s.lineTo(-6.6,1.7);s.quadraticCurveTo(-7.2,1.7,-7.2,1.1);s.lineTo(-7.2,-1.1);s.quadraticCurveTo(-7.2,-1.7,-6.6,-1.7);return s;}
+ function slab(h,m,y,sc){var ge=new T.ExtrudeGeometry(hullShape(),{depth:h,bevelEnabled:false});ge.rotateX(-Math.PI/2);var o=new T.Mesh(ge,m);o.position.y=y;if(sc)o.scale.set(sc,1,sc);b.add(o);return o;}
+ slab(0.95,navy,-0.65);slab(0.08,red,0.3,1.005);slab(0.85,wht,0.38);
+ var wt=crzWinTex();wt.wrapS=T.RepeatWrapping;wt.repeat.set(3,1);var wm=std({map:wt,r:0.6});
+ [-1,1].forEach(function(s){var p=ms(new T.PlaneGeometry(11,0.28),wm,-0.9,0.78,s*1.715);if(s<0)p.rotation.y=Math.PI;b.add(p);});
+ // 甲板層
+ var lit=std({c:0x3a6fa8,r:0.3,e:0xffd27a});lit.emissiveIntensity=0;CRZ.lit=lit;
+ [[10.2,0.95,3.0,-0.9,1.7],[8.2,0.85,2.7,-1.3,2.6],[5.8,0.75,2.3,-1.6,3.4]].forEach(function(d,i){b.add(ms(new T.BoxGeometry(d[0],d[1],d[2]),wht,d[3],d[4],0));
+  [-1,1].forEach(function(s){b.add(ms(new T.BoxGeometry(d[0]*0.96,d[1]*0.4,0.02),i?lit:glass,d[3],d[4]+0.05,s*(d[2]/2+0.012)));b.add(ms(new T.BoxGeometry(d[0],0.05,0.05),wht,d[3],d[4]+d[1]/2+0.12,s*(d[2]/2-0.03)));});});
+ // 船橋
+ b.add(ms(new T.BoxGeometry(2.2,0.7,2.9),wht,3.2,3.35,0));b.add(ms(new T.BoxGeometry(0.05,0.3,2.7),glass,4.31,3.42,0));
+ // 煙囱（紅色、白帶、黑頂）
+ var fn=ms(new T.CylinderGeometry(0.55,0.7,1.6,18),red,-3.3,4.5,0);fn.scale.set(1.2,1,0.8);b.add(fn);var fb=ms(new T.CylinderGeometry(0.62,0.66,0.25,18),wht,-3.3,4.6,0);fb.scale.set(1.2,1,0.8);b.add(fb);var ft=ms(new T.CylinderGeometry(0.56,0.56,0.12,18),M(0x1d1b22),-3.3,5.33,0);ft.scale.set(1.2,1,0.8);b.add(ft);
+ // 桅杆、旗
+ b.add(ms(new T.CylinderGeometry(0.04,0.05,1.6,6),gry,3.0,4.5,0));[0xe8574f,0xffd23f,0x3a8a5a,0x57a8e8].forEach(function(c,i){var f=ms(new T.PlaneGeometry(0.28,0.18),std({c:c,side:T.DoubleSide,r:0.8}),3.0-0.02,5.1-i*0.22,0.16);f.rotation.y=Math.PI/2;b.add(f);});
+ // 救生艇
+ [-1,1].forEach(function(s){for(var i=0;i<3;i++){var lb=ms(new T.SphereGeometry(0.28,12,8),M(0xff8a2a),-3.6+i*2.3,2.2,s*1.6);lb.scale.set(2.2,0.7,0.8);b.add(lb);}});
+ // 泳池
+ b.add(ms(new T.BoxGeometry(1.8,0.06,1.2),std({c:0x57c8e8,r:0.15,e:0x0a3a4a}),-1.2,3.08,0));
+ // 船名
+ [-1,1].forEach(function(s){var nm=roomSign('星海號','#1f3a6a','#ffffff',1.4,0.32);nm.position.set(5.2,0.95,s*1.62);nm.rotation.y=s>0?0.12:Math.PI-0.12;b.add(nm);});
+ mergeRigid(b);shadowAll(g,true,false);noCull(g);
+ // 船頭浪花（行船時先見）
+ var wk=new T.Mesh(new T.PlaneGeometry(4,3.2),new T.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0.5,depthWrite:false}));wk.rotation.x=-Math.PI/2;wk.position.set(7.4,0.05,0);g.add(wk);CRZ.wake=wk;
+ return g;}
+function crzGangway(){var g=new T.Group(),wd=M(0xd8d2c4),rl=M(0x9aa3ad);g.add(ms(new T.BoxGeometry(1,0.06,0.9),wd,0.5,0,0));[-1,1].forEach(function(s){g.add(ms(new T.BoxGeometry(1,0.04,0.04),rl,0.5,0.5,s*0.43));for(var i=0;i<=4;i++)g.add(ms(new T.BoxGeometry(0.03,0.5,0.03),rl,i*0.25,0.25,s*0.43));});noCull(g);return g;}
+function crzHorn(){try{if(!AUD||!AUD.ctx||!AUD.sfxOn)return;var c=AUD.ctx,t0=c.currentTime,gn=c.createGain();gn.gain.setValueAtTime(0,t0);gn.gain.linearRampToValueAtTime(0.18*(AUD.vol||0.5),t0+0.15);gn.gain.setValueAtTime(0.18*(AUD.vol||0.5),t0+1.3);gn.gain.linearRampToValueAtTime(0,t0+1.8);gn.connect(AUD.sfx||c.destination);
+ [110,138.6].forEach(function(f){var o=c.createOscillator();o.type='sawtooth';o.frequency.value=f;var lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=700;o.connect(lp);lp.connect(gn);o.start(t0);o.stop(t0+1.9);});}catch(e){}}
+function crzPlace(k){var D=CRZ.D,g=CRZ.g,L=60*(1-k);if(D.from){g.position.set(D.cx+D.px*L*D.from,0,D.cz+D.pz*L*D.from);g.rotation.y=D.ry;}else{g.position.set(D.cx+D.dx*L,0,D.cz+D.dz*L);g.rotation.y=D.ry+(1-k)*0.9;}}
+function crzGwSet(k){var D=CRZ.D,gw=CRZ.gw;if(!gw)return;var L=Math.hypot(D.gx-D.ex,D.gz-D.ez);gw.visible=k>0.02;gw.position.set(D.ex,0.18,D.ez);gw.rotation.y=Math.atan2(-D.dz,D.dx);gw.scale.set(Math.max(0.01,L*k),1,1);}
+function crzClear(){if(CRZ.g){if(CRZ.g.parent)CRZ.g.parent.remove(CRZ.g);disposeTree(CRZ.g);}if(CRZ.gw){if(CRZ.gw.parent)CRZ.gw.parent.remove(CRZ.gw);disposeTree(CRZ.gw);}CRZ.g=CRZ.gw=null;CRZ.st='none';
+ if(typeof SEE41!=='undefined')for(var i=SEE41.list.length-1;i>=0;i--)if(SEE41.list[i].src==='cruise')seeDrop(i);}
+function crzPaxBack(o){CRZ.back++;CRZ.spend+=20+(o.spent||0);}
+function crzTick(dt,t){var now=Date.now();
+ if(CRZ.st==='none'){if(!crzOK()){CRZ.next=0;return;}if(!CRZ.next){CRZ.next=now+(60+Math.random()*90)*1000;return;}if(now<CRZ.next)return;
+  CRZ.D=crzDock();CRZ.g=crzModel();scO.add(CRZ.g);CRZ.gw=crzGangway();scO.add(CRZ.gw);crzGwSet(0);CRZ.st='in';CRZ.t=0;CRZ.pax=0;CRZ.out=0;CRZ.back=0;CRZ.spend=0;crzHorn();
+  toast('郵輪「星海號」駛緊埋碼頭，好多旅客準備上岸遊覽！',4500);return;}
+ if(VISIT&&CRZ.st!=='none'){crzClear();CRZ.next=0;return;}
+ var g=CRZ.g,D=CRZ.D;if(!g)return;CRZ.t+=dt;var nkv=typeof nk==='number'?nk:0;if(CRZ.lit)CRZ.lit.emissiveIntensity=0.15+0.9*nkv;
+ var bob=Math.sin(t*0.9)*0.04;
+ if(CRZ.st==='in'){var k=Math.min(1,CRZ.t/24),e=1-Math.pow(1-k,3);crzPlace(e);g.position.y=bob;if(CRZ.wake){CRZ.wake.visible=k<0.95;CRZ.wake.material.opacity=0.5*(1-e);}
+  if(k>=1){CRZ.st='dock';CRZ.t=0;crzHorn();addNews('郵輪泊岸','郵輪「星海號」泊咗星球碼頭，一大班旅客上岸觀光，島上即刻熱鬧好多。','ev');}}
+ else if(CRZ.st==='dock'){crzPlace(1);g.position.y=bob;crzGwSet(Math.min(1,CRZ.t/1.5));var want=Math.min(18,10+2*big41c().n);
+  if(CRZ.t>2&&CRZ.pax<want&&CRZ.t<2+want*1.7&&CRZ.t>2+CRZ.pax*1.7){CRZ.pax++;var pre=crzLandPts();if(pre.length&&typeof seeNew==='function')seeNew('cruise',pre[0][0],pre[0][1],pre.slice(1));}
+  if(CRZ.t>200&&!CRZ.call){CRZ.call=1;crzHorn();toast('「星海號」準備開船：郵輪旅客返緊船',3500);if(typeof SEE41!=='undefined')SEE41.list.forEach(function(o){if(o.src==='cruise'&&o.st!=='board'){o.plan=['pier'];if(o.st==='stay')o.stay=0;}});}
+  var left=0;if(typeof SEE41!=='undefined')SEE41.list.forEach(function(o){if(o.src==='cruise')left++;});
+  if((CRZ.t>240&&left===0)||CRZ.t>300){CRZ.st='gw';CRZ.t=0;CRZ.call=0;if(typeof SEE41!=='undefined')for(var i=SEE41.list.length-1;i>=0;i--)if(SEE41.list[i].src==='cruise')seeDrop(i);
+   if(CRZ.spend>0){S.coins+=CRZ.spend;coinsUI();save();toast('郵輪旅客喺島上消費咗 $'+fmtC(CRZ.spend)+'，已經計入你個錢包',4500);}}}
+ else if(CRZ.st==='gw'){crzPlace(1);g.position.y=bob;crzGwSet(Math.max(0,1-CRZ.t/1.5));if(CRZ.t>1.6){CRZ.st='out';CRZ.t=0;crzHorn();}}
+ else if(CRZ.st==='out'){var k2=Math.min(1,CRZ.t/24),e2=k2*k2;var DD=D.from||-1;g.position.set(D.cx-D.px*60*e2*DD,bob,D.cz-D.pz*60*e2*DD);g.rotation.y=D.ry;if(CRZ.wake){CRZ.wake.visible=true;CRZ.wake.material.opacity=0.5*Math.min(1,k2*3);}
+  if(k2>=1){crzClear();CRZ.next=now+(600+Math.random()*600)*1000;}}}
+// ================= v41 每格（由 tick40 叫）＋動態互動點 =================
+function tick41(dt,t){try{door41Tick(dt);}catch(e){errNote(e,'室內門口');}try{gardTick(dt,t);}catch(e){errNote(e,'花王');}try{thfTick(dt,t);}catch(e){errNote(e,'捉小偷');}
+ try{life41Tick(dt,t);}catch(e){errNote(e,'觀光旅客');}try{crzTick(dt,t);}catch(e){errNote(e,'郵輪');}try{col41Tick(dt);}catch(e){errNote(e,'碰撞');}}
+function ito41(){return gardITO().concat(seeITO());}
+// YHP 賺錢攻略：加花王、郵輪、發展指數
+var adv39GrowV40=adv39Grow;adv39Grow=function(){var L=adv39GrowV40(),co=S.coins||0;
+ try{if(MAP.fbed&&gardLv()===0&&co>=3000)L.push('你有花圃：搵建材行嘉禧聘請花王，開花自動摘、送去伊伊花店賣，唔使自己淋花摘花。');}catch(e){}
+ try{var B=big41c();if(B.n<2)L.push('起夠兩個大型設施，就會有郵輪泊碼頭，一大班旅客上岸消費。');else if(B.idx<8)L.push('升級大型設施（市長林庫「升級大型設施」）：發展指數越高，生命週期越成熟，嚟觀光嘅旅客越多。');}catch(e){}
+ return L;};
 // ---- 模組載入完：開始砌大型設施、牧場外型 ----
 LF_OK=true;if(MAP&&MAP.L&&typeof lfSync==='function')lfSync(true);
 requestAnimationFrame(loop);
