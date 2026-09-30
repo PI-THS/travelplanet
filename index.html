@@ -2,7 +2,7 @@
 <html lang="zh-Hant-HK">
 <head>
 <meta charset="utf-8">
-<meta name="ths-build" content="2609300919">
+<meta name="ths-build" content="2609301148">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="color-scheme" content="light">
 <!-- iPhone Safari 冇 element fullscreen API：由「分享 → 加入主畫面」開就會冇工具列（同旅款亂Upper 一樣）-->
@@ -225,6 +225,25 @@ button{touch-action:manipulation;}
 @keyframes cvIn{from{opacity:0;transform:translateY(-20px) scale(.9);}to{opacity:1;transform:none;}}
 @keyframes cvFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
 @keyframes cvPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.06);}}
+/* v43 封面（three.js）：舊標題收埋；掣、提示改夜空配色 */
+.sr43{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;margin:0;padding:0;}
+#cover.c43{justify-content:flex-end!important;background:linear-gradient(rgba(24,16,56,0) 58%,rgba(24,16,56,.42));}
+#cover.c43 .cv-logo{display:none;}
+#cover.c43 .cv-go{position:relative;overflow:hidden;padding:15px 56px;font-size:23px;letter-spacing:3px;background:linear-gradient(#ffe27a,#ffb13b 55%,#ff8f2a);border:3px solid #fff4d2;box-shadow:0 6px 0 #b8621c,0 12px 28px rgba(255,160,80,.45);text-shadow:0 2px 0 #b8621c;animation:cv43In .6s 1s both,cvPulse 1.8s 1.6s ease-in-out infinite;}
+#cover.c43 .cv-go:after{content:"";position:absolute;top:-20%;bottom:-20%;left:-40%;width:26%;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.7),rgba(255,255,255,0));transform:skewX(-20deg);animation:cv43Sh 3s 2s ease-in-out infinite;}
+#cover.c43 .cv-hint{color:#fff6e0;font-size:14px;text-shadow:0 1px 3px rgba(30,16,60,.85);animation:cv43In .6s 1.2s both;}
+#cover.c43 .cv-ver{color:rgba(255,255,255,.5);}
+@media (max-height:500px){#cover.c43{padding-bottom:calc(3vh + env(safe-area-inset-bottom));}#cover.c43 .cv-go{padding:9px 40px;font-size:18px;}#cover.c43 .cv-hint{margin-top:5px;font-size:12px;}}
+@keyframes cv43In{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
+@keyframes cv43Sh{0%{left:-40%;}45%,100%{left:135%;}}
+#cov43f{position:absolute;inset:0;z-index:14;background:#fffaf0;opacity:0;pointer-events:none;transition:opacity .38s ease;}#cov43f.on{opacity:1;}
+/* v43 登入框（開始新遊戲）、揀進度 */
+.lgx{font-size:12.5px;color:#8a7560;line-height:1.55;margin:6px 4px 0;}.lgx:empty{display:none;}
+#lgErr:empty{min-height:0;margin:0;}
+.lgb{display:block;width:100%;margin-top:14px;border:none;border-radius:999px;padding:10px;background:#fff4dc;color:#8a5a34;font-size:17px;font-weight:700;box-shadow:0 3px 0 #e8cfa0;}
+#acct43{position:absolute;inset:0;display:none;z-index:16;background:rgba(40,30,20,.35);}#acct43.on{display:block;}#acct43 .mk{left:50%;right:auto;transform:translate(-50%,-50%);}
+.a43c{background:#fff;border-radius:16px;padding:10px 12px;margin:8px 0;font-size:13px;line-height:1.6;color:#8a7560;}.a43c b{display:block;font-size:15px;color:#5a4632;}.a43c .mkgo{margin-top:8px;padding:8px;font-size:15px;}
+@media (max-width:700px) and (orientation:portrait){#acct43 .mk{left:12px;right:12px;transform:none;top:auto;bottom:calc(12px + env(safe-area-inset-bottom));}}
 /* 揀地形 */
 #terr{position:absolute;inset:0;display:none;z-index:12;pointer-events:none;}
 #terr.on{display:block;}
@@ -366,11 +385,11 @@ button{touch-action:manipulation;}
 <div id="panel"><div class="ph"><div><h2 id="pTitle"></h2><div class="sub" id="pSub"></div></div><button class="x" id="pClose" aria-label="關閉">✕</button></div><div class="tabs" id="pTabs"></div><div class="pb" id="pBody"></div></div>
 <div id="make"><div class="mk"><h2 id="mkTitle">建立你的角色</h2><div class="sub" id="mkSub">先決定名字和樣子。之後可以到芷華時裝店找芷華改變造型。</div><label for="mkName">名字（最多 8 個字）</label><input id="mkName" maxlength="12" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done"><div class="mkerr" id="mkErr"></div><div id="mkPwBox" style="display:none"><label for="mkPw">老師密碼（YHP 專用）</label><input id="mkPw" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done"></div><label>性別</label><div class="chips" id="mkG"></div><label>生日</label><div class="mkbd"><select id="mkBm" aria-label="生日月份"></select><span>月</span><select id="mkBd" aria-label="生日日子"></select><span>日</span></div><label>膚色</label><div class="sws" id="mkSkin"></div><label>髮色</label><div class="sws" id="mkHair"></div><label>髮型</label><div class="chips" id="mkHs"></div><label>眼睛</label><div class="chips" id="mkEye"></div><button class="mkgo" id="mkGo">完成</button><button class="mkno" id="mkNo">取消</button></div></div>
 <div id="terr"><div class="mk"><h2>選擇你的島嶼</h2><div class="sub">點選看看，後面會即時顯示。每個新星球只可以揀一次。</div><div class="tg" id="trGrid"></div><div class="ti" id="trInfo"></div><button class="mkgo" id="trGo">就選這個地形</button></div></div>
-<div id="cover"><div class="cv-logo"><div class="cv-planet"></div><div class="cv-sub">旅遊與款待・經營遊戲</div><h1>真．旅遊星球</h1></div><div class="cv-bot"><button class="cv-go" id="cvGo">開始遊戲</button><div class="cv-hint" id="cvHint">&nbsp;</div><button class="cv-login" id="cvLogin">用 Google 帳戶登入（雲端存檔）</button></div><div class="cv-ver" id="cvVer"></div></div>
+<div id="cover" class="c43"><h1 class="sr43">真．旅遊星球</h1><div class="cv-logo"><div class="cv-planet"></div><div class="cv-sub">旅遊與款待・經營遊戲</div><h1>真．旅遊星球</h1></div><div class="cv-bot"><button class="cv-go" id="cvGo">開始遊戲</button><div class="cv-hint" id="cvHint">&nbsp;</div><button class="cv-login" id="cvLogin">用 Google 帳戶登入（雲端存檔）</button></div><div class="cv-ver" id="cvVer"></div></div>
 <div id="story"><div class="st-cap"><div class="st-tag" id="stTag"></div><div class="st-txt" id="stTxt"></div><div class="st-row"><button class="st-skip" id="stSkip">略過</button><button class="st-next" id="stNext">繼續</button></div></div></div>
-<div id="login"><div class="mk"><h2>登入／註冊</h2><div class="sub">用 Google 帳戶登入就得，第一次登入會自動註冊。登入之後，遊戲進度會存到雲端，換部機都玩得返；仲可以加朋友、互相探訪星球。</div>
-<div class="lgnote" id="lgNote"></div><button class="mkgo lgg" id="lgG">用 Google 帳戶登入</button><div class="mkerr" id="lgErr"></div>
-<button class="mkno" id="lgCancel">唔登入（進度只存喺呢部機）</button></div></div>
+<div id="login"><div class="mk"><h2 id="lgH">登入／註冊</h2><div class="sub" id="lgS">用 Google 帳戶登入就得，第一次登入會自動註冊。登入之後，遊戲進度會存到雲端，換部機都玩得返；仲可以加朋友、互相探訪星球。</div>
+<div class="lgnote" id="lgNote"></div><button class="mkgo lgg" id="lgG">用 Google 帳戶登入</button><div class="lgx" id="lgGx"></div><div class="mkerr" id="lgErr"></div>
+<button class="mkno" id="lgCancel">唔登入（進度只存喺呢部機）</button><div class="lgx" id="lgCx"></div></div></div>
 <div id="visitbar"><span>👀 參觀緊 <b id="vbName"></b> 的星球</span><button class="pill" id="vbBack">返回我的星球</button></div>
 <div id="tip"><div class="tipb"><b id="tipT"></b><div id="tipX"></div><button class="mkgo" id="tipOk">明白</button></div></div>
 <div id="fade"></div>
@@ -3060,7 +3079,7 @@ var RENDER={
   S.plots.forEach(function(p,i){var s=plotState(p),txt=s==='empty'?'空地':s==='ready'?'<span class="ok">可以採摘</span>':'生長中 '+Math.floor(p.p/(3*cropStage(p.c))*100)+'%　'+(s==='wet'?'💧 濕潤（還有 '+Math.ceil((p.w-Date.now())/1000)+' 秒）':'<span class="bad">乾了，要澆水</span>');
    b.appendChild(card({ico:p.c?'item:'+p.c:'soil'},'第 '+(i+1)+' 格'+(p.c?'：'+iname(p.c):''),txt,[]));});},
  phone_set:function(b){b.appendChild(note(NET.user?'遊戲進度會自動儲存在這部裝置，並同步到雲端。':'遊戲進度自動儲存在這部裝置的瀏覽器。'));
-  if(netAvail())b.appendChild(card({emo:'☁️'},NET.user?'已登入':'未登入',NET.user?esc(acctName())+'<br>好友碼：'+(S.fcode||''):'登入之後，進度會存到雲端，換部機都玩得返；仲可以交朋友。',[NET.user?{t:'登出',cls:'g',fn:function(){AUTHI.out();}}:{t:'用 Google 登入',cls:'o',fn:function(){closePanel();openLogin();}}]));
+  if(netAvail())b.appendChild(card({emo:'☁️'},NET.user?'已登入 Google 帳戶':'未登入（進度只存喺呢部機）',NET.user?esc(acctName())+'<br>好友碼：'+(S.fcode||''):'用 Google 帳戶登入之後，呢部機嘅進度會上載到雲端，換部機都玩得返；仲可以加朋友、互相探訪星球。如果個帳戶本身已經有雲端進度，會問你揀邊一份。',[NET.user?{t:'登出',cls:'g',fn:function(){AUTHI.out();}}:{t:'用 Google 帳戶登入',cls:'o',fn:function(){closePanel();openLogin();}}]));
   if(testerOn())b.appendChild(card({ico:'bld:dome'},'立即完成建設（測試）','所有興建緊嘅景點、大型設施即刻落成，唔使等 24 小時（學生唔會見到呢個掣）。',[{t:'即刻完成',cls:'o',fn:function(){var n=finishAllBuilds();toast(n?'已經完成 '+n+' 項工程':'而家冇興建緊嘅工程',3000);renderPanel();}}]));
   if(testerOn())b.appendChild(card({ico:'storm'},'天氣測試（測試）','即刻落雨 10 分鐘，睇吓落雨效果（學生唔會見到呢個掣）。平時每日隨機落雨，最多 4 小時。',[{t:RAIN.force>Date.now()?'停雨':'落雨 10 分鐘',cls:'o',fn:function(){RAIN.force=RAIN.force>Date.now()?0:Date.now()+600000;RAIN.wt=0;renderPanel();}}]));
   if(testerOn())b.appendChild(card({ico:'bld:dome'},'志華老師測試（測試）','即刻叫考古專家志華老師坐船嚟碼頭（停留 1 小時），方便測試博物館（學生唔會見到呢個掣）。'+(bld('dome')?'':'要先起好星球博物館，志華老師先會嚟。'),[{t:'叫志華老師嚟',cls:'o',dis:!!zhwNow()||!bld('dome'),fn:function(){zhwForce();closePanel();toast('志華老師正在開船嚟碼頭',2500);}}]));
@@ -3272,10 +3291,10 @@ function updMac(dt,t){var m=MAC,u=macO.userData;macO.visible=macSh.visible=!maki
 
 // ================= 封面、揀地形 =================
 // 每次開遊戲先見封面；未玩過嘅新玩家：揀地形 → 建立角色 → 開場白
-var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v42',BUILD='2609300919';
-function showCover(){phase='cover';$('cover').classList.add('on');$('app').classList.add('cover');CU.uB.value=0;sea.scale.set(4,7,1);sea.position.z=(MAP.bc||[0,0])[1];
+var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v43',BUILD='2609301148';
+function showCoverV42(){phase='cover';$('cover').classList.add('on');$('app').classList.add('cover');CU.uB.value=0;sea.scale.set(4,7,1);sea.position.z=(MAP.bc||[0,0])[1];
  var old=!!(S.me&&S.me.nm);$('cvVer').textContent=BUILD+'V'+VERSION.slice(1);$('cvGo').textContent=old?'繼續遊戲':'開始遊戲';$('cvHint').textContent=old?'歡迎回來，'+S.me.nm+'！':'第一次玩：先揀島嶼地形，再建立角色';}
-function leaveCover(){if(phase!=='cover')return;$('cover').classList.remove('on');if(!S.layout){if(!S.story)openStory();else openTerr();}else startPlay();}
+function leaveCoverV42(){if(phase!=='cover')return;$('cover').classList.remove('on');if(!S.layout){if(!S.story)openStory();else openTerr();}else startPlay();}
 function openTerr(){phase='terrain';trSel=S.layout||MAP.id||'square';$('terr').classList.add('on');renderTerr();if(MAP.id!==trSel)setLayout(trSel);}
 // 小地圖（揀島嶼用）：藍＝海、綠＝陸地、紅＝餐廳、深綠＝服務中心、黃＝市場、啡＝農場、藍點＝池塘、灰＝飛碟站
 function thumbOf(L){if(THUMB[L.id])return THUMB[L.id];var c=document.createElement('canvas');c.width=c.height=64;var x=c.getContext('2d');x.fillStyle='#6fcbe6';x.fillRect(0,0,64,64);x.fillStyle='#8fd06a';
@@ -3511,6 +3530,7 @@ var fpsA=0,fpsN=0,fpsDone=false;function fpsTick(dt){if(fpsDone||!FINE||phase!==
 // ================= 主迴圈 =================
 var idleT=0,testFreeze=false,last=performance.now(),tm=0,ph=0,cur=null,saveT=0,moved=false,hintT=0,lastLab='',rsT=1;
 function loopV36(now){var dt=Math.min(0.05,Math.max(0,(now-last)/1000));last=now;tm+=dt;
+ if(phase==='cover'&&typeof cov43Render==='function'&&cov43Render(dt)){requestAnimationFrame(loop);return;}
  if(phase==='story'){storyTick(dt);if(STORY.sc)renderScene(STORY.sc);requestAnimationFrame(loop);return;}
  var busy=!!D0||!!panelKind||fading||making||!!HOLD||!!WATER||!!HARV||!!SOW||!!BEAMUP||FS.on||phase!=='play'||!!(typeof TRAM!=='undefined'&&TRAM.ride)||!!(typeof PARK!=='undefined'&&PARK.ride)||!!(typeof MG!=='undefined'&&MG);
  var ix=(K.r?1:0)-(K.l?1:0)+jv.x,iz=(K.d?1:0)-(K.u?1:0)+jv.y,L=Math.hypot(ix,iz),mv=false;if(L>1){ix/=L;iz/=L;L=1;}
@@ -4397,7 +4417,7 @@ function mockInit(){var K='ths-mockdb';function load(){try{return JSON.parse(loc
  var cur=null,lis=[];function fire(){lis.forEach(function(cb){cb(cur);});}function keep(){try{if(cur)sessionStorage.setItem('ths-mockuser',JSON.stringify(cur));else sessionStorage.removeItem('ths-mockuser');}catch(e){}}
  AUTHI={google:function(){cur={uid:'g_'+Math.random().toString(36).slice(2,8),email:'student@gmail.com',displayName:'Google 測試'};keep();fire();return Promise.resolve({user:cur});},
   out:function(){cur=null;keep();fire();return Promise.resolve();},onChange:function(cb){lis.push(cb);try{cur=JSON.parse(sessionStorage.getItem('ths-mockuser')||'null');}catch(e){}setTimeout(function(){cb(cur);},0);}};}
-function netStart(){if(!netAvail())return;var go=function(){AUTHI.onChange(function(u){if(u&&(!NET.user||NET.user.uid!==u.uid))onLogin(u);else if(!u&&NET.user)onLogout();});};
+function netStart(){if(!netAvail())return;var go=function(){AUTHI.onChange(function(u){if(u&&(!NET.user||NET.user.uid!==u.uid))onLogin(u);else if(!u){NET.pend=null;if(NET.user)onLogout();}});};
  if(MOCK){NET.mode='mock';mockInit();go();}else fbLoad(function(err){if(err){toast('☁️ 未能連接雲端（請檢查網絡）');return;}try{fbInit();NET.mode='fb';go();}catch(e){toast('☁️ 雲端設定有問題');}});}
 // ---- 帳戶：只用 Google（2026-09-28 用戶指示：唔要班別學號＋密碼）；第一次登入即係註冊 ----
 // Google 唔准喺 App 內置瀏覽器（Instagram、Facebook、WhatsApp、微信等）登入；由主畫面圖示開（冇 Safari 工具列）有機會開唔到登入視窗
@@ -4411,11 +4431,11 @@ function closeLogin(){$('login').classList.remove('on');}
 var LGW=null;
 function lgGoogle(){if(!AUTHI){$('lgErr').textContent=NET.mode==='off'?'雲端連接中，請等幾秒再試。':'未能連接雲端，請檢查網絡。';return;}$('lgErr').textContent='開啟 Google 登入視窗……（會開一個新分頁，喺嗰度揀你嘅 Google 帳戶）';
  clearTimeout(LGW);LGW=setTimeout(function(){if(!NET.user&&$('login').classList.contains('on'))$('lgErr').textContent='仲未收到 Google 登入結果。如果冇彈出登入視窗：①請用 Safari 開遊戲網址（唔好由主畫面圖示或者其他 App 開）；②去 iPhone「設定 → Safari」關閉「阻擋彈出式視窗」；③再撳一次「用 Google 帳戶登入」。';},12000);
- AUTHI.google().then(function(){clearTimeout(LGW);closeLogin();}).catch(function(e){clearTimeout(LGW);$('lgErr').textContent=authErr(e);});}
+ AUTHI.google().then(function(r){clearTimeout(LGW);lgOk43(r);}).catch(function(e){clearTimeout(LGW);$('lgErr').textContent=authErr(e);});}
 function acctName(){var u=NET.user;if(!u)return '';return (u.displayName?u.displayName+'・':'')+(u.email||'Google 帳戶');}
 // ---- 登入後：比較雲端同本機存檔（取較新），之後定時上載 ----
 function codeOf(uid){var A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',h=2166136261;for(var i=0;i<uid.length;i++){h^=uid.charCodeAt(i);h=Math.imul(h,16777619)>>>0;}var s='';for(var k=0;k<6;k++){s+=A[h%A.length];h=Math.floor(h/A.length)^(k*7919+uid.length);if(h<=0)h=h+2654435761>>>0;}return s;}
-function onLogin(u){NET.user=u;var uid=u.uid;
+function onLoginV42(u){NET.user=u;var uid=u.uid;
  DBI.get('saves/'+uid).then(function(cs){var loc=S.savedAt||0,cloudT=cs&&cs.t||0,fresh0=!(S.me&&S.me.nm);
   if(cs&&cs.json&&(cloudT>loc||fresh0)&&sessionStorage.getItem('ths-cloudload')!==String(cloudT)){try{sessionStorage.setItem('ths-cloudload',String(cloudT));}catch(e){}noSave=true;try{localStorage.setItem(CFG.saveKey,cs.json);}catch(e){}toast('☁️ 已載入雲端進度',3000);setTimeout(function(){location.reload();},600);return;}
   S.fcode=codeOf(uid);DBI.set('codes/'+S.fcode,uid).catch(function(){});cloudSave(true);publish();presenceHome();friendFromLink();mailSub();if(typeof frSub==='function')frSub();if(typeof coopSub==='function')coopSub();toast('☁️ 已登入：'+acctName()+'（進度會自動同步到雲端）',4500);if(panelKind)renderPanel();}).catch(function(e){console.warn(e);toast('☁️ 已登入，但未能讀取雲端存檔（'+((e&&(e.code||e.message))||'網絡')+'）：請稍後重新開遊戲',5000);});}
@@ -6675,7 +6695,7 @@ growFarm();pondTick();prevSt=S.plots.map(plotState);
 applyDeco();buildStoves();syncFridge();syncChefs();drawBoard();drawMenu(availDishes());coinsUI();clk();nk=nt;setInterval(clk,15000);resize();npcPick();
 noCull(scO);noCull(scI);noCull(scC);
 initComposer();resize();hudIcons();coinsUI();syncSenseDeco();syncPOS();syncMgr();magDot();syncGuides();netStart();
-$('cvLogin').addEventListener('click',function(e){e.stopPropagation();openLogin();});$('lgG').addEventListener('click',lgGoogle);$('lgCancel').addEventListener('click',closeLogin);$('vbBack').addEventListener('click',leaveVisit);
+$('cvLogin').addEventListener('click',function(e){e.stopPropagation();openLogin();});$('lgG').addEventListener('click',function(){lgGoogle();});$('lgCancel').addEventListener('click',function(){lgCancel43();});$('vbBack').addEventListener('click',leaveVisit);
 if(!netAvail())$('cvLogin').style.display='none';showCover();setTimeout(function(){phLoad();},4000);
 // ================= v26 通用室內房間（博物館、志華老師條船、酒店各層、主題樂園都用）=================
 // 每間房：sc 場景、b 範圍 [x0,x1,z0,z1]、door 門口 {x,w}（喺 z 最大嗰邊）、cir/box 碰撞、npc() 會郁嘅人、items 互動點、cam() 鏡頭、out() 出門位置、nm 地圖名、tick(dt,t) 每格
@@ -11301,6 +11321,308 @@ function museumTick(dt){if(VISIT||!bld('dome')||!S)return;var o=musSt();o.t=(o.t
 // ================= v42 每格（由 tick41 叫）＋動態互動點 =================
 function tick42(dt,t){try{mus42Tick(dt,t);}catch(e){errNote(e,'博物館');}}
 function ito42(){return typeof thfITO==='function'?thfITO():[];}
+// ================= v43 封面：three.js 立體星球（用戶指示：封面頁太醜，用 three.js 執靚佢）=================
+// 自己一個場景＋鏡頭：暮色星空（漸變、閃星、星雲）、低多邊形小星球（海、淺灘、沙灘、草地、山、雪頂、樹）、
+//   餐廳、摩天輪、酒店、博物館、蘑菇屋、燈塔、風車、熱氣球、雲、光環、飛碟、月亮、流星、光點
+// 標題「真．旅遊星球」逐隻字疊九層做厚度＋閃光掃過；副題彩帶會飄；一開始星球彈出、字逐隻跌落；撳開始＝鏡頭衝向星球＋白光過場
+// 精美模式經後期效果（光暈、調色、暗角）；流暢模式直接畫；出錯就退返舊封面（島嶼轉圈）
+// 主迴圈喺 phase==='cover' 時先叫 cov43Render（其他嘢唔郁），所以封面唔會同遊戲世界爭效能
+var COV43={bloom:[0.28,0.5,0.88],exp:1,want:false,sc:null,cam:null,t:0,fail:false,leave:-1,cb:null,autoGo:0,px:0,py:0,cx:0,cy:0,asp:0,W:0,H:0,disp:[],anim:[],ch:[]};
+function c43rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return ((t^t>>>14)>>>0)/4294967296;};}
+function c43h(i,j,k,s){var n=Math.imul(i,374761393)^Math.imul(j,668265263)^Math.imul(k,1274126177)^Math.imul(s,1442695041);n=Math.imul(n^(n>>>13),1274126177);n^=n>>>16;return (n>>>0)/4294967296;}
+function c43n(x,y,z,s){var xi=Math.floor(x),yi=Math.floor(y),zi=Math.floor(z),xf=x-xi,yf=y-yi,zf=z-zi,u=xf*xf*(3-2*xf),v=yf*yf*(3-2*yf),w=zf*zf*(3-2*zf);
+ function L(a,b,t){return a+(b-a)*t;}
+ return L(L(L(c43h(xi,yi,zi,s),c43h(xi+1,yi,zi,s),u),L(c43h(xi,yi+1,zi,s),c43h(xi+1,yi+1,zi,s),u),v),L(L(c43h(xi,yi,zi+1,s),c43h(xi+1,yi,zi+1,s),u),L(c43h(xi,yi+1,zi+1,s),c43h(xi+1,yi+1,zi+1,s),u),v),w);}
+function c43f(x,y,z,s){var a=0.5,f=1,t=0,n=0;for(var o=0;o<4;o++){t+=a*c43n(x*f,y*f,z*f,s+o*17);n+=a;a*=0.5;f*=2.03;}return t/n;}
+function c43cv(w,h,fn){var c=document.createElement('canvas');c.width=w;c.height=h;fn(c.getContext('2d'),w,h);return c;}
+function c43tx(c,raw){var t=new T.CanvasTexture(c);if(!raw)texEnc(t);COV43.disp.push(t);return t;}
+function c43ease(k){return k<=0?0:k>=1?1:1-Math.pow(1-k,3);}
+function c43back(k){if(k<=0)return 0;if(k>=1)return 1;var c=1.70158,c3=c+1;return 1+c3*Math.pow(k-1,3)+c*Math.pow(k-1,2);}
+function c43bounce(k){if(k<=0)return 0;if(k>=1)return 1;var n=7.5625,d=2.75;if(k<1/d)return n*k*k;if(k<2/d){k-=1.5/d;return n*k*k+0.75;}if(k<2.5/d){k-=2.25/d;return n*k*k+0.9375;}k-=2.625/d;return n*k*k+0.984375;}
+function c43M(x,y,z,rx,ry,rz,s){var sv=s==null?[1,1,1]:typeof s==='number'?[s,s,s]:s;return new T.Matrix4().compose(new T.Vector3(x||0,y||0,z||0),new T.Quaternion().setFromEuler(new T.Euler(rx||0,ry||0,rz||0)),new T.Vector3(sv[0],sv[1],sv[2]));}
+// 合併幾何（頂點色）：成堆細件砌成一個 mesh，一次畫晒（靜態景物、樹、雲）
+function C43B(){this.P=[];this.C=[];}
+C43B.prototype.add=function(geo,col,m){var g=geo.index?geo.toNonIndexed():geo,p=g.attributes.position,c=lc(col),v=new T.Vector3();for(var i=0;i<p.count;i++){v.fromBufferAttribute(p,i);if(m)v.applyMatrix4(m);this.P.push(v.x,v.y,v.z);this.C.push(c.r,c.g,c.b);}if(g!==geo)g.dispose();geo.dispose();return this;};
+C43B.prototype.part=function(base,geo,col,x,y,z,rx,ry,rz,s){return this.add(geo,col,base.clone().multiply(c43M(x,y,z,rx,ry,rz,s)));};
+C43B.prototype.mesh=function(mat){var G=new T.BufferGeometry();G.setAttribute('position',new T.Float32BufferAttribute(this.P,3));G.setAttribute('color',new T.Float32BufferAttribute(this.C,3));G.computeVertexNormals();return new T.Mesh(G,mat);};
+// ---- 星球地形：單位球面方向 → [陸地高度 h（<0 係海）, 山脈值 m] ----
+function c43ht(x,y,z){return [c43f(x*1.45+3.1,y*1.45+1.7,z*1.45+5.3,11)-0.5+0.012,c43f(x*3.1+9.1,y*3.1+2.2,z*3.1+7.7,23)];}
+function c43rad(h,m){if(h<0)return 0.965+Math.max(-0.07,h*0.45);var e=Math.min(1,h/0.14),mt=Math.max(0,m-0.55)*Math.min(1,h/0.06);return 1.024+e*0.045+mt*0.62;}
+function c43landCol(h,m,r,rn){if(r<0.998){var k=Math.max(0,Math.min(1,(r-0.925)/0.07));return new T.Color(0x1f5fae).lerp(new T.Color(0x6fe3df),k*k);}
+ var mt=Math.max(0,m-0.55)*Math.min(1,h/0.06);if(r>1.135)return new T.Color(0xffffff);if(mt>0.028)return new T.Color(rn<0.5?0xb39278:0x9d7d66);if(h<0.016)return new T.Color(rn<0.5?0xf7e3a8:0xf0d693);
+ return new T.Color(h>0.085?(rn<0.5?0x55b35a:0x4aa653):(rn<0.33?0xa6dc6a:rn<0.66?0x8ed163:0x7cc75c));}
+function c43Planet(rich){var det=rich?18:12,geo=new T.IcosahedronGeometry(1,det),p=geo.attributes.position,n=p.count,cache={},col=new Float32Array(n*3),R=c43rng(77),v=new T.Vector3();
+ for(var i=0;i<n;i++){v.fromBufferAttribute(p,i).normalize();var k=Math.round(v.x*1e4)+','+Math.round(v.y*1e4)+','+Math.round(v.z*1e4),q=cache[k];if(!q){var hm=c43ht(v.x,v.y,v.z);q=cache[k]=[hm[0],hm[1],c43rad(hm[0],hm[1])];}p.setXYZ(i,v.x*q[2],v.y*q[2],v.z*q[2]);}
+ for(var t=0;t<n;t+=3){var hs=0,ms0=0,rs=0,cx=0,cy=0,cz=0;for(var j=0;j<3;j++){v.fromBufferAttribute(p,t+j);var r=v.length();rs+=r;v.divideScalar(r);cx+=v.x;cy+=v.y;cz+=v.z;}var ln=Math.hypot(cx,cy,cz),hm2=c43ht(cx/ln,cy/ln,cz/ln);
+  var c=c43landCol(hm2[0],hm2[1],rs/3,R()),b=0.94+R()*0.1;c.r*=b;c.g*=b;c.b*=b;if(FINE)c.convertSRGBToLinear();for(var j2=0;j2<3;j2++){col[(t+j2)*3]=c.r;col[(t+j2)*3+1]=c.g;col[(t+j2)*3+2]=c.b;}}
+ geo.setAttribute('color',new T.BufferAttribute(col,3));p.needsUpdate=true;geo.computeVertexNormals();
+ var m=new T.Mesh(geo,new T.MeshStandardMaterial({vertexColors:true,flatShading:true,roughness:0.86,metalness:0}));m.receiveShadow=true;return m;}
+function c43surf(d){var hm=c43ht(d.x,d.y,d.z);return {h:hm[0],m:hm[1],r:c43rad(hm[0],hm[1])};}
+function c43base(d,yaw,sink){var s=c43surf(d),q=new T.Quaternion().setFromUnitVectors(new T.Vector3(0,1,0),d).multiply(new T.Quaternion().setFromAxisAngle(new T.Vector3(0,1,0),yaw||0));
+ return new T.Matrix4().compose(d.clone().multiplyScalar(s.r-(sink||0.006)),q,new T.Vector3(1,1,1));}
+// ---- 景點（單位星球大細：半徑 1）----
+function c43Rest(B,G,m){B.part(m,new T.BoxGeometry(0.16,0.09,0.12),0xfff1d8,0,0.045,0);B.part(m,new T.ConeGeometry(0.125,0.08,4),0xe8574f,0,0.13,0,0,Math.PI/4,0,[1,1,0.8]);
+ B.part(m,new T.BoxGeometry(0.032,0.052,0.006),0x8a5a34,0,0.026,0.061);[-0.05,0.05].forEach(function(x){G.part(m,new T.BoxGeometry(0.028,0.024,0.006),0xffe08a,x,0.052,0.061);});
+ B.part(m,new T.BoxGeometry(0.022,0.05,0.022),0xb8543f,0.045,0.15,-0.02);for(var i=0;i<6;i++)B.part(m,new T.BoxGeometry(0.028,0.006,0.034),i%2?0xffffff:0xe8574f,-0.07+i*0.028,0.083,0.07,0.5,0,0);}
+function c43Hotel(B,G,m,alt){B.part(m,new T.BoxGeometry(0.11,alt?0.22:0.28,0.11),alt?0xffc9a8:0x8fb3e6,0,alt?0.11:0.14,0);B.part(m,new T.BoxGeometry(0.125,0.018,0.125),alt?0x4fc3b0:0xff9ec8,0,alt?0.229:0.289,0);if(alt){for(var f2=0;f2<4;f2++)for(var s2=0;s2<4;s2++)for(var c2=0;c2<2;c2++){G.add(new T.BoxGeometry(0.02,0.022,0.004),(f2+s2+c2)%3?0xffe79a:0xfff6d6,m.clone().multiply(c43M(0,0.07+f2*0.042,0,0,s2*Math.PI/2,0)).multiply(c43M(c2?0.025:-0.025,0,0.056)));}return;}B.part(m,new T.BoxGeometry(0.07,0.034,0.012),0xffd23f,0,0.315,0);
+ B.part(m,new T.CylinderGeometry(0.003,0.003,0.06,4),0xffffff,0.035,0.33,-0.03);B.part(m,new T.BoxGeometry(0.06,0.007,0.04),0xe8574f,0,0.05,0.07);
+ for(var f=0;f<5;f++)for(var s=0;s<4;s++)for(var c=0;c<2;c++){var a=s*Math.PI/2,x=(c?0.025:-0.025),mm=m.clone().multiply(c43M(0,0.085+f*0.042,0,0,a,0)).multiply(c43M(x,0,0.056));G.add(new T.BoxGeometry(0.02,0.022,0.004),(f+s+c)%3?0xffe79a:0xfff6d6,mm);}}
+function c43Museum(B,G,m){B.part(m,new T.BoxGeometry(0.21,0.08,0.13),0xfbf6ea,0,0.04,0);B.part(m,new T.BoxGeometry(0.15,0.014,0.04),0xe8e0cc,0,0.007,0.08);
+ for(var i=0;i<4;i++)B.part(m,new T.CylinderGeometry(0.009,0.009,0.07,6),0xffffff,-0.06+i*0.04,0.049,0.075);B.part(m,new T.BoxGeometry(0.17,0.012,0.03),0xfbf6ea,0,0.09,0.075);
+ B.part(m,new T.CylinderGeometry(0.058,0.058,0.022,12),0xffffff,0,0.091,-0.01);
+ B.part(m,new T.SphereGeometry(0.062,12,8,0,Math.PI*2,0,Math.PI/2),0xffcf4a,0,0.1,-0.01);B.part(m,new T.ConeGeometry(0.008,0.03,6),0xffcf4a,0,0.176,-0.01);
+ [-1,1].forEach(function(s){G.part(m,new T.BoxGeometry(0.03,0.03,0.006),0xffe7a6,s*0.08,0.045,0.066);});}
+function c43Mush(B,G,m,cc){B.part(m,new T.CylinderGeometry(0.036,0.044,0.065,8),0xfff1d6,0,0.032,0);B.part(m,new T.SphereGeometry(0.072,10,6,0,Math.PI*2,0,Math.PI/2),cc,0,0.058,0,0,0,0,[1,0.82,1]);
+ var R=c43rng(cc&0xffff);for(var i=0;i<7;i++){var a=R()*6.28,e=0.25+R()*0.9;B.part(m,new T.IcosahedronGeometry(0.012,0),0xffffff,Math.cos(a)*Math.sin(e)*0.07,0.058+Math.cos(e)*0.058,Math.sin(a)*Math.sin(e)*0.07);}
+ B.part(m,new T.BoxGeometry(0.024,0.036,0.005),0x8a5a34,0,0.018,0.041);G.part(m,new T.CircleGeometry(0.01,10),0xffe08a,0.022,0.04,0.041);}
+function c43Tree(B,m,R,kind){var s=0.95+R()*0.45,g=[0x3f9d57,0x2f8a4a,0x58b368,0x4aa653],leaf=kind===2?[0xffb3d1,0xff9ec8][R()*2|0]:kind===3?0xffc85a:g[R()*g.length|0];
+ B.part(m,new T.CylinderGeometry(0.007*s,0.009*s,0.03*s,5),0x8a5a34,0,0.015*s,0);
+ if(kind===0){B.part(m,new T.ConeGeometry(0.036*s,0.07*s,6),leaf,0,0.055*s,0);B.part(m,new T.ConeGeometry(0.027*s,0.05*s,6),leaf,0,0.088*s,0);}
+ else{B.part(m,new T.IcosahedronGeometry(0.036*s,0),leaf,0,0.058*s,0,R(),R(),R());if(R()<0.5)B.part(m,new T.IcosahedronGeometry(0.024*s,0),leaf,0.02*s,0.078*s,0.008*s,R(),R(),R());}}
+// 會郁嘅景點：返回 {g, tick(dt,t)}
+function c43Wheel(mat,gm,m){var g=new T.Group();g.applyMatrix4(m);var B=new C43B(),I=new T.Matrix4();
+ [-1,1].forEach(function(z){[-1,1].forEach(function(x){B.part(I,new T.BoxGeometry(0.008,0.17,0.008),0xffffff,x*0.035,0.08,z*0.022,0,0,x*0.42);});});B.part(I,new T.BoxGeometry(0.17,0.012,0.07),0xe8e0cc,0,0.006,0);
+ g.add(B.mesh(mat));var w=new T.Group();w.position.y=0.16;g.add(w);var W=new C43B(),L=new C43B();W.part(I,new T.TorusGeometry(0.105,0.007,5,28),0xff7eb6,0,0,0);W.part(I,new T.TorusGeometry(0.055,0.004,4,20),0xffffff,0,0,0);
+ W.part(I,new T.CylinderGeometry(0.014,0.014,0.06,8),0xffd23f,0,0,0,Math.PI/2,0,0);for(var i=0;i<8;i++){var a=i/8*Math.PI*2;W.part(I,new T.BoxGeometry(0.004,0.105,0.004),0xffffff,Math.cos(a)*0.052,Math.sin(a)*0.052,0,0,0,a-Math.PI/2);L.part(I,new T.IcosahedronGeometry(0.008,0),i%2?0xfff1a8:0xff9ed8,Math.cos(a+0.39)*0.105,Math.sin(a+0.39)*0.105,0.004);}
+ w.add(W.mesh(mat));w.add(L.mesh(gm));var cabs=[],cc=[0xffd23f,0x57b5f5,0x6fd46a,0xff7eb6];
+ for(var j=0;j<8;j++){var a2=j/8*Math.PI*2,cb=new T.Group();cb.position.set(Math.cos(a2)*0.105,Math.sin(a2)*0.105,0);var C=new C43B();C.part(I,new T.BoxGeometry(0.03,0.026,0.026),cc[j%4],0,-0.018,0);C.part(I,new T.BoxGeometry(0.034,0.006,0.03),0xffffff,0,-0.003,0);cb.add(C.mesh(mat));w.add(cb);cabs.push(cb);}
+ g.traverse(function(o){if(o.isMesh&&o.material===mat)o.castShadow=true;});
+ return {g:g,tick:function(dt){w.rotation.z+=dt*0.55;cabs.forEach(function(c){c.rotation.z=-w.rotation.z;});}};}
+function c43Mill(mat,m){var g=new T.Group();g.applyMatrix4(m);var B=new C43B(),I=new T.Matrix4();B.part(I,new T.CylinderGeometry(0.03,0.046,0.17,6),0xfff3dc,0,0.085,0);B.part(I,new T.ConeGeometry(0.045,0.055,6),0xc2553f,0,0.197,0);B.part(I,new T.BoxGeometry(0.022,0.034,0.006),0x8a5a34,0,0.017,0.04);
+ var ms0=B.mesh(mat);ms0.castShadow=true;g.add(ms0);var bl=new T.Group();bl.position.set(0,0.16,0.045);g.add(bl);var S=new C43B();S.part(I,new T.CylinderGeometry(0.01,0.01,0.02,8),0x8a5a34,0,0,0,Math.PI/2,0,0);
+ for(var i=0;i<4;i++){var a=i*Math.PI/2;S.part(I,new T.BoxGeometry(0.026,0.11,0.004),0xffffff,Math.cos(a+Math.PI/2)*0.062,Math.sin(a+Math.PI/2)*0.062,0.004,0,0,a);S.part(I,new T.BoxGeometry(0.004,0.11,0.006),0x8a5a34,Math.cos(a+Math.PI/2)*0.062,Math.sin(a+Math.PI/2)*0.062,0.006,0,0,a);}
+ var bm=S.mesh(mat);bm.castShadow=true;bl.add(bm);return {g:g,tick:function(dt){bl.rotation.z-=dt*1.1;}};}
+function c43Light(mat,gm,m,beamTx){var g=new T.Group();g.applyMatrix4(m);var B=new C43B(),G=new C43B(),I=new T.Matrix4();B.part(I,new T.IcosahedronGeometry(0.055,0),0x9a9aa8,0,0.012,0,0,0,0,[1,0.45,1]);
+ for(var i=0;i<4;i++)B.part(I,new T.CylinderGeometry(0.03-i*0.002-0.002,0.03-i*0.002,0.04,10),i%2?0xffffff:0xe8574f,0,0.03+i*0.04,0);B.part(I,new T.CylinderGeometry(0.036,0.036,0.008,10),0x4a3a5a,0,0.174,0);
+ G.part(I,new T.CylinderGeometry(0.02,0.02,0.028,10),0xfff2a0,0,0.192,0);B.part(I,new T.ConeGeometry(0.03,0.032,10),0xe8574f,0,0.222,0);var bm=B.mesh(mat);bm.castShadow=true;g.add(bm);g.add(G.mesh(gm));
+ var bw=new T.Group();bw.position.y=0.192;g.add(bw);var bmat=new T.MeshBasicMaterial({map:beamTx,color:lc(0xfff0b0),transparent:true,opacity:0.55,blending:T.AdditiveBlending,depthWrite:false,side:T.DoubleSide,toneMapped:false});
+ [-1,1].forEach(function(s){var c=new T.Mesh(new T.ConeGeometry(0.075,0.55,16,1,true),bmat);c.rotation.z=s*Math.PI/2;c.position.x=s*0.285;bw.add(c);});
+ return {g:g,tick:function(dt){bw.rotation.y+=dt*1.6;}};}
+function c43Balloon(mat,m){var g=new T.Group();g.applyMatrix4(m);var B=new C43B(),I=new T.Matrix4(),cs=[0xff7eb6,0xffd23f,0x57b5f5,0x6fd46a,0xff9e5a,0xb98cff];
+ for(var i=0;i<12;i++)B.part(I,new T.SphereGeometry(0.068,2,10,i/12*Math.PI*2,Math.PI*2/12),cs[i%6],0,0,0,0,0,0,[1,1.18,1]);B.part(I,new T.ConeGeometry(0.03,0.04,10),0xff7eb6,0,-0.085,0,Math.PI,0,0);
+ B.part(I,new T.BoxGeometry(0.032,0.024,0.032),0x9a6b45,0,-0.13,0);[[-1,-1],[1,-1],[-1,1],[1,1]].forEach(function(q){B.part(I,new T.BoxGeometry(0.002,0.04,0.002),0x6a4a2a,q[0]*0.014,-0.105,q[1]*0.014);});
+ var bm=B.mesh(mat);bm.castShadow=true;var h=new T.Group();h.add(bm);g.add(h);return {g:g,tick:function(dt,t){h.position.y=0.3+Math.sin(t*0.9)*0.025;h.rotation.y+=dt*0.2;}};}
+// ---- 飛碟：繞住星球飛，間中射光束 ----
+function c43Ufo(mat,gm,beamTx){var g=new T.Group(),B=new C43B(),G=new C43B(),I=new T.Matrix4();B.part(I,new T.SphereGeometry(0.13,18,8),0xcfc8ff,0,0,0,0,0,0,[1,0.26,1]);B.part(I,new T.TorusGeometry(0.118,0.012,5,24),0x9a8cff,0,0,0,Math.PI/2,0,0);
+ for(var i=0;i<10;i++){var a=i/10*Math.PI*2;G.part(I,new T.IcosahedronGeometry(0.011,0),i%2?0xfff1a8:0xff9ed8,Math.cos(a)*0.118,0,Math.sin(a)*0.118);}var sm=B.mesh(mat);sm.castShadow=true;var body=new T.Group();body.add(sm);body.add(G.mesh(gm));
+ var dm=new T.Mesh(new T.SphereGeometry(0.058,14,8,0,Math.PI*2,0,Math.PI/2),new T.MeshStandardMaterial({color:lc(0x9ff0ff),emissive:lc(0x3fa0c0),emissiveIntensity:0.6,roughness:0.1,transparent:true,opacity:0.78}));dm.position.y=0.018;body.add(dm);g.add(body);
+ var bmat=new T.MeshBasicMaterial({map:beamTx,color:lc(0xaef6ff),transparent:true,opacity:0,blending:T.AdditiveBlending,depthWrite:false,side:T.DoubleSide,toneMapped:false}),bm=new T.Mesh(new T.ConeGeometry(0.11,0.34,20,1,true),bmat);bm.position.y=-0.17;g.add(bm);
+ return {g:g,body:body,beam:bmat};}
+// ---- 星空背景（全畫面四邊形，直接出 sRGB，同遊戲天空一樣）----
+function c43Sky(){var u={uT:{value:0},uRes:{value:new T.Vector2(1,1)},uPR:{value:PR},uGlow:{value:new T.Vector3(0.5,0.42,0.3)}};
+ var m=new T.Mesh(new T.PlaneGeometry(2,2),new T.ShaderMaterial({uniforms:u,depthTest:false,depthWrite:false,
+  vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.9999,1.0);}',
+  fragmentShader:['uniform float uT;uniform vec2 uRes;uniform float uPR;uniform vec3 uGlow;varying vec2 vUv;',
+   'float hs(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}',
+   'float vn(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);return mix(mix(hs(i),hs(i+vec2(1.0,0.0)),f.x),mix(hs(i+vec2(0.0,1.0)),hs(i+vec2(1.0,1.0)),f.x),f.y);}',
+   'float fb(vec2 p){float a=0.5,t=0.0;for(int i=0;i<4;i++){t+=a*vn(p);p*=2.03;a*=0.5;}return t/0.9375;}',
+   'void main(){float y=vUv.y;vec3 hor=vec3(1.0,0.80,0.62),low=vec3(0.98,0.55,0.68),mid=vec3(0.47,0.35,0.78),um=vec3(0.22,0.18,0.48),top=vec3(0.07,0.09,0.29);',
+   ' vec3 c=mix(hor,low,smoothstep(0.0,0.16,y));c=mix(c,mid,smoothstep(0.12,0.44,y));c=mix(c,um,smoothstep(0.4,0.7,y));c=mix(c,top,smoothstep(0.64,1.0,y));',
+   ' float asp=uRes.x/uRes.y;vec2 q=vec2(vUv.x*asp,y);',
+   ' float n1=fb(q*2.2+vec2(uT*0.012,0.0)),n2=fb(q*3.1+vec2(7.3,-uT*0.008));c+=vec3(0.62,0.26,0.62)*smoothstep(0.52,0.86,n1)*0.30*smoothstep(0.35,0.95,y);c+=vec3(0.22,0.46,0.78)*smoothstep(0.58,0.9,n2)*0.22*smoothstep(0.45,1.0,y);',
+   ' vec2 g=vec2((vUv.x-uGlow.x)*asp,y-uGlow.y);float gd=length(g)/uGlow.z;c+=vec3(1.0,0.72,0.86)*0.26*exp(-gd*gd*1.6);',
+   ' vec2 px=gl_FragCoord.xy/uPR;float cs=26.0;vec2 cl=floor(px/cs),fr=fract(px/cs);float r=hs(cl);vec2 sp=vec2(hs(cl+1.7),hs(cl+4.3))*0.8+0.1;float d=length((fr-sp)*cs);',
+   ' float tw=0.55+0.45*sin(uT*(1.2+r*3.0)+r*40.0);float st=r>0.7?smoothstep(1.4,0.0,d)*tw*(0.5+r*0.6):0.0;',
+   ' float cs2=110.0;vec2 cl2=floor(px/cs2),fr2=fract(px/cs2);float r2=hs(cl2+9.1);vec2 sp2=vec2(hs(cl2+2.9),hs(cl2+6.1))*0.7+0.15;vec2 dd=(fr2-sp2)*cs2;',
+   ' float tw2=0.5+0.5*sin(uT*1.7+r2*50.0);float cr=r2>0.72?(max(0.0,1.0-abs(dd.x)/1.1)*max(0.0,1.0-abs(dd.y)/9.0)+max(0.0,1.0-abs(dd.y)/1.1)*max(0.0,1.0-abs(dd.x)/9.0)+smoothstep(2.6,0.0,length(dd)))*tw2:0.0;',
+   ' c+=vec3(1.0,0.97,0.9)*(st+cr*0.9)*smoothstep(0.3,0.75,y);gl_FragColor=vec4(c,1.0);}'].join('\n')}));
+ m.frustumCulled=false;m.renderOrder=-100;m.userData.u=u;return m;}
+// 大氣光暈（加法混色）
+function c43Atmo(){return new T.Mesh(new T.SphereGeometry(1.2,48,32),new T.ShaderMaterial({side:T.BackSide,transparent:true,depthWrite:false,blending:T.AdditiveBlending,
+ vertexShader:'varying vec3 vN;varying vec3 vP;void main(){vN=normalize(normalMatrix*normal);vec4 mv=modelViewMatrix*vec4(position,1.0);vP=mv.xyz;gl_Position=projectionMatrix*mv;}',
+ fragmentShader:'varying vec3 vN;varying vec3 vP;void main(){float f=dot(normalize(vN),normalize(-vP));float k=pow(smoothstep(0.0,0.56,-f),1.7);vec3 c=mix(vec3(0.55,0.86,1.0),vec3(1.0,0.62,0.86),clamp(vN.x*0.5+0.5,0.0,1.0));gl_FragColor=vec4(c*k*0.75,1.0);}'}));}
+// ---- 標題：逐隻字（臉＝白邊＋深紫描邊＋金色漸變＋高光；厚度＝九層剪影向右下疊）----
+function c43Glyph(ch){var S=256,dot=ch==='．',fs=Math.round(S*0.7),cx=S/2,cy=S/2+S*0.03;
+ function draw(x,mode){x.lineJoin='round';x.lineCap='round';x.textAlign='center';x.textBaseline='middle';x.font='900 '+fs+'px '+FONT;
+  var shape=function(fn){if(dot){x.beginPath();x.arc(cx,S*0.62,S*0.085,0,Math.PI*2);fn(true);}else fn(false);};
+  if(mode==='mask'){x.strokeStyle=x.fillStyle='#ffffff';x.lineWidth=S*0.2;shape(function(d){if(d){x.stroke();x.fill();}else{x.strokeText(ch,cx,cy);x.fillText(ch,cx,cy);}});return;}
+  x.strokeStyle='#fffaf0';x.lineWidth=S*0.2;shape(function(d){if(d)x.stroke();else x.strokeText(ch,cx,cy);});
+  x.strokeStyle='#4a2a5e';x.lineWidth=S*0.125;shape(function(d){if(d)x.stroke();else x.strokeText(ch,cx,cy);});
+  var gr=x.createLinearGradient(0,cy-fs*0.46,0,cy+fs*0.46);gr.addColorStop(0,'#fffbea');gr.addColorStop(0.42,'#ffe27a');gr.addColorStop(1,'#ffa733');x.fillStyle=gr;shape(function(d){if(d)x.fill();else x.fillText(ch,cx,cy);});
+  var gl=c43cv(S,S,function(y){y.textAlign='center';y.textBaseline='middle';y.font=x.font;y.fillStyle='#fff';if(dot){y.beginPath();y.arc(cx,S*0.62,S*0.085,0,Math.PI*2);y.fill();}else y.fillText(ch,cx,cy);
+   y.globalCompositeOperation='source-in';var g2=y.createLinearGradient(0,cy-fs*0.5,0,cy+fs*0.05);g2.addColorStop(0,'rgba(255,255,255,0.75)');g2.addColorStop(0.55,'rgba(255,255,255,0.18)');g2.addColorStop(1,'rgba(255,255,255,0)');y.fillStyle=g2;y.fillRect(0,0,S,S);});
+  x.drawImage(gl,0,0);}
+ return {face:c43tx(c43cv(S,S,function(x){draw(x,'face');}),true),mask:c43tx(c43cv(S,S,function(x){draw(x,'mask');}))};}
+function c43Title(){var g=new T.Group(),txt='真．旅遊星球',adv=[0.9,0.5,0.9,0.9,0.9,0.9],tot=adv.reduce(function(a,b){return a+b;},0),x0=-tot/2,cs=1.14,N=9,side=[0xe58a2e,0xd07426,0xbb6222,0xa8541f,0x96481c,0x843d19,0x733417,0x652d15,0x582713];
+ COV43.ch=[];var ax=x0;for(var i=0;i<txt.length;i++){var ch=txt[i],G=c43Glyph(ch),cg=new T.Group(),cx=ax+adv[i]/2;ax+=adv[i];cg.position.x=cx;g.add(cg);var pl=new T.PlaneGeometry(cs,cs);COV43.disp.push(pl);
+  for(var k=N;k>=1;k--){var sm=new T.MeshBasicMaterial({map:G.mask,color:lc(side[k-1]),alphaTest:0.5,toneMapped:false}),s=new T.Mesh(pl,sm);s.position.set(0.0045*k,-0.0105*k,-0.012*k);s.renderOrder=1;cg.add(s);}
+  var fu={map:{value:G.face},uT:{value:0},uO:{value:cx*0.55},uA:{value:1}},fm=new T.ShaderMaterial({uniforms:fu,transparent:true,depthWrite:false,
+   vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
+   fragmentShader:'uniform sampler2D map;uniform float uT;uniform float uO;uniform float uA;varying vec2 vUv;void main(){vec4 c=texture2D(map,vUv);float lum=dot(c.rgb,vec3(0.3,0.59,0.11));float p=(vUv.x-0.5)*0.63+uO+vUv.y*0.35;float s=mod(uT*0.9,5.2)-2.2;float b=smoothstep(0.18,0.0,abs(p-s));c.rgb+=vec3(1.0,0.97,0.88)*b*0.62*smoothstep(0.5,0.9,lum);gl_FragColor=vec4(c.rgb,c.a*uA);}'});
+  var f=new T.Mesh(pl,fm);f.renderOrder=2;cg.add(f);COV43.ch.push({g:cg,u:fu,i:i,x:cx});}
+ g.userData.w=tot+0.25;return g;}
+// 副題彩帶：「旅遊與款待・經營遊戲」（兩頭燕尾、會飄）
+function c43Ribbon(){var W=1024,H=160,cvs=c43cv(W,H,function(x){x.fillStyle='#d9506c';
+ x.beginPath();x.moveTo(6,42);x.lineTo(172,42);x.lineTo(172,138);x.lineTo(6,138);x.lineTo(58,90);x.closePath();x.fill();
+ x.beginPath();x.moveTo(W-6,42);x.lineTo(W-172,42);x.lineTo(W-172,138);x.lineTo(W-6,138);x.lineTo(W-58,90);x.closePath();x.fill();
+ x.fillStyle='#8f2f48';x.beginPath();x.moveTo(132,120);x.lineTo(172,120);x.lineTo(172,138);x.closePath();x.fill();x.beginPath();x.moveTo(W-132,120);x.lineTo(W-172,120);x.lineTo(W-172,138);x.closePath();x.fill();
+ var gr=x.createLinearGradient(0,24,0,120);gr.addColorStop(0,'#ff93aa');gr.addColorStop(1,'#ff5f7e');x.fillStyle=gr;x.fillRect(132,24,W-264,96);x.fillStyle='rgba(255,255,255,0.35)';x.fillRect(132,31,W-264,6);
+ x.font='900 58px '+FONT;x.textAlign='center';x.textBaseline='middle';x.fillStyle='#8f2f48';x.fillText('旅遊與款待・經營遊戲',W/2+2,75);x.fillStyle='#ffffff';x.fillText('旅遊與款待・經營遊戲',W/2,72);});
+ var geo=new T.PlaneGeometry(2.9,2.9*H/W,40,1),m=new T.Mesh(geo,new T.MeshBasicMaterial({map:c43tx(cvs),transparent:true,side:T.DoubleSide,depthWrite:false,toneMapped:false}));m.renderOrder=3;
+ var b=geo.attributes.position.array.slice();m.userData.tick=function(t){var p=geo.attributes.position;for(var i=0;i<p.count;i++){var x=b[i*3],k=x/1.45;p.setY(i,b[i*3+1]+k*k*0.1);p.setZ(i,Math.sin(x*2.4+t*2.2)*0.035+Math.abs(k)*0.06);}p.needsUpdate=true;};return m;}
+// 光點貼圖、光束貼圖、光環貼圖、月亮貼圖
+function c43GlowTx(){return c43tx(c43cv(64,64,function(x){var g=x.createRadialGradient(32,32,0,32,32,32);g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(0.25,'rgba(255,255,255,0.55)');g.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=g;x.fillRect(0,0,64,64);}));}
+function c43BeamTx(){return c43tx(c43cv(8,128,function(x){var g=x.createLinearGradient(0,0,0,128);g.addColorStop(0,'rgba(255,255,255,0.9)');g.addColorStop(0.65,'rgba(255,255,255,0.3)');g.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=g;x.fillRect(0,0,8,128);}));}
+function c43RingTx(){return c43tx(c43cv(512,512,function(x){var cx=256,r0=256*1.42/1.95,g=x.createRadialGradient(cx,cx,r0,cx,cx,256);
+ [[0,'rgba(255,190,220,0)'],[0.06,'rgba(255,170,210,0.55)'],[0.2,'rgba(255,150,200,0.75)'],[0.28,'rgba(255,220,240,0.25)'],[0.36,'rgba(255,208,140,0.7)'],[0.52,'rgba(255,190,120,0.55)'],[0.6,'rgba(255,240,220,0.18)'],[0.7,'rgba(190,164,255,0.6)'],[0.86,'rgba(170,150,255,0.45)'],[1,'rgba(170,150,255,0)']].forEach(function(q){g.addColorStop(q[0],q[1]);});
+ x.fillStyle=g;x.beginPath();x.arc(cx,cx,256,0,Math.PI*2);x.arc(cx,cx,r0,0,Math.PI*2,true);x.fill();
+ var R=c43rng(5);for(var i=0;i<900;i++){var a=R()*6.283,r=r0+R()*(256-r0);x.fillStyle='rgba(255,255,255,'+(R()*0.35).toFixed(2)+')';x.fillRect(cx+Math.cos(a)*r,cx+Math.sin(a)*r,1.5,1.5);}}));}
+function c43MoonTx(){return c43tx(c43cv(256,128,function(x){x.fillStyle='#e9e3ff';x.fillRect(0,0,256,128);var R=c43rng(9);for(var i=0;i<46;i++){var px=R()*256,py=R()*128,r=3+R()*12;x.fillStyle='rgba(150,138,200,'+(0.25+R()*0.3).toFixed(2)+')';x.beginPath();x.ellipse(px,py,r,r*0.8,0,0,Math.PI*2);x.fill();x.fillStyle='rgba(255,255,255,0.35)';x.beginPath();x.ellipse(px-r*0.25,py-r*0.25,r*0.55,r*0.4,0,0,Math.PI*2);x.fill();}}));}
+// ================= 砌成個封面 =================
+function cov43Build(){var rich=FINE&&!(PHONE&&PR<1.2),sc=new T.Scene(),K=FINE?1:0.62;COV43.sc=sc;COV43.anim=[];
+ var cam=new T.PerspectiveCamera(40,1,0.1,120);COV43.cam=cam;sc.add(cam);
+ var sky=c43Sky();sc.add(sky);COV43.sky=sky;
+ var hemi=new T.HemisphereLight(lc(0xb8ccff),lc(0x7a4a9a),0.55*K);sc.add(hemi);COV43.hemi=hemi;
+ var sun=new T.DirectionalLight(lc(0xfff0dc),1.3*K);sun.position.set(-5,4.5,6);sc.add(sun);sc.add(sun.target);COV43.sun=sun;
+ var rim=new T.DirectionalLight(lc(0xff7ac8),0.9*K);rim.position.set(5.5,1.2,-5);sc.add(rim);COV43.rim=rim;
+ if(FINE&&rd.shadowMap.enabled){sun.castShadow=true;sun.shadow.mapSize.set(PHONE?1024:2048,PHONE?1024:2048);sun.shadow.bias=-0.0012;sun.shadow.normalBias=0.02;sun.shadow.radius=3;}
+ var root=new T.Group();sc.add(root);COV43.root=root;var tilt=new T.Group();tilt.rotation.set(0.36,0,-0.24);root.add(tilt);COV43.tilt=tilt;
+ var spin=new T.Group();tilt.add(spin);COV43.spin=spin;spin.rotation.y=-0.6;
+ var land=c43Planet(rich);spin.add(land);
+ var wu={uT:{value:0}},wm=new T.MeshStandardMaterial({color:lc(0x46bdf0),roughness:0.14,metalness:0.02,transparent:true,opacity:0.8,flatShading:true});
+ wm.onBeforeCompile=function(s){s.uniforms.uT=wu.uT;s.vertexShader='uniform float uT;\n'+s.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\ntransformed*=1.0+0.006*sin(dot(position,vec3(13.0,11.0,9.0))+uT*1.4)+0.004*sin(dot(position,vec3(-7.0,15.0,5.0))-uT*1.1);');};
+ var water=new T.Mesh(new T.IcosahedronGeometry(1.0,rich?14:10),wm);water.receiveShadow=true;spin.add(water);COV43.wu=wu;
+ var atmo=c43Atmo();tilt.add(atmo);
+ // 景點＋樹（靜態合併做一個 mesh；窗、燈用唔受光嘅發光材質）
+ var mat=new T.MeshStandardMaterial({vertexColors:true,flatShading:true,roughness:0.72,metalness:0}),gm=new T.MeshBasicMaterial({vertexColors:true,toneMapped:false}),B=new C43B(),G=new C43B(),R=c43rng(4242),beamTx=c43BeamTx();
+ var picks=[],cand=[];for(var i=0;i<2600;i++){var z=R()*2-1,a=R()*6.2832,rr=Math.sqrt(1-z*z),d=new T.Vector3(rr*Math.cos(a),z,rr*Math.sin(a)),s=c43surf(d);cand.push({d:d,s:s});}
+ function far(d,L,ang){var c=Math.cos(ang);for(var j=0;j<L.length;j++)if(d.dot(L[j])>c)return false;return true;}
+ var flat=cand.filter(function(c){return c.s.h>0.03&&c.s.h<0.13&&c.s.r<1.08&&Math.abs(c.d.y)<0.62;}),coast=cand.filter(function(c){return c.s.h>0.004&&c.s.h<0.014&&Math.abs(c.d.y)<0.7;});
+ var kinds=['rest','wheel','hotel','museum','mush','mill','mush','hotel2','mush'],spots=[];
+ kinds.forEach(function(k){for(var j=0;j<flat.length;j++){var c=flat[j];if(far(c.d,spots,0.62)){spots.push(c.d);picks.push({k:k,d:c.d});flat.splice(j,1);return;}}});
+ for(var j=0;j<coast.length;j++){if(far(coast[j].d,spots,0.5)){spots.push(coast[j].d);picks.push({k:'light',d:coast[j].d});break;}}
+ var mushC=[0xe8574f,0xff8a3d,0xb46be0],mi=0;
+ picks.forEach(function(p,ix){var yaw=R()*6.28,m=c43base(p.d,yaw,0.008);
+  if(p.k==='rest')c43Rest(B,G,m);else if(p.k==='hotel'||p.k==='hotel2')c43Hotel(B,G,m,p.k==='hotel2');else if(p.k==='museum')c43Museum(B,G,m);else if(p.k==='mush')c43Mush(B,G,m,mushC[mi++%3]);
+  else{var o=p.k==='wheel'?c43Wheel(mat,gm,m):p.k==='mill'?c43Mill(mat,m):c43Light(mat,gm,m,beamTx);spin.add(o.g);COV43.anim.push(o);}});
+ var bd=null;for(var j=0;j<cand.length;j++){var c=cand[j];if(c.s.h>0.02&&Math.abs(c.d.y)<0.5&&far(c.d,spots,0.5)){bd=c.d;break;}}if(bd){var bo=c43Balloon(mat,c43base(bd,0,0));spin.add(bo.g);COV43.anim.push(bo);spots.push(bd);}
+ var trees=[],nT=rich?150:95;for(var j=0;j<cand.length&&trees.length<nT;j++){var c=cand[j];if(c.s.h<0.02||c.s.r>1.13)continue;if(!far(c.d,spots,0.16)||!far(c.d,trees,0.052))continue;trees.push(c.d);
+  var mt=Math.max(0,c.s.m-0.55)*Math.min(1,c.s.h/0.06),rk=R(),kind=mt>0.01||c.s.h>0.1?0:rk<0.14?2:rk<0.2?3:rk<0.55?0:1;c43Tree(B,c43base(c.d,R()*6.28,0.004),R,kind);}
+ var stat=B.mesh(mat);stat.castShadow=true;stat.receiveShadow=true;spin.add(stat);spin.add(G.mesh(gm));
+ // 雲（一層，慢慢同星球反方向飄）
+ var cl=new T.Group();tilt.add(cl);COV43.cloud=cl;var CB=new C43B(),RC=c43rng(31);
+ for(var i2=0;i2<(rich?9:6);i2++){var a2=i2/(rich?9:6)*6.283+RC()*0.4,el=(RC()-0.5)*1.1,dd=new T.Vector3(Math.cos(el)*Math.cos(a2),Math.sin(el),Math.cos(el)*Math.sin(a2)),bm=c43base(dd,RC()*6.28,-(0.2+RC()*0.08)),nb=4+(RC()*3|0);
+  for(var b=0;b<nb;b++){var r3=0.045+RC()*0.04;CB.part(bm,new T.IcosahedronGeometry(r3,1),b%3?0xffffff:0xf1f3ff,(b-(nb-1)/2)*0.055,RC()*0.02,(RC()-0.5)*0.04,0,0,0,[1,0.78,1]);}}
+ var cm=CB.mesh(new T.MeshStandardMaterial({vertexColors:true,flatShading:true,roughness:0.95,emissive:lc(0x2a2440)}));cm.castShadow=true;cl.add(cm);
+ // 光環＋環上閃光
+ var ring=new T.Mesh(new T.RingGeometry(1.42,1.95,160,2),new T.MeshBasicMaterial({map:c43RingTx(),transparent:true,side:T.DoubleSide,depthWrite:false,toneMapped:false,opacity:0}));ring.rotation.x=-Math.PI/2;tilt.add(ring);COV43.ring=ring;
+ var spk=new T.Group();tilt.add(spk);COV43.spk=spk;var SB=new C43B(),RS=c43rng(12);for(var i3=0;i3<(rich?80:40);i3++){var a3=RS()*6.283,r4=1.47+RS()*0.44;SB.part(new T.Matrix4(),new T.OctahedronGeometry(0.008+RS()*0.01,0),[0xffffff,0xfff1a8,0xffc4e6][i3%3],Math.cos(a3)*r4,(RS()-0.5)*0.02,Math.sin(a3)*r4,RS(),RS(),RS());}spk.add(SB.mesh(gm));
+ // 飛碟
+ var U=c43Ufo(mat,gm,beamTx);U.g.scale.setScalar(0.7);tilt.add(U.g);COV43.ufo=U;
+ // 月亮、光點、流星
+ var moon=new T.Mesh(new T.SphereGeometry(0.34,28,18),new T.MeshStandardMaterial({map:c43MoonTx(),roughness:1,emissive:lc(0x4a3f7a),emissiveIntensity:0.5}));sc.add(moon);COV43.moon=moon;
+ var gt=c43GlowTx(),mg=new T.Sprite(new T.SpriteMaterial({map:gt,color:lc(0xd9ccff),transparent:true,opacity:0.55,blending:T.AdditiveBlending,depthWrite:false,toneMapped:false}));moon.add(mg);mg.scale.set(1.6,1.6,1);
+ COV43.bok=[];var RB=c43rng(99);for(var i4=0;i4<(rich?26:14);i4++){var sp=new T.Sprite(new T.SpriteMaterial({map:gt,color:lc([0xffb3d9,0xfff1a8,0xa8e6ff,0xffffff][i4%4]),transparent:true,opacity:0.2+RB()*0.35,blending:T.AdditiveBlending,depthWrite:false,toneMapped:false}));
+  var s5=0.05+RB()*0.2;sp.scale.set(s5,s5,1);sc.add(sp);COV43.bok.push({s:sp,x:RB(),y:RB(),z:-3+RB()*4.5,v:0.015+RB()*0.03,ph:RB()*6.28});}
+ var ss=new T.Mesh(new T.PlaneGeometry(1,0.018),new T.MeshBasicMaterial({map:c43tx(c43cv(128,4,function(x){var g=x.createLinearGradient(0,0,128,0);g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=g;x.fillRect(0,0,128,4);})),transparent:true,opacity:0,blending:T.AdditiveBlending,depthWrite:false,toneMapped:false}));
+ ss.visible=false;sc.add(ss);COV43.ss={m:ss,t:-2.5,dur:0.9};
+ // 標題＋彩帶
+ var title=c43Title();sc.add(title);COV43.title=title;var rib=c43Ribbon();sc.add(rib);COV43.rib=rib;
+ COV43.t=0;COV43.leave=-1;COV43.asp=0;cov43Layout();}
+// 版面：按畫面闊窄計星球、標題、彩帶位置（標題喺上面、星球喺中間偏下、底部留俾「開始遊戲」掣）
+function cov43Layout(){var W=innerWidth,H=innerHeight,a=W/H,por=a<0.85,cam=COV43.cam,D=12;COV43.asp=a;COV43.W=W;COV43.H=H;
+ cam.fov=por?42:34;cam.aspect=a;cam.updateProjectionMatrix();var hh=D*Math.tan(cam.fov*Math.PI/360),hw=hh*a,Hw=hh*2,Ww=hw*2;COV43.D=D;COV43.hh=hh;COV43.hw=hw;
+ function at(f,z){return (hh-f*Hw)*(D-z)/D;}
+ var short=H<520,Rw=Math.min(Hw*(short?0.17:0.235),Ww*(por?0.37:0.33)),py=por?0.575:short?0.5:0.56;COV43.R=Rw;COV43.pY=at(py,0);COV43.root.position.set(0,COV43.pY,0);
+ var tz=1.2,tw=(COV43.title.userData.w),k=(D-tz)/D,chH=Math.min(Hw*(por?0.12:short?0.13:0.135),Ww*0.9/tw)*k;COV43.tS=chH;COV43.title.position.set(0,at(por?0.17:short?0.12:0.14,tz),tz);COV43.tY=COV43.title.position.y;
+ var rz=1.3,rk=(D-rz)/D,rw=Math.min(tw*chH*0.72,Ww*0.86*rk)/2.9;COV43.rib.scale.set(rw,rw,rw);COV43.rib.position.set(0,COV43.tY-chH*0.8,rz);COV43.rY=COV43.rib.position.y;
+ var mz=-6,mk=(D-mz)/D;COV43.moon.position.set((por?0.62:0.58)*hw*mk,at(por?0.36:0.3,mz),mz);COV43.moon.scale.setScalar(por?1:1.25);
+ COV43.bok.forEach(function(b){b.wx=hw*1.2*(D-b.z)/D;b.wy=hh*1.1*(D-b.z)/D;});
+ var sun=COV43.sun;if(sun.castShadow){var c=sun.shadow.camera,e=Rw*1.6;c.left=c.bottom=-e;c.right=c.top=e;c.near=0.5;c.far=30;c.updateProjectionMatrix();}
+ sun.target.position.set(0,COV43.pY,0);sun.position.set(-5,COV43.pY+4.5,6);
+ var su=COV43.sky.userData.u;su.uRes.value.set(W,H);su.uPR.value=PR;su.uGlow.value.set(0.5,1-py+0.02,Rw*1.9/Hw);}
+function cov43Tick(dt){var C=COV43,t=(C.t+=dt);if(innerWidth!==C.W||innerHeight!==C.H)cov43Layout();
+ var intro=c43back(Math.min(1,Math.max(0,(t-0.05)/0.95))),lv=C.leave>=0?Math.min(1,C.leave/0.8):0,le=lv*lv*lv;
+ C.root.scale.setScalar(Math.max(0.001,C.R*intro));C.spin.rotation.y+=dt*(0.1+le*2.6);C.cloud.rotation.y+=dt*0.035;C.spk.rotation.y+=dt*0.06;C.wu.uT.value=t;C.sky.userData.u.uT.value=t;
+ C.ring.material.opacity=Math.min(1,Math.max(0,(t-0.4)/0.8))*(1-lv);
+ C.anim.forEach(function(o){o.tick(dt,t);});
+ var U=C.ufo,ua=t*0.32+1.1,ur=1.5,up=new T.Vector3(Math.cos(ua)*ur,Math.sin(ua*1.7)*0.22+0.25,Math.sin(ua)*ur);U.g.position.copy(up);U.g.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),up.clone().normalize());U.body.rotation.y+=dt*2.2;
+ var bp=(t%9)/9,bo=bp>0.55&&bp<0.9?Math.sin((bp-0.55)/0.35*Math.PI):0;U.beam.opacity=bo*0.32;
+ C.moon.rotation.y+=dt*0.05;C.bok.forEach(function(b){b.y+=b.v*dt;if(b.y>1.05)b.y=-0.05;b.s.position.set((b.x*2-1)*b.wx+Math.sin(t*0.5+b.ph)*0.12,(b.y*2-1)*b.wy,b.z);});
+ var S=C.ss;S.t+=dt;if(S.t>S.dur){S.m.visible=false;if(S.nx==null)S.nx=S.dur+2+Math.random()*3;if(S.t>S.nx){S.t=0;S.nx=S.dur+3.5+Math.random()*4.5;var sx=(Math.random()*0.6+0.1)*C.hw,sy=C.hh*(0.55+Math.random()*0.35);S.x0=sx;S.y0=sy;S.m.visible=true;}}
+ if(S.m.visible){var k=S.t/S.dur,L=1.4;S.m.position.set(S.x0-k*2.4,S.y0-k*1.1,-4);S.m.rotation.z=Math.atan2(1.1,2.4);S.m.scale.set(L,1,1);S.m.material.opacity=Math.sin(k*Math.PI)*0.9;}
+ C.ch.forEach(function(q){var p=Math.min(1,Math.max(0,(t-0.35-q.i*0.09)/0.75)),dy=(1-c43bounce(p))*2.4;q.g.position.y=dy+Math.sin(t*2.1-q.i*0.6)*0.035;q.g.rotation.z=Math.sin(t*1.6-q.i*0.8)*0.035;q.g.visible=p>0;q.u.uT.value=t;q.u.uA.value=1-lv;});
+ C.title.scale.setScalar(C.tS*(1+le*0.5));C.title.position.y=C.tY+le*C.hh*0.9;
+ var rb=c43back(Math.min(1,Math.max(0,(t-1.0)/0.55)));C.rib.userData.tick(t);C.rib.scale.x=C.rib.scale.y*Math.max(0.001,rb);C.rib.position.y=C.rY+le*C.hh*0.9;C.rib.material.opacity=1-lv;
+ C.cx+=(C.px-C.cx)*Math.min(1,dt*3);C.cy+=(C.py-C.cy)*Math.min(1,dt*3);
+ var cam=C.cam,dz=C.D*(1-le*0.62);cam.position.set(Math.sin(t*0.13)*0.18+C.cx*0.45,Math.sin(t*0.17)*0.1-C.cy*0.3+le*C.pY*0.6,dz);cam.lookAt(C.cx*0.12,le*C.pY*0.9,0);
+ if(C.autoGo>0){C.autoGo-=dt;if(C.autoGo<=0&&phase==='cover')leaveCover();}
+ if(C.leave>=0){C.leave+=dt;if(C.leave>0.42&&!C.fl){C.fl=1;var f=$('cov43f');if(f)f.classList.add('on');}if(C.leave>0.8&&C.cb){var cb=C.cb;C.cb=null;C.want=false;try{cb();}catch(e){errNote(e,'封面');}
+  setTimeout(function(){var f2=$('cov43f');if(f2)f2.classList.remove('on');},80);setTimeout(cov43Dispose,900);}}}
+// 每格：主迴圈喺封面時叫；畫咗就返回 true（出錯就退返舊封面，返回 false）
+function cov43Render(dt){var C=COV43;if(!C.want||C.fail)return false;
+ try{if(!C.sc)cov43Build();cov43Tick(dt);var ex=rd.toneMappingExposure;rd.toneMappingExposure=C.exp;
+  if(COMP){var rp=COMP.rp,oc=rp.camera,bs=bloomP.strength,br=bloomP.radius,bt=bloomP.threshold;rp.scene=C.sc;rp.camera=C.cam;tiltH.enabled=tiltV.enabled=false;bloomP.strength=C.bloom[0];bloomP.radius=C.bloom[1];bloomP.threshold=C.bloom[2];rd.shadowMap.needsUpdate=true;
+   try{COMP.render();}finally{rp.camera=oc;bloomP.strength=bs;bloomP.radius=br;bloomP.threshold=bt;}}
+  else rd.render(C.sc,C.cam);rd.toneMappingExposure=ex;return true;}
+ catch(e){C.fail=true;errNote(e,'封面');cov43Fallback();return false;}}
+function cov43Fallback(){var cv=$('cover');if(cv)cv.classList.remove('c43');COV43.want=false;try{cov43Dispose();}catch(e){}}
+// 撳開始：鏡頭衝向星球、白光過場，之後先真正離開封面
+function cov43Leave(cb){var C=COV43;if(!C.sc||C.fail||!C.want){cb();return;}if(C.leave>=0)return;C.leave=0;C.fl=0;C.cb=cb;}
+function cov43Dispose(){var C=COV43;if(!C.sc||C.want)return;var geos=[],mats=[];C.sc.traverse(function(o){if(o.geometry&&geos.indexOf(o.geometry)<0)geos.push(o.geometry);if(o.material)(Array.isArray(o.material)?o.material:[o.material]).forEach(function(m){if(mats.indexOf(m)<0)mats.push(m);});});
+ geos.forEach(function(g){try{g.dispose();}catch(e){}});mats.forEach(function(m){try{m.dispose();}catch(e){}});C.disp.forEach(function(t){try{t.dispose();}catch(e){}});C.disp=[];
+ if(C.sun&&C.sun.shadow&&C.sun.shadow.map){try{C.sun.shadow.map.dispose();}catch(e){}}C.sc=null;C.anim=[];C.ch=[];C.bok=[];}
+window.addEventListener('pointermove',function(e){if(phase!=='cover')return;COVx(e);});
+function COVx(e){COV43.px=(e.clientX/Math.max(1,innerWidth)-0.5)*2;COV43.py=(e.clientY/Math.max(1,innerHeight)-0.5)*2;}
+(function(){var cv=$('cover');if(!cv)return;var f=document.createElement('div');f.id='cov43f';cv.parentNode.insertBefore(f,cv.nextSibling);
+ try{if(sessionStorage.getItem('ths-cvgo')){sessionStorage.removeItem('ths-cvgo');COV43.autoGo=1.7;}}catch(e){}
+ if(phase==='cover'&&cv.classList.contains('on'))COV43.want=true;})();
+// ================= v43 開始遊戲同 Google 登入（用戶指示）=================
+// ① 第一次撳「開始遊戲」：揀「用 Google 帳戶登入」或者「唔登入，直接開始」；揀完（S.began）以後封面只有「繼續遊戲」
+// ② 唔登入嘅玩家之後可以喺「設定」登入：呢部機嘅進度會上載；如果個帳戶本身已經有另一份雲端進度，就問玩家揀邊一份（唔會靜靜雞蓋咗）
+// ③ 登入要等讀完雲端存檔先算數（NET.pend）：之前一登入就當已登入，讀緊雲端嗰陣如果存檔會搶先上載本機進度
+var CV43={auto:false,busy:false},LG43={mode:''};
+function cvBegan(){return !!(S&&(S.began||(S.me&&S.me.nm)||S.layout||S.story));}
+function cvHintSet(){var nm=S.me&&S.me.nm;$('cvHint').textContent=cvBegan()?(nm?'歡迎回來，'+nm+'！':'歡迎回來！'):'第一次玩：撳「開始遊戲」';}
+function showCover(){showCoverV42();$('cvGo').textContent=cvBegan()?'繼續遊戲':'開始遊戲';cvHintSet();$('cvLogin').style.display='none';if(typeof COV43==='object'&&COV43)COV43.want=true;}
+function leaveCover(){if(phase!=='cover'||CV43.busy)return;if($('login').classList.contains('on')||A43.on)return;
+ if(!cvBegan()&&netAvail()&&!NET.user&&!NET.pend){openLogin('start');return;}
+ if(!S.began){S.began=1;save();}CV43.busy=true;cov43Leave(function(){CV43.busy=false;leaveCoverV42();});}
+// 登入框：一般（設定、526、好友）同「開始新遊戲」兩個樣
+var openLoginV42=openLogin;openLogin=function(mode){LG43.mode=mode==='start'?'start':'';openLoginV42();if(!$('login').classList.contains('on'))return;var st=LG43.mode==='start';
+ $('lgH').textContent=st?'開始新遊戲':'登入／註冊';
+ $('lgS').textContent=st?'開始之前，揀吓想唔想用 Google 帳戶登入：':'用 Google 帳戶登入就得，第一次登入會自動註冊。登入之後，呢部機嘅進度會上載到雲端，換部機都玩得返；仲可以加朋友、互相探訪星球。';
+ $('lgGx').textContent=st?'進度存喺雲端：換部機都玩得返，仲可以加朋友、互相探訪星球。':'';
+ $('lgCancel').textContent=st?'唔登入，直接開始':'唔登入（進度只存喺呢部機）';$('lgCancel').className=st?'lgb':'mkno';
+ $('lgCx').textContent=st?'進度只存喺呢部機。之後隨時可以喺遊戲「設定」用 Google 帳戶登入。':'';};
+function lgCancel43(){var st=LG43.mode==='start';closeLogin();LG43.mode='';CV43.auto=false;if(st&&phase==='cover'){S.began=1;save();leaveCover();}}
+// 「開始新遊戲」揀 Google：記住登入完要自動開始（CV43.auto）；登入完成可能早過或者遲過登入框收埋，兩個次序都處理
+var lgGoogleV42=lgGoogle;lgGoogle=function(){if(LG43.mode==='start'&&phase==='cover')CV43.auto=true;lgGoogleV42();};
+function lgOk43(r){var st=LG43.mode==='start';closeLogin();LG43.mode='';var u=r&&r.user;
+ if(st&&phase==='cover'){if(NET.user){CV43.auto=false;cvHintSet();leaveCover();return;}$('cvHint').textContent='登入成功，讀取緊雲端進度……';}
+if(u&&!(NET.user&&NET.user.uid===u.uid)&&!(NET.pend&&NET.pend.uid===u.uid))onLogin(u);}
+// ---- 登入後：比較雲端同本機 ----
+// 同一份進度（S.acct／好友碼對得上）→ 用較新嗰份；呢部機未有角色 → 用雲端；兩邊都有而且唔係同一份 → 問玩家
+function onLogin(u){if(NET.user&&NET.user.uid===u.uid)return;if(NET.pend&&NET.pend.uid===u.uid)return;NET.pend=u;var uid=u.uid;
+ DBI.get('saves/'+uid).then(function(cs){if(NET.pend!==u)return;
+  var hasC=!!(cs&&cs.json),loc=S.savedAt||0,cloudT=cs&&cs.t||0,fresh0=!(S.me&&S.me.nm),bound=S.acct===uid||(!!S.fcode&&S.fcode===codeOf(uid))||(hasC&&!!cloudT&&S.savedAt===cloudT);
+  if(hasC&&!fresh0&&!bound){acct43Ask(u,cs);return;}
+  if(hasC&&(cloudT>loc||fresh0)&&sessionStorage.getItem('ths-cloudload')!==String(cloudT)){acct43Load(cs,'☁️ 已載入雲端進度',uid);return;}
+  loginDone43(u);}).catch(function(e){if(NET.pend!==u)return;NET.pend=null;console.warn(e);var go=CV43.auto;CV43.auto=false;
+  toast('☁️ 未能讀取雲端存檔（'+((e&&(e.code||e.message))||'網絡')+'），暫時未登入：請檢查網絡，之後喺「設定」再登入',6000);if(go&&phase==='cover')$('cvHint').textContent='未能讀取雲端進度：請再撳「開始遊戲」再試';});}
+function loginDone43(u){NET.pend=null;NET.user=u;var uid=u.uid;S.acct=uid;S.fcode=codeOf(uid);DBI.set('codes/'+S.fcode,uid).catch(function(){});cloudSave(true);save();
+ publish();presenceHome();friendFromLink();mailSub();if(typeof frSub==='function')frSub();if(typeof coopSub==='function')coopSub();toast('☁️ 已登入：'+acctName()+'（進度會自動同步到雲端）',4500);if(panelKind)renderPanel();
+ if(CV43.auto&&!$('login').classList.contains('on')){CV43.auto=false;if(phase==='cover'){cvHintSet();leaveCover();}}}
+// 載入雲端進度時寫埋帳戶標記：之後再登入就認得係同一份（唔會再問）
+function acct43Load(cs,msg,uid){var j=cs.json;try{var o=JSON.parse(j);o.acct=uid;o.fcode=codeOf(uid);j=JSON.stringify(o);}catch(e){}
+ try{sessionStorage.setItem('ths-cloudload',String(cs.t||0));if(CV43.auto)sessionStorage.setItem('ths-cvgo','1');}catch(e){}noSave=true;try{localStorage.setItem(CFG.saveKey,j);}catch(e){}toast(msg,3000);setTimeout(function(){location.reload();},600);}
+function acct43Bak(from,json){try{localStorage.setItem('ths-planet-bak',JSON.stringify({t:Date.now(),from:from,json:json}));}catch(e){}}
+// ---- 兩份進度揀一份（要撳兩下確認；被取代嗰份喺呢部機留一份備份 ths-planet-bak）----
+var A43={on:false,u:null,cs:null,arm:''};
+function acct43Ask(u,cs){var box=$('acct43');if(!box){box=document.createElement('div');box.id='acct43';box.innerHTML='<div class="mk"><h2>揀邊一份進度？</h2><div class="sub">呢個 Google 帳戶本身已經有雲端進度，而呢部機都有另一份進度。要揀一份繼續玩，另一份會被取代：</div>'+
+  '<div class="a43c"><b>雲端進度</b><span id="a43cc"></span><button class="mkgo" id="a43C"></button></div><div class="a43c"><b>呢部機嘅進度</b><span id="a43lc"></span><button class="mkgo" id="a43L"></button></div>'+
+  '<button class="mkno" id="a43X">取消，唔登入住</button></div>';$('login').parentNode.appendChild(box);
+  $('a43C').onclick=function(){acct43Pick('c');};$('a43L').onclick=function(){acct43Pick('l');};$('a43X').onclick=function(){acct43Pick('x');};}
+ var c=null;try{c=JSON.parse(cs.json);}catch(e){}function info(o,t){var nm=o&&o.me&&o.me.nm||'（未有角色）',co=o&&o.coins||0,d=t?new Date(t):null;return '角色：'+esc(nm)+'　金錢：$'+fmtC(co)+(d?'<br>最後儲存：'+(d.getMonth()+1)+' 月 '+d.getDate()+' 日 '+hhmm(t):'');}
+ $('a43cc').innerHTML=info(c,cs.t);$('a43lc').innerHTML=info(S,S.savedAt);A43.on=true;A43.u=u;A43.cs=cs;A43.arm='';acct43Btns();box.classList.add('on');if(D0)closeDlg();if(panelKind)closePanel();}
+function acct43Btns(){$('a43C').textContent=A43.arm==='c'?'再撳一次確認（呢部機嘅進度會被取代）':'用雲端進度';$('a43L').textContent=A43.arm==='l'?'再撳一次確認（雲端嗰份會被取代）':'用呢部機嘅進度';}
+function acct43Pick(k){if(!A43.on)return;var u=A43.u,cs=A43.cs;
+ if(k==='x'){A43.on=false;$('acct43').classList.remove('on');NET.pend=null;CV43.auto=false;toast('已取消登入：進度照舊只存喺呢部機',4000);if(AUTHI)AUTHI.out().catch(function(){});if(phase==='cover')cvHintSet();return;}
+ if(A43.arm!==k){A43.arm=k;acct43Btns();clearTimeout(A43.tm);A43.tm=setTimeout(function(){A43.arm='';if(A43.on)acct43Btns();},5000);return;}
+ A43.on=false;$('acct43').classList.remove('on');
+ if(k==='c'){acct43Bak('local',JSON.stringify(S));acct43Load(cs,'☁️ 已改用雲端進度',u.uid);}else{acct43Bak('cloud',cs.json);loginDone43(u);}}
+// 揀進度時唔好俾鍵盤郁到後面嘅主角
+window.addEventListener('keydown',function(e){if(A43.on)e.stopImmediatePropagation();},true);
 // ---- 模組載入完：開始砌大型設施、牧場外型 ----
 LF_OK=true;if(MAP&&MAP.L&&typeof lfSync==='function')lfSync(true);
 requestAnimationFrame(loop);
