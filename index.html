@@ -2,7 +2,7 @@
 <html lang="zh-Hant-HK">
 <head>
 <meta charset="utf-8">
-<meta name="ths-build" content="2610010730">
+<meta name="ths-build" content="2610011218">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="color-scheme" content="light">
 <!-- iPhone Safari 冇 element fullscreen API：由「分享 → 加入主畫面」開就會冇工具列（同旅款亂Upper 一樣）-->
@@ -3318,7 +3318,7 @@ function updMac(dt,t){var m=MAC,u=macO.userData;macO.visible=macSh.visible=!maki
 
 // ================= 封面、揀地形 =================
 // 每次開遊戲先見封面；未玩過嘅新玩家：揀地形 → 建立角色 → 開場白
-var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v47',BUILD='2610010730';
+var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v48',BUILD='2610011218';
 function showCoverV42(){phase='cover';$('cover').classList.add('on');$('app').classList.add('cover');CU.uB.value=0;sea.scale.set(4,7,1);sea.position.z=(MAP.bc||[0,0])[1];
  var old=!!(S.me&&S.me.nm);$('cvVer').textContent=BUILD+'V'+VERSION.slice(1);$('cvGo').textContent=old?'繼續遊戲':'開始遊戲';$('cvHint').textContent=old?'歡迎回來，'+S.me.nm+'！':'第一次玩：先揀島嶼地形，再建立角色';}
 function leaveCoverV42(){if(phase!=='cover')return;$('cover').classList.remove('on');if(!S.layout){if(!S.story)openStory();else openTerr();}else startPlay();}
@@ -12364,7 +12364,7 @@ function hwLongTalk(){var L=HW.long;if(L)L.talk=true;if(L)P.face=Math.atan2(L.x-
   if(PHOTO.list[n-1].t>(F0.phSeen||0)){talk(HWL_NM,HWL_BG,'#ffffff',hi.concat(['嘩，你影咗新相！我已經幫你沖曬好，睇吓先！']),null,function(){open(n-1);});return;}
   talk(HWL_NM,HWL_BG,'#ffffff',hi.concat(['又嚟睇相？你嘅相簿有 '+n+' 張相，記得試吓「萬聖節」同「月夜」相框！']),[{t:'睇相・揀相框',cb:function(){open(n-1);}},{t:'點樣影相？',cb:function(){talk(HWL_NM,HWL_BG,'#ffffff',how,null,done);}},{t:'沒事了',cb:done}],done);});}
 // ---- 出發／返屋企 ----
-function hwGo(){if(VISIT||fading||BEAMUP)return;try{pFree37();}catch(e){}HWD.me=null;toast('坐上南瓜飛碟，正在前往萬聖節星球……',2600);if(typeof hwSfx==='function')hwSfx('whoosh');roomEnter('hw',HW_UFO[0],HW_UFO[1],0);}
+function hwGo(){if(VISIT||fading||BEAMUP)return;if(!hwCanGo()){toast('萬聖節星球未開放，敬請期待！',2600);return;}try{pFree37();}catch(e){}HWD.me=null;toast('坐上南瓜飛碟，正在前往萬聖節星球……',2600);if(typeof hwSfx==='function')hwSfx('whoosh');roomEnter('hw',HW_UFO[0],HW_UFO[1],0);}
 function hwArrive(){if(HW.on){hwBar(true);return;}HW.on=true;AUD.song=null;AUD.step=0;if(NET.user){try{presenceJoin('halloween');}catch(e){errNote(e,'萬聖節同場');}}hwBar(true);
  // 由南瓜飛碟光柱降落（同去好友島一樣）
  P.x=HW_UFO[0];P.z=HW_UFO[1];P.rot=P.face=0;fx=P.x;fz=P.z;BEAMUP={t:0,st:'down'};player.position.set(P.x,2.55,P.z);player.scale.setScalar(2.4*0.28);pSh.scale.setScalar(0.05);
@@ -12408,9 +12408,20 @@ function hwTempTick(dt,t){if(where!=='out'||!MAP||!MAP.ufo||phase!=='play')retur
  T0.r=lerpA(T0.r,T0.face,dt*8);if(T0.mv)T0.ph+=dt*9;var u=T0.m.userData;T0.m.position.set(T0.x,standY(T0.x,T0.z),T0.z);T0.m.rotation.y=T0.r;animWalk(T0.m,T0.ph,T0.mv);
  if(!T0.mv)u.b.position.y=Math.abs(Math.sin(t*2.2))*0.02;u.am[1].rotation.x=Math.sin(t*1.7)*0.15-(T0.mv?0:0.2);if(pd<2.4&&!T0.talk)u.am[0].rotation.x=-2.3+Math.sin(t*9)*0.3;
  T0.it.x=T0.x;T0.it.z=T0.z;if(T0.sh)T0.sh.position.set(T0.x,0.03,T0.z);
- T0.sayT-=dt;if(T0.sayT<=0){T0.sayT=9+Math.random()*7;if(pd<11&&!T0.sp&&!T0.talk){T0.sp=bubble(pick(['萬聖節派對！','Trick or treat！','搭南瓜飛碟去萬聖節星球！','Happy Halloween！']),HWT_BG,HWT_FG,0.42);scO.add(T0.sp);T0.spT=3.2;}}
+ T0.sayT-=dt;if(T0.sayT<=0){T0.sayT=9+Math.random()*7;if(pd<11&&!T0.sp&&!T0.talk){T0.sp=bubble(pick(HW_OPEN?['萬聖節派對！','Trick or treat！','搭南瓜飛碟去萬聖節星球！','Happy Halloween！']:['萬聖節派對就快嚟喇！','Trick or treat！','萬聖節星球，敬請期待！','Happy Halloween！']),HWT_BG,HWT_FG,0.42);scO.add(T0.sp);T0.spT=3.2;}}
  if(T0.sp){T0.spT-=dt;T0.sp.position.copy(bendPt(T0.x,3.25,T0.z));if(T0.spT<=0){killSprite(T0.sp);T0.sp=null;}}}
+// v48（用戶指示）：萬聖節星球唔好出住：臨記同廣告欄淨係預告、叫大家期待；通往萬聖節星球嘅通訊未接通
+// 老師／創作者（testerOn）仍然可以先去試玩；開放＝將 HW_OPEN 改做 true（同時喺廣告欄加開幕消息）
+var HW_OPEN=false;
+function hwCanGo(){return HW_OPEN||testerOn();}
 function hwTempTalk(){var T0=HW.temp;if(T0){T0.talk=true;P.face=Math.atan2(T0.x-P.x,T0.z-P.z);}var done=function(){if(T0)T0.talk=false;};
+ if(!HW_OPEN){var F1=myS();F1.met=F1.met||{};var first1=!F1.met.hwt;F1.met.hwt=1;save();
+  var L=(first1?['Trick or treat！我係 halloween臨記～']:['又係你呀！Trick or treat！']).concat(['我係萬聖節星球派嚟嘅臨記：萬聖節星球就快開放喇！',
+   '到時搵我，就可以坐南瓜飛碟去萬聖節星球：全日都係夜晚、煙花放唔停，有鬼屋、攤位遊戲、打卡位，仲可以同其他玩家一齊開派對！',
+   '不過通往萬聖節星球嘅通訊仲未接通，敬請期待！可以先去芷華時裝店買定萬聖節服飾。']);
+  var op=[{t:'萬聖節星球有咩玩？',cb:function(){talk(HWT_NM,HWT_BG,HWT_FG,HW_INFO.concat(['萬聖節星球開放嗰陣，廣告欄外星人會貼出嚟，記得留意！']),null,done);}}];
+  if(testerOn()&&!VISIT)op.push({t:'（老師／創作者試玩）出發',cb:function(){done();hwGo();}});
+  op.push({t:'期待！',cb:done});talk(HWT_NM,HWT_BG,HWT_FG,L,op,done);return;}
  if(VISIT){talk(HWT_NM,HWT_BG,HWT_FG,['Trick or treat！我係 halloween臨記，專門接大家去萬聖節星球開派對。','不過你而家喺朋友嘅星球：要先返自己嘅星球，先可以搭我嘅南瓜飛碟出發。'],null,done);return;}
  var F0=myS();F0.met=F0.met||{};var first=!F0.met.hwt;F0.met.hwt=1;save();
  var hi=first?['Trick or treat！我係 halloween臨記～','我喺每個星球嘅飛碟站附近行嚟行去，專門接大家去「萬聖節星球」開派對！']:['又係你呀！今晚萬聖節星球好熱鬧㗎！'],
@@ -12688,7 +12699,7 @@ WEAR.mask=[{id:'',n:'不戴面具',p:0}];
  P('top',[{id:'hw_vamp',n:'吸血鬼斗篷裝',st:'suit',c:0x16121c,c2:0xffffff,tc:0xa01a2a,cape:[0x16121c,0xa01a2a],p:900},{id:'hw_skel',n:'骷髏衫',st:'tee',c:0x1d1a24,deco:'bones',p:500},
   {id:'hw_pumpkin',n:'南瓜衫',st:'tee',c:0xff8a1f,deco:'jack',p:450},{id:'hw_robe',n:'巫師長袍',st:'hood',c:0x2e2a5e,deco:'stars',p:700},{id:'hw_witchdress',n:'巫師長裙',st:'dress',c:0x3a2250,deco:'stars',g:'f',p:720},
   {id:'hw_mummy',n:'木乃伊繃帶裝',st:'stripe',c:0xf0e8d4,c2:0xcdbfa0,deco:'wrap',p:600},{id:'hw_hulk',n:'綠色大力士肌肉衫',st:'tee',c:0x5fae3a,deco:'hulk',p:1200}]);
- P('bot',[{id:'hw_torn',n:'破爛紫短褲',st:'shorts',c:0x6a3fa0,deco:'torn',p:400},{id:'hw_bones',n:'骷髏褲',st:'pants',c:0x1d1a24,deco:'bones',p:420},
+ P('bot',[{id:'hw_torn',n:'破爛紫長褲',st:'shorts',c:0x8a4fd0,deco:'torn',p:400},{id:'hw_bones',n:'骷髏褲',st:'pants',c:0x1d1a24,deco:'bones',p:420},
   {id:'hw_puff',n:'南瓜燈籠褲',st:'shorts',c:0xff8a1f,deco:'puff',p:380},{id:'hw_wskirt',n:'巫師蓬蓬裙',st:'skirt',c:0x3a2250,deco:'stars',g:'f',p:380}]);
  P('acc',[{id:'hw_batwing',n:'蝙蝠翼',st:'hwwing',c:0x2a2036,p:600},{id:'hw_cape',n:'萬聖節披風',st:'hwcape',c:0x3a2250,c2:0xff8a1f,p:520},{id:'hw_bucket',n:'南瓜糖果桶',st:'hwbucket',c:0xff8a1f,p:260},{id:'hw_wand',n:'魔法棒',st:'hwwand',c:0xffd23f,p:280}]);})();
 var HW47_SET={n:'綠色大力士全套',ids:[['top','hw_hulk'],['bot','hw_torn'],['mask','mk_hulk']]};
@@ -12701,7 +12712,7 @@ var wearSigV47=wearSig;wearSig=function(){return wearSigV47()+'.'+((S.wear&&S.we
 wearToday=function(cat){var r=rng(dayNo()*7919+pSeed()%100003+cat.length*31),L=(WEAR[cat]||[]).filter(function(it){return it.id&&it.p>0&&!it.hw&&wearFits(it);});for(var i=L.length-1;i>0;i--){var j=Math.floor(r()*(i+1)),t=L[i];L[i]=L[j];L[j]=t;}return L.slice(0,WEAR_DAY[cat]||3);};
 // ---- 外觀參數：加 mask；戴面具唔顯示眼鏡；全頭套當帽（唔畫頭頂頭髮）----
 var meOptsV47=meOpts;meOpts=function(me0,wear,tier){var o=meOptsV47(me0,wear,tier),w=wear||{};o.mask=wearItem('mask',w.mask||'');
- if(o.mask&&o.mask.st){o.gl=WEAR.gl[0];if((o.mask.st==='hulk'||o.mask.st==='pumphead')&&!(o.hat&&o.hat.st))o.hat={st:'_mask'};}return o;};
+ if(o.mask&&o.mask.st){o.gl=WEAR.gl[0];if(o.mask.st==='hulk'||o.mask.st==='pumphead'){o.hs='buzz';if(o.mask.st==='hulk')o.hair=0x16141c;if(!(o.hat&&o.hat.st))o.hat={st:'_mask'};}}return o;};
 // ---- 材質、貼圖 ----
 function hw47M(c,side){return side?hwSM('w47'+c+'_'+side,{c:c,side:side}):M(c);}
 function hw47AM(key,tex,side){var k='a47'+key;if(HWM.mat[k])return HWM.mat[k];var m=std({map:tex,r:0.8,side:side||T.FrontSide});m.alphaTest=0.5;return HWM.mat[k]=m;}
@@ -12752,12 +12763,16 @@ function hw47Wear(m,o){var u=m.userData,b=u.b;if(!b||!u.am)return false;var n=0,
   b.add(ms(new T.CylinderGeometry(0.077,0.1025,0.17,20,1,true,-Math.PI,Math.PI*2),hw47AM(top.deco,tx),0,0.185,0));n++;
   if(top.st==='dress'&&top.deco==='stars'){b.add(ms(new T.CylinderGeometry(0.097,0.147,0.1,20,1,true,-Math.PI,Math.PI*2),hw47AM('starsd',tx),0,0.11,0));}
   if(top.deco==='bones')u.am.forEach(function(a){a.add(ms(new T.BoxGeometry(0.008,0.07,0.005),M(0xf4f2ea),0,-0.05,0.02));});}
- if(top.deco==='hulk'){var dg=M(0x4f9a30),gm=M(top.c);[-1,1].forEach(function(s){var pc=ms(new T.SphereGeometry(0.038,12,8),dg,s*0.034,0.226,rz(0.226)-0.008);pc.scale.set(1.15,0.75,0.5);b.add(pc);b.add(ms(new T.SphereGeometry(0.034,10,8),gm,s*0.084,0.262,0));
-   for(var r=0;r<3;r++){var ab=ms(new T.BoxGeometry(0.022,0.016,0.01),dg,s*0.013,0.13+r*0.025,rz(0.13+r*0.025)+0.001);b.add(ab);}});
-  u.am.forEach(function(a){a.children.forEach(function(c){if(c.material===sk)c.material=gm;});a.add(ms(new T.SphereGeometry(0.024,8,6),gm,0,-0.035,0.006));});
-  if(u.lg)u.lg.forEach(function(l){l.children.forEach(function(c){if(c.material===sk)c.material=gm;});});n++;}
+ // 綠色大力士（參考用戶畫：闊胸、大隻膊頭、胸肌腹肌、粗手臂同拳頭；手腳同赤腳都係綠色，見最尾）
+ if(top.deco==='hulk'){var dg=M(0x4f9a30),gm=M(top.c),ch=ms(new T.SphereGeometry(0.1,16,12),gm,0,0.215,0.004);ch.scale.set(1.22,0.78,0.92);b.add(ch);
+  [-1,1].forEach(function(s){var pc=ms(new T.SphereGeometry(0.042,12,8),dg,s*0.036,0.228,0.086);pc.scale.set(1.15,0.72,0.5);b.add(pc);b.add(ms(new T.SphereGeometry(0.044,10,8),gm,s*0.098,0.262,0));
+   for(var r=0;r<3;r++){var ab=ms(new T.BoxGeometry(0.024,0.017,0.01),dg,s*0.014,0.128+r*0.024,rz(0.128+r*0.024)+0.002);b.add(ab);}});
+  u.am.forEach(function(a){a.add(ms(new T.SphereGeometry(0.03,10,8),gm,0,-0.04,0.006));a.add(ms(new T.SphereGeometry(0.03,10,8),gm,0,-0.108,0.006));});n++;}
  // 下裝
- if(bot.deco==='torn'&&u.lg){u.lg.forEach(function(l){for(var i=0;i<5;i++){var a=i/5*Math.PI*2,cn=ms(new T.ConeGeometry(0.009,0.022,3),M(bot.c),Math.cos(a)*0.024,-0.052,Math.sin(a)*0.024);cn.rotation.x=Math.PI;l.add(cn);}});n++;}
+ // 破爛紫長褲：褲腳去到小腿、鋸齒狀爛邊；一隻腳膝頭有個爛洞
+ if(bot.deco==='torn'&&u.lg){u.lg.forEach(function(l,li){var pm=M(bot.c);l.add(ms(new T.CylinderGeometry(0.0262,0.0245,0.032,10),pm,0,-0.06,0));
+   for(var i=0;i<6;i++){var a=i/6*Math.PI*2+li*0.4,cn=ms(new T.ConeGeometry(0.009,0.02+((i*7+li)%3)*0.006,3),pm,Math.cos(a)*0.023,-0.083,Math.sin(a)*0.023);cn.rotation.x=Math.PI;l.add(cn);}
+   if(li===0){var tp=ms(new T.SphereGeometry(0.011,8,6),sk,0.004,-0.03,0.024);tp.scale.set(1,1.3,0.45);l.add(tp);}});n++;}
  if(bot.deco==='bones'&&u.lg){u.lg.forEach(function(l){[-0.028,-0.072].forEach(function(y){l.add(ms(new T.BoxGeometry(0.008,0.034,0.005),M(0xf4f2ea),0,y,0.022));});l.add(ms(new T.SphereGeometry(0.008,6,5),M(0xf4f2ea),0,-0.05,0.023));});n++;}
  if(bot.deco==='puff'){var pp=new T.Mesh(hwPumpGeo(),M(bot.c));pp.scale.set(0.112,0.09,0.104);pp.position.y=0.1;b.add(pp);n++;}
  if(bot.deco==='stars'&&bot.st==='skirt'&&top.st!=='dress'&&top.st!=='maid'){b.add(ms(new T.CylinderGeometry(0.1,0.137,0.075,20,1,true,-Math.PI,Math.PI*2),hw47AM('starsk',hw47StarTex()),0,0.125,0));n++;}
@@ -12773,8 +12788,13 @@ function hw47Wear(m,o){var u=m.userData,b=u.b;if(!b||!u.am)return false;var n=0,
  // 面具
  var ks=mk.st;
  if(ks==='pumphead'){var pk=hwLantern(0.205,true,0);pk.position.set(0,0.405,0);b.add(pk);n++;}
- else if(ks==='hulk'){b.add(ms(new T.SphereGeometry(0.152,24,16),hw47AM('hulk',hw47HulkTex()),0,0.39,0));var hm=M(0x1d1a24);
-  for(var i=0;i<11;i++){var a2=-0.2+i/10*Math.PI*1.25,cn2=ms(new T.ConeGeometry(0.03,0.075,5),hm,Math.cos(a2)*0.1,0.5+Math.sin(i*1.7)*0.02,-Math.abs(Math.sin(a2))*0.06-0.02);cn2.rotation.set(-0.5-Math.random()*0.3,0,(Math.cos(a2))*-0.9);b.add(cn2);}n++;}
+ // 大力士全頭套：綠色嬲嬲面＋黑色亂頭髮（頭頂、後腦、一撮撮向外、前面有陰）
+ else if(ks==='hulk'){b.add(ms(new T.SphereGeometry(0.17,24,16),hw47AM('hulk',hw47HulkTex()),0,0.39,0));var hm=M(0x16141c);
+  b.add(ms(new T.SphereGeometry(0.179,22,10,0,Math.PI*2,0,Math.PI*0.37),hm,0,0.39,0));b.add(ms(new T.SphereGeometry(0.177,20,10,Math.PI*1.08,Math.PI*0.84,Math.PI*0.3,Math.PI*0.4),hm,0,0.39,0));
+  var up=new T.Vector3(0,1,0),nv=new T.Vector3(),R0=rng(77);
+  for(var i=0;i<16;i++){var th=R0()*Math.PI*0.42,ph=R0()*Math.PI*2;if(Math.sin(ph)>0.55&&th>Math.PI*0.25)continue;nv.set(-Math.cos(ph)*Math.sin(th),Math.cos(th),Math.sin(ph)*Math.sin(th));
+   var cn2=ms(new T.ConeGeometry(0.03,0.055+R0()*0.03,5),hm,nv.x*0.18,0.39+nv.y*0.18,nv.z*0.18);nv.y+=0.15;nv.x+=(R0()-0.5)*0.4;nv.normalize();cn2.quaternion.setFromUnitVectors(up,nv);b.add(cn2);}
+  for(var j=0;j<5;j++){var fx=(j-2)*0.035,fr=ms(new T.ConeGeometry(0.019,0.05,4),hm,fx*1.1,0.468-Math.abs(j-2)*0.008,0.15-Math.abs(j-2)*0.013);fr.rotation.set(Math.PI*0.85,0,fx*2.5);b.add(fr);}n++;}
  else if(ks==='skull'||ks==='ghost'||ks==='fox'){b.add(ms(new T.SphereGeometry(0.148,24,16,Math.PI*0.1,Math.PI*0.8,Math.PI*0.12,Math.PI*0.7),hw47AM('mk'+ks,hw47FaceTex(ks)),0,0.39,0));
   if(ks==='fox')[-1,1].forEach(function(s){var e3=ms(new T.ConeGeometry(0.04,0.09,4),M(0xfbf8f2),s*0.075,0.53,0.05);e3.rotation.set(0.2,Math.PI/4,-s*0.35);b.add(e3);var e4=ms(new T.ConeGeometry(0.022,0.05,4),M(0xd8302a),s*0.073,0.522,0.066);e4.rotation.set(0.2,Math.PI/4,-s*0.35);b.add(e4);});n++;}
  else if(ks==='cateye'||ks==='bateye'){b.add(ms(new T.SphereGeometry(0.15,24,6,Math.PI*0.1,Math.PI*0.8,Math.PI*0.38,Math.PI*0.22),hw47AM('mk'+ks,hw47EyeTex(ks)),0,0.39,0));n++;}
@@ -12785,6 +12805,8 @@ function hw47Wear(m,o){var u=m.userData,b=u.b;if(!b||!u.am)return false;var n=0,
  else if(as==='hwbucket'){var bk=new T.Group();bk.position.set(0,-0.125,0.035);u.am[1].add(bk);var pb=new T.Mesh(hwPumpGeo(),M(acc.c));pb.scale.setScalar(0.05);bk.add(pb);var hd=ms(new T.TorusGeometry(0.042,0.004,4,12,Math.PI),M(0x2d2a32),0,0.012,0);bk.add(hd);
   [0xff5aa8,0x7dff5a,0x5ad7ff].forEach(function(c,i){bk.add(ms(new T.SphereGeometry(0.012,6,5),M(c),-0.015+i*0.015,0.04,0));});n++;}
  else if(as==='hwwand'){var wd=new T.Group();wd.position.set(0,-0.1,0.02);u.am[1].add(wd);var sk2=ms(new T.CylinderGeometry(0.006,0.006,0.15,5),M(0x3a2a2a),0,0,0.06);sk2.rotation.x=Math.PI/2;wd.add(sk2);wd.add(ms(starGeo(0.035),hwBM(acc.c,{side:T.DoubleSide}),0,0,0.14));n++;}
+ // 肌肉衫：手、腳、赤腳都轉綠色（加完爛褲洞先轉，個洞都會變綠）
+ if(top.deco==='hulk'){var gm2=M(top.c),shM=M(o.shoe||0x6b4a3a);u.am.forEach(function(a){a.children.forEach(function(c){if(c.material===sk)c.material=gm2;});});if(u.lg)u.lg.forEach(function(l){l.children.forEach(function(c){if(c.material===sk||c.material===shM)c.material=gm2;});});}
  return n>0;}
 function hw47Merge(m){var u=m.userData;mergeRigid(u.b,function(n){var t=n.geometry&&n.geometry.type;if(t==='TorusGeometry'||t==='TorusBufferGeometry')return true;if(n.material&&n.material.transparent)return true;for(var p=n.parent;p;p=p.parent)if(u.pack&&p===u.pack)return true;return false;});}
 var kidV47=kid;kid=function(o){var m=kidV47(o);if(o&&(o.mask||o.top||o.bot||o.hat||o.acc))try{if(hw47Wear(m,o))hw47Merge(m);}catch(e){errNote(e,'萬聖節服飾');}return m;};
@@ -12793,9 +12815,9 @@ function hw47SetPrice(){var sum=0;HW47_SET.ids.forEach(function(q){if(!hasWear(q
 function hw47BuySet(){var p=hw47SetPrice();if(p<=0){hw47WearSet();return;}buy(p,function(){HW47_SET.ids.forEach(function(q){var L=hw47Own(q[0]);if(L.indexOf(q[1])<0)L.push(q[1]);S.wear[q[0]]=q[1];});rebuildPlayer();toast('買咗「'+HW47_SET.n+'」，已經全套換上！',3200);});}
 function hw47WearSet(){HW47_SET.ids.forEach(function(q){S.wear[q[0]]=q[1];});rebuildPlayer();save();renderPanel();}
 PANELS.wear.tabs.unshift(['hw','萬聖節']);
-RENDER.wear_hw=function(b){b.appendChild(note('<b>萬聖節限定</b>：扮靚靚去萬聖節星球開派對！買咗會即時穿上，之後可以喺「背包 → 衣櫃」隨時換。'));
+RENDER.wear_hw=function(b){b.appendChild(note('<b>萬聖節限定</b>：萬聖節星球就快開放，買定靚衫準備開派對！買咗會即時穿上，之後可以喺「背包 → 衣櫃」隨時換。'));
  var own=HW47_SET.ids.every(function(q){return hasWear(q[0],q[1]);}),on=HW47_SET.ids.every(function(q){return (S.wear[q[0]]||'')===q[1];}),sep=HW47_SET.ids.reduce(function(a,q){return a+wearItem(q[0],q[1]).p;},0),sp=hw47SetPrice();
- b.appendChild(card({ico:'hwset:'+wearSig()},HW47_SET.n,own?'已擁有全套：肌肉衫＋破爛紫短褲＋面具':'肌肉衫＋破爛紫短褲＋面具，一次過買八折（分開買要 $'+fmtC(sep)+'）',[on?{t:'穿著中',cls:'g',dis:true,fn:function(){}}:own?{t:'全套穿上',fn:hw47WearSet}:{t:'購買全套 $'+fmtC(sp),cls:'o',dis:S.coins<sp,fn:hw47BuySet}],on));
+ b.appendChild(card({ico:'hwset:'+wearSig()},HW47_SET.n,own?'已擁有全套：肌肉衫＋破爛紫長褲＋面具':'肌肉衫＋破爛紫長褲＋面具，一次過買八折（分開買要 $'+fmtC(sep)+'）',[on?{t:'穿著中',cls:'g',dis:true,fn:function(){}}:own?{t:'全套穿上',fn:hw47WearSet}:{t:'購買全套 $'+fmtC(sp),cls:'o',dis:S.coins<sp,fn:hw47BuySet}],on));
  ['hat','mask','top','bot','acc'].forEach(function(cat){var L=WEAR[cat].filter(function(it){return it.hw&&wearFits(it);});if(!L.length)return;b.appendChild(note('<b>'+WEAR_CAT[cat]+'</b>'));
   L.forEach(function(it){var ow=hasWear(cat,it.id),cur=(S.wear[cat]||'')===it.id,rm=cat==='hat'||cat==='mask'||cat==='acc';
    var bt=cur?(rm?{t:'除下',fn:function(){putOn(cat,'');}}:{t:'穿著中',cls:'g',dis:true,fn:function(){}}):ow?{t:'穿上',fn:function(){putOn(cat,it.id);}}:{t:'購買 $'+it.p,cls:'o',dis:S.coins<it.p,fn:function(){buyWear(cat,it);}};
@@ -12804,7 +12826,7 @@ var icoModelV47=icoModel;icoModel=function(key){if(key&&key.indexOf('hwset:')===
 // 芷華：加「萬聖節服飾」
 sheepTalk=function(){var first=!S.met.mm;S.met.mm=1;var fh=!S.met.hw47;S.met.hw47=1;save();npcHop.mian=0.8;
  talk('芷華（芷華時裝）','#c2527a','#ffffff',first?['歡迎光臨芷華時裝，'+me()+'！我是芷華。','這裏有衣服、帽子、眼鏡和小飾物，還有更大的背包。','而家仲有萬聖節限定服飾同面具！想換個髮型或者改名字，也可以找我。今天想看甚麼？']:
-  fh?['歡迎光臨，'+me()+'！萬聖節服飾到貨喇：巫師帽、南瓜帽、吸血鬼斗篷、骷髏衫、各款面具……仲有「綠色大力士」全套！','扮靚靚去萬聖節星球開派對啦！今日想睇啲咩？']:['歡迎光臨，'+me()+'！今天想看甚麼？'],
+  fh?['歡迎光臨，'+me()+'！萬聖節服飾到貨喇：巫師帽、南瓜帽、吸血鬼斗篷、骷髏衫、各款面具……仲有「綠色大力士」全套！','萬聖節星球就快開放，買定靚衫準備開派對啦！今日想睇啲咩？']:['歡迎光臨，'+me()+'！今天想看甚麼？'],
   [{t:'萬聖節服飾',cb:function(){openPanel('wear','hw');}},{t:'買衣服',cb:function(){openPanel('wear','top');}},{t:'買飾物',cb:function(){openPanel('wear','acc');}},{t:'換更大的背包',cb:function(){openPanel('wear','bag');}},{t:'買跑鞋',cb:function(){openPanel('wear','shoe');}},{t:'改變造型',cb:function(){openMaker(false);}},{t:'沒事了',cb:function(){}}]);};
 // ================= v47 廣告欄外星人（用戶指示）=================
 // 噴水池旁邊嘅廣告欄其實係個外星人：屋頂上面兩隻眼（眼柄）、板面上面一把大咀、兩邊有手、柱腳著住大鞋
@@ -12812,12 +12834,13 @@ sheepTalk=function(){var first=!S.met.mm;S.met.mm=1;var fh=!S.met.hw47;S.met.hw4
 // 撳佢：先由佢親口講新消息，講完先做返好友任務嗰啲（有任務貼出就直接跳去任務）
 var AD47_NM='廣告欄外星人',AD47_BG='#3f8f4a';
 var AD47={p:null,bub:null,t:0,bl:2.5};
-var AD47_NEWS=[{id:'hw47',t:'萬聖節星球開幕！',lines:['新內容！新內容！萬聖節星球開幕喇！',
- '去飛碟站附近搵南瓜頭嘅「halloween臨記」，就可以坐南瓜飛碟去萬聖節星球：嗰度全日都係夜晚，煙花放唔停！',
- '星球上有鬼屋、攤位遊戲（仲有新遊戲「顏色配對」）、打卡位；影完相可以搵攝影師「龍友」曬相、揀萬聖節相框。',
- '撳「視角」轉低角度就隨時可以影相，仲可以同其他玩家一齊開派對、落舞池跳舞！',
- '芷華時裝店新到大批萬聖節服飾：巫師帽、南瓜帽、吸血鬼斗篷、骷髏衫、各款面具……仲有「綠色大力士」全套連面具！',
- '快啲去芷華時裝店買，扮靚靚去萬聖節星球開派對啦！']}];
+// v48：萬聖節星球未開放，先刊登預告（開放嗰陣再加一則開幕消息）
+var AD47_NEWS=[{id:'hw48t',t:'萬聖節星球即將開放！',lines:['新內容！新內容！萬聖節星球就快開放喇，敬請期待！',
+ '飛碟站附近嗰個南瓜頭「halloween臨記」，就係萬聖節星球派嚟嘅：開放之後搵佢，就可以坐南瓜飛碟過去。',
+ '萬聖節星球全日都係夜晚、煙花放唔停：有鬼屋、攤位遊戲（仲有新遊戲「顏色配對」）、打卡位，仲可以同其他玩家一齊開派對！',
+ '而家通往萬聖節星球嘅通訊仲未接通；一開放，我會即刻貼出嚟！',
+ '不過芷華時裝店已經有萬聖節服飾：巫師帽、南瓜帽、吸血鬼斗篷、骷髏衫、各款面具……仲有「綠色大力士」全套連面具！',
+ '快啲去買定，扮靚靚準備去萬聖節星球開派對啦！']}];
 function ad47Seen(){var o=myS();if(!o.news47||typeof o.news47!=='object')o.news47={};return o.news47;}
 function ad47Unseen(){var sn=ad47Seen();return AD47_NEWS.filter(function(n){return !sn[n.id];});}
 function ad47Mark(id){ad47Seen()[id]=1;save();}
@@ -12829,16 +12852,18 @@ function ad47Parts(g){var skin=M(0x7fd35a),dk=M(0x2a3a2a),P0={eyes:[],pup:[],arm
   var a=new T.Group();a.position.set(s*0.96,1.5,0);g.add(a);a.add(ms(new T.CylinderGeometry(0.035,0.035,0.34,8),skin,s*0.14,-0.08,0).rotateZ(-s*1.1));var hd=new T.Group();hd.position.set(s*0.29,-0.2,0);a.add(hd);
   hd.add(ms(new T.SphereGeometry(0.055,10,8),skin,0,0,0));for(var f=0;f<3;f++){var fg=ms(new T.CylinderGeometry(0.014,0.012,0.06,5),skin,s*0.03,-0.04+f*0.035,0.02);fg.rotation.z=s*(1.3-f*0.35);hd.add(fg);}P0.arms.push(a);
   var ft=ms(new T.SphereGeometry(0.16,14,10),M(0x6a3fa0),s*0.85,0.07,0.1);ft.scale.set(0.9,0.5,1.45);g.add(ft);g.add(ms(new T.CylinderGeometry(0.07,0.07,0.08,10),M(0x6a3fa0),s*0.85,0.14,0.02));
-  var ck=ms(new T.CircleGeometry(0.065,16),M(0xff9ec4),s*0.43,1.87,0.058);g.add(ck);});
+  var ck=ms(new T.CircleGeometry(0.065,16),M(0xff8fb6),s*0.43,1.7,0.064);g.add(ck);});
  // 大咀（下半邊開口；scale.y 開合）
- var mo=new T.Group();mo.position.set(0,1.86,0.062);g.add(mo);var inn=ms(new T.CircleGeometry(0.32,24,Math.PI,Math.PI),M(0x4a1020),0,0,0);inn.scale.y=0.62;mo.add(inn);
+ var mo=new T.Group();mo.position.set(0,1.76,0.064);g.add(mo);var inn=ms(new T.CircleGeometry(0.3,24,Math.PI,Math.PI),std({c:0x8a1a34,e:0x3a0812,r:0.7}),0,0,0);inn.scale.y=0.62;mo.add(inn);
+ var lip=ms(new T.TorusGeometry(0.3,0.018,6,24,Math.PI),skin,0,0,0.002);lip.rotation.z=Math.PI;lip.scale.y=0.62;mo.add(lip);
  var tg=ms(new T.CircleGeometry(0.15,16,Math.PI,Math.PI),M(0xff7a8a),0,-0.12,0.003);tg.scale.y=0.55;mo.add(tg);[-1,1].forEach(function(s){mo.add(ms(new T.BoxGeometry(0.085,0.05,0.006),M(0xffffff),s*0.1,-0.026,0.004));});
- g.add(ms(new T.BoxGeometry(0.68,0.026,0.012),dk,0,1.86,0.066));P0.mo=mo;return P0;}
-var misBoardV47=misBoard;misBoard=function(){if(MIS.bb)return MIS.bb;var B=misBoardV47();try{AD47.p=ad47Parts(B.g);shadowAll(B.g,true,true);noCull(B.g);}catch(e){errNote(e,'廣告欄外星人');}return B;};
+ g.add(ms(new T.BoxGeometry(0.64,0.03,0.014),skin,0,1.76,0.068));P0.mo=mo;return P0;}
+// 海報、星星原本用 MeshBasicMaterial 冇經 bend()：行遠少少就同板面錯位（浮高、蓋住把咀），呢度補返
+var misBoardV47=misBoard;misBoard=function(){if(MIS.bb)return MIS.bb;var B=misBoardV47();try{if(B.pm){B.pm.position.y=1.32;bend(B.pm.material);B.pm.material.needsUpdate=true;}if(B.star){bend(B.star.material);B.star.material.needsUpdate=true;}AD47.p=ad47Parts(B.g);shadowAll(B.g,true,true);noCull(B.g);}catch(e){errNote(e,'廣告欄外星人');}return B;};
 // 冇好友任務時嘅海報：萬聖節新消息
 function ad47Poster(){var c=document.createElement('canvas');c.width=256;c.height=192;var x=c.getContext('2d'),gr=x.createLinearGradient(0,0,0,192);gr.addColorStop(0,'#3a1a52');gr.addColorStop(1,'#1c0c2a');x.fillStyle=gr;x.fillRect(0,0,256,192);
  x.fillStyle='#ff8a1f';x.fillRect(0,0,256,40);x.fillStyle='#ffffff';x.font='800 24px '+FONT;x.textAlign='center';x.fillText('最新消息',128,29);
- x.fillStyle='#ffb347';x.font='900 24px '+FONT;x.fillText('萬聖節星球開幕！',128,76);x.fillStyle='#e6d6ff';x.font='600 15px '+FONT;x.fillText('飛碟站搵 halloween臨記',128,106);x.fillText('芷華時裝：萬聖節服飾',128,130);x.fillText('走近按 A 睇詳情',128,160);
+ x.fillStyle='#ffb347';x.font='900 24px '+FONT;x.fillText('萬聖節星球',128,72);x.fillText('即將開放！',128,100);x.fillStyle='#e6d6ff';x.font='600 15px '+FONT;x.fillText('芷華時裝：萬聖節服飾',128,130);x.fillText('走近按 A 睇詳情',128,158);
  if(typeof hwFrPump==='function'){hwFrPump(x,26,166,14);hwFrPump(x,230,166,12);}x.strokeStyle='#c9a26b';x.lineWidth=6;x.strokeRect(3,3,250,186);return texEnc(new T.CanvasTexture(c));}
 var misPosterV47=misPoster;misPoster=function(s,ok){if(!s)return ad47Poster();return misPosterV47(s,ok);};
 // 撳廣告欄：新消息 → 好友任務
