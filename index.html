@@ -2,7 +2,7 @@
 <html lang="zh-Hant-HK">
 <head>
 <meta charset="utf-8">
-<meta name="ths-build" content="2610011218">
+<meta name="ths-build" content="2610022159">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="color-scheme" content="light">
 <!-- iPhone Safari 冇 element fullscreen API：由「分享 → 加入主畫面」開就會冇工具列（同旅款亂Upper 一樣）-->
@@ -861,7 +861,7 @@ function fishPick(ctx){var night=typeof nk==='number'&&nk>0.55,rain=typeof RAIN!
   L.push([f,w]);tot+=w;});var r=Math.random()*tot;for(var i=0;i<L.length;i++){r-=L[i][1];if(r<=0)return L[i][0];}return L[0][0];}
 function fishRollKg(f){var r=Math.pow(Math.random(),1.6)*Math.min(1,0.75+0.05*(S.rod||0));if(f.rar>=2)r*=0.69;var kg=f.kg[0]+(f.kg[1]-f.kg[0])*r,q=(kg-f.kg[0])/(f.kg[1]-f.kg[0]||1);return {kg:+kg.toFixed(kg<0.1?3:kg<1?2:1),cl:q<0.35?'S':q<0.7?'M':q<0.92?'L':'XL'};}
 
-// 背包：cap＝格數。種子、農作物每格疊 10 個；魚每條佔一格。喺服務中心芷華度買更大嘅背包
+// 背包：cap＝格數。每款種子只佔一格（v49，數量不限）；農作物每格疊 10 個；魚每條佔一格。喺服務中心芷華度買更大嘅背包
 var BAGS=[{cap:10,n:'小背包',p:0,col:0xf39a3d},{cap:15,n:'郊遊背包',p:600,col:0x6fb58c},{cap:20,n:'登山背包',p:1500,col:0x5b7fd6},{cap:30,n:'探險背包',p:3200,col:0xe8574f},{cap:40,n:'旅行背包',p:8000,col:0xf4c542},{cap:50,n:'環球背包',p:15000,col:0x2fbf8f},{cap:60,n:'星際背包',p:25000,col:0xa98bff}];
 // 服裝（芷華時裝）：st＝款式（模型用），c／c2＝顏色；p:0＝開局已有
 var WEAR={
@@ -2541,7 +2541,7 @@ function me(){return S.me&&S.me.nm?S.me.nm:'島主';}
 function vib(p){try{var ua=navigator.userActivation;if(navigator.vibrate&&(!ua||ua.hasBeenActive))navigator.vibrate(p);}catch(e){}}
 
 // ================= 背包 =================
-// 每格 {k,n}：k＝'seed:番茄種'／'ing:農作物'／'fish:魚種|大細'。種子、農作物每格疊 10 個；魚每條佔一格
+// 每格 {k,n}：k＝'seed:番茄種'／'ing:農作物'／'fish:魚種|大細'。農作物每格疊 10 個；魚每條佔一格；每款種子只佔一格（v49 bag49.js）
 function stackLim(k){return k==='wool:w'?100:k.indexOf('fish:')===0||k.indexOf('art:')===0?1:10;}
 function bagFree(){return S.bag.cap-S.bag.s.length;}
 function bagCount(k){var n=0;S.bag.s.forEach(function(x){if(x.k===k)n+=x.n;});return n;}
@@ -2549,7 +2549,7 @@ function bagRoom(k){var L=stackLim(k),r=bagFree()*L;S.bag.s.forEach(function(x){
 function bagAdd(k,n){if(bagRoom(k)<n)return false;var L=stackLim(k);S.bag.s.forEach(function(x){if(x.k===k&&n>0){var a=Math.min(n,L-x.n);x.n+=a;n-=a;}});while(n>0){var a=Math.min(n,L);S.bag.s.push({k:k,n:a});n-=a;}return true;}
 function bagTake(k,n){if(!n||bagCount(k)<n)return false;for(var i=S.bag.s.length-1;i>=0&&n>0;i--){var x=S.bag.s[i];if(x.k!==k)continue;var a=Math.min(n,x.n);x.n-=a;n-=a;if(!x.n)S.bag.s.splice(i,1);}return true;}
 function bagKeys(pre){var L=[];S.bag.s.forEach(function(x){if(x.k.indexOf(pre)===0&&L.indexOf(x.k)<0)L.push(x.k);});return L;}
-function bagFullMsg(){toast('🎒 背包滿了（'+S.bag.s.length+' / '+S.bag.cap+' 格）：先把東西賣掉、放入池塘，或者交到餐廳',4200);}
+function bagFullMsg(){toast('🎒 背包滿了（'+S.bag.s.length+' / '+S.bag.cap+' 格）：先把東西賣掉、放入池塘、交到餐廳，或者到服務中心的垃圾桶扔掉不要的東西',4200);}
 function bagLine(){return '背包 '+S.bag.s.length+' / '+S.bag.cap+' 格';}
 function seen(k){S.seen[k]=1;}
 function slotInfoV34(x){var a=x.k.split(':'),k=a[1];
@@ -2933,7 +2933,7 @@ var prevSt=[],remT=0,remIdx=0,evT=99;
 function counts(){var c={dry:0,ready:0,empty:0};S.plots.forEach(function(p){var s=plotState(p);if(s==='dry')c.dry++;else if(s==='ready')c.ready++;else if(s==='empty')c.empty++;});return c;}
 function remindMsg(){var c=counts(),L=[];if(!VISIT&&S.cmp&&S.cmp.cur)L.push('意見欄有居民投訴：快啲去服務中心搵羊鷹回應（仲有 '+Math.ceil(S.cmp.cur.left/60)+' 分鐘）');if(!VISIT&&typeof qReady==='function'&&qReady())L.push('有任務完成咗：撳畫面上面嘅「任務」掣領取獎金');if(c.ready)L.push('🧺 有 '+c.ready+' 格農作物可以採摘');if(c.dry)L.push('💧 有 '+c.dry+' 格農田乾了：站在農田上按 A 澆水'+(S.can>0?'（連按兩下澆 '+CANS[S.can].k+' 格）':''));if(c.empty)L.push(seedCount()?'🌱 有 '+c.empty+' 格空地，可以播種':'🌱 背包沒有種子了，到星際市場找阿康買吧');
  var rt=0;TREEV.forEach(function(tr,i){if(tr.kind!=='pine'&&treeReady(i))rt++;});if(rt)L.push('🍎 有 '+rt+' 棵樹結了果或者有蜂蜜：站在樹旁邊按 A 採摘');
- if(bagFree()<1)L.push('🎒 背包滿了：可以賣掉東西，或者把農作物交到餐廳');else if(bagKeys('ing:').length&&where!=='in')L.push('📦 背包有農作物，記得交到旅款餐廳出菜檯的「食材交收」');
+ if(bagFree()<1)L.push('🎒 背包滿了：可以賣掉東西、把農作物交到餐廳，或者到服務中心的垃圾桶扔掉不要的東西');else if(bagKeys('ing:').length&&where!=='in')L.push('📦 背包有農作物，記得交到旅款餐廳出菜檯的「食材交收」');
  if(!hiredChefs().length)L.push('🧑‍🍳 餐廳沒有廚師：到服務中心搵市長林庫請人');else if(!availDishes().length)L.push('🍽️ 廚房沒有食材可以煮菜，客人不會來');
  var fl=fountLv(),fn=fl<3&&UP.fount.L[fl+1];if(fn&&S.coins>=fn.c*1.5)L.push('儲夠錢了：可以到服務中心搵市長林庫申請，把噴水池升級做「'+fn.d.split('：')[0]+'」，許願禮物更好更多');
  if(!VISIT&&wishLeft()>0&&S.coins>=WISH_CO[fl]*3)L.push('今天還可以在噴水池許願 '+wishLeft()+' 次');
@@ -3001,7 +3001,7 @@ function recipeStatus(r){var lk=dishLock(r),miss=r.ks.filter(function(k){return 
 function recipeCards(b){S.recipes.forEach(function(r){b.appendChild(card({ico:dishIco(r)},r.n+'　$'+r.price,'用料：'+r.ks.map(function(k){return (CHILL[k]?'🧊':'')+iname(k)+'（'+GRADE_N[ING[k].g]+'，廚房有 '+(S.inv[k]||0)+'）';}).join('、')+'<br>'+recipeStatus(r),[]));});}
 var FISH_EMO={clown:'🐠',tuna:'🐟',grouper:'🐟',bream:'🐟',bass:'🐟',mack:'🐟'};
 var RENDER={
- market_seed:function(b){b.appendChild(note('種子會放進背包（每格最多 10 包）。每格農田收成 '+CFG.yield+' 個。'));
+ market_seed:function(b){b.appendChild(note('種子會放進背包（每款種子只佔一格，數量不限）。每格農田收成 '+CFG.yield+' 個。'));
   var lv=planetLv(),nx=LV_EARN[lv+1],o0=ownS0(),pool=cropPoolOf(),ex=Object.keys(o0.spec||{}).filter(function(k){return PROD[k]&&pool.indexOf(k)<0;});
   b.appendChild(note('<b>星球等級 Lv'+lv+'</b>（累積收入 $'+fmtC((o0.st||{}).earned||0)+'）'+(nx?'：累積到 $'+fmtC(nx)+' 升 Lv'+(lv+1)+'，解鎖更多本島蔬果。':'：已經最高級。')));
   var sc=function(k,lock){var c=CROPS[k];b.appendChild(colB(card({ico:'seedpk:'+k},c.n+'種子　'+tierTag(k),lock?'<span class="lock">星球等級 Lv'+cropLvNeed(k)+' 解鎖</span>':'每包 $'+c.seed+'　約 '+growMin(k)+' 分鐘成熟（要保持濕潤）　收購價 $'+sellPrice(k)+'　背包：'+bagCount('seed:'+k)+' 包',lock?[]:[
@@ -3099,7 +3099,7 @@ var RENDER={
   fs.forEach(function(fk0){var fk=fk0.slice(5);b.appendChild(card({ico:'fish:'+parseKey(fk).k},fishLab(fk)+' × '+bagCount(fk0),'現在值 $'+fishPrice(fk),[{t:'放入池塘',dis:full,fn:function(){releaseFish(fk);}}]));});
   if(!fs.length)b.appendChild(note('背包裏沒有魚。先到碼頭釣魚吧！'));},
  phone_bag:function(b){b.appendChild(card({ico:'fish:tuna'},'魚類圖鑑','已經釣到 '+Object.keys(S.fdex||{}).length+' / '+FISH.length+' 種魚：睇吓仲有邊啲未釣到、要幾時去釣。',[{t:'打開圖鑑',fn:function(){openPanel('pond','dex');}}]));b.appendChild(card({ico:'pin'},'高空平面圖','由高空睇成個星球：你而家喺邊（橙色箭嘴）、各個建築物、旅客同朋友嘅位置。打開之後可以一路行一路睇。',[{t:MAPV.on?'收起地圖':'打開地圖',cls:'o',fn:function(){closePanel();if(MAPV.on)closeMap();else openMap();}}]));
-  b.appendChild(note('🎒 '+BAGS[S.bag.tier].n+'：已用 '+S.bag.s.length+' / '+S.bag.cap+' 格。種子和農作物每格最多 10 個，魚、藝術品每件佔一格。'));
+  b.appendChild(note('🎒 '+BAGS[S.bag.tier].n+'：已用 '+S.bag.s.length+' / '+S.bag.cap+' 格。每款種子只佔一格（數量不限）；農作物每格最多 10 個；魚、藝術品每件佔一格。唔要嘅嘢可以去服務中心門口嘅垃圾桶扔走。'));
   var g=el('div','bag');for(var i=0;i<S.bag.cap;i++){var x=S.bag.s[i],d=el('div','slot'+(x?'':' empty'));if(x){var f=slotInfo(x),u=typeof icoURL==='function'?icoURL(f.ico):'';d.innerHTML=(u?'<img class="slico" src="'+u+'" alt="">':'')+'<small>'+esc(f.nm)+'</small><i>'+esc(String(f.n))+'</i>';}g.appendChild(d);}b.appendChild(g);
   b.appendChild(note('💡 農作物要交到旅款餐廳出菜檯的「食材交收」，廚師才可以用；魚可以到星際市場賣、放入池塘，或者在「食材交收」處理成鮮魚。更大的背包：到芷華時裝店找芷華。'));},
  phone_closet:function(b){wearChips(b,['top','bot','hat','mask','gl','acc'],function(){return closetCat;},function(k){closetCat=k;});b.appendChild(note('已擁有的服裝。想買新款：到芷華時裝店找芷華。'));wearCards(b,closetCat,false);},
@@ -3318,7 +3318,7 @@ function updMac(dt,t){var m=MAC,u=macO.userData;macO.visible=macSh.visible=!maki
 
 // ================= 封面、揀地形 =================
 // 每次開遊戲先見封面；未玩過嘅新玩家：揀地形 → 建立角色 → 開場白
-var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v48',BUILD='2610011218';
+var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v49',BUILD='2610022159';
 function showCoverV42(){phase='cover';$('cover').classList.add('on');$('app').classList.add('cover');CU.uB.value=0;sea.scale.set(4,7,1);sea.position.z=(MAP.bc||[0,0])[1];
  var old=!!(S.me&&S.me.nm);$('cvVer').textContent=BUILD+'V'+VERSION.slice(1);$('cvGo').textContent=old?'繼續遊戲':'開始遊戲';$('cvHint').textContent=old?'歡迎回來，'+S.me.nm+'！':'第一次玩：先揀島嶼地形，再建立角色';}
 function leaveCoverV42(){if(phase!=='cover')return;$('cover').classList.remove('on');if(!S.layout){if(!S.story)openStory();else openTerr();}else startPlay();}
@@ -10057,7 +10057,7 @@ var ADV39={n:0};
 function adv39Urgent(){var L=[];try{var c=counts();if(!VISIT&&S.cmp&&S.cmp.cur)L.push('意見欄有居民投訴：快啲去服務中心搵羊鷹回應');if(!VISIT&&typeof qReady==='function'&&qReady())L.push('有任務完成咗：撳右上角「任務」領獎金');
  if(!hiredChefs().length)L.push('餐廳冇廚師：入服務中心搵林庫請一位');else if(!availDishes().length)L.push('廚房冇食材煮菜：收成之後放入交收箱');
  if(c.ready)L.push('有 '+c.ready+' 格田熟咗：快啲收成');if(c.dry)L.push('有 '+c.dry+' 格田乾咗：淋水先會繼續生長');if(c.empty)L.push(seedCount()?'有 '+c.empty+' 格田空咗：播種啦':'背包冇種子：去星際市場搵阿康買');
- if(bagFree()<1)L.push('背包滿咗：賣走啲嘢，或者去芷華時裝換個大啲嘅背包');}catch(e){}return L;}
+ if(bagFree()<1)L.push('背包滿咗：賣走啲嘢、去服務中心門口嘅垃圾桶扔走唔要嘅嘢，或者去芷華時裝換個大啲嘅背包');}catch(e){}return L;}
 function adv39Grow(){var L=[],co=S.coins||0,chk=function(f,t){try{if(f())L.push(t);}catch(e){}};
  chk(function(){return hiredChefs().length<chefSlots();},'廚房仲有位：去服務中心搵林庫多請一位廚師，一次煮多啲菜，收入即刻多。');
  chk(function(){return !(S.up&&S.up.fridge);},'搵建材行嘉禧裝雪櫃：可以用雞蛋、牛奶、鮮魚煮貴啲嘅菜。');
@@ -12899,6 +12899,87 @@ var LK47={t:0};
 function hw47LookTick(dt){LK47.t-=dt;if(LK47.t>0)return;LK47.t=0.5;for(var k in OTHERS){var o=OTHERS[k],L=o.look||{},sig=JSON.stringify([L.me||null,L.wear||null,L.bag||0]);if(o._lsig==null){o._lsig=sig;continue;}if(o._lsig===sig)continue;o._lsig=sig;
  try{var nm=kid(meOpts(L.me,L.wear,L.bag||0)),old=o.m,sc=SCN[o.w]||scO;nm.scale.setScalar(2.4);noCull(nm);nm.position.copy(old.position);nm.rotation.copy(old.rotation);if(old.parent)old.parent.remove(old);sc.add(nm);disposeTree(old);o.m=nm;o.dnW=0;}catch(e){errNote(e,'好友換衫');}}}
 var tick46V47=tick46;tick46=function(dt,t){tick46V47(dt,t);try{ad47Tick(dt,t);}catch(e){errNote(e,'廣告欄外星人');}try{hw47LookTick(dt);}catch(e){errNote(e,'好友換衫');}};
+// ================= v49 背包：每款種子只佔一格（數量不限）；服務中心垃圾桶（用戶指示）=================
+// ① 種子（農作物種子 seed:、花種子 fseed:）每款只佔背包一格，幾多包都得：stackLim 包一層（用好大嘅數，唔用 Infinity，因為 bagRoom 會計 0×上限）
+//    舊存檔同一款種子分咗幾格：bagRoom／bagAdd 之前、開背包、每秒都會自動合併返做一格（擺返第一格嘅位置）
+// ② 服務中心門口左邊（入口地氈同提款機之間）加垃圾桶：行近撳 A 打開「垃圾桶」面板，揀背包唔要嘅嘢扔走
+//    扔 1 個即刻扔；「全部扔」、或者魚／藝術品要再撳一次「確定扔走」（扔咗就冇得拎返）
+//    行近個蓋會打開少少；關面板之後（有扔過嘢）個蓋一開一合、冒少少塵、有聲
+//    探訪好友時唔用得（探訪期間唔會儲存進度，同提款機一樣）
+var SEED49_LIM=1e9;
+function seed49(k){return k.indexOf('seed:')===0||k.indexOf('fseed:')===0;}
+var stackLimV49=stackLim;stackLim=function(k){return seed49(k)?SEED49_LIM:stackLimV49(k);};
+function bag49Merge(){if(!S||!S.bag||!S.bag.s)return false;var s=S.bag.s,f={},ch=false;
+ for(var i=0;i<s.length;i++){var x=s[i];if(!x||!x.k||!seed49(x.k))continue;var a=f[x.k];if(a){a.n+=x.n;s.splice(i,1);i--;ch=true;}else f[x.k]=x;}return ch;}
+var bagRoomV49=bagRoom;bagRoom=function(k){bag49Merge();return bagRoomV49(k);};
+var bagAddV49=bagAdd;bagAdd=function(k,n){bag49Merge();return bagAddV49(k,n);};
+// ---- 垃圾桶外型：上闊下窄嘅綠色桶、桶口邊、淺色坑紋、弧形「垃圾桶」標籤、腳踏；個蓋喺後面有鉸（userData.dyn，唔會俾 mergeRigid 合併）----
+var TR49={x:-1.85,z:3.0,s:1.25,g:null,lid:null,ang:0,an:null,snd:0,pend:0,ask:null,puff:[],mt:0};
+function trash49Tex(){var c=document.createElement('canvas');c.width=256;c.height=96;var x=c.getContext('2d');x.fillStyle='#fbf8f2';rrect(x,6,8,244,80,24);x.fill();
+ x.strokeStyle='#2d6b4a';x.lineWidth=5;rrect(x,6,8,244,80,24);x.stroke();x.fillStyle='#2d6b4a';x.font='800 50px '+FONT;x.textAlign='center';x.textBaseline='middle';x.fillText('垃圾桶',128,52);
+ var t=texEnc(new T.CanvasTexture(c));t.minFilter=T.LinearFilter;t.generateMipmaps=false;return t;}
+function trash49Model(){var g=new T.Group(),gr=M(0x3f9a6a),dk=M(0x2d6b4a),lt=M(0x5cb985);
+ g.add(ms(new T.CylinderGeometry(0.235,0.2,0.56,28,1,true),gr,0,0.31,0));
+ var inr=std({c:0x24402f,r:0.9});inr.side=T.BackSide;g.add(ms(new T.CylinderGeometry(0.234,0.199,0.56,28,1,true),inr,0,0.31,0));
+ var bag=ms(new T.CircleGeometry(0.226,28),std({c:0x34373b,r:0.55}),0,0.47,0);bag.rotation.x=-Math.PI/2;g.add(bag);
+ [[0.07,0.05,0xf2eee6],[-0.08,-0.04,0xe8dcc0],[0.0,-0.1,0xf7f3ea]].forEach(function(q,i){var pb=ms(new T.IcosahedronGeometry(0.045,0),M(q[2]),q[0],0.49,q[1]);pb.rotation.set(i,i*2,0);pb.scale.set(1,0.8,1);g.add(pb);});
+ g.add(ms(new T.CylinderGeometry(0.205,0.205,0.04,28),dk,0,0.02,0));
+ var rim=ms(new T.TorusGeometry(0.236,0.018,8,32),dk,0,0.59,0);rim.rotation.x=Math.PI/2;g.add(rim);
+ var bd=ms(new T.TorusGeometry(0.212,0.011,6,32),lt,0,0.16,0);bd.rotation.x=Math.PI/2;g.add(bd);
+ var lab=new T.Mesh(new T.CylinderGeometry(0.2295,0.2215,0.13,18,1,true,-0.74,1.48),std({map:trash49Tex(),r:0.7}));lab.position.y=0.4;g.add(lab);
+ g.add(ms(rbox(0.15,0.035,0.11,0.012),dk,0,0.045,0.235));
+ g.add(ms(new T.BoxGeometry(0.09,0.035,0.035),dk,0,0.6,-0.238));
+ var hg=new T.Group();hg.position.set(0,0.6,-0.236);hg.userData.dyn=1;g.add(hg);var lid=new T.Group();lid.position.set(0,0,0.236);hg.add(lid);
+ var dm=ms(new T.SphereGeometry(0.25,28,10,0,Math.PI*2,0,Math.PI/2),lt,0,0,0);dm.scale.y=0.42;lid.add(dm);
+ lid.add(ms(new T.CylinderGeometry(0.253,0.253,0.03,28),gr,0,0.004,0));
+ lid.add(ms(new T.TorusGeometry(0.046,0.014,6,16,Math.PI),dk,0,0.1,0));
+ g.userData.lid=hg;return g;}
+(function(){var g=trash49Model();g.position.set(TR49.x,0,TR49.z);g.rotation.y=0.2;g.scale.setScalar(TR49.s);mergeRigid(g);shadowAll(g,true,true);scC.add(g);TR49.g=g;TR49.lid=g.userData.lid;
+ cirC(TR49.x,TR49.z,0.36);IT_C.push({x:TR49.x,z:TR49.z,r:1.0,l:'垃圾桶',fn:function(){trash49Open();}});})();
+// ---- 面板 ----
+PANELS.trash={t:'垃圾桶・服務中心',tabs:[['bag','背包物品']]};
+(function(){var st=document.createElement('style');st.textContent='.act.r{background:#e8574f;}';document.head.appendChild(st);})();
+function trash49Open(){if(VISIT){toast('要返自己個星球先可以用垃圾桶',2600);return;}bag49Merge();TR49.ask=null;openPanel('trash');}
+function trash49Name(k){var f=slotInfo({k:k,n:1});return k.indexOf('fish:')===0?f.nm+'（'+f.n+'）':f.nm;}
+RENDER.trash_bag=function(b){bag49Merge();
+ b.appendChild(note('揀背包裏面唔要嘅嘢，扔落垃圾桶。<b>扔咗就冇得拎返</b>，扔之前睇清楚啊！'));
+ var keys=[];S.bag.s.forEach(function(x){if(keys.indexOf(x.k)<0)keys.push(x.k);});
+ if(!keys.length){b.appendChild(note('背包係空嘅，冇嘢可以扔。'));return;}
+ keys.forEach(function(k){var n=bagCount(k),sl=S.bag.s.filter(function(x){return x.k===k;}).length,f=slotInfo({k:k,n:n}),nm=trash49Name(k),a=k.split(':')[0],val=a==='fish'||a==='art',ask=TR49.ask&&TR49.ask.k===k?TR49.ask:null;
+  var sub=ask?'<span class="bad">確定扔走 '+esc(nm)+' × '+ask.n+'？扔咗就冇得拎返。</span>':'佔 '+sl+' 格';
+  var btns=ask?[{t:'確定扔走',cls:'r',fn:function(){trash49Do(k,ask.n);}},{t:'唔扔',cls:'g',fn:function(){TR49.ask=null;renderPanel();}}]
+   :n>1?[{t:'扔 1 個',fn:function(){trash49Do(k,1);}},{t:'全部扔',cls:'o',fn:function(){TR49.ask={k:k,n:bagCount(k)};renderPanel();}}]
+   :[{t:'扔掉',cls:val?'o':'',fn:function(){if(val){TR49.ask={k:k,n:1};renderPanel();}else trash49Do(k,1);}}];
+  b.appendChild(card({ico:f.ico},nm+(n>1?' × '+n:''),sub,btns));});};
+function trash49Do(k,n){var nm=trash49Name(k);TR49.ask=null;if(!n||!bagTake(k,n)){renderPanel();return;}TR49.pend++;save();toast('扔咗 '+nm+' × '+n+' 落垃圾桶',2400);renderPanel();}
+var panelSubV49=panelSub;panelSub=function(){if(panelKind==='trash')return bagLine();return panelSubV49();};
+// ---- 聲：開蓋「咔」、沙沙聲、冚蓋「咚」----
+function trash49Snd(){if(!AUD.sfxOn)return;try{var c=audCtx();if(!c)return;if(c.state==='suspended')c.resume();var t=c.currentTime;
+ var n=Math.floor(c.sampleRate*0.3),buf=c.createBuffer(1,n,c.sampleRate),d=buf.getChannelData(0);for(var i=0;i<n;i++){var e=i/n;d[i]=(Math.random()*2-1)*Math.pow(1-e,1.5)*(0.55+0.45*Math.abs(Math.sin(e*31)));}
+ var src=c.createBufferSource(),bp=c.createBiquadFilter(),g=c.createGain();bp.type='bandpass';bp.frequency.value=2300;bp.Q.value=0.8;g.gain.value=0.2;src.buffer=buf;src.connect(bp);bp.connect(g);g.connect(AUD.sfx);src.start(t+0.14);
+ [[0,420,260,0.1],[0.7,190,85,0.22]].forEach(function(q){var o=c.createOscillator(),gg=c.createGain();o.type='triangle';o.frequency.setValueAtTime(q[1],t+q[0]);o.frequency.exponentialRampToValueAtTime(q[2],t+q[0]+0.12);
+  gg.gain.setValueAtTime(0.0001,t+q[0]);gg.gain.exponentialRampToValueAtTime(q[3],t+q[0]+0.008);gg.gain.exponentialRampToValueAtTime(0.0001,t+q[0]+0.17);o.connect(gg);gg.connect(AUD.sfx);o.start(t+q[0]);o.stop(t+q[0]+0.2);});}catch(e){}}
+// ---- 塵：幾粒白色小波波由桶口升起、散開、淡出 ----
+var TR49_PG=new T.SphereGeometry(0.035,8,6);
+function trash49Puff(){for(var i=0;i<7;i++){var m=new T.Mesh(TR49_PG,new T.MeshBasicMaterial({color:lc(0xf2ede4),transparent:true,opacity:0.6,depthWrite:false})),a=i/7*6.283+Math.random()*0.5;
+ m.position.set(TR49.x,0.62*TR49.s,TR49.z);scC.add(m);TR49.puff.push({m:m,t:-0.12-Math.random()*0.08,vx:Math.cos(a)*0.32,vz:Math.sin(a)*0.32,vy:0.55+Math.random()*0.35});}}
+// ---- 每格：每秒合併種子；垃圾桶個蓋（行近打開少少；扔完嘢關面板就一開一合）----
+function bag49Tick(dt,t){TR49.mt-=dt;if(TR49.mt<=0){TR49.mt=1;bag49Merge();}
+ if(TR49.pend&&panelKind!=='trash'){TR49.pend=0;if(where==='cc'){TR49.an=0;TR49.snd=0;}}
+ var tg=0;if(TR49.an!=null){TR49.an+=dt;var q=TR49.an;
+  if(!TR49.snd&&q>0.05){TR49.snd=1;trash49Snd();trash49Puff();}
+  tg=q<0.15?-1.25*(q/0.15):q<0.55?-1.25+Math.sin((q-0.15)*18)*0.06:q<0.72?-1.25*(1-(q-0.55)/0.17):q<0.9?-0.12*Math.sin((q-0.72)/0.18*Math.PI):0;
+  if(q>=0.9)TR49.an=null;if(TR49.lid)TR49.lid.rotation.x=tg;TR49.ang=tg;}
+ else if(TR49.lid){var near=where==='cc'&&!panelKind&&Math.hypot(P.x-TR49.x,P.z-TR49.z)<1.25;tg=near?-0.3:0;TR49.ang+=(tg-TR49.ang)*Math.min(1,dt*8);TR49.lid.rotation.x=TR49.ang;}
+ for(var i=TR49.puff.length-1;i>=0;i--){var p=TR49.puff[i];p.t+=dt;if(p.t<0){p.m.visible=false;continue;}p.m.visible=true;var k=p.t/0.7;
+  p.m.position.set(TR49.x+p.vx*p.t,0.62*TR49.s+p.vy*p.t-0.25*p.t*p.t,TR49.z+p.vz*p.t);p.m.scale.setScalar(1+k*1.4);p.m.material.opacity=0.6*Math.max(0,1-k);
+  if(k>=1){scC.remove(p.m);p.m.material.dispose();TR49.puff.splice(i,1);}}}
+var tick46V49=tick46;tick46=function(dt,t){tick46V49(dt,t);try{bag49Tick(dt,t);}catch(e){errNote(e,'垃圾桶');}};
+// ---- 廣告欄外星人刊登新消息（用戶指示：一切新增都喺廣告欄刊登）----
+if(typeof AD47_NEWS!=='undefined')AD47_NEWS.unshift({id:'bag49',t:'背包新安排：種子＋垃圾桶',lines:['新消息！新消息！背包有新安排！',
+ '每款種子而家只佔背包一格：同一款種子買幾多包都放得落，唔使再分幾格。',
+ '服務中心門口左邊新增咗一個垃圾桶：背包有唔要嘅嘢，行過去撳 A 就可以揀嚟扔走。',
+ '不過扔咗就冇得拎返，扔之前睇清楚啊！']});
 // ---- 模組載入完：開始砌大型設施、牧場外型 ----
 LF_OK=true;if(MAP&&MAP.L&&typeof lfSync==='function')lfSync(true);
 requestAnimationFrame(loop);
