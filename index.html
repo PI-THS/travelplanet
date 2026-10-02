@@ -2,7 +2,7 @@
 <html lang="zh-Hant-HK">
 <head>
 <meta charset="utf-8">
-<meta name="ths-build" content="2610022159">
+<meta name="ths-build" content="2610022225">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="color-scheme" content="light">
 <!-- iPhone Safari 冇 element fullscreen API：由「分享 → 加入主畫面」開就會冇工具列（同旅款亂Upper 一樣）-->
@@ -1020,7 +1020,7 @@ function save(){if(noSave||(typeof VISIT!=='undefined'&&VISIT))return;S.savedAt=
 var GFXK='ths-planet-gfx',FINE=true;try{FINE=localStorage.getItem(GFXK)!=='fast';}catch(e){}
 var PHONE=Math.min(screen.width||999,screen.height||999)<760||/iPhone|iPad|Android/i.test(navigator.userAgent);
 var cv=$('cv'),rd;
-try{rd=new T.WebGLRenderer({canvas:cv,antialias:true,powerPreference:'high-performance'});}catch(e){fatal('此裝置未能顯示 3D 畫面。');return;}
+try{rd=new T.WebGLRenderer({canvas:cv,antialias:true,powerPreference:'default'});}catch(e){fatal('此裝置未能顯示 3D 畫面。');return;}
 var PR=Math.min(FINE?(PHONE?1.5:1.75):2,window.devicePixelRatio||1);rd.setPixelRatio(PR);
 if(FINE){rd.outputEncoding=T.sRGBEncoding;rd.toneMapping=T.ACESFilmicToneMapping;rd.toneMappingExposure=1;rd.shadowMap.enabled=true;rd.shadowMap.type=T.PCFSoftShadowMap;}
 var cam=new T.PerspectiveCamera(35,1,0.5,400);
@@ -1744,7 +1744,7 @@ function initComposer(){if(FINE&&T.EffectComposer&&T.UnrealBloomPass&&T.ShaderPa
   gradeP=new T.ShaderPass(GRADE);COMP.addPass(gradeP);rd.shadowMap.autoUpdate=false;}catch(e){COMP=null;rd.shadowMap.autoUpdate=true;}}
  if(!COMP)cam.layers.enable(1);}
 // 每幀：場景經後期效果畫一次，之後喺上面補畫頭頂氣泡（第 1 層，唔會被光暈、移軸影響）
-function renderScene(sc,nb){if(COMP){COMP.rp.scene=sc;var ti=sc===scO?1:0.35;if(tiltH.enabled!==(ti>0))tiltH.enabled=tiltV.enabled=ti>0;tiltH.uniforms.r1.value=tiltV.uniforms.r1.value=sc===scO?0.64:0.8;rd.shadowMap.needsUpdate=true;COMP.render();if(!nb){cam.layers.set(1);rd.autoClear=false;rd.render(sc,cam);rd.autoClear=true;cam.layers.set(0);}}else{if(nb)cam.layers.disable(1);rd.render(sc,cam);if(nb)cam.layers.enable(1);}}
+function renderScene(sc,nb){if(COMP){COMP.rp.scene=sc;var ti=sc===scO?1:0.35;if(tiltH.enabled!==(ti>0))tiltH.enabled=tiltV.enabled=ti>0;tiltH.uniforms.r1.value=tiltV.uniforms.r1.value=sc===scO?0.64:0.8;rd.shadowMap.needsUpdate=typeof eco50Sh==='function'?eco50Sh(sc):true;COMP.render();if(!nb){cam.layers.set(1);rd.autoClear=false;rd.render(sc,cam);rd.autoClear=true;cam.layers.set(0);}}else{if(nb)cam.layers.disable(1);rd.render(sc,cam);if(nb)cam.layers.enable(1);}}
 function sizeComposer(w,h){if(!COMP)return;COMP.setPixelRatio(PR);COMP.setSize(w,h);var bl=PHONE?2.6:3.2;tiltH.uniforms.amt.value=bl/(w*PR);tiltV.uniforms.amt.value=bl/(h*PR);}
 
 // ================= 室外場景 =================
@@ -3318,7 +3318,7 @@ function updMac(dt,t){var m=MAC,u=macO.userData;macO.visible=macSh.visible=!maki
 
 // ================= 封面、揀地形 =================
 // 每次開遊戲先見封面；未玩過嘅新玩家：揀地形 → 建立角色 → 開場白
-var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v49',BUILD='2610022159';
+var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v50',BUILD='2610022225';
 function showCoverV42(){phase='cover';$('cover').classList.add('on');$('app').classList.add('cover');CU.uB.value=0;sea.scale.set(4,7,1);sea.position.z=(MAP.bc||[0,0])[1];
  var old=!!(S.me&&S.me.nm);$('cvVer').textContent=BUILD+'V'+VERSION.slice(1);$('cvGo').textContent=old?'繼續遊戲':'開始遊戲';$('cvHint').textContent=old?'歡迎回來，'+S.me.nm+'！':'第一次玩：先揀島嶼地形，再建立角色';}
 function leaveCoverV42(){if(phase!=='cover')return;$('cover').classList.remove('on');if(!S.layout){if(!S.story)openStory();else openTerr();}else startPlay();}
@@ -12980,6 +12980,49 @@ if(typeof AD47_NEWS!=='undefined')AD47_NEWS.unshift({id:'bag49',t:'背包新安�
  '每款種子而家只佔背包一格：同一款種子買幾多包都放得落，唔使再分幾格。',
  '服務中心門口左邊新增咗一個垃圾桶：背包有唔要嘅嘢，行過去撳 A 就可以揀嚟扔走。',
  '不過扔咗就冇得拎返，扔之前睇清楚啊！']});
+// ================= v50 修正（用戶指示）=================
+// ① 綠色大力士全套：重開遊戲之後身上變返普通衫
+//    原因：主角模型喺遊戲一開始（萬聖節服飾模組未載入）就砌好，嗰陣搵唔到 hw_hulk 等衫，就用咗預設款；存檔其實冇變
+//    修正：所有模組載入完之後重砌一次主角
+try{rebuildPlayer();}catch(e){errNote(e,'重砌主角');}
+// ② 自動化花圃（花王第 3 級）：以前你唔喺度時，每格花最多補計 30 次開花，過夜可以賺兩萬至四萬幾
+//    改做同農田一樣：你唔喺度，每格最多開一次花（返嚟時花王即刻摘晒送去花店），之後由返嚟嗰刻重新生長
+gardOffline=function(){if(gardLv()<3)return;var fg=fgArr(),now=Date.now(),tot=0;
+ for(var i=0;i<6;i++){var p=fg[i];if(!p||p.by||!FLOWERS[p.k])continue;var F=FLOWERS[p.k],cyc=F.min*fbedSp()*60000;if(now<p.t0+cyc)continue;
+  var n=fbedDbl()?2:1;gardSell(p.k,n);tot+=n;p.t0=now-0.25*cyc;}
+ if(tot){save();setTimeout(function(){toast('你唔喺度嘅時候，花圃開咗花：花王摘咗 '+tot+' 枝送去伊伊花店，收入 +$'+fmtC(GARD.msg.amt),5500);GARD.msg={n:0,amt:0,t:0,k:{}};},2500);}};
+GARD_UP[3].d='加自動定時系統：你唔喺度，花圃每格都照開一次花（同農田一樣，每格最多一輪），返嚟時花王即刻摘晒送去花店；花價再高一成';
+// ③ 省電模式（用戶指示：有玩家話手機好熱）
+//    手機、平板預設開（設定入面可以熄）：主迴圈每秒 30 次（唔使 60）；閒置 45 秒或者開住選單時，畫面再畫慢啲（邏輯照每秒 30 次，唔會慢咗）；
+//    解像度上限 1.25 倍；陰影隔一格先重新計
+//    無論開唔開：攤位遊戲開住（成個畫面俾遊戲框遮住）時，後面個島每秒只畫 4 次
+//    無論開唔開：最多每秒 60 次（120Hz 螢幕唔會畫 120 格）；建立 3D 畫面改用一般耗電設定（唔再要求高效能 GPU）
+var ECO50K='ths-planet-eco',PR0_50=PR;
+var ECO={on:PHONE,lastN:-1,lastL:-1e9,last:-1e9,act:performance.now(),skip:false,shN:0,shSc:null};
+try{var ev50=localStorage.getItem(ECO50K);if(ev50==='1')ECO.on=true;else if(ev50==='0')ECO.on=false;}catch(e){}
+['pointerdown','keydown','touchstart','wheel'].forEach(function(k){window.addEventListener(k,function(){ECO.act=performance.now();},{capture:true,passive:true});});
+function eco50PR(){var p=ECO.on?Math.min(PR0_50,PHONE?1.25:1.5):PR0_50;if(p===PR)return;PR=p;try{rd.setPixelRatio(PR);resize();}catch(e){errNote(e,'省電模式');}}
+function eco50Set(on){ECO.on=!!on;try{localStorage.setItem(ECO50K,on?'1':'0');}catch(e){}eco50PR();toast(on?'已開省電模式：手機冇咁熱、慳電':'已熄省電模式：畫面每秒 60 格',3200);}
+function eco50Cover(){return !!(typeof G40!=='undefined'&&G40.on);}
+function eco50RenderIv(){if(eco50Cover())return 250;if(!ECO.on)return 0;if(panelKind&&PHONE)return 100;if(performance.now()-ECO.act>45000&&idleT>45)return 66;return 33;}
+// 陰影：省電模式隔一格先重新計（換場景嗰格一定計）
+function eco50Sh(sc){if(!ECO.on||sc!==ECO.shSc){ECO.shSc=sc;ECO.shN=0;return true;}ECO.shN^=1;return ECO.shN===0;}
+var loopV50=loop;loop=function(now){if(now===ECO.lastN)return;ECO.lastN=now;if(now<ECO.lastL||now<ECO.last){ECO.lastL=ECO.last=-1e9;}
+ if(now-ECO.lastL<(ECO.on?31:14)){requestAnimationFrame(loop);return;}ECO.lastL=now;
+ var iv=eco50RenderIv();ECO.skip=iv>0&&now-ECO.last<iv-2;if(!ECO.skip)ECO.last=now;try{loopV50(now);}finally{ECO.skip=false;}};
+var renderSceneV50=renderScene;renderScene=function(sc,nb){if(ECO.skip)return;renderSceneV50(sc,nb);};
+eco50PR();
+// 設定頁：喺「畫質」下面加省電模式開關
+var phoneSetV50=RENDER.phone_set;RENDER.phone_set=function(b){phoneSetV50(b);
+ var c=card({ico:'sprout'},'省電模式：'+(ECO.on?'開咗':'熄咗'),ECO.on?'畫面每秒畫 30 格（企定唔郁、開住選單時再慢啲），解像度低少少：手機冇咁熱、慳電。':'畫面每秒畫 60 格、最高解像度。手機玩耐咗覺得熱，可以開返省電模式。',
+  [{t:ECO.on?'熄省電模式':'開省電模式',cls:'o',fn:function(){eco50Set(!ECO.on);renderPanel();}}]);
+ var cs=b.querySelectorAll('.card'),af=null;for(var i=0;i<cs.length;i++){var t=cs[i].querySelector('b');if(t&&t.textContent.indexOf('畫質')===0){af=cs[i];break;}}
+ if(af&&af.nextSibling)b.insertBefore(c,af.nextSibling);else b.appendChild(c);};
+// ④ 廣告欄外星人刊登新消息（一切新增都喺廣告欄刊登）
+if(typeof AD47_NEWS!=='undefined')AD47_NEWS.unshift({id:'eco50',t:'省電模式＋花圃新規則',lines:['新消息！手機玩到好熱？而家有「省電模式」！',
+ '手機同平板已經自動開咗：畫面每秒畫少啲，企定唔郁或者開住選單時仲會再慢啲，手機冇咁熱、仲慳電。想熄可以去「背包 → 設定」。',
+ '另外，自動化花圃有新規則：你唔喺度嘅時候，花圃每格最多開一次花（同農田一樣），返嚟時花王會即刻幫你摘晒去賣。',
+ '仲有：重開遊戲之後萬聖節服飾唔見咗嘅問題，已經修正咗！']});
 // ---- 模組載入完：開始砌大型設施、牧場外型 ----
 LF_OK=true;if(MAP&&MAP.L&&typeof lfSync==='function')lfSync(true);
 requestAnimationFrame(loop);
