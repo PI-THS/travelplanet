@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-Hant-HK">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="河馬星球">
+<meta name="theme-color" content="#bfe7f6">
+<title>河馬星球</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap" rel="stylesheet">
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}
+</script>
+<style>
+/*__CSS__*/
+</style>
+</head>
+<body>
+/*__SYMBOLS__*/
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13.4 2.5 5.2 13.4h5.4l-1.2 8.1 8.4-11.3h-5.5z" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></symbol></defs></svg>
+<canvas id="c"></canvas>
+<div id="joy"><div id="joyk"></div></div>
+<div id="hud">
+  <div class="hb" id="stars"><svg class="ic"><use href="#i-star"/></svg><span id="starN">0</span></div>
+  <div class="hb" id="doneBox"><svg class="ic"><use href="#i-flag"/></svg><span id="doneN">0/14</span></div>
+  <button class="hb" id="bMute" aria-label="聲音"></button>
+  <button class="hb" id="bHome" aria-label="返廣場"><svg class="ic"><use href="#i-home"/></svg></button>
+  <div class="hb" id="energy"></div>
+  <button id="bTalk" class="hidden"><span id="bTalkIc"></span><span>傾偈</span></button>
+</div>
+<div id="talk" class="hidden"><div class="tkc"><div id="tkIc"></div><div class="tkb"><div><span id="tkName"></span><span id="tkRole"></span></div><div id="tkText"></div></div><div id="tkBtns"></div></div></div>
+<div id="qwrap" class="hidden"><div id="qcard">
+  <button id="qclose" class="hidden" aria-label="關閉"><svg class="ic"><use href="#i-close"/></svg></button>
+  <div id="qhead"><span id="qcat"></span><div id="qprompt"></div><div id="qprog"></div><button id="qsay" aria-label="再講一次"><svg class="ic"><use href="#i-sound"/></svg></button></div>
+  <div id="qvis"></div>
+  <div id="qopts"></div>
+</div></div>
+<div id="win" class="hidden"><div class="wc"><h1>河馬星球小博士！</h1><p>你同所有朋友都玩過問答喇</p><button class="bigbtn" id="winOk"><svg class="ic"><use href="#i-play"/></svg><span>繼續探險</span></button></div></div>
+<div id="cover"><h1>河馬星球<small>Hippo Planet</small></h1><button id="startBtn" aria-label="開始"><svg class="ic"><use href="#i-play"/></svg></button></div>
+<button id="resetBtn">清除進度</button>
+<div id="hint" class="hidden"></div>
+<div id="toast"></div>
+<div id="fx"></div>
+<script type="module">
+//__JS__
+</script>
+</body>
+</html>

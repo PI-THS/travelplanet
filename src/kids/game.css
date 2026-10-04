@@ -1,0 +1,186 @@
+/* ===== v5：RUNNING TRAIN 式介面（深色半透明細框）＋線條圖示，全遊戲冇 emoji ===== */
+#vig{display:none}
+.ic{width:1em;height:1em;display:inline-block;vertical-align:-.14em;flex:none;fill:currentColor;overflow:visible}
+.glass{background:rgba(12,17,24,.64);color:#fff;border:1px solid rgba(255,255,255,.16);border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.28)}
+.logo .l3{font-size:min(3.4vw,22px);font-weight:800;margin-top:10px;background:rgba(0,0,0,.28);display:inline-block;padding:6px 16px;border-radius:99px}
+#fade{position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;z-index:3}
+#loading .ld-train{color:#2f5e1c}
+.route .lock{color:#5d6770}
+.route .rgo{display:inline-flex;align-items:center;gap:4px;margin-left:10px;padding-left:10px;border-left:2px solid rgba(255,255,255,.5)}
+.small{display:inline-flex;align-items:center;gap:8px}
+.small .ic{font-size:1.15em}
+
+/* ---- 頂部：次站卡＋路線條 ---- */
+#hud{position:fixed;left:0;right:0;top:0;z-index:8;padding:calc(env(safe-area-inset-top) + 10px) 12px 0;display:flex;flex-direction:column;align-items:stretch;gap:8px;pointer-events:none}
+#hud>*{pointer-events:auto}
+.hrow{display:flex;align-items:center;gap:8px}
+.hrow>*{min-width:0}
+.gbtn{flex:none;width:52px;height:52px;border-radius:16px;border:1px solid rgba(255,255,255,.18);background:rgba(12,17,24,.64);color:#fff;font-size:26px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,.28)}
+.gbtn:active{transform:scale(.94)}
+#nextBox{flex:1;height:52px;display:flex;align-items:center;gap:10px;padding:0 12px 0 7px}
+.nb-code{flex:none;width:40px;height:40px;border:4px solid var(--jy);border-radius:8px;background:#fff;color:#1d1d1d;display:flex;flex-direction:column;align-items:center;justify-content:center;font:800 10px/1 "Baloo 2",sans-serif}
+.nb-code b{font-size:17px;line-height:.95}
+.nb-txt{flex:1;min-width:0;display:flex;align-items:baseline;gap:8px;white-space:nowrap;overflow:hidden}
+.nb-txt small{font-size:13px;color:#8fd3ff;font-weight:800}
+.nb-txt b{font-size:25px;font-weight:900;font-family:"Hiragino Sans","PingFang HK",sans-serif;letter-spacing:.04em}
+.nb-txt span{font:700 15px "Baloo 2",sans-serif;color:rgba(255,255,255,.62);overflow:hidden;text-overflow:ellipsis}
+#nbDist{flex:none;display:flex;align-items:center;gap:6px}
+.nb-ring{width:30px;height:30px;transform:rotate(-90deg)}
+.nb-ring circle{fill:none;stroke-width:5}
+.nb-ring .bg{stroke:rgba(255,255,255,.18)}
+.nb-ring .fg{stroke:#ffd24a;stroke-linecap:round;stroke-dasharray:0 100}
+.nb-m b{font:800 24px "Baloo 2",sans-serif;color:#ffd24a}
+.nb-m small{font-size:12px;color:rgba(255,255,255,.7);margin-left:2px}
+#hud #stars,#hud #lineBar{background:rgba(12,17,24,.64);color:#fff;border:1px solid rgba(255,255,255,.16);border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.28)}
+#hud #stars{flex:none;height:52px;padding:0 12px;display:flex;align-items:center;gap:6px;font:800 24px "Baloo 2",sans-serif}
+#hud #stars .ic{color:#ffd24a;font-size:24px}
+#hud #lineBar{display:block;min-height:0;padding:8px 34px 4px}
+#hud #lbTrack{position:relative;height:36px}
+#hud #lbTrack .rail{position:absolute;left:0;right:0;top:9px;height:6px;border-radius:6px;background:rgba(255,255,255,.2)}
+#hud #lbFill{position:absolute;left:0;top:9px;height:6px;border-radius:6px;background:var(--jy);box-shadow:0 0 10px rgba(128,194,65,.6)}
+#hud .lbst{position:absolute;top:4px;transform:translateX(-50%);text-align:center}
+#hud .lbst .dot{width:16px;height:16px;border-radius:50%;background:#101820;border:4px solid var(--jy);margin:0 auto}
+#hud .lbst.done .dot{background:var(--jy)}
+#hud .lbst .nm{font-size:13px;font-weight:800;white-space:nowrap;margin-top:2px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.5)}
+#hud #lbTrain{position:absolute;top:-6px;transform:translateX(-50%);color:#e9eef2;font-size:22px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.55))}
+
+/* ---- 底部控制台（剎車｜速度環＋級數條｜加速） ---- */
+#deck{position:fixed;left:0;right:0;bottom:0;z-index:9;padding:16px 12px calc(env(safe-area-inset-bottom) + 12px);background:linear-gradient(rgba(6,9,13,0),rgba(6,9,13,.42) 45%,rgba(6,9,13,.68));pointer-events:none}
+.deck-row{display:flex;align-items:center;gap:12px;max-width:860px;margin:0 auto;pointer-events:auto}
+.dbtn{flex:none;width:clamp(78px,19vw,112px);height:clamp(78px,19vw,112px);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#fff;font-weight:900;border:2px solid rgba(255,255,255,.35);touch-action:none;-webkit-user-select:none;user-select:none;box-shadow:0 10px 24px rgba(0,0,0,.4),inset 0 2px 0 rgba(255,255,255,.25)}
+.dbtn .ic{font-size:clamp(28px,7vw,40px)}
+.dbtn .dt{font-size:clamp(14px,3.8vw,18px);letter-spacing:.06em}
+.dbtn.brake{background:radial-gradient(circle at 35% 28%,#ffb25e,#e0661a 70%)}
+.dbtn.power{background:radial-gradient(circle at 35% 28%,#7cc0ff,#1f6fd6 70%)}
+.dbtn:active,.dbtn.on{transform:scale(.94);filter:brightness(1.1)}
+#dMid{flex:1;min-width:0;display:flex;align-items:center;gap:10px;padding:8px 12px 8px 8px}
+#dGauge{position:relative;flex:none;width:clamp(84px,21vw,112px);height:clamp(84px,21vw,112px)}
+#dGauge svg{width:100%;height:100%;transform:rotate(135deg);overflow:visible}
+#dGauge circle{fill:none;stroke-width:9}
+#dGauge .g-track{stroke:rgba(255,255,255,.14);stroke-dasharray:75 100}
+#dGauge .g-red{stroke:#ff4d4d;stroke-width:4;stroke-dasharray:0 50 25 25}
+#dGauge .g-arc{stroke:#ff9a2e;stroke-dasharray:0 100;stroke-linecap:round}
+#gTicks line{stroke:rgba(255,255,255,.6);stroke-width:1.8}
+.gv{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:6px}
+.gv b{font:800 clamp(28px,7.5vw,40px)/.9 "Baloo 2",sans-serif}
+.gv small{font-size:11px;color:rgba(255,255,255,.65)}
+.dm-right{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+#notchBar{display:flex;gap:3px;background:rgba(0,0,0,.35);border-radius:10px;padding:4px;touch-action:none}
+.nt{flex:1;min-width:0;height:clamp(28px,7vw,36px);border-radius:7px;display:flex;align-items:center;justify-content:center;font:800 clamp(11px,2.9vw,14px) "Baloo 2",sans-serif;color:rgba(255,255,255,.45);background:rgba(255,255,255,.06);transition:background .12s}
+.nt.lit.p{background:rgba(43,127,224,.45);color:#fff}.nt.lit.b,.nt.lit.eb{background:rgba(224,112,26,.45);color:#fff}
+.nt.on.p{background:#2b7fe0;color:#fff}.nt.on.n{background:#f2f2f2;color:#222}.nt.on.b{background:#e0701a;color:#fff}.nt.on.eb{background:#d83a3a;color:#fff}
+.lamps{display:flex;gap:6px;flex-wrap:wrap}
+.lamps span{font:800 11px "Baloo 2","Hiragino Sans",sans-serif;letter-spacing:.08em;padding:2px 8px;border-radius:6px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.4)}
+.lamps span.on{background:#1f9d55;color:#fff;box-shadow:0 0 12px rgba(31,157,85,.8)}
+.lamps #atsLamp.on{background:#c62828;box-shadow:0 0 12px rgba(198,40,40,.8)}
+.lamps #doorLamp.on{background:#e08a1a;box-shadow:0 0 12px rgba(224,138,26,.8)}
+#cabBtns{position:fixed;right:12px;bottom:calc(env(safe-area-inset-bottom) + clamp(124px,30vw,168px));z-index:9;display:flex;flex-direction:column;gap:10px;align-items:flex-end}
+.cbtn{height:56px;min-width:56px;border-radius:18px;border:1px solid rgba(255,255,255,.2);background:rgba(12,17,24,.66);color:#fff;font-size:26px;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 8px 20px rgba(0,0,0,.3)}
+.cbtn.wide{padding:0 18px;font-size:clamp(17px,4.4vw,21px);font-weight:900}
+.cbtn.wide .ic{font-size:24px}
+.cbtn:active{transform:scale(.95)}
+.cbtn.hot{background:linear-gradient(#9ad65a,#6fb33a);color:#0f2a07;border-color:rgba(255,255,255,.7);animation:hot 1s ease-in-out infinite}
+/* 閃動只郁 transform（顯示卡合成就得）；外圈光環固定。之前連 box-shadow 一齊郁，iPad 每格都要重畫個掣 */
+.cbtn.hot,.act.hot,#bOpen{box-shadow:0 8px 20px rgba(0,0,0,.3),0 0 0 7px rgba(128,194,65,.35)}
+@keyframes hot{50%{transform:scale(1.07)}}
+
+/* ---- 月台動作按鈕 ---- */
+#actions{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 18px);transform:translateX(-50%);z-index:9;display:flex;gap:14px;width:min(94vw,620px)}
+.act,#bOpen{border:1px solid rgba(255,255,255,.2);border-radius:26px;padding:10px 18px 10px 10px;background:rgba(12,17,24,.72);color:#fff;box-shadow:0 10px 26px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;gap:12px;font-weight:900}
+.act{flex:1;min-width:0}
+.ai{flex:none;width:clamp(48px,12vw,62px);height:clamp(48px,12vw,62px);border-radius:50%;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:clamp(28px,7vw,36px)}
+.at{font-size:clamp(20px,5.2vw,28px);white-space:nowrap;letter-spacing:.04em}
+.act:disabled{opacity:.4}
+.act.hot,#bOpen{background:linear-gradient(#9ad65a,#6fb33a);color:#0f2a07;border-color:rgba(255,255,255,.7);animation:hot 1s ease-in-out infinite}
+.act.hot .ai,#bOpen .ai{background:rgba(255,255,255,.55)}
+.act:active,#bOpen:active{transform:scale(.96)}
+#bOpen{position:fixed;left:0;right:0;margin:0 auto;width:max-content;min-width:min(70vw,300px);bottom:calc(env(safe-area-inset-bottom) + clamp(140px,32vw,184px));z-index:10}
+
+/* ---- 車長提示（字幕式） ---- */
+#guide{position:fixed;left:12px;right:12px;top:calc(env(safe-area-inset-top) + 124px);z-index:8;display:flex;justify-content:center;pointer-events:none;animation:gin .4s ease}
+@keyframes gin{from{opacity:0;transform:translateY(-10px)}}
+#guide .gtext{max-width:min(620px,92vw);background:rgba(12,17,24,.74);color:#fff;border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:9px 16px;font-size:clamp(16px,4.2vw,21px);font-weight:800;line-height:1.45;box-shadow:0 8px 20px rgba(0,0,0,.3);text-align:center}
+.k{display:inline-flex;align-items:center;gap:4px;padding:0 8px;border-radius:8px;background:rgba(255,255,255,.16);margin:0 3px;white-space:nowrap}
+.k .ic{font-size:1.05em}
+.k.p{background:#1f6fd6}.k.b{background:#e0661a}.k.g{background:#5a9e2f}
+
+/* ---- 題目 ---- */
+#qprog{flex:none;display:flex;gap:4px;margin-right:4px}
+#qprog i{width:11px;height:11px;border-radius:50%;background:#dfe5ec;display:block}
+#qprog i.done{background:#43b649}#qprog i.cur{background:#ffd23f;box-shadow:0 0 0 3px rgba(255,210,63,.35)}
+#qcat{display:inline-flex;align-items:center;gap:6px}#qcat .ic{font-size:1.1em}
+#qsay{display:flex;align-items:center;justify-content:center;color:#6b5200;font-size:32px}
+#qclose{display:flex;align-items:center;justify-content:center;font-size:24px}
+.ico{display:inline-block;width:1.15em;height:1.15em;object-fit:contain;vertical-align:middle;-webkit-user-drag:none;pointer-events:none}
+.qbub{display:inline-flex;align-items:center;justify-content:center;width:1.05em;height:1.05em;border-radius:50%;background:#fff3c4;border:.05em solid #f0c02e;color:#e0a500;font:800 .72em/1 "Baloo 2",sans-serif;box-shadow:0 .06em 0 #e8cf72}
+.fcell .ico{width:1.18em;height:1.18em}.seq span .ico{width:1.3em;height:1.3em}.optgrp .ico{width:1.1em;height:1.1em}.grp .ico{width:1.2em;height:1.2em}
+.pic .ico{width:1.2em;height:1.2em}.rebus .ico{width:1.15em;height:1.15em}.opt .emo .ico{width:1.6em;height:1.6em}
+.op .ic{display:block}
+.qm-box{display:inline-flex;align-items:center;justify-content:center;font:800 .62em "Baloo 2",sans-serif;color:#e0a500}
+.swatch{display:inline-block;width:.9em;height:.9em;border-radius:50%;vertical-align:-.12em;margin-right:.25em;box-shadow:inset 0 -3px 0 rgba(0,0,0,.18),0 2px 6px rgba(0,0,0,.2)}
+#qopts.n2{grid-template-columns:repeat(2,minmax(0,1fr))}#qopts.n3{grid-template-columns:repeat(3,minmax(0,1fr))}#qopts.n4{grid-template-columns:repeat(4,minmax(0,1fr))}.opt{min-width:0}
+/* 直向手機：題目內容按畫面闊度縮放，唔好凸出卡外 */
+@media (max-aspect-ratio:3/4){#qcard{padding:16px 14px 18px;border-radius:28px;gap:1.4vh}#qprompt{font-size:20px}#qcat{font-size:15px;padding:6px 10px}
+  #qvis{min-height:22vh;gap:8px}#qopts{gap:10px}#qopts.n4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .opt{min-height:min(15vh,150px);border-width:4px;border-radius:22px;padding:4px;box-shadow:0 7px 0 #cfd8e2;font-size:min(10vh,76px,13vw)}
+  .opt.good{box-shadow:0 7px 0 #2f8f35}.opt.bad{box-shadow:0 7px 0 #c44}
+  .opt .emo{font-size:min(12vh,92px,17vw)}.opt .word{font-size:min(7vh,52px,7.4vw);letter-spacing:0}.opt .zh{font-size:min(8vh,58px,11vw)}
+  .pic{font-size:min(23vh,200px,42vw)}.pic.sm{font-size:min(15vh,130px,24vw)}
+  .tiles{gap:4px}.tile{flex:1 1 0;min-width:0;max-width:min(10vh,78px,13vw);height:min(11vh,86px,15vw);padding:0 2px;border-width:3px;border-radius:12px;box-shadow:0 4px 0 #c8d3e0;font-size:min(8vh,60px,9vw,calc(62vw / var(--n,5)))}
+  .seq{gap:6px}.seq span{font-size:min(9vh,70px,10vw);padding:4px 6px;border-radius:14px;border-width:3px}
+  .riddle{flex-direction:column;gap:10px;text-align:center}.riddle .rq{font-size:min(15vh,116px,26vw)}.riddle .rt{font-size:min(4.6vh,34px,5.4vw);padding:10px 14px}
+  .rebus{gap:8px;font-size:min(15vh,116px,15vw)}.rebus b{font-size:min(9vh,70px,10vw)}
+  .findgrid{gap:4px;padding:8px}.fcell{padding:2px;font-size:min(8.5vh,64px,9vw)}
+  .optgrp{font-size:min(8vh,60px,9vw)}.eqtxt{font-size:min(8vh,60px,9vw)}.op{font-size:min(60px,11vw)}.grp{padding:6px 8px}.grp span{font-size:min(var(--es,54px),9vw)}
+  .zoomwin{width:min(29vh,250px,60vw);height:min(29vh,250px,60vw)}}
+
+/* ---- 站名牌、印章、完成 ---- */
+#banner{top:calc(env(safe-area-inset-top) + 178px);width:min(460px,84vw)}
+#banner .bn-ja{font-size:clamp(34px,9vw,50px)}#banner .bn-top{padding:8px 12px 4px;gap:12px}#banner .bn-band{font-size:16px;padding:6px 12px;min-height:0}
+#banner .bn-band span{display:inline-flex;align-items:center;gap:4px}
+@media (min-aspect-ratio:1/1){#banner{top:calc(env(safe-area-inset-top) + 170px)}}
+.stamp .s3 .ic{font-size:40px}.stamp.mini .s3 .ic{font-size:24px}
+.fcard h1{display:flex;align-items:center;justify-content:center;gap:12px;font-size:clamp(28px,7.5vw,54px);white-space:nowrap}.fcard h1 .ic{color:var(--jy)}
+#fstars{display:flex;align-items:center;justify-content:center;gap:8px}#fstars .ic{color:#f5b400;font-size:1.3em}
+.bigbtn{display:inline-flex;align-items:center;gap:10px}
+.tcard h2{display:flex;align-items:center;gap:10px}
+.tcard .lv button{min-width:52px}
+
+/* ---- 窄畫面／橫向 ---- */
+@media (max-width:480px){.nb-ring{display:none!important}.nb-txt span,.nb-txt small{display:none}.nb-txt b{font-size:22px;flex:none}#nextBox{gap:8px;padding:0 10px 0 6px}.nb-code{width:36px;height:36px}#hud #stars{padding:0 9px;font-size:20px}.nb-m b{font-size:21px}.nb-ring{width:24px;height:24px}#banner{top:calc(env(safe-area-inset-top) + 200px)}}
+/* 橫向（iPad）：剎車靠左、加速靠右；速度環＋直立級數條貼住加速掣（RUNNING TRAIN 式角落儀表），中間留返畀駕駛室螢幕 */
+@media (min-aspect-ratio:1/1){#deck{background:none;padding:0 max(16px,env(safe-area-inset-right)) calc(env(safe-area-inset-bottom) + 14px) max(16px,env(safe-area-inset-left))}
+  .deck-row{max-width:none;align-items:flex-end}
+  #dMid{flex:none;margin-left:auto;display:grid;grid-template-columns:auto auto;grid-template-areas:"notch gauge" "notch lamps";gap:6px 12px;padding:10px 14px 10px 10px;align-items:center}
+  .dm-right{display:contents}
+  #notchBar{grid-area:notch;flex-direction:column-reverse;width:54px;align-self:stretch}
+  #notchBar .nt{flex:1;height:auto;min-height:19px}
+  #dGauge{grid-area:gauge;width:118px;height:118px}
+  .lamps{grid-area:lamps;justify-content:center}
+  #cabBtns{bottom:calc(env(safe-area-inset-bottom) + 230px)}}
+/* 直向：速度環＋指示燈一行，級數條喺下面成行 */
+@media (max-aspect-ratio:1/1){#dMid{display:grid;grid-template-columns:auto 1fr;grid-template-areas:"gauge lamps" "notch notch";gap:6px 10px;padding:8px;align-items:center}
+  .dm-right{display:contents}
+  #dGauge{grid-area:gauge;width:clamp(70px,19vw,96px);height:clamp(70px,19vw,96px)}
+  .gv b{font-size:clamp(24px,6.6vw,34px)}
+  .lamps{grid-area:lamps;flex-direction:column;align-items:flex-start;gap:5px}
+  #notchBar{grid-area:notch}}
+/* ---- 山手線一周路線圖 ---- */
+.trow{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+/* iPad 靜音模式提示：網頁音效（叮噹、普通話英文聲檔）會被靜音，系統語音（廣東話）照講 */
+.sndtip{margin:10px auto 0;max-width:min(92vw,760px);background:rgba(12,17,24,.62);color:#fff;border-radius:14px;padding:8px 14px;font-size:15px;font-weight:700;text-align:center;line-height:1.6}
+.sndtip .small{margin:0 6px;padding:6px 14px;font-size:15px;color:#1f2a36}
+#btnMap b,#btnMapE b{font-family:"Baloo 2",sans-serif;color:#2e7d32;margin-left:4px}#btnMapE b{color:#1f6f9c}
+#ymap{position:fixed;inset:0;z-index:18;background:rgba(8,20,35,.55);display:flex;align-items:center;justify-content:center;padding:14px}
+.ymcard{background:#fff;border-radius:28px;padding:16px 18px 18px;width:min(760px,100%);max-height:100%;overflow:auto;box-shadow:var(--shadow)}
+.ymhead{display:flex;justify-content:space-between;align-items:center;gap:10px}.ymhead h2{margin:0;font-size:clamp(20px,5vw,28px);display:flex;align-items:center;gap:8px}.ymhead h2 .ic{color:var(--jy)}
+#ymsvg{width:100%;height:auto;display:block;font-family:"Hiragino Sans","PingFang HK",sans-serif}
+/* 揀站畫面：出發／到達＋開始掣 */
+#ymsvg .yst{cursor:pointer}
+.ymtip{margin:4px 2px 8px;font-size:16px;font-weight:800;color:#556;text-align:center}
+.ympick{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.ymsel{display:flex;align-items:center;gap:8px;font-size:clamp(20px,4.8vw,28px);flex-wrap:wrap}.ymsel b{font-weight:900;color:#26323c}
+.ymtag{font-size:14px;font-weight:900;color:#fff;border-radius:99px;padding:4px 10px}.ymtag.f{background:#2e9d3a}.ymtag.t{background:#e65100}
+.ymarr{color:#9aa5b1;font-weight:900}.ymn{font-size:16px;font-weight:800;color:#7a8896}
+#ymGo{margin:0;box-shadow:0 7px 0 rgba(0,0,0,.22)}#ymGo:disabled{opacity:.4}
+.fcount{font-size:.8em;color:#556;margin-left:8px}
