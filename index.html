@@ -2,7 +2,7 @@
 <html lang="zh-Hant-HK">
 <head>
 <meta charset="utf-8">
-<meta name="ths-build" content="2610052255">
+<meta name="ths-build" content="2610052326">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="color-scheme" content="light">
 <!-- iPhone Safari 冇 element fullscreen API：由「分享 → 加入主畫面」開就會冇工具列（同旅款亂Upper 一樣）-->
@@ -1857,15 +1857,15 @@ function edt2(g,N){var f=new Float64Array(N),d=new Float64Array(N),v=new Int32Ar
  for(x=0;x<N;x++){for(y=0;y<N;y++)f[y]=g[y*N+x];edt1(f,N,d,v,z);for(y=0;y<N;y++)g[y*N+x]=d[y];}
  for(y=0;y<N;y++){for(x=0;x<N;x++)f[x]=g[y*N+x];edt1(f,N,d,v,z);for(x=0;x<N;x++)g[y*N+x]=d[x];}}
 // 海岸：原本形狀＋填海地 → 距離場 → 近岸加雜訊（岸線唔再方正）→ 建築周圍一定係陸地
-function buildSDF(L,occ,pierBase){var N=SDN,land=new Uint8Array(N*N),g1=new Float32Array(N*N),g2=new Float32Array(N*N),INF=1e20,rc=S.recl||[],i,j,k;
+function buildSDF(L,occ,pierBase){var N=SDN,rlk=new Uint8Array(N*N),land=new Uint8Array(N*N),g1=new Float32Array(N*N),g2=new Float32Array(N*N),INF=1e20,rc=S.recl||[],i,j,k;
  var rcb=rc.map(function(R0){return reclBridge(L,R0);});
- for(j=0;j<N;j++)for(i=0;i<N;i++){var x=SDO+(i+0.5)*SDS,z=SDO+(j+0.5)*SDS,on=L.land(x,z);k=j*N+i;
+ for(j=0;j<N;j++)for(i=0;i<N;i++){var x=SDO+(i+0.5)*SDS,z=SDO+(j+0.5)*SDS,on=L.land(x,z),o0=on;k=j*N+i;
   if(!on)for(var q=0;q<rc.length;q++){var R0=rc[q];if((x-R0[0])*(x-R0[0])+(z-R0[1])*(z-R0[1])<R0[2]*R0[2]||reclNear(x,z,R0,rcb[q])){on=true;break;}}
-  land[k]=on?1:0;g1[k]=on?0:INF;g2[k]=on?INF:0;}
- edt2(g1,N);edt2(g2,N);var amp=L.coast!=null?L.coast:1.5,sd=L.seed*0.37;
+  land[k]=on?1:0;if(on&&!o0)rlk[k]=1;g1[k]=on?0:INF;g2[k]=on?INF:0;}
+ if(rc.length)reclFill59(land,g1,g2,rlk,N,rc,INF);edt2(g1,N);edt2(g2,N);var amp=L.coast!=null?L.coast:1.5,sd=L.seed*0.37;
  for(k=0;k<N*N;k++){i=k%N;j=(k/N)|0;var x2=SDO+(i+0.5)*SDS,z2=SDO+(j+0.5)*SDS,s=land[k]?-(Math.sqrt(g2[k])-0.5)*SDS:(Math.sqrt(g1[k])-0.5)*SDS;
   var fall=1-sstep(2.5,6,Math.abs(s));if(pierBase)fall*=sstep(2.2,6,Math.hypot(x2-pierBase[0],z2-pierBase[1]));
-  s+=(fbm2(x2*0.17+sd,z2*0.17-sd)-0.5)*2*amp*fall;
+  var nz0=(fbm2(x2*0.17+sd,z2*0.17-sd)-0.5)*2*amp*fall;s+=rlk[k]?Math.min(0,nz0):nz0;
   for(var o=0;o<occ.length;o++){var O=occ[o],dx=Math.max(O[1]-x2,0,x2-O[2]),dz=Math.max(O[3]-z2,0,z2-O[4]),dr=Math.hypot(dx,dz)-1.4;if(dr<s)s=dr;}
   SDF[k]=s;}}
 // 海水 shader 用嘅距離貼圖（-8～8 單位壓落一個 byte）
@@ -3115,7 +3115,7 @@ var RENDER={
   if(testerOn())b.appendChild(card({ico:'wool'},'羊堅測試（測試）','即刻叫羊毛商人羊堅嚟牧場（停留 1 小時），方便測試賣羊毛（學生唔會見到呢個掣）。',[{t:'叫羊堅嚟',cls:'o',dis:!!(typeof ygNow==='function'&&ygNow()),fn:function(){ygForce();closePanel();toast('羊毛商人羊堅嚟咗牧場',2500);}}]));
   if(testerOn()&&typeof xyForce==='function')b.appendChild(card({ico:'za:koala'},'邦邦測試（測試）','即刻叫動物引薦商邦邦嚟服務中心附近（停留一個半鐘），方便測試引入動物（學生唔會見到呢個掣）。',[{t:'叫邦邦嚟',cls:'o',dis:!!(typeof xyNow==='function'&&xyNow()),fn:function(){xyForce();closePanel();toast('動物引薦商邦邦嚟咗服務中心附近',2500);}}]));
   b.appendChild(audCard());
-  b.appendChild(card({emo:'🎨'},'畫質：'+(FINE?'精美模式':'流暢模式'),FINE?'仿真材質、陰影、光暈和移軸效果。手機覺得慢，可以轉做流暢模式。':'舊畫法，比較慳電。想要陰影和光暈，可以轉做精美模式。',[{t:FINE?'轉做流暢模式':'轉做精美模式',cls:'o',fn:function(){try{localStorage.setItem(GFXK,FINE?'fast':'fine');}catch(e){}save();location.reload();}}]));
+  b.appendChild(card({emo:'🎨'},'畫質：'+(FINE?'精美模式':'流暢模式'),FINE?'畫面最靚，有陰影同光暈。手機覺得慢，可以轉做流暢模式。':'畫面簡潔，玩起嚟更順暢、更慳電。想畫面靚啲，可以轉做精美模式。',[{t:FINE?'轉做流暢模式':'轉做精美模式',cls:'o',fn:function(){try{localStorage.setItem(GFXK,FINE?'fast':'fine');}catch(e){}save();location.reload();}}]));
   b.appendChild(card({emo:'🪞'},'改變造型','改名字、膚色、髮色、髮型和眼睛。',[{t:'改變造型',fn:function(){closePanel();openMaker(false);}}]));
   b.appendChild(card({emo:'❓'},'玩法說明','農田播種、澆水、採摘；把農作物交到餐廳，廚師會自動煮菜；賺到的錢可以裝修、請廚師、研發新菜，或者擴建設施。',[{t:'再看一次',fn:function(){closePanel();intro();}}]));
   b.appendChild(card({emo:'🔄'},'重新開始','清除進度（已登入的話，雲端存檔都會一併清除），由頭開始。',[{t:'重新開始',cls:'o',fn:function(){if(confirm('確定清除進度，重新開始？'))doRestart();}}]));}};
@@ -3319,7 +3319,7 @@ function updMac(dt,t){var m=MAC,u=macO.userData;macO.visible=macSh.visible=!maki
 
 // ================= 封面、揀地形 =================
 // 每次開遊戲先見封面；未玩過嘅新玩家：揀地形 → 建立角色 → 開場白
-var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v58',BUILD='2610052255';
+var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v59',BUILD='2610052326';
 function showCoverV42(){phase='cover';$('cover').classList.add('on');$('app').classList.add('cover');CU.uB.value=0;sea.scale.set(4,7,1);sea.position.z=(MAP.bc||[0,0])[1];
  var old=!!(S.me&&S.me.nm);$('cvVer').textContent=BUILD+'V'+VERSION.slice(1);$('cvGo').textContent=old?'繼續遊戲':'開始遊戲';$('cvHint').textContent=old?'歡迎回來，'+S.me.nm+'！':'第一次玩：先揀島嶼地形，再建立角色';}
 function leaveCoverV42(){if(phase!=='cover')return;$('cover').classList.remove('on');if(!S.layout){if(!S.story)openStory();else openTerr();}else startPlay();}
@@ -3554,7 +3554,7 @@ function cullTick(dt){if(where!=='out'||phase!=='play'){if(CULLI.length&&!CULLI.
  CULLI.forEach(function(e){var dx=e.x-fx,dz=e.z-fz,vis=dz<20+e.r&&Math.abs(dx)<42+e.r;if(e.o.visible!==vis)e.o.visible=vis;
   if(FINE){var sh=Math.hypot(dx,dz+2)<SHR*1.45+e.r;if(sh!==e.sh){e.sh=sh;e.ms.forEach(function(n){n.castShadow=sh;});}}});}
 // 幀數監察：精美模式開始玩之後 8 秒，平均低過每秒 24 幀就提一次（喺手機設定可以轉流暢模式）
-var fpsA=0,fpsN=0,fpsDone=false;function fpsTick(dt){if(fpsDone||!FINE||phase!=='play'||making||document.hidden)return;fpsA+=dt;fpsN++;if(fpsA>=8){fpsDone=true;var f=fpsN/fpsA;if(f<24)toast('🐢 畫面有點慢（每秒約 '+Math.round(f)+' 幀）：可以到「背包 → 設定」轉做流暢模式',6500);}}
+var fpsA=0,fpsN=0,fpsDone=false;function fpsTick(dt){if(fpsDone||!FINE||phase!=='play'||making||document.hidden)return;fpsA+=dt;fpsN++;if(fpsA>=8){fpsDone=true;var f=fpsN/fpsA;if(f<24)toast('畫面有點慢：可以到「背包 → 設定」轉做流暢模式',6500);}}
 // ================= 主迴圈 =================
 var idleT=0,testFreeze=false,last=performance.now(),tm=0,ph=0,cur=null,saveT=0,moved=false,hintT=0,lastLab='',rsT=1;
 function loopV36(now){var dt=Math.min(0.05,Math.max(0,(now-last)/1000));last=now;tm+=dt;
@@ -9954,7 +9954,7 @@ setInterval(function(){try{if(document.hidden||phase==='cover')return;
 // ---- ③ 到咗朋友星球（visitFriend 淡出之後叫）：每步獨立；砌唔到朋友個島就留返自己星球 ----
 function visitArrive38(f,pl,V){pFree37();S=V;VISIT={uid:f.uid,nm:pl.nm||f.p.nm};
  try{rebuildWorld();}catch(e){errNote(e,'參觀');var coop=typeof COOP!=='undefined'&&COOP.role==='guest';try{if(coop)coopLeaveFix();}catch(e2){}S=OWN_S;OWN_S=null;VISIT=null;try{rebuildWorld();}catch(e3){errNote(e3,'參觀還原');}try{presenceHome();}catch(e4){}
-  toast('未能載入 '+(pl.nm||f.p.nm||'朋友')+' 嘅星球（'+String(e&&e.message||e).slice(0,40)+'），已經留返喺自己星球。'+(testerOn()?'設定頁「錯誤紀錄（測試）」有詳情':'可以截圖話俾老師知'),7000);return;}
+  toast('未能載入 '+(pl.nm||f.p.nm||'朋友')+' 嘅星球'+(testerOn()?'（'+String(e&&e.message||e).slice(0,40)+'）':'')+'，已經留返喺自己星球。'+(testerOn()?'設定頁「錯誤紀錄（測試）」有詳情':'可以截圖話俾老師知'),7000);return;}
  try{beamDown37();}catch(e){BEAMUP=null;}try{presenceJoin(f.uid);}catch(e){errNote(e,'參觀同場');}
  $('visitbar').classList.add('on');$('vbName').textContent=VISIT.nm;
  try{if(typeof COOP!=='undefined'&&COOP.role==='guest')coopArrived();else toast('歡迎來到 '+VISIT.nm+' 的星球！（參觀期間唔會存檔、唔可以改嘢）',5000);}catch(e){errNote(e,'參觀提示');}}
@@ -13003,7 +13003,7 @@ var ECO50K='ths-planet-eco';
 var ECO={on:PHONE,lastN:-1,lastL:-1e9,last:-1e9,now:0,act:performance.now(),inLoop:false,moved:true,shN:0,shSc:null,lsc:null,cp:new T.Vector3(1e9,0,0),cq:new T.Quaternion()};
 try{var ev50=localStorage.getItem(ECO50K);if(ev50==='1')ECO.on=true;else if(ev50==='0')ECO.on=false;}catch(e){}
 ['pointerdown','keydown','touchstart','wheel'].forEach(function(k){window.addEventListener(k,function(){ECO.act=performance.now();},{capture:true,passive:true});});
-function eco50Set(on){ECO.on=!!on;try{localStorage.setItem(ECO50K,on?'1':'0');}catch(e){}toast(on?'已開省電模式：企定唔郁時畫慢啲，手機冇咁熱':'已熄省電模式：畫面一直每秒 60 格',3200);}
+function eco50Set(on){ECO.on=!!on;try{localStorage.setItem(ECO50K,on?'1':'0');}catch(e){}toast(on?'已開省電模式':'已熄省電模式',2600);}
 function eco50Cover(){return !!(typeof G40!=='undefined'&&G40.on);}
 // 鏡頭同上一次畫嗰陣比較：位置郁咗 2 毫米以上、或者轉咗少少，就當有郁
 function eco51Moved(sc){return sc!==ECO.lsc||cam.position.distanceToSquared(ECO.cp)>4e-6||1-Math.abs(cam.quaternion.dot(ECO.cq))>1e-8;}
@@ -13016,7 +13016,7 @@ var renderSceneV50=renderScene;renderScene=function(sc,nb){if(ECO.inLoop){var no
  renderSceneV50(sc,nb);};
 // 設定頁：喺「畫質」下面加省電模式開關
 var phoneSetV50=RENDER.phone_set;RENDER.phone_set=function(b){phoneSetV50(b);
- var c=card({ico:'sprout'},'省電模式：'+(ECO.on?'開咗':'熄咗'),ECO.on?'行路、轉視角時照樣順暢；企定唔郁時每秒畫 30 格，閒置或者開住選單時再慢啲：手機冇咁熱、慳電。':'畫面一直每秒畫 60 格。手機玩耐咗覺得熱，可以開返省電模式。',
+ var c=card({ico:'sprout'},'省電模式：'+(ECO.on?'開咗':'熄咗'),ECO.on?'手機冇咁熱、更慳電。':'手機玩耐咗覺得熱，可以開返省電模式。',
   [{t:ECO.on?'熄省電模式':'開省電模式',cls:'o',fn:function(){eco50Set(!ECO.on);renderPanel();}}]);
  var cs=b.querySelectorAll('.card'),af=null;for(var i=0;i<cs.length;i++){var t=cs[i].querySelector('b');if(t&&t.textContent.indexOf('畫質')===0){af=cs[i];break;}}
  if(af&&af.nextSibling)b.insertBefore(c,af.nextSibling);else b.appendChild(c);};
@@ -13864,10 +13864,10 @@ function reclNear(x,z,R0,B){if(!B||!B[2])return false;var vx=B[0]-R0[0],vz=B[1]-
 function relNewCnt(){return ((S&&S.lf)||[]).filter(function(e){return relIs(e.k);}).length;}
 function relLandOK(){return ((S&&S.recl)||[]).length>relNewCnt();}
 function relLandTxt(){return '土地：已填海 '+((S.recl||[]).length)+' 次；v53 之後嘅新建築已經起咗 '+relNewCnt()+' 座（每填海一次可以多起一座新建築）。';}
-var relBuildV53=relBuild;relBuild=function(k){if(VISIT||relE(k))return;if(!relLandOK()){talk('市長林庫','#6f82d9','#ffffff',['星球土地唔夠喇！由 v53 開始，每興建一座新建築，都要先填海一次，擴大土地。',relLandTxt(),'可以去建材行搵嘉禧申請填海：填出嚟嘅新土地會連住原本個島。']);return;}relBuildV53(k);};
+var relBuildV53=relBuild;relBuild=function(k){if(VISIT||relE(k))return;if(!relLandOK()){talk('市長林庫','#6f82d9','#ffffff',['星球土地唔夠喇！每興建一座新建築，都要先填海一次，擴大土地。',relLandTxt(),'可以去建材行搵嘉禧申請填海：填出嚟嘅新土地會連住原本個島。']);return;}relBuildV53(k);};
 var RLB53=RENDER.lfb_rel;RENDER.lfb_rel=function(b){RLB53(b);b.insertBefore(note('<b>'+esc(relLandTxt())+'</b>'+(relLandOK()?'':'<br><span style="color:#c0392b">土地唔夠：要先填海先可以再起新建築。</span>')),b.children[1]||null);
  if(!relLandOK())[].forEach.call(b.querySelectorAll('.card'),function(c){var bt=c.querySelector('button');if(bt&&/開工/.test(bt.textContent)){bt.textContent='要先填海';bt.disabled=true;bt.className=bt.className.replace(/\bo\b/,'g');}});};
-if(RENDER.build_recl){var RBR53=RENDER.build_recl;RENDER.build_recl=function(b){RBR53(b);b.appendChild(note('填出嚟嘅新土地會連住原本個島。由 v53 開始，每興建一座新建築（例如宗教聖地）都要先填海一次。<br>'+esc(relLandTxt())));};}
+if(RENDER.build_recl){var RBR53=RENDER.build_recl;RENDER.build_recl=function(b){RBR53(b);b.appendChild(note('填出嚟嘅新土地會連住原本個島。每興建一座新建築，都要先填海一次。<br>'+esc(relLandTxt())));};}
 
 // ---- 求籤效果（用戶指示）：神農廟→農作物生長快慢；魚之神社→釣到嘅魚稀有度 ----
 function relCropMul(){var c=S&&S.rlg&&S.rlg.crop;return c&&Date.now()<c.until?c.m:1;}
@@ -13878,7 +13878,7 @@ var fishPickV53=fishPick;fishPick=function(ctx){var r=relFishRule(),f=fishPickV5
  for(var i=0;i<400&&!ok(f);i++)f=fishPickV53(ctx);if(ok(f))return f;var night=typeof nk==='number'&&nk>0.55,L=FISH.filter(function(x){return ok(x)&&!(x.tm==='day'&&night)&&!(x.tm==='night'&&!night)&&!x.rain&&!(x.rar===3&&(S.rod||0)<2)&&!(x.rar===4&&(S.rod||0)<4);});return L.length?L[Math.floor(Math.random()*L.length)]:f;};
 // ================= v53 廣告欄新消息 =================
 if(typeof AD47_NEWS!=='undefined')AD47_NEWS.unshift({id:'rel53',t:'新大型設施：宗教聖地',lines:['新消息！新消息！星球可以興建宗教聖地喇！',
- '向市長林庫申請「增建大型設施 → 宗教聖地」：神農廟（中式廟宇）、魚之神社（日式神社）、教堂，每款一間，工期 24 小時；由 v53 開始，每起一座新建築都要先填海一次（填出嚟嘅土地會連住原本個島）。',
+ '向市長林庫申請「增建大型設施 → 宗教聖地」：神農廟（中式廟宇）、魚之神社（日式神社）、教堂，每款一間，工期 24 小時。',
  '魚之神社有鳥居、手水舍、拜殿、授與所：可以淨手、參拜、入殿抽籤（大吉至大凶，影響釣到嘅魚）、請御守；升級仲有繪馬、御神籤結所、千本鳥居、御神木。',
  '神農廟可以上香、入殿求籤（上上籤至下下籤，影響農作物生長快慢）、請平安符；升級加建鐘鼓樓、許願樹、解籤檔、燈籠長廊。教堂可以點蠟燭祈禱；升級有鐘樓尖塔、婚禮花園、彩繪玻璃。',
  '參觀宗教場所要尊重信仰、遵守禮儀：第一次參拜會教你點做！']});
@@ -14121,7 +14121,7 @@ var fsThemeV55=fsTheme;fsTheme=function(){fsThemeV55.apply(this,arguments);if(FI
  c.addEventListener('webglcontextrestored',function(){setTimeout(function(){location.reload();},300);},false);})();
 function ctx56Show(){var d=document.getElementById('ctx56');if(!d){d=document.createElement('div');d.id='ctx56';
  d.style.cssText='position:fixed;left:0;top:0;right:0;bottom:0;z-index:99998;display:flex;align-items:center;justify-content:center;background:rgba(20,24,40,.86);color:#fff;text-align:center;padding:24px;font-family:'+FONT;
- d.innerHTML='<div><div style="font:800 22px '+FONT+';margin-bottom:10px">畫面暫停咗</div><div style="font:500 16px '+FONT+';line-height:1.7">部機記憶體唔夠，3D 畫面停咗。<br>進度已經儲存，撳下面重新載入就得。</div>'+
+ d.innerHTML='<div><div style="font:800 22px '+FONT+';margin-bottom:10px">畫面暫停咗</div><div style="font:500 16px '+FONT+';line-height:1.7">進度已經儲存，撳下面重新載入就得。</div>'+
   '<button style="margin-top:18px;font:800 18px '+FONT+';padding:10px 28px;border:0;border-radius:22px;background:#f2c14e;color:#3a2a10">重新載入</button></div>';
  document.body.appendChild(d);d.querySelector('button').onclick=function(){location.reload();};}d.style.display='flex';}
 // ================= v56 星空保安（用戶指示；取代 v54 保安）=================
@@ -14374,7 +14374,7 @@ function pm57P(v){return v?pm57R(v*PM57.m):v;}
 var lfPriceV56=lfPrice;lfPrice=function(k,t){var v=lfPriceV56(k,t);return (typeof REL!=='undefined'&&REL[k])?v:pm57P(v);};
 // 開面板前先更新；發展面板頂加一句說明
 var PM57_PANELS={build:1,facil:1,lfb:1,lfu:1,musup:1,hotel:1,park:1,tr:1,zau:1,relu:1};
-var renderPanelV56=renderPanel;renderPanel=function(top){if(panelKind&&PM57_PANELS[panelKind])pm57Update(false);renderPanelV56(top);try{if(panelKind&&PM57_PANELS[panelKind]&&PM57.m>1.001){var body=$('pBody');if(body&&body.firstChild){var n=note('價錢按星球發展程度調整：發展指數 '+PM57.idx.toFixed(1)+'、最近每小時收入約 $'+fmtC(PM57.inc)+'，所以價錢係原本嘅 '+PM57.m.toFixed(2).replace(/\.?0+$/,'')+' 倍。');n.classList.add('pm57');body.insertBefore(n,body.firstChild);}}}catch(e){}};
+var renderPanelV56=renderPanel;renderPanel=function(top){if(panelKind&&PM57_PANELS[panelKind])pm57Update(false);renderPanelV56(top);try{if(panelKind&&PM57_PANELS[panelKind]&&PM57.m>1.001){var body=$('pBody');if(body&&body.firstChild){var n=note('星球越發展，地價同工程費越貴。');n.classList.add('pm57');body.insertBefore(n,body.firstChild);}}}catch(e){}};
 var zaTickV56pm=zaTick;zaTick=function(dt,t){zaTickV56pm(dt,t);if(phase==='play'&&!VISIT&&Date.now()-PM57.t>600000)pm57Update(false);};
 setTimeout(function(){try{if(S&&S.pm57){PM57.m=S.pm57;pm57Apply();}pm57Update(true);}catch(e){}},1500);
 // ================= v57 新建築一定要起喺新填海嘅土地（用戶指示）=================
@@ -14388,7 +14388,7 @@ function lf57Used(){var U={},R=S.recl||[];(S.lf||[]).forEach(function(e){if(e.rp
  (S.lf||[]).forEach(function(e){if(!e.p||e.rp!=null)return;for(var i=0;i<R.length;i++)if(!U[i]&&Math.hypot(e.p[0]-R[i][0],e.p[1]-R[i][1])<R[i][2]*0.75){U[i]=1;break;}});return U;}
 function lf57Free(){var U=lf57Used(),L=[];(S.recl||[]).forEach(function(q,i){if(!U[i])L.push(i);});return L;}
 function lf57LandOK(){return lf57Free().length>0;}
-function lf57LandTxt(){return '土地：已填海 '+((S.recl||[]).length)+' 次，仲有 '+lf57Free().length+' 塊新填海地未用（每填海一次可以起一座新建築，新建築會起喺新填海嘅土地上，唔會俾舊建築遮住）。';}
+function lf57LandTxt(){return '土地：仲有 '+lf57Free().length+' 塊新填海地可以起建築（每填海一次可以起一座新建築）。';}
 function lf57Spot(i,kind,skip){var q=(S.recl||[])[i];if(!q||!MAP)return null;var F=lfFP(kind==='tr'?'tr':'stay'),hx=F[0],zb=F[1],zf=F[2],OC=(MAP.occ||[]).filter(function(o){return o[0]!==skip;}),pr=MAP.pier,Q=MAP.plaza||[0,0],best=null,bs=-1e9,tall=/^(rest|svc|mkt|hotel|wheel|dome|house\d|shop\d|lf_|ranch)/;
  for(var x=q[0]-q[2];x<=q[0]+q[2];x+=0.5)for(var z=q[1]-q[2];z<=q[1]+q[2];z+=0.5){var dc=Math.hypot(x-q[0],z-q[1]);if(dc>q[2]*0.85)continue;var r=[x-hx,x+hx,z-zb,z+zf];if(!lfRectOk(r,OC,pr))continue;if(sdAt(x,z+zf+0.6)>-0.3)continue;
   var sc=-dc-Math.hypot(x-Q[0],z-Q[1])*0.05;for(var oi=0;oi<OC.length;oi++){var o=OC[oi];if(tall.test(o[0])&&r[1]>o[1]&&r[0]<o[2]&&o[3]>r[3]-0.2&&o[3]<r[3]+7)sc-=8;}
@@ -14396,8 +14396,8 @@ function lf57Spot(i,kind,skip){var q=(S.recl||[])[i];if(!q||!MAP)return null;var
  return best;}
 // 起新建築：工程隊只會喺未用過嘅新填海地搵位（由最新嗰塊開始）
 var lfFindV56=lfFind;lfFind=function(kind,block){if(LF57.want){var F=lf57Free();for(var j=F.length-1;j>=0;j--){var p=lf57Spot(F[j],kind);if(p){LF57.found={i:F[j],p:p};return p;}}LF57.found=null;return null;}return lfFindV56(kind,block);};
-var lfNoRoomV56=lfNoRoom;lfNoRoom=function(){if(!LF57.want)return lfNoRoomV56();if(!lf57LandOK())lf57Need();else talk(LINK_NM,LINK_BG,'#ffffff',['新填海嘅土地唔夠位放呢座建築（要避開碼頭、行人路同其他建築，前面又唔可以俾高建築遮住）。','可以喺旁邊再填多次海，令土地大啲，或者喺另一邊海岸填海。']);};
-function lf57Need(){talk(LINK_NM,LINK_BG,'#ffffff',['星球土地唔夠喇！每興建一座新建築，都要先填海一次：新建築會起喺新填海嘅土地上，唔會俾舊建築遮住。',lf57LandTxt(),'可以向我申請「升級設施 → 填海」，再去海邊面向大海按 A 填海。']);}
+var lfNoRoomV56=lfNoRoom;lfNoRoom=function(){if(!LF57.want)return lfNoRoomV56();if(!lf57LandOK())lf57Need();else talk(LINK_NM,LINK_BG,'#ffffff',['新填海嘅土地唔夠位放呢座建築。','可以喺另一邊海岸再填海。']);};
+function lf57Need(){talk(LINK_NM,LINK_BG,'#ffffff',['星球土地唔夠喇！每興建一座新建築，都要先填海一次：新建築會起喺新填海嘅土地上。',lf57LandTxt(),'可以向我申請「升級設施 → 填海」，再去海邊面向大海按 A 填海。']);}
 function lf57Wrap(fn){return function(){if(VISIT)return fn.apply(this,arguments);LF57.want=1;LF57.found=null;try{return fn.apply(this,arguments);}finally{LF57.want=0;}};}
 lfBuildStay=lf57Wrap(lfBuildStay);lfBuildTR=lf57Wrap(lfBuildTR);if(typeof lfBuildZA==='function')lfBuildZA=lf57Wrap(lfBuildZA);
 relBuild=lf57Wrap(function(k){if(VISIT||relE(k))return;if(!lf57LandOK()){lf57Need();return;}return relBuildV53(k);});
@@ -14413,7 +14413,7 @@ function lf57Migrate(){if(VISIT||!S||S.lf57m||!MAP||!MAP.occ)return;S.lf57m=1;va
  (S.lf||[]).forEach(function(e){if(!relIs(e.k)||e.rp!=null||!e.p)return;var U=lf57Used();
   for(var i=0;i<R.length;i++)if(!U[i]&&Math.hypot(e.p[0]-R[i][0],e.p[1]-R[i][1])<R[i][2]*0.75){e.rp=i;return;}
   var F=lf57Free();if(!F.length)return;var j=F[0],p=lf57Spot(j,'stay','lf_'+e.id);e.rp=j;if(p){e.p=p;moved.push(lfName(e));var r=lfRect(e);(MAP.occ||[]).forEach(function(o){if(o[0]==='lf_'+e.id){o[1]=r[0];o[2]=r[1];o[3]=r[2];o[4]=r[3];}});}});
- save();if(moved.length){relayout();setTimeout(function(){toast(moved.join('、')+'已經搬去新填海嘅土地，唔再俾舊建築遮住',6000);},1500);}}
+ save();if(moved.length){relayout();setTimeout(function(){toast(moved.join('、')+'已經搬到新填海嘅土地',5000);},1500);}}
 var zaTickV57l=zaTick;zaTick=function(dt,t){zaTickV57l(dt,t);if(phase==='play'&&!VISIT&&S&&!S.lf57m&&MAP&&MAP.occ){try{lf57Migrate();}catch(x){errNote(x,'填海地');}}};
 // ================= v57 星空保安（用戶指示：星空刑警改名做星空保安；樣子重新設計、五位一樣大細；追捕時頭頂一直出「咪走！」；能力值排整齊）=================
 // 新外型：外星大圓頭（大眼、面紅、微笑、兩條觸角穿出帽頂）、深藍保安帽（帽帶、黑色帽舌、金色帽章）、淺藍短袖制服（領、深藍領呔、胸袋、金色星章、白色名牌、肩章）、深藍褲、黑皮帶金扣、黑鞋、右手警棍
@@ -14554,6 +14554,30 @@ if(typeof AD47_NEWS!=='undefined')AD47_NEWS.unshift({id:'land57',t:'新建築起
  '星球越發展，工程越貴：增建同升級大型設施、升級設施同社區設施嘅價錢，會跟星球發展程度（發展指數、最近每小時收入）調整，面板頂會講而家係原本嘅幾多倍。',
  '「星空刑警」改名做「星空保安」，仲換咗新制服、新樣！追偷魚賊嗰陣會一路叫「咪走！」。',
  '神跡池搬咗去教堂外面；喺神農廟求籤，會見到一支籤由籤筒跌落地。']});
+// ================= v59 填海地唔再有積水窩（用戶反映：喺填海地卡住；填海新土地應該係草地）=================
+// 原因：填海圓形地同原本海岸之間會留低細海灣（條頸兩邊）同積水窩：水好淺，地面斜落但高過海面，睇落似灰色沙地，其實係水，行唔入就好似卡住
+// 做法（buildSDF 入面，只限填海附近）：① 俾陸地圍住嘅海水填做陸地；② 陸地向外擴 3 單位再收返（閉運算），填平填海地同海岸之間嘅凹位；③ 填海地嘅海岸起伏只會向外推，唔會喺陸地入面開窿
+function reclFill59(land,g1,g2,rlk,N,rc,INF){var seen=new Uint8Array(N*N),qq=new Int32Array(N*N),qn=0,h,k,i,NN=N*N;
+ function near(k){var x=SDO+((k%N)+0.5)*SDS,z=SDO+(((k/N)|0)+0.5)*SDS;for(var q=0;q<rc.length;q++){var R=rc[q],rr=R[2]+8;if((x-R[0])*(x-R[0])+(z-R[1])*(z-R[1])<rr*rr)return true;}return false;}
+ function set(k){land[k]=1;rlk[k]=1;g1[k]=0;g2[k]=INF;}
+ function push(k){if(!land[k]&&!seen[k]){seen[k]=1;qq[qn++]=k;}}
+ for(i=0;i<N;i++){push(i);push((N-1)*N+i);push(i*N);push(i*N+N-1);}
+ for(h=0;h<qn;h++){k=qq[h];var i0=k%N;if(i0>0)push(k-1);if(i0<N-1)push(k+1);if(k>=N)push(k-N);if(k<NN-N)push(k+N);}
+ for(k=0;k<NN;k++)if(!land[k]&&!seen[k]&&near(k))set(k);
+ var D=3/SDS,D2=D*D,dl=new Float32Array(NN),dw=new Float32Array(NN);for(k=0;k<NN;k++)dl[k]=land[k]?0:INF;edt2(dl,N);
+ for(k=0;k<NN;k++)dw[k]=dl[k]<=D2?INF:0;edt2(dw,N);
+ for(k=0;k<NN;k++)if(!land[k]&&dw[k]>D2&&near(k))set(k);}
+// ================= v59 廣告欄新消息改得簡潔（用戶指示：只講新項目係乜、去邊度聘請或者興建）=================
+(function(){if(typeof AD47_NEWS==='undefined')return;var R={
+ hw48t:['萬聖節星球即將開放！','萬聖節星球就快開放，敬請期待！芷華時裝已經有萬聖節服飾，可以去買定！'],
+ bag49:['新增垃圾桶','新增垃圾桶：唔要嘅嘢可以拎去服務中心門口嘅垃圾桶扔走！'],
+ fish52:['50 款新魚','新增 50 款魚！快啲去釣魚，可以喺「魚類圖鑑」睇魚卡。','嘉禧嘅農務人員可以幫你安排每格田種乜。'],
+ rel53:['新大型設施：宗教聖地','新增大型設施：神農廟、魚之神社、星際教堂！你可以搵林庫申請興建。'],
+ steal54:['星球日報','廣告欄新增「星球日報」：有好友偷你池塘嘅魚，就會喺度報道！'],
+ rel55:['宗教聖地可以入內','神農廟、魚之神社、星際教堂可以行入去參拜、求籤！'],
+ cop56:['星空保安＋神跡池','新增星空保安，負責捉偷魚賊，你可以搵林庫聘請啦！','星際教堂外面新增神跡池：拋一樣物品落去，會拋返一件出嚟！'],
+ land57:['填海起新建築','起新建築之前要先填海：你可以搵林庫申請填海，新建築會起喺新填海嘅土地上。']};
+ for(var i=AD47_NEWS.length-1;i>=0;i--){var n=AD47_NEWS[i];if(n.id==='eco50'){AD47_NEWS.splice(i,1);continue;}var r=R[n.id];if(r){n.t=r[0];n.lines=r.slice(1);}}})();
 // ---- 模組載入完：開始砌大型設施、牧場外型 ----
 LF_OK=true;if(MAP&&MAP.L&&typeof lfSync==='function')lfSync(true);
 requestAnimationFrame(loop);
