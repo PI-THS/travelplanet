@@ -2,7 +2,7 @@
 <html lang="zh-Hant-HK">
 <head>
 <meta charset="utf-8">
-<meta name="ths-build" content="2610052150">
+<meta name="ths-build" content="2610052249">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="color-scheme" content="light">
 <!-- iPhone Safari 冇 element fullscreen API：由「分享 → 加入主畫面」開就會冇工具列（同旅款亂Upper 一樣）-->
@@ -3319,7 +3319,7 @@ function updMac(dt,t){var m=MAC,u=macO.userData;macO.visible=macSh.visible=!maki
 
 // ================= 封面、揀地形 =================
 // 每次開遊戲先見封面；未玩過嘅新玩家：揀地形 → 建立角色 → 開場白
-var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v56',BUILD='2610052150';
+var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v57',BUILD='2610052249';
 function showCoverV42(){phase='cover';$('cover').classList.add('on');$('app').classList.add('cover');CU.uB.value=0;sea.scale.set(4,7,1);sea.position.z=(MAP.bc||[0,0])[1];
  var old=!!(S.me&&S.me.nm);$('cvVer').textContent=BUILD+'V'+VERSION.slice(1);$('cvGo').textContent=old?'繼續遊戲':'開始遊戲';$('cvHint').textContent=old?'歡迎回來，'+S.me.nm+'！':'第一次玩：先揀島嶼地形，再建立角色';}
 function leaveCoverV42(){if(phase!=='cover')return;$('cover').classList.remove('on');if(!S.layout){if(!S.story)openStory();else openTerr();}else startPlay();}
@@ -3740,7 +3740,7 @@ var HELP=[
  {t:'點樣賺錢？',say:['最主要的收入來自旅款餐廳：旅客吃完就付錢。菜式越多、廚師越好、餐廳五感越舒服，旅客越多。','另外可以把農作物、水果、蜂蜜和漁獲賣給市場的阿康；魚先放入池塘養大，價錢會高很多。','晚上在中央廣場噴水池放煙花，或者聘請導遊帶團，都可以吸引更多旅客。']},
  {t:'農田同工具',say:['空田按 A 播種，未熟的田按 A 澆水，成熟了按 A 收成。','星球上有五十種蔬果，分一級、二級、三級：等級越高，種子越貴、生長越耐（要澆多幾次水），但賣得越貴、做的菜越值錢。每個星球有 10 款本島蔬果，星球等級越高（累積收入越多），市場解鎖越多。其他蔬果要朋友送，收到之後市場先有得買；賣外來蔬果，收購價高五成。','在服務中心建材行（嘉禧）可以買更好的澆水器、採摘器、播種器：揀好之後快快連按兩下 A，就可以一次過處理幾格。','工具要逐級買，不可以一下子跳到最高級。']},
  {t:'釣魚同池塘',say:['站在任何海邊、面向大海按 A 就會打開釣魚畫面；碼頭是深水，大魚多啲。','按住「拋竿」蓄力，放手拋出去（拋得越遠越易遇到稀有魚）；浮標大力沉落就撳「拉！」；之後按住「收線」，拉力錶去到紅色、或者魚大力掙扎就要放手，否則會斷線。','海裏有三十三種魚，分普通、少見、稀有、珍貴、傳說：好啲的魚竿收線快、拉力耐，珍貴和傳說的魚要碳纖或者星光魚竿先釣到。有啲魚只喺夜晚、日頭或者落雨出現，可以喺「背包 → 魚類圖鑑」睇提示。','池塘可以養魚：魚會長大、會繁殖。池塘面板有「全部放入」和「全部撈起」，會由貴到平處理。','阿康每日收購魚有上限：頭 40 條照價，第 41–80 條六折，之後三折；用魚做菜、放入池塘養大就唔受影響。','釣魚有時限：上釣之後畫面上面有「時限」倒數，越珍貴嘅魚時限越短、越大力、越會掙扎，時間到魚就會逃走。所以稀有、珍貴、傳說魚都賣得貴啲。','魚類圖鑑撳釣到咗嘅魚，就睇到兩面魚卡：正面係基本資料，翻轉係生態資料（資料經網上核實）。珍貴同傳說魚要放入池塘養大先賣得好價：傳說魚大約要 1 日先長到「巨」。']},
- {t:'擴建同大型設施',say:['服務中心的市長林庫負責審批：「升級設施」（農場、池塘、花圃、噴水池、填海）、「增建社區設施」（電車、長椅、街燈、主道路）、「增建大型設施」（住宿、博物館、主題樂園、主題餐廳）同「升級大型設施」；批准之後由建材行嘉禧的工程隊施工。','大型設施只要儲夠錢就可以開工：住宿（商務酒店、精品酒店、渡假村各一間）、博物館、主題樂園工期 24 小時；主題餐廳（10 款揀最多 3 間）工期 12 小時。第二間起嘅住宿同主題餐廳，工程隊會自動喺島上搵空地（唔會壓住建築物同行人路），重疊嘅樹會斬走，仲會鋪一條行人路去門口。','工具、雪櫃、爐具、銷售點系統同餐廳五感裝修，就搵建材行的嘉禧。','星球後期（主題樂園、第一間住宿、博物館都落成）先可以申請填海：之後走到海邊、面向大海按 A，就會填出一塊新土地。','農作物、水果可以放入池塘邊或農場入口的「食材交收箱」，直接送到餐廳廚房。']},
+ {t:'擴建同大型設施',say:['服務中心的市長林庫負責審批：「升級設施」（農場、池塘、花圃、噴水池、填海）、「增建社區設施」（電車、長椅、街燈、主道路）、「增建大型設施」（住宿、博物館、主題樂園、主題餐廳）同「升級大型設施」；批准之後由建材行嘉禧的工程隊施工。','大型設施只要儲夠錢就可以開工：住宿（商務酒店、精品酒店、渡假村各一間）、博物館、主題樂園工期 24 小時；主題餐廳（10 款揀最多 3 間）工期 12 小時。第二間起嘅住宿同主題餐廳，工程隊會起喺新填海嘅土地上（每座要先填海一次；唔會壓住建築物同行人路），重疊嘅樹會斬走，仲會鋪一條行人路去門口。','工具、雪櫃、爐具、銷售點系統同餐廳五感裝修，就搵建材行的嘉禧。','星球後期（主題樂園、第一間住宿、博物館都落成）先可以申請填海：之後走到海邊、面向大海按 A，就會填出一塊新土地。','農作物、水果可以放入池塘邊或農場入口的「食材交收箱」，直接送到餐廳廚房。']},
  {t:'信箱同好友',say:['飛碟站下面有一個信箱。成為好友之後，可以用信箱把種子、農作物、水果、漁獲、花送給好友，每 15 分鐘可以送一次。','好友送給你的禮物會寄到你的信箱：信箱上面出現彈吓彈吓嘅禮物盒（旗仔亦會升起），就是有禮物，按 A 就會放進背包。','互相送禮物會增加大家的好友度；收到其他島的特產，你的星際市場以後都有得買。','同好友企近，按 A 就可以一齊揮手、拍手、擊掌、拖手；影相時鏡頭入面有好友，喺麥仔攝影室就可以揀好友名，相片會加上「合照」字眼同日期時間。']},
  {t:'花圃同各島特產',say:['星球上有一個花圃：到星際市場買花種子，種在花圃，不用澆水，時間到了就會開花。開花後按 A 摘花，花可以賣給市場，或者送給朋友；摘完之後會再開。','每個島都有自己的特產水果（果樹上）和特產花。其他島的特產，要朋友用信箱送給你，之後你的市場才有得買，還可以用來研發新菜式。']},
  {t:'噴水池同原居民',say:['廣場中間的噴水池是許願池：投錢許願，池裏會送你一份神秘禮物，每日最多許願 3 次。','向服務中心的市長林庫申請，可以把噴水池升級（石砌噴泉、花園噴泉、星空噴泉）：外型更漂亮，許願送的禮物更好更多，最高級還有機會得到外來蔬果種子。','每個星球的原居民和他們的屋都不一樣：有動物、有外星人，住在茶壺屋、南瓜屋、冰屋、樹屋等等。他們平時在屋前散步，走近按 A 就可以傾偈；說服他們開民宿，旅客就可以入住。']},
@@ -8062,7 +8062,7 @@ function lfFinish(e){if(e.done)return;e.done=1;var nm=lfName(e);if(e.k==='stay'&
 function lfFinishAll(){var n=0;(S.lf||[]).forEach(function(e){if(!e.done&&e.p){lfFinish(e);n++;}});return n;}
 // ---- 開工 ----
 function lfStart(e,c){lfList().push(e);noteInvest(c,'bld');S.flags.capFix=Date.now();relayout();var nm=lfName(e),hrs=lfHours(e);
- addNews('「'+nm+'」動工','「'+nm+'」今日動工：工程隊喺島上搵到一塊空地，圍地施工，預計 '+hrs+' 小時後落成。','ev');toast('「'+nm+'」開工了！地圖上可以見到工地；'+hrs+' 小時後落成',6500);save();}
+ addNews('「'+nm+'」動工','「'+nm+'」今日動工：工程隊喺新填海嘅土地上圍地施工，預計 '+hrs+' 小時後落成。','ev');toast('「'+nm+'」開工了！地圖上可以見到工地；'+hrs+' 小時後落成',6500);save();}
 function lfNoRoom(){toast('星球暫時搵唔到夠大嘅空地（唔可以壓住建築物同行人路）：可以申請填海擴大島嶼',5500);}
 function lfBuildStay(t){if(VISIT||stayOwned(t))return;var c=lfPrice('stay',t);if(S.coins<c){toast('金幣不足：要 $'+fmtC(c),2600);return;}
  if(!siteOn('hotel')){buy(c,function(){S.htl=htlNew(t);S.build=S.build||{};S.build.hotel={t0:Date.now()};noteInvest(c,'bld');S.flags.capFix=Date.now();relayout();
@@ -8090,14 +8090,14 @@ PANELS.lfb={t:'增建大型設施・市長林庫',tabs:[['stay','住宿'],['mus'
 function lfBtn(done,left,c,fn,extraDis){return done?{t:'已經開業',cls:'g',dis:true,fn:function(){}}:left!=null?{t:'興建中：還有 '+fmtLeft(left),cls:'g',dis:true,fn:function(){}}:{t:'開工 $'+fmtC(c),cls:'o',dis:S.coins<c||!!VISIT||!!extraDis,fn:fn};}
 function lfStayOf(t){if(S.htl&&S.htl.type===t&&siteOn('hotel'))return {legacy:1,done:bld('hotel'),left:bld('hotel')?null:Math.max(0,buildDur()-buildEl('hotel'))};
  var e=lfStays().filter(function(q){return lfType(q)===t;})[0];if(e)return {e:e,done:!!e.done,left:e.done?null:Math.max(0,lfDur(e)-lfEl(e))};return null;}
-RENDER.lfb_stay=function(b){b.appendChild(note('住宿最多三間：<b>商務酒店、精品酒店、渡假村各一間</b>。第一間起喺原本預留嘅酒店位；之後嘅由工程隊喺島上搵空地——唔會壓住建築物同行人路，重疊嘅樹會斬走，仲會由廣場鋪一條行人路去門口。工期 24 小時。每間住宿每晚結算房租收入，評級越高、旅客越多。'));
+RENDER.lfb_stay=function(b){b.appendChild(note('住宿最多三間：<b>商務酒店、精品酒店、渡假村各一間</b>。第一間起喺原本預留嘅酒店位；之後嘅由工程隊起喺新填海嘅土地上（每座要先填海一次）——唔會壓住建築物同行人路，重疊嘅樹會斬走，仲會由廣場鋪一條行人路去門口。工期 24 小時。每間住宿每晚結算房租收入，評級越高、旅客越多。'));
  ['btq','biz','rst'].forEach(function(t){var T0=HTL_T[t],c=lfPrice('stay',t),s0=lfStayOf(t);
   b.appendChild(colB(card({ico:'stay:'+t},'星際'+T0.n+(s0&&s0.done?'（已開業）':''),esc(T0.d)+'<br>客房 '+T0.rooms+' 間　費用 $'+fmtC(c)+'　工期 24 小時'+(s0||S.coins>=c?'':'<br>'+lfGoal(c)),[lfBtn(s0&&s0.done,s0&&!s0.done?s0.left:null,c,function(){lfBuildStay(t);})])));});};
 function lfLegacyCard(b,k,extra){var B=BLD[k],cons=S.build&&S.build[k],done=bld(k),left=cons&&!done?Math.max(0,buildDur()-buildEl(k)):null;
  b.appendChild(colB(card({ico:'bld:'+k},B.n+(done?'（已開業）':''),esc(B.d)+'<br>費用 $'+fmtC(B.c)+'　工期 24 小時'+(cons&&!done?'<br>進度：第 '+(buildStage(k)+1)+'／6 階段':'')+(extra||'')+(done||cons||S.coins>=B.c?'':'<br>'+lfGoal(B.c)),[lfBtn(done,left,B.c,function(){startBuild(k);})])));}
 RENDER.lfb_mus=function(b){b.appendChild(note('星球博物館起喺原本預留嘅位（地圖上嘅博物館位）。開工之前會先揀展廳佈局（六款）。落成之後向考古專家志華老師買名畫、古董、雕塑擺出嚟，展品越多、越有名，參觀收入越多。'));lfLegacyCard(b,'dome');};
 RENDER.lfb_park=function(b){b.appendChild(note('主題樂園起喺原本預留嘅位（摩天輪位，前面有前院）。落成之後可以逐項加建、升級機動遊戲；已經興建嘅機動遊戲喺樂園外面都見到，入去先可以玩。'));lfLegacyCard(b,'wheel');};
-RENDER.lfb_tr=function(b){var n=lfTRs().length;b.appendChild(note('主題餐廳：由裝修、音樂、制服到菜式都圍繞同一個主題，令客人有獨特嘅體驗。<b>10 款主題，最多開 3 間</b>（每款一間）；已經開咗 '+n+'／3 間。工程隊自動喺島上搵空地、鋪行人路，工期 12 小時。之後可以按「感官五個方面」（視覺、觸覺、聽覺、嗅覺、溫度）升級。'));
+RENDER.lfb_tr=function(b){var n=lfTRs().length;b.appendChild(note('主題餐廳：由裝修、音樂、制服到菜式都圍繞同一個主題，令客人有獨特嘅體驗。<b>10 款主題，最多開 3 間</b>（每款一間）；已經開咗 '+n+'／3 間。工程隊起喺新填海嘅土地上（每座要先填海一次）、鋪行人路，工期 12 小時。之後可以按「感官五個方面」（視覺、觸覺、聽覺、嗅覺、溫度）升級。'));
  TR_TH.forEach(function(T0){var e=lfTRs().filter(function(q){return q.t===T0.k;})[0],c=lfPrice('tr');
   b.appendChild(colB(card({ico:'tr:'+T0.k},T0.n+(e&&e.done?'（已開業）':''),esc(T0.d)+'<br>招牌菜：'+T0.menu.join('、')+'<br>費用 $'+fmtC(c)+'　工期 12 小時'+(e||n>=3||S.coins>=c?'':'<br>'+lfGoal(c)),
    [e?lfBtn(e.done,e.done?null:Math.max(0,lfDur(e)-lfEl(e)),c,function(){}):n>=3?{t:'已經有三間',dis:true,fn:function(){}}:lfBtn(false,null,c,function(){lfBuildTR(T0.k);})])));});};
@@ -9194,8 +9194,8 @@ function zaBuildCard(b,k){var e=zaE(k),c=lfPrice(k),nm=k==='zoo'?'星際動物�
  b.appendChild(colB(card({ico:'lfz:'+k},nm+(e&&e.done?'（已開業）':''),(k==='zoo'?'可以引入大熊貓、大象、獅子、長頸鹿、樹熊、斑馬、袋鼠、紅鶴 8 種動物，每個展區都有配合動物嘅環境。':'可以引入海獅、海龜、企鵝、章魚、水母、海星 6 種海洋生物；仲可以將你釣到嘅魚放入近海魚缸展出。')+'<br>費用 $'+fmtC(c)+'　工期 24 小時　旅客多 5%'+(e||S.coins>=c?'':'<br>'+lfGoal(c)),
   [lfBtn(e&&e.done,e&&!e.done?Math.max(0,lfDur(e)-lfEl(e)):null,c,function(){lfBuildZA(k);})])));}
 PANELS.lfb.tabs.push(['zoo','動物園'],['aqua','水族館']);
-RENDER.lfb_zoo=function(b){b.appendChild(note('星際動物園由工程隊喺島上搵空地興建（唔會壓住建築物同行人路），工期 24 小時。落成之後向動物引薦商<b>邦邦</b>引入動物（佢不定時喺服務中心附近出現）；展區唔夠可以向市長林庫申請升級。<br>現代動物園有四個任務：<b>康樂、教育、保育、研究</b>。'));zaBuildCard(b,'zoo');};
-RENDER.lfb_aqua=function(b){b.appendChild(note('星際水族館由工程隊喺島上搵空地興建，工期 24 小時。落成之後向動物引薦商<b>邦邦</b>引入海洋生物；你釣到嘅魚都可以放入「近海魚缸」展出——越稀有、越大嘅魚越吸引旅客。最高級有海底隧道。'));zaBuildCard(b,'aqua');};
+RENDER.lfb_zoo=function(b){b.appendChild(note('星際動物園由工程隊喺新填海嘅土地上興建（每座要先填海一次；唔會壓住建築物同行人路），工期 24 小時。落成之後向動物引薦商<b>邦邦</b>引入動物（佢不定時喺服務中心附近出現）；展區唔夠可以向市長林庫申請升級。<br>現代動物園有四個任務：<b>康樂、教育、保育、研究</b>。'));zaBuildCard(b,'zoo');};
+RENDER.lfb_aqua=function(b){b.appendChild(note('星際水族館由工程隊喺新填海嘅土地上興建（每座要先填海一次），工期 24 小時。落成之後向動物引薦商<b>邦邦</b>引入海洋生物；你釣到嘅魚都可以放入「近海魚缸」展出——越稀有、越大嘅魚越吸引旅客。最高級有海底隧道。'));zaBuildCard(b,'aqua');};
 // ================= 升級、展出（市長林庫：升級大型設施）=================
 PANELS.zau={t:'星際動物園・市長林庫',tabs:[['up','升級'],['ex','展出']]};
 function zaOpen(e,tab){if(!e||!e.done)return;ZA_CUR=e;PANELS.zau.t=lfName(e)+'・市長林庫';openPanel('zau',tab||'up');}
@@ -13586,7 +13586,7 @@ function relCollide(e){var p=e.p,x=p[0],z=p[1],lv=relLvOf(e);function bx(a,b,c,d
   if(lv>=1){bx(-2.6,-1.85,-1.35,-0.75);bx(1.85,2.6,-1.35,-0.75);}if(lv>=2)[1.62,1.3,0.98,0.66].forEach(function(q){ci(-0.55,q,0.06);ci(0.55,q,0.06);});if(lv>=3)ci(-2.4,-1.75,0.32);}
  else if(e.k==='temple'){bx(-1.85,1.85,-2.15,-0.6);ci(0,0.5,0.42);ci(-0.95,-0.3,0.24);ci(0.95,-0.3,0.24);ci(-0.95,2.1,0.15);ci(0.95,2.1,0.15);bx(-2.75,-1.85,-0.05,0.65);
   if(lv>=1){bx(-2.8,-1.95,-1.65,-0.8);bx(1.95,2.8,-1.65,-0.8);}if(lv>=2){bx(1.85,2.75,-0.05,0.65);ci(-2.3,1.5,0.24);bx(2.1,2.6,1.25,1.8);}if(lv>=3){[-1.6,1.6].forEach(function(a){ci(a,1.6,0.07);ci(a,-0.35,0.07);});[-1.88,-1.32,1.32,1.88].forEach(function(a){ci(a,2.1,0.1);});}}
- else if(e.k==='church'){bx(-1.2,1.2,-2.05,1.05);ci(-1.85,1.6,0.3);bx(-2.75,-1.95,0.45,0.75);bx(-2.75,-1.95,-0.55,-0.25);
+ else if(e.k==='church'){bx(-1.2,1.2,-2.05,1.05);ci(2.1,-1.2,0.68);ci(-1.85,1.6,0.3);bx(-2.75,-1.95,0.45,0.75);bx(-2.75,-1.95,-0.55,-0.25);
   if(lv>=1)bx(-1.95,-1.15,0.15,1.05);if(lv>=2){ci(1.45,1.55,0.08);ci(2.45,1.55,0.08);}if(lv>=3){ci(-0.85,2.2,0.07);ci(0.85,2.2,0.07);}}}
 // ---- 設定 ----
 var REL={temple:{n:'神農廟',sn:'神農廟',c:22000,col:'#c0392b',up:[{n:'神農廟',d:'牌坊、大香爐、正殿、石獅：可以上香、入殿求籤（每小時一次，影響農作物生長）、請平安符'},{n:'鐘鼓樓',d:'加建鐘樓同鼓樓；參觀收入多 20%',c:7000},{n:'許願廣場',d:'加建許願樹（拋寶牒許願）、化寶爐、解籤檔（解籤）；參觀收入再多 20%',c:15000},{n:'燈籠長廊',d:'紅燈籠長廊、三門大牌坊；參觀收入再多 20%、旅客多 3%',c:24000}]},
@@ -13837,7 +13837,7 @@ var fishPickV52=fishPick;fishPick=function(ctx){if(relBuf('fish')){ctx=Object.as
 var payMultV52=payMult;payMult=function(ck){return payMultV52(ck)*(relBuf('inc')?1.05:1);};
 // ---- 面板：增建、升級、禮儀 ----
 PANELS.lfb.tabs.push(['rel','宗教聖地']);
-RENDER.lfb_rel=function(b){b.appendChild(note('<b>宗教旅遊</b>係文化旅遊嘅一種：旅客參觀宗教建築，認識唔同地方嘅信仰、建築同傳統習俗。參觀時要尊重信仰、遵守參拜禮儀。<br>宗教聖地由工程隊喺島上搵空地興建（唔會壓住建築物同行人路），工期 24 小時；每款一間，落成之後可以向市長林庫申請升級。'));
+RENDER.lfb_rel=function(b){b.appendChild(note('<b>宗教旅遊</b>係文化旅遊嘅一種：旅客參觀宗教建築，認識唔同地方嘅信仰、建築同傳統習俗。參觀時要尊重信仰、遵守參拜禮儀。<br>宗教聖地由工程隊喺新填海嘅土地上興建（每座要先填海一次；唔會壓住建築物同行人路），工期 24 小時；每款一間，落成之後可以向市長林庫申請升級。'));
  REL_K.forEach(function(k){var R=REL[k],e=relE(k),c=R.c;b.appendChild(colB(card({ico:'rel:'+k},R.n+(e&&e.done?'（已開業）':''),esc(R.up[0].d)+'。<br>升級：'+R.up.slice(1).map(function(u){return u.n;}).join('、')+'<br>費用 $'+fmtC(c)+'　工期 24 小時　旅客多 5%'+(e||S.coins>=c?'':'<br>'+lfGoal(c)),
   [lfBtn(e&&e.done,e&&!e.done?Math.max(0,lfDur(e)-lfEl(e)):null,c,function(){relBuild(k);})])));});};
 function relBuild(k){if(VISIT||relE(k))return;var c=lfPrice(k);if(S.coins<c){toast('金幣不足：要 $'+fmtC(c),2600);return;}var p=lfFind('stay',MAP.block);if(!p){lfNoRoom();return;}
@@ -14030,7 +14030,7 @@ function rinTemple(g,R,e){var b=R.b,RD=M(0xb3261e),GD=M(0xd9a53a),WD=M(0x6a2a1a)
  [-0.6,0.6].forEach(function(xx){zA(g,zCy(0.18,0.12,0.04,14),M(0xf6f1e6),xx,0.87,b[2]+1.25);for(var o=0;o<5;o++)zA(g,zSp(0.06,10,8),M(0xf08a2a),xx+(o%3-1)*0.08,0.94+(o>2?0.07:0),b[2]+1.25+(o%2?0.05:-0.05));});
  [-0.95,0.95].forEach(function(xx){zA(g,zCy(0.07,0.09,0.25,10),M(0x2f6f8a),xx,0.97,b[2]+1.0);for(var f=0;f<5;f++)zA(g,zSp(0.05,8,6),M([0xe8574f,0xf2c14e,0xff9ac8][f%3]),xx+(f%3-1)*0.06,1.15+(f>2?0.06:0),b[2]+1.0);});
  // 拜墊、籤筒
- [-0.55,0.55].forEach(function(xx){zA(g,zCy(0.3,0.32,0.12,18),M(0xc0392b),xx,0.06,b[2]+2.3);});zA(g,zBx(0.42,0.36,0.42),RD,0,0.18,b[2]+2.05);zA(g,zCy(0.09,0.08,0.3,12),M(0xb08850),0,0.51,b[2]+2.05);for(var st=0;st<9;st++){var sk=zA(g,zCy(0.006,0.006,0.34,4),M(0xd8b878),(st%3-1)*0.03,0.72,b[2]+2.05+(Math.floor(st/3)-1)*0.03);sk.rotation.z=(st%3-1)*0.08;}R.cir.push([0,b[2]+2.05,0.3]);
+ [-0.55,0.55].forEach(function(xx){zA(g,zCy(0.3,0.32,0.12,18),M(0xc0392b),xx,0.06,b[2]+2.3);});zA(g,zBx(0.42,0.36,0.42),RD,0,0.18,b[2]+2.05);var qt=new T.Group();qt.userData.dyn=1;qt.position.set(0,0.36,b[2]+2.05);g.add(qt);zA(qt,zCy(0.09,0.08,0.3,12),M(0xb08850),0,0.15,0);for(var st=0;st<9;st++){var sk=zA(qt,zCy(0.006,0.006,0.34,4),M(0xd8b878),(st%3-1)*0.03,0.36,(Math.floor(st/3)-1)*0.03);sk.rotation.z=(st%3-1)*0.08;}REL_IN.qt=qt;R.cir.push([0,b[2]+2.05,0.3]);
  // 紅柱對聯
  [[-2.6,'風調雨順'],[2.6,'國泰民安']].forEach(function(q){zA(g,zCy(0.16,0.18,3.6,14),RD,q[0],1.8,b[2]+2.2);var cp=vSign(q[1],'#b3261e','#f2c14e',0.36,1.7);cp.position.set(q[0],1.8,b[2]+2.39);g.add(cp);});
  [[-2.6,1.2],[2.6,1.2]].forEach(function(q){zA(g,zCy(0.16,0.18,3.6,14),RD,q[0],1.8,q[1]);});R.cir.push([-2.6,b[2]+2.2,0.22],[2.6,b[2]+2.2,0.22],[-2.6,1.2,0.22],[2.6,1.2,0.22]);
@@ -14043,7 +14043,7 @@ function rinTemple(g,R,e){var b=R.b,RD=M(0xb3261e),GD=M(0xd9a53a),WD=M(0x6a2a1a)
  var dr=zA(g,zCy(0.36,0.36,0.5,18),M(0xb3261e),4.2,0.9,b[2]+1.2);dr.rotation.x=Math.PI/2;[-0.26,0.26].forEach(function(zz){zA(g,zCy(0.34,0.34,0.01,18),M(0xe8dcc0),4.2,0.9,b[2]+1.2+zz).rotation.x=Math.PI/2;});zA(g,zBx(0.9,0.45,0.5),WD,4.2,0.22,b[2]+1.2);
  R.box.push([-4.75,-3.65,b[2]+0.95,b[2]+1.45],[3.75,4.65,b[2]+0.85,b[2]+1.55],[-1.6,1.6,b[2],b[2]+1.65]);
  zA(g,zBx(0.6,0.55,0.4),M(0x8a2a1a),3.9,0.275,2.9);var dsg=roomSign('香油','#8a2a1a','#f2c14e',0.4,0.16);dsg.position.set(3.9,0.36,3.11);g.add(dsg);R.box.push([3.6,4.2,2.7,3.1]);
- R.items.push({x:0,z:b[2]+2.75,r:1.3,l:'求籤',th:1.6,fn:function(){relCim(REL_IN.e);}});
+ R.items.push({x:0,z:b[2]+2.75,r:1.3,l:'求籤',th:1.6,fn:function(){cim57Go();}});
  R.items.push({x:3.9,z:3.35,r:0.9,l:'香油',th:1.4,fn:function(){if(VISIT){relTalk('香油箱',['朋友星球嘅香油箱，心意到就得啦。']);return;}if(S.coins<10){toast('香油錢要 $10',2200);return;}S.coins-=10;coinsUI();save();relTalk('神農廟',['你放咗 $10 香油錢入香油箱。','廟祝：「多謝善信！祝你五穀豐登、生意興隆！」']);}});}
 // ---- 魚之神社拜殿 ----
 function rinShrine(g,R,e){var b=R.b,WD=M(0xc49058),WD2=M(0x8a5f38),V=M(0xd23c26),W=M(0xf6f1e6);
@@ -14124,11 +14124,11 @@ function ctx56Show(){var d=document.getElementById('ctx56');if(!d){d=document.cr
  d.innerHTML='<div><div style="font:800 22px '+FONT+';margin-bottom:10px">畫面暫停咗</div><div style="font:500 16px '+FONT+';line-height:1.7">部機記憶體唔夠，3D 畫面停咗。<br>進度已經儲存，撳下面重新載入就得。</div>'+
   '<button style="margin-top:18px;font:800 18px '+FONT+';padding:10px 28px;border:0;border-radius:22px;background:#f2c14e;color:#3a2a10">重新載入</button></div>';
  document.body.appendChild(d);d.querySelector('button').onclick=function(){location.reload();};}d.style.display='flex';}
-// ================= v56 星空刑警（用戶指示；取代 v54 保安）=================
-// 向市長林庫聘請（最多 5 位：盧隊長、鐵膽、阿強、大孖、細孖）：穿警察制服（淺藍短袖恤衫、深藍領呔、肩章、警帽）嘅外星人，手持警棍
+// ================= v56 星空保安（用戶指示；取代 v54 保安）=================
+// 向市長林庫聘請（最多 5 位：盧隊長、鐵膽、阿強、大孖、細孖）：穿保安制服（淺藍短袖恤衫、深藍領呔、肩章、警帽）嘅外星人，手持警棍
 // 林庫每次提供三位求職者，$100 換一批；能力 1–5 星：速度（5 星＝最快嘅星光跑鞋）、手長（手越長，越遠都敲得中）、警覺性（越敏銳越易察覺偷魚賊）
 // 聘請後即刻吩咐站崗：池塘通道／池塘旁／農田旁／花田旁／飛碟旁（離飛碟 5 個身位）／任何建築物旁；刑警喺站崗位置附近不斷徘徊
-// 好友探訪偷魚：附近刑警按警覺性察覺 → 頭上「！」→ 按速度追 → 入到手長範圍就用警棍敲偷魚賊個頭，敲中即拘捕：罰款 $5,000 交入被偷魚島主嘅戶口、沒收偷到嘅魚
+// 好友探訪偷魚：附近刑警按警覺性察覺 → 頭上「！」→ 按速度追 → 入到手長範圍就用警棍敲偷魚賊個頭，敲中即捉住：罰款 $5,000 交入被偷魚島主嘅戶口、沒收偷到嘅魚
 var COP_NM=['盧隊長','鐵膽','阿強','大孖','細孖'],COP_MAX=5,COP_RF=100;
 var COP_COL={'盧隊長':0x8fd66b,'鐵膽':0x7fc8f0,'阿強':0xc49af0,'大孖':0xf59ac0,'細孖':0xf59ac0},COP_SC={'大孖':1.1,'細孖':0.86};
 var COP_POST=[{k:'path',n:'池塘通道'},{k:'pond',n:'池塘旁'},{k:'farm',n:'農田旁'},{k:'flower',n:'花田旁'},{k:'ufo',n:'飛碟旁'},{k:'bld',n:'建築物旁'}];
@@ -14177,7 +14177,7 @@ function copPortrait(c){return portraitURL('cop56:'+c.nm+'|'+copCl(c.rc),functio
 // ---- 每格：巡邏、察覺、追捕、警棍 ----
 function copMigrate(){if(VISIT||!S||!S.guard||!(S.guard.lv>0)||copList().length)return;var lv=Math.max(1,Math.min(5,S.guard.lv));
  S.cops=[{nm:'盧隊長',sp:lv,rc:2,al:2,post:{k:'pond'},t:Date.now()}];S.guard={lv:0,mig:1};save();
- setTimeout(function(){toast('你嘅保安已經升職做「星空刑警盧隊長」，繼續守住池塘！（可以喺市長林庫度聘請更多星空刑警）',6000);},3000);}
+ setTimeout(function(){toast('你嘅保安已經升職做「星空保安盧隊長」，繼續守住池塘！（可以喺市長林庫度聘請更多星空保安）',6000);},3000);}
 function copSync(){copMigrate();var L=copList(),sig=(VISIT?VISIT.uid:'me')+'|'+(MAP&&MAP.id||'')+'|'+L.map(function(c){return c.nm+c.sp+c.rc+c.al+JSON.stringify(c.post||{});}).join(';');if(COPS.sig===sig)return;COPS.sig=sig;
  var old={};COPS.list.forEach(function(o){old[o.c.nm+'|'+o.c.rc]=o;});var keep=[];
  L.forEach(function(c,i){var o=old[c.nm+'|'+c.rc];if(o){delete old[c.nm+'|'+c.rc];o.c=c;o.i=i;o.wp=null;if(o.st==='patrol')o.st='back';}
@@ -14187,7 +14187,7 @@ function copSync(){copMigrate();var L=copList(),sig=(VISIT?VISIT.uid:'me')+'|'+(
 function copSay(o,t,sec){if(o.bub){killSprite(o.bub);o.bub=null;}if(!t)return;var s=bubble(t,'#2f3f6e','#ffffff',t.length<=1?0.6:0.4);scO.add(s);o.bub=s;o.bubT=sec||2.4;}
 function copChaseOK(){return !!(VISIT&&STL.n>0&&!STL.caught&&where==='out'&&!(typeof BEAMUP!=='undefined'&&BEAMUP));}
 function copAlert(o){if(STL.caught||!(o.st==='patrol'||o.st==='back'))return;o.st='alert';o.t=Math.max(0.2,1.15-0.19*copCl(o.c.al));copSay(o,'！',1.5);vib([60,40,60]);
- if(!STL.copWarn){STL.copWarn=1;toast('星空刑警'+o.c.nm+'發現你偷魚！快啲跑返飛碟（喺飛碟下面撳 A 先走得甩）',4500);}}
+ if(!STL.copWarn){STL.copWarn=1;toast('星空保安'+o.c.nm+'發現你偷魚！快啲跑返飛碟（喺飛碟下面撳 A 先走得甩）',4500);}}
 function copTheft(){if(!VISIT||STL.caught)return;COPS.list.forEach(function(o){var d=Math.hypot(P.x-o.x,P.z-o.z);if(d<copDetR(o.c)&&Math.random()<0.55+0.09*copCl(o.c.al))copAlert(o);});}
 function copMove(o,tx,tz,sp,dt){var dx=tx-o.x,dz=tz-o.z,d=Math.hypot(dx,dz);if(d<0.05)return false;o.face=guardStep(o,dx/d,dz/d,Math.min(d,sp*dt));return true;}
 function copTick(dt,t){copSync();if(!COPS.list.length){copHitFx(dt);return;}var out=where==='out';
@@ -14212,69 +14212,69 @@ function stlSend56(op,n,list,ex){if(typeof coopGuest!=='function'||!coopGuest())
 function copCatch(o){if(STL.caught)return;var n=STL.n,fine=Math.min(5000,Math.max(0,S.coins)),c=o.c;STL.caught=true;STL.banned=true;copHitShow();vib([140,60,140]);
  STL.list.forEach(function(q){bagTake('fish:'+q.key,1);});S.coins-=fine;coinsUI();var names=stlNames(STL.list);stlSend56('stealc',n,STL.list,{fine:fine,cop:c.nm});STL.n=0;STL.list=[];STL.keys={};save();
  COPS.list.forEach(function(x){if(x!==o&&(x.st==='chase'||x.st==='alert'))x.st='back';});copSay(o,'捉到你喇！',2.6);
- setTimeout(function(){talk('星空刑警'+c.nm,'#2f3f6e','#ffffff',['咚！星空刑警'+c.nm+'一警棍敲中你個頭：即場拘捕！','喺人哋個島偷魚係唔啱㗎！罰款 $'+fmtC(fine)+'，已經交咗俾島主。','偷到嘅 '+n+' 條魚（'+names+'）全部沒收，交返俾島主。','（今次探訪唔可以再撈魚）']);},700);}
+ setTimeout(function(){talk('星空保安'+c.nm,'#2f3f6e','#ffffff',['咚！星空保安'+c.nm+'一警棍敲中你個頭：即場捉住！','喺人哋個島偷魚係唔啱㗎！罰款 $'+fmtC(fine)+'，已經交咗俾島主。','偷到嘅 '+n+' 條魚（'+names+'）全部沒收，交返俾島主。','（今次探訪唔可以再撈魚）']);},700);}
 // 敲中：偷魚賊頭上「咚！」、三粒星星轉圈
 function copHitShow(){copHitClear();COPFX.t=1.8;var b=bubble('咚！','#f2c14e','#3a2a10',0.66);scO.add(b);COPFX.b=b;for(var i=0;i<3;i++){var s=ms(starGeo(0.13),basicM({c:0xffe14a,side:T.DoubleSide}),0,0,0);scO.add(s);COPFX.st.push(s);}}
 function copHitClear(){if(COPFX.b){killSprite(COPFX.b);COPFX.b=null;}COPFX.st.forEach(function(s){scO.remove(s);s.geometry.dispose();});COPFX.st=[];}
 function copHitFx(dt){if(COPFX.t<=0)return;COPFX.t-=dt;var y=standY(P.x,P.z),tt=1.8-COPFX.t;if(where!=='out'){copHitClear();COPFX.t=0;return;}
  if(COPFX.b)COPFX.b.position.copy(bendPt(P.x,y+2.55+Math.min(0.3,tt*0.9),P.z));COPFX.st.forEach(function(s,i){var a=tt*6+i*2.094;s.position.set(P.x+Math.cos(a)*0.38,y+1.5,P.z+Math.sin(a)*0.38);s.rotation.y=a;});if(COPFX.t<=0)copHitClear();}
-// ---- 撈魚（探訪時＝偷魚）：改用星空刑警 ----
+// ---- 撈魚（探訪時＝偷魚）：改用星空保安 ----
 netFish=function(id){if(!VISIT)return netFishV53(id);
  if(typeof coopGuest!=='function'||!coopGuest()){toast('只係參觀朋友個島，唔可以撈魚',3000);return;}
- if(STL.banned){toast('你已經俾星空刑警拘捕過，今次探訪唔可以再撈魚',3200);return;}if(STL.n>=5){toast('每次探訪最多只可以偷 5 條魚',3000);return;}
+ if(STL.banned){toast('你已經俾星空保安捉住過，今次探訪唔可以再撈魚',3200);return;}if(STL.n>=5){toast('每次探訪最多只可以偷 5 條魚',3000);return;}
  var f=null;S.pond.fish.forEach(function(q){if(q.id===id)f=q;});if(!f)return;var key=f.k+'|'+FCLS[fIdx(f)].c,n0=S.pond.fish.length;netFishV53(id);if(S.pond.fish.length>=n0)return;
  STL.n++;STL.list.push({id:id,k:f.k,key:key});STL.keys[key]=(STL.keys[key]||0)+1;toast('你偷咗一條'+fishOf(f.k).n+'！（今次仲可以偷 '+(5-STL.n)+' 條；要帶返自己個島先可以賣）',3600);setTimeout(copTheft,250);};
-// ---- 停用 v54 保安（升職做星空刑警）----
+// ---- 停用 v54 保安（升職做星空保安）----
 guardTick=function(){if(GUARD.m){scO.remove(GUARD.m);disposeTree(GUARD.m);GUARD.m=null;}if(GUARD.bub){killSprite(GUARD.bub);GUARD.bub=null;}};guardLv=function(){return 0;};
 if(PANELS.auto&&PANELS.auto.tabs)PANELS.auto.tabs=PANELS.auto.tabs.filter(function(t){return t[0]!=='guard';});
-var zaTickV55=zaTick;zaTick=function(dt,t){zaTickV55(dt,t);try{copTick(dt,t);}catch(x){errNote(x,'星空刑警');}};
+var zaTickV55=zaTick;zaTick=function(dt,t){zaTickV55(dt,t);try{copTick(dt,t);}catch(x){errNote(x,'星空保安');}};
 // ---- 對話、吩咐站崗、解僱 ----
 function copRt(c){for(var i=0;i<COPS.list.length;i++)if(COPS.list[i].c===c)return COPS.list[i];return null;}
 function copTalk(c){var o=copRt(c);if(o&&o.st==='patrol'){o.pause=4;o.face=Math.atan2(P.x-o.x,P.z-o.z);}
- if(VISIT){talk('星空刑警'+c.nm,'#2f3f6e','#ffffff',[pick(['我係星空刑警'+c.nm+'，正喺度巡邏。','呢個島嘅池塘有我哋星空刑警睇住，唔好打啲魚嘅主意啊！','見到有人偷魚，我哋一定會捉！'])]);return;}
- talk('星空刑警'+c.nm,'#2f3f6e','#ffffff',['報告！星空刑警'+c.nm+'，而家喺「'+copPostName(c.post)+'」站崗。','速度 '+starStr(c.sp)+'　手長 '+starStr(c.rc)+'　警覺性 '+starStr(c.al)],
+ if(VISIT){talk('星空保安'+c.nm,'#2f3f6e','#ffffff',[pick(['我係星空保安'+c.nm+'，正喺度巡邏。','呢個島嘅池塘有我哋星空保安睇住，唔好打啲魚嘅主意啊！','見到有人偷魚，我哋一定會捉！'])]);return;}
+ talk('星空保安'+c.nm,'#2f3f6e','#ffffff',['報告！星空保安'+c.nm+'，而家喺「'+copPostName(c.post)+'」站崗。','速度 '+starStr(c.sp)+'　手長 '+starStr(c.rc)+'　警覺性 '+starStr(c.al)],
   [{t:'吩咐站崗位置',cb:function(){copAskPost(c);}},{t:'解僱',cb:function(){copFireAsk(c);}},{t:'沒事了',cb:function(){}}]);}
 function copAskPost(c,first){var L=COP_POST.filter(function(p){return copPostOK(p.k);}).map(function(p){return {t:p.n,cb:function(){if(p.k==='bld')copAskBld(c,0);else copSetPost(c,{k:p.k});}};});
- talk('星空刑警'+c.nm,'#2f3f6e','#ffffff',[first?'報告！星空刑警'+c.nm+'報到！':'收到！','請吩咐我喺邊度站崗：池塘通道（池塘同飛碟之間）、池塘旁、農田旁、花田旁、飛碟旁（離飛碟 5 個身位），或者任何建築物旁。'],L);}
+ talk('星空保安'+c.nm,'#2f3f6e','#ffffff',[first?'報告！星空保安'+c.nm+'報到！':'收到！','請吩咐我喺邊度站崗：池塘通道（池塘同飛碟之間）、池塘旁、農田旁、花田旁、飛碟旁（離飛碟 5 個身位），或者任何建築物旁。'],L);}
 function copAskBld(c,pg){var B=copBlds(),per=8,L=B.slice(pg*per,pg*per+per).map(function(b){return {t:b.n,cb:function(){copSetPost(c,{k:'bld',n:b.n,x:Math.round(b.x*100)/100,z:Math.round(b.z*100)/100});}};});
  if(B.length>(pg+1)*per)L.push({t:'下一頁',cb:function(){copAskBld(c,pg+1);}});if(pg>0)L.push({t:'上一頁',cb:function(){copAskBld(c,pg-1);}});L.push({t:'返回',cb:function(){copAskPost(c);}});
- talk('星空刑警'+c.nm,'#2f3f6e','#ffffff',['要喺邊座建築物旁邊站崗？'],L);}
-function copSetPost(c,p){c.post=p;save();COPS.sig='';if(NET.user&&typeof publish==='function')publish();talk('星空刑警'+c.nm,'#2f3f6e','#ffffff',['收到！我而家就去「'+copPostName(p)+'」站崗。']);}
-function copFireAsk(c){talk('星空刑警'+c.nm,'#2f3f6e','#ffffff',['確定要解僱星空刑警'+c.nm+'？（聘請費唔會退返）'],[{t:'確定解僱',cb:function(){S.cops=copList().filter(function(x){return x!==c;});save();COPS.sig='';if(NET.user&&typeof publish==='function')publish();toast('已經解僱星空刑警'+c.nm,3000);}},{t:'唔解僱',cb:function(){}}]);}
-function copHire(c){if(VISIT)return;if(copList().length>=COP_MAX){toast('最多只可以聘請 '+COP_MAX+' 位星空刑警',3000);return;}
+ talk('星空保安'+c.nm,'#2f3f6e','#ffffff',['要喺邊座建築物旁邊站崗？'],L);}
+function copSetPost(c,p){c.post=p;save();COPS.sig='';if(NET.user&&typeof publish==='function')publish();talk('星空保安'+c.nm,'#2f3f6e','#ffffff',['收到！我而家就去「'+copPostName(p)+'」站崗。']);}
+function copFireAsk(c){talk('星空保安'+c.nm,'#2f3f6e','#ffffff',['確定要解僱星空保安'+c.nm+'？（聘請費唔會退返）'],[{t:'確定解僱',cb:function(){S.cops=copList().filter(function(x){return x!==c;});save();COPS.sig='';if(NET.user&&typeof publish==='function')publish();toast('已經解僱星空保安'+c.nm,3000);}},{t:'唔解僱',cb:function(){}}]);}
+function copHire(c){if(VISIT)return;if(copList().length>=COP_MAX){toast('最多只可以聘請 '+COP_MAX+' 位星空保安',3000);return;}
  buy(c.fee,function(){var o={nm:c.nm,sp:c.sp,rc:c.rc,al:c.al,post:null,t:Date.now()};S.cops=copList();S.cops.push(o);var L=S.cjobs.list,i=L.indexOf(c);if(i>=0)L.splice(i,1);
   noteInvest(c.fee,'hire');if(typeof qAdd==='function')qAdd('hire',1);COPS.sig='';save();if(panelKind)closePanel();setTimeout(function(){copAskPost(o,true);},250);});}
 var dynITOV55=dynITO;dynITO=function(){var L=dynITOV55();if(where==='out')COPS.list.forEach(function(o){if(o.st==='patrol'||o.st==='back')L.push({x:o.x,z:o.z,r:1.3,l:'對話',fn:function(){copTalk(o.c);}});});return L;};
-// ---- 林庫：聘請人員面板「星空刑警」分頁；選單加「聘請星空刑警」----
-PANELS.staff.tabs.splice(3,0,['police','星空刑警']);
+// ---- 林庫：聘請人員面板「星空保安」分頁；選單加「聘請星空保安」----
+PANELS.staff.tabs.splice(3,0,['police','星空保安']);
 RENDER.staff_police=function(b){var L=copList();
- b.appendChild(note('「星空刑警」係穿警察制服嘅外星人，手持警棍，最多聘請 '+COP_MAX+' 位。聘請之後要吩咐佢哋喺邊度站崗：池塘通道、池塘旁、農田旁、花田旁、飛碟旁或者任何建築物旁，佢哋會喺站崗位置附近巡邏。<br>好友探訪時偷你池塘嘅魚，附近嘅星空刑警察覺到就會頭上出「！」然後追，用警棍敲中偷魚賊個頭就即場拘捕：罰款 $5,000 交入你嘅戶口，偷到嘅魚全部沒收。'));
+ b.appendChild(note('「星空保安」係穿保安制服嘅外星人，手持警棍，最多聘請 '+COP_MAX+' 位。聘請之後要吩咐佢哋喺邊度站崗：池塘通道、池塘旁、農田旁、花田旁、飛碟旁或者任何建築物旁，佢哋會喺站崗位置附近巡邏。<br>好友探訪時偷你池塘嘅魚，附近嘅星空保安察覺到就會頭上出「！」然後追，用警棍敲中偷魚賊個頭就即場捉住：罰款 $5,000 交入你嘅戶口，偷到嘅魚全部沒收。'));
  b.appendChild(note('能力：<b>速度</b>（5 星同星光跑鞋一樣快）、<b>手長</b>（手越長，越遠都敲得中）、<b>警覺性</b>（越敏銳越易察覺偷魚賊）。'));
- L.forEach(function(c){b.appendChild(card({img:copPortrait(c)},'星空刑警'+c.nm,'速度 '+copStars(c.sp)+'　手長 '+copStars(c.rc)+'　警覺性 '+copStars(c.al)+'<br>站崗：'+esc(copPostName(c.post)),
+ L.forEach(function(c){b.appendChild(card({img:copPortrait(c)},'星空保安'+c.nm,'速度 '+copStars(c.sp)+'　手長 '+copStars(c.rc)+'　警覺性 '+copStars(c.al)+'<br>站崗：'+esc(copPostName(c.post)),
   [{t:'吩咐站崗',fn:function(){closePanel();setTimeout(function(){copAskPost(c);},200);}},{t:'解僱',fn:function(){closePanel();setTimeout(function(){copFireAsk(c);},200);}}]));});
- b.appendChild(note('求職嘅星空刑警（已經聘請 '+L.length+' / '+COP_MAX+' 位）：'));if(L.length>=COP_MAX){b.appendChild(note('已經聘請晒 5 位星空刑警。'));return;}
- copJobs().forEach(function(c){b.appendChild(card({img:copPortrait(c)},'星空刑警'+c.nm,'速度 '+copStars(c.sp)+'　手長 '+copStars(c.rc)+'　警覺性 '+copStars(c.al),[{t:'聘請 $'+fmtC(c.fee),cls:'o',dis:S.coins<c.fee||!!VISIT,fn:function(){copHire(c);}}]));});
- b.appendChild(card({emo:'🔄'},'即時換一批星空刑警','付 $'+COP_RF+' 請林庫再搵三位求職者。',[{t:'換一批 $'+COP_RF,dis:S.coins<COP_RF||!!VISIT,fn:function(){buy(COP_RF,function(){copJobs(true);renderPanel();});}}]));};
-var linkTalkV55=linkTalk;linkTalk=function(){var T0=talk;talk=function(nm,bg,fg,lines,opts,done){if(Array.isArray(opts)){var i=-1;opts.forEach(function(o,j){if(o.t==='聘請人員')i=j;});if(i>=0)opts.splice(i+1,0,{t:'聘請星空刑警',cb:function(){openPanel('staff','police');}});}return T0(nm,bg,fg,lines,opts,done);};try{linkTalkV55();}finally{talk=T0;}};
+ b.appendChild(note('求職嘅星空保安（已經聘請 '+L.length+' / '+COP_MAX+' 位）：'));if(L.length>=COP_MAX){b.appendChild(note('已經聘請晒 5 位星空保安。'));return;}
+ copJobs().forEach(function(c){b.appendChild(card({img:copPortrait(c)},'星空保安'+c.nm,'速度 '+copStars(c.sp)+'　手長 '+copStars(c.rc)+'　警覺性 '+copStars(c.al),[{t:'聘請 $'+fmtC(c.fee),cls:'o',dis:S.coins<c.fee||!!VISIT,fn:function(){copHire(c);}}]));});
+ b.appendChild(card({emo:'🔄'},'即時換一批星空保安','付 $'+COP_RF+' 請林庫再搵三位求職者。',[{t:'換一批 $'+COP_RF,dis:S.coins<COP_RF||!!VISIT,fn:function(){buy(COP_RF,function(){copJobs(true);renderPanel();});}}]));};
+var linkTalkV55=linkTalk;linkTalk=function(){var T0=talk;talk=function(nm,bg,fg,lines,opts,done){if(Array.isArray(opts)){var i=-1;opts.forEach(function(o,j){if(o.t==='聘請人員')i=j;});if(i>=0)opts.splice(i+1,0,{t:'聘請星空保安',cb:function(){openPanel('staff','police');}});}return T0(nm,bg,fg,lines,opts,done);};try{linkTalkV55();}finally{talk=T0;}};
 // ---- 公開（好友探訪用）：刑警能力同站崗位置 ----
 var publishV55=publish;publish=function(){publishV55();if(NET.user&&!VISIT)DBI.update('planets/'+NET.user.uid,{cops:copList().map(function(c){var p=c.post||null;return {nm:c.nm,sp:copCl(c.sp),rc:copCl(c.rc),al:copCl(c.al),post:p?{k:p.k,n:p.n||'',x:p.x!=null?+p.x:null,z:p.z!=null?+p.z:null}:null};})}).catch(function(){});};
 var pub44ApplyV55=pub44Apply;pub44Apply=function(V,pl,pf){pub44ApplyV55(V,pl,pf);var L=pl&&pl.cops?fbArr(pl.cops).filter(function(c){return c&&COP_NM.indexOf(c.nm)>=0;}).slice(0,COP_MAX).map(function(c){var p=c.post&&c.post.k?{k:String(c.post.k),n:c.post.n||'',x:c.post.x,z:c.post.z}:null;return {nm:c.nm,sp:copCl(c.sp),rc:copCl(c.rc),al:copCl(c.al),post:p};}):[];
  if(!L.length&&pl&&pl.guard&&pl.guard.lv>0)L=[{nm:'盧隊長',sp:copCl(pl.guard.lv),rc:2,al:2,post:{k:'pond'}}];V.cops=L;};
-var visitArriveV55=visitArrive38;visitArrive38=function(f,pl,V){visitArriveV55(f,pl,V);COPS.sig='';copHitClear();if(typeof coopGuest==='function'&&coopGuest())setTimeout(function(){var n=copList().length;if(VISIT&&n)toast('呢個島有 '+n+' 位星空刑警巡邏緊',3500);},4200);};
+var visitArriveV55=visitArrive38;visitArrive38=function(f,pl,V){visitArriveV55(f,pl,V);COPS.sig='';copHitClear();if(typeof coopGuest==='function'&&coopGuest())setTimeout(function(){var n=copList().length;if(VISIT&&n)toast('呢個島有 '+n+' 位星空保安巡邏緊',3500);},4200);};
 var leaveVisitNowV55=leaveVisitNow;leaveVisitNow=function(){leaveVisitNowV55();COPS.sig='';copHitClear();};
-// ---- 島主：偷魚賊被捕，罰款撥入戶口；星球日報寫埋邊位星空刑警 ----
+// ---- 島主：偷魚賊被捕，罰款撥入戶口；星球日報寫埋邊位星空保安 ----
 stealApply=function(a){var L=thfList(),id='th'+(a.t||Date.now())+(a.by||'').slice(0,4);if(L.some(function(x){return x.id===id;}))return;var got=[];
  if(a.op==='steal'){(a.fish?fbArr(a.fish).filter(function(x){return x;}):[]).forEach(function(q){var i=S.pond.fish.findIndex(function(f){return f.id===q.id;});if(i<0)i=S.pond.fish.findIndex(function(f){return f.k===q.k;});if(i>=0){got.push(S.pond.fish[i].k);S.pond.fish.splice(i,1);}});}
  else (a.fish?fbArr(a.fish).filter(function(x){return x;}):[]).forEach(function(q){got.push(q.k);});
  var fine=a.op==='stealc'?Math.max(0,Math.min(5000,Math.round(+a.fine||0))):0,cop=a.cop&&COP_NM.indexOf(a.cop)>=0?a.cop:'';if(fine>0){S.coins+=fine;coinsUI();}
  var nm=a.nm||'朋友',n=a.op==='steal'?got.length:(a.n||got.length);L.unshift({id:id,kind:a.op==='steal'?'steal':'caught',t:a.t||Date.now(),nm:nm,look:a.look||null,n:n,names:stlNames(got.map(function(k){return {k:k};})),cop:cop,fine:fine,seen:0});if(L.length>20)L.length=20;
- addNews(a.op==='steal'?'魚塘失竊':'偷魚賊落網',a.op==='steal'?nm+'偷走咗池塘 '+n+' 條魚。':nm+'想偷池塘嘅魚，俾'+(cop?'星空刑警'+cop:'保安')+'當場捉住'+(fine?'：罰款 $'+fmtC(fine)+' 已經撥入你嘅戶口':'')+'。','ev');save();if(typeof publish==='function'&&NET.user)publish();
- setTimeout(function(){toast(a.op==='steal'?'你嘅池塘有 '+n+' 條魚俾 '+nm+' 偷咗！去廣告欄睇「星球日報」':'有好友想偷你嘅魚，俾'+(cop?'星空刑警'+cop:'保安')+'捉住'+(fine?'，罰款 $'+fmtC(fine)+' 已經撥入你嘅戶口':'')+'！去廣告欄睇「星球日報」',6500);},1200);};
+ addNews(a.op==='steal'?'魚塘失竊':'偷魚賊落網',a.op==='steal'?nm+'偷走咗池塘 '+n+' 條魚。':nm+'想偷池塘嘅魚，俾'+(cop?'星空保安'+cop:'保安')+'當場捉住'+(fine?'：罰款 $'+fmtC(fine)+' 已經撥入你嘅戶口':'')+'。','ev');save();if(typeof publish==='function'&&NET.user)publish();
+ setTimeout(function(){toast(a.op==='steal'?'你嘅池塘有 '+n+' 條魚俾 '+nm+' 偷咗！去廣告欄睇「星球日報」':'有好友想偷你嘅魚，俾'+(cop?'星空保安'+cop:'保安')+'捉住'+(fine?'，罰款 $'+fmtC(fine)+' 已經撥入你嘅戶口':'')+'！去廣告欄睇「星球日報」',6500);},1200);};
 var thfPaperV55=thfPaper;thfPaper=function(e,done){thfPaperV55(e,done);var box=$('thfPaper'),tx=box&&box.querySelector('.tx');if(!tx)return;
  var d=new Date(e.t),ds=d.getFullYear()+' 年 '+(d.getMonth()+1)+' 月 '+d.getDate()+' 日　'+hhmm(e.t),nm=esc(e.nm),nn=e.names?'（'+esc(e.names)+'）':'';
- if(e.kind==='steal')tx.innerHTML='（本報訊）'+ds+'，'+nm+'趁探訪本島嘅時候，偷偷撈走咗池塘 '+e.n+' 條魚'+nn+'，仲成功坐飛碟離開。<br>池塘負責人呼籲島主加強防範：可以向市長林庫聘請「星空刑警」，吩咐佢哋喺池塘旁、池塘通道或者飛碟旁站崗。';
- else if(e.cop){var cop=esc(e.cop);tx.innerHTML='（本報訊）'+ds+'，'+nm+'企圖偷走本島池塘嘅魚，點知俾星空刑警'+cop+'當場發現，追上去一警棍敲中個頭，即場拘捕！<br>'+nm+'被罰款 $'+fmtC(e.fine||0)+'，罰款已經撥入島主戶口；偷到嘅 '+e.n+' 條魚'+nn+'全部追返，池塘冇損失。星空刑警'+cop+'話：「偷魚係唔啱㗎！」';
-  var cap=box.querySelector('figcaption');if(cap)cap.textContent=e.nm+'（被星空刑警'+e.cop+'拘捕）';}};
+ if(e.kind==='steal')tx.innerHTML='（本報訊）'+ds+'，'+nm+'趁探訪本島嘅時候，偷偷撈走咗池塘 '+e.n+' 條魚'+nn+'，仲成功坐飛碟離開。<br>池塘負責人呼籲島主加強防範：可以向市長林庫聘請「星空保安」，吩咐佢哋喺池塘旁、池塘通道或者飛碟旁站崗。';
+ else if(e.cop){var cop=esc(e.cop);tx.innerHTML='（本報訊）'+ds+'，'+nm+'企圖偷走本島池塘嘅魚，點知俾星空保安'+cop+'當場發現，追上去一警棍敲中個頭，即場捉住！<br>'+nm+'被罰款 $'+fmtC(e.fine||0)+'，罰款已經撥入島主戶口；偷到嘅 '+e.n+' 條魚'+nn+'全部追返，池塘冇損失。星空保安'+cop+'話：「偷魚係唔啱㗎！」';
+  var cap=box.querySelector('figcaption');if(cap)cap.textContent=e.nm+'（被星空保安'+e.cop+'捉住）';}};
 // ================= v56 教堂神跡池（用戶指示）=================
 // 星際教堂禮拜堂入口左邊：八角石池、發光池水、池中央星星
 // 喺背包揀一樣物品拋落神跡池 → 池水發光 → 即刻拋返一件物品出嚟：乜都有可能（種子、農作物、水果、食材、花、花種子、羊毛、貝殼、魚、藝術品）
@@ -14343,13 +14343,217 @@ function pool56Done(quiet){var A=POOL56.anim;if(!A)return;POOL56.anim=null;if(A.
 var rinTickV55=rinTick;rinTick=function(dt,t){rinTickV55(dt,t);if(where==='relch'){try{pool56Tick(dt,t);}catch(x){errNote(x,'神跡池');}}};
 var zaTickV56p=zaTick;zaTick=function(dt,t){zaTickV56p(dt,t);if(POOL56.anim&&where!=='relch')pool56Done(true);};
 // ================= v56 廣告欄新消息 =================
-if(typeof AD47_NEWS!=='undefined')AD47_NEWS.unshift({id:'cop56',t:'星空刑警＋神跡池',lines:['新消息！新消息！星球有「星空刑警」喇！',
- '向市長林庫申請「聘請星空刑警」：穿警察制服嘅外星人，手持警棍，最多聘請 5 位（盧隊長、鐵膽、阿強、大孖、細孖）。林庫每次介紹三位求職者，$100 可以換一批。',
- '每位星空刑警有三項能力：速度（5 星同星光跑鞋一樣快）、手長（手越長，越遠都敲得中）、警覺性（越敏銳越易察覺偷魚賊）。',
- '聘請之後要吩咐佢哋喺邊度站崗：池塘通道、池塘旁、農田旁、花田旁、飛碟旁，或者任何建築物旁。好友偷魚俾佢哋見到，就會追上去用警棍敲個頭即場拘捕：罰款 $5,000 會交入被偷魚島主嘅戶口！',
- '原本嘅保安已經升職做「星空刑警盧隊長」。',
+if(typeof AD47_NEWS!=='undefined')AD47_NEWS.unshift({id:'cop56',t:'星空保安＋神跡池',lines:['新消息！新消息！星球有「星空保安」喇！',
+ '向市長林庫申請「聘請星空保安」：穿保安制服嘅外星人，手持警棍，最多聘請 5 位（盧隊長、鐵膽、阿強、大孖、細孖）。林庫每次介紹三位求職者，$100 可以換一批。',
+ '每位星空保安有三項能力：速度（5 星同星光跑鞋一樣快）、手長（手越長，越遠都敲得中）、警覺性（越敏銳越易察覺偷魚賊）。',
+ '聘請之後要吩咐佢哋喺邊度站崗：池塘通道、池塘旁、農田旁、花田旁、飛碟旁，或者任何建築物旁。好友偷魚俾佢哋見到，就會追上去用警棍敲個頭即場捉住：罰款 $5,000 會交入被偷魚島主嘅戶口！',
+ '原本嘅保安已經升職做「星空保安盧隊長」。',
  '另外，星際教堂入面加咗「神跡池」：將背包一樣物品拋落去，神跡池會即刻拋返一件物品出嚟，乜都有可能，越珍貴越難出！每個鐘最多拋 3 次。',
  '仲有：流暢模式夜晚畫面太黑嘅問題已經修正咗。']});
+// ================= v57 價錢跟星球發展程度（用戶指示：興建新建築物成本太便宜，要按發展程度評估玩家金錢、按比率定價）=================
+// 發展倍數 M＝以下兩個較大者（最少 1 倍，最多 60 倍）：
+//   ① 發展指數倍數：1＋0.5×發展指數（大型設施數目×（1＋平均升級級數）÷2）
+//   ② 收入倍數：最近每小時收入 ÷ $4,000（即係原價 $20,000 嘅建築大約等於 5 個鐘收入）
+// 適用：增建大型設施、升級大型設施（酒店設施、樂園、主題餐廳、動物園、水族館、博物館、宗教聖地）、升級設施（農場、池塘、噴水池、花圃、牧場、行人路）、社區設施
+// 唔適用：填海（本身已經按次數加價）、聘請人員、買種子工具衫褲等日常嘢
+// 每 10 分鐘先重新計一次；每次最多跌 15%，價錢唔會時高時低
+var PM57={m:1,t:0,idx:0,inc:0},PM57R=[];
+function pm57Reg(o,k){if(!o||o[k]==null)return;var v=o[k];if(Array.isArray(v))PM57R.push({o:o,k:k,b:v.slice()});else if(typeof v==='number')PM57R.push({o:o,k:k,b:v});}
+function pm57R(v){v=Math.max(0,v);return v<1000?Math.round(v/10)*10:v<10000?Math.round(v/100)*100:v<100000?Math.round(v/1000)*1000:Math.round(v/10000)*10000;}
+function pm57Calc(){var idx=0,inc=0;try{idx=big41c().idx||0;}catch(e){}try{inc=incRate()||0;}catch(e){}PM57.idx=idx;PM57.inc=inc;return Math.min(60,Math.max(1,1+0.5*idx,inc/4000));}
+function pm57Apply(){var m=PM57.m;PM57R.forEach(function(r){if(Array.isArray(r.b))r.o[r.k]=r.b.map(function(v){return v?pm57R(v*m):v;});else r.o[r.k]=r.b?pm57R(r.b*m):r.b;});}
+function pm57Update(force){if(VISIT||!S)return;var now=Date.now();if(!force&&now-PM57.t<600000)return;PM57.t=now;var m=pm57Calc();if(S.pm57&&m<S.pm57*0.85)m=S.pm57*0.85;m=Math.round(m*20)/20;S.pm57=m;if(m!==PM57.m){PM57.m=m;pm57Apply();}}
+function pm57P(v){return v?pm57R(v*PM57.m):v;}
+(function(){try{['dome','wheel','hotel'].forEach(function(k){pm57Reg(BLD[k],'c');});
+ if(typeof REL!=='undefined')Object.keys(REL).forEach(function(k){pm57Reg(REL[k],'c');(REL[k].up||[]).forEach(function(u){pm57Reg(u,'c');});});
+ HTL_F.forEach(function(f){pm57Reg(f,'c');});Object.keys(PK_R).forEach(function(k){pm57Reg(PK_R[k],'c');});Object.keys(PK_A).forEach(function(k){pm57Reg(PK_A[k],'c');});Object.keys(PK_S).forEach(function(k){pm57Reg(PK_S[k],'c');});
+ for(var i=0;i<TR_C.length;i++)pm57Reg(TR_C,i);ZOO_UP.forEach(function(u){pm57Reg(u,'c');});AQ_UP.forEach(function(u){pm57Reg(u,'c');});
+ ['ext','int','cap'].forEach(function(k){MUS_UP[k].L.forEach(function(u){pm57Reg(u,'c');});});RANCH_UP.forEach(function(u){pm57Reg(u,'c');});PV40.forEach(function(u){if(u)pm57Reg(u,'c');});
+ Object.keys(FAC).forEach(function(k){FAC[k].L.forEach(function(u){pm57Reg(u,'c');});});FBED_UP.forEach(function(u){pm57Reg(u,'c');});['farm','pond','fount'].forEach(function(k){if(UP[k])UP[k].L.forEach(function(u){pm57Reg(u,'c');});});}catch(e){errNote(e,'發展定價');}})();
+// 增建大型設施：住宿、主題餐廳、動物園、水族館（宗教聖地已經喺上面嘅表入面）
+var lfPriceV56=lfPrice;lfPrice=function(k,t){var v=lfPriceV56(k,t);return (typeof REL!=='undefined'&&REL[k])?v:pm57P(v);};
+// 開面板前先更新；發展面板頂加一句說明
+var PM57_PANELS={build:1,facil:1,lfb:1,lfu:1,musup:1,hotel:1,park:1,tr:1,zau:1,relu:1};
+var renderPanelV56=renderPanel;renderPanel=function(top){if(panelKind&&PM57_PANELS[panelKind])pm57Update(false);renderPanelV56(top);try{if(panelKind&&PM57_PANELS[panelKind]&&PM57.m>1.001){var body=$('pBody');if(body&&body.firstChild){var n=note('價錢按星球發展程度調整：發展指數 '+PM57.idx.toFixed(1)+'、最近每小時收入約 $'+fmtC(PM57.inc)+'，所以價錢係原本嘅 '+PM57.m.toFixed(2).replace(/\.?0+$/,'')+' 倍。');n.classList.add('pm57');body.insertBefore(n,body.firstChild);}}}catch(e){}};
+var zaTickV56pm=zaTick;zaTick=function(dt,t){zaTickV56pm(dt,t);if(phase==='play'&&!VISIT&&Date.now()-PM57.t>600000)pm57Update(false);};
+setTimeout(function(){try{if(S&&S.pm57){PM57.m=S.pm57;pm57Apply();}pm57Update(true);}catch(e){}},1500);
+// ================= v57 新建築一定要起喺新填海嘅土地（用戶指示）=================
+// 問題：工程隊喺島上搵空地，新建築有時起喺舊建築後面，俾舊建築遮住（例如神社起咗喺精品酒店後面）
+// 做法：每座新建築（第二、三間住宿、主題餐廳、動物園、水族館、宗教聖地）都要用一塊未用過嘅填海地：每填海一次可以起一座，而且就起喺嗰塊新填海地上面
+//   揀位：要喺陸地、唔壓住建築物同行人路、門口有路行；前面（鏡頭嗰邊）有高建築遮住嘅位置唔揀
+//   原本預留位嘅建築（第一間酒店、博物館、主題樂園）照舊起喺預留位，唔使填海
+//   v53 之後起咗嘅宗教聖地：自動配返一塊填海地；放得落就搬去新填海地（唔再俾舊建築遮住）
+var LF57={want:0,found:null};
+function lf57Used(){var U={},R=S.recl||[];(S.lf||[]).forEach(function(e){if(e.rp!=null&&R[e.rp])U[e.rp]=1;});
+ (S.lf||[]).forEach(function(e){if(!e.p||e.rp!=null)return;for(var i=0;i<R.length;i++)if(!U[i]&&Math.hypot(e.p[0]-R[i][0],e.p[1]-R[i][1])<R[i][2]*0.75){U[i]=1;break;}});return U;}
+function lf57Free(){var U=lf57Used(),L=[];(S.recl||[]).forEach(function(q,i){if(!U[i])L.push(i);});return L;}
+function lf57LandOK(){return lf57Free().length>0;}
+function lf57LandTxt(){return '土地：已填海 '+((S.recl||[]).length)+' 次，仲有 '+lf57Free().length+' 塊新填海地未用（每填海一次可以起一座新建築，新建築會起喺新填海嘅土地上，唔會俾舊建築遮住）。';}
+function lf57Spot(i,kind,skip){var q=(S.recl||[])[i];if(!q||!MAP)return null;var F=lfFP(kind==='tr'?'tr':'stay'),hx=F[0],zb=F[1],zf=F[2],OC=(MAP.occ||[]).filter(function(o){return o[0]!==skip;}),pr=MAP.pier,Q=MAP.plaza||[0,0],best=null,bs=-1e9,tall=/^(rest|svc|mkt|hotel|wheel|dome|house\d|shop\d|lf_|ranch)/;
+ for(var x=q[0]-q[2];x<=q[0]+q[2];x+=0.5)for(var z=q[1]-q[2];z<=q[1]+q[2];z+=0.5){var dc=Math.hypot(x-q[0],z-q[1]);if(dc>q[2]*0.85)continue;var r=[x-hx,x+hx,z-zb,z+zf];if(!lfRectOk(r,OC,pr))continue;if(sdAt(x,z+zf+0.6)>-0.3)continue;
+  var sc=-dc-Math.hypot(x-Q[0],z-Q[1])*0.05;for(var oi=0;oi<OC.length;oi++){var o=OC[oi];if(tall.test(o[0])&&r[1]>o[1]&&r[0]<o[2]&&o[3]>r[3]-0.2&&o[3]<r[3]+7)sc-=8;}
+  if(sc>bs){bs=sc;best=[+x.toFixed(2),+z.toFixed(2)];}}
+ return best;}
+// 起新建築：工程隊只會喺未用過嘅新填海地搵位（由最新嗰塊開始）
+var lfFindV56=lfFind;lfFind=function(kind,block){if(LF57.want){var F=lf57Free();for(var j=F.length-1;j>=0;j--){var p=lf57Spot(F[j],kind);if(p){LF57.found={i:F[j],p:p};return p;}}LF57.found=null;return null;}return lfFindV56(kind,block);};
+var lfNoRoomV56=lfNoRoom;lfNoRoom=function(){if(!LF57.want)return lfNoRoomV56();if(!lf57LandOK())lf57Need();else talk(LINK_NM,LINK_BG,'#ffffff',['新填海嘅土地唔夠位放呢座建築（要避開碼頭、行人路同其他建築，前面又唔可以俾高建築遮住）。','可以喺旁邊再填多次海，令土地大啲，或者喺另一邊海岸填海。']);};
+function lf57Need(){talk(LINK_NM,LINK_BG,'#ffffff',['星球土地唔夠喇！每興建一座新建築，都要先填海一次：新建築會起喺新填海嘅土地上，唔會俾舊建築遮住。',lf57LandTxt(),'可以向我申請「升級設施 → 填海」，再去海邊面向大海按 A 填海。']);}
+function lf57Wrap(fn){return function(){if(VISIT)return fn.apply(this,arguments);LF57.want=1;LF57.found=null;try{return fn.apply(this,arguments);}finally{LF57.want=0;}};}
+lfBuildStay=lf57Wrap(lfBuildStay);lfBuildTR=lf57Wrap(lfBuildTR);if(typeof lfBuildZA==='function')lfBuildZA=lf57Wrap(lfBuildZA);
+relBuild=lf57Wrap(function(k){if(VISIT||relE(k))return;if(!lf57LandOK()){lf57Need();return;}return relBuildV53(k);});
+var lfStartV56=lfStart;lfStart=function(e,c){var f=LF57.found;if(f&&e&&e.p&&e.p[0]===f.p[0]&&e.p[1]===f.p[1])e.rp=f.i;LF57.found=null;return lfStartV56(e,c);};
+// v53 宗教聖地嘅土地規則改用新規則
+relLandOK=lf57LandOK;relLandTxt=lf57LandTxt;
+// 面板：增建大型設施每頁都講土地；冇新填海地就唔俾開工（第一間住宿起喺預留酒店位，唔使填海）
+function lf57PanelFix(b){var ok=lf57LandOK();b.insertBefore(note('<b>'+esc(lf57LandTxt())+'</b>'+(ok?'':'<br><span style="color:#c0392b">土地唔夠：要先填海先可以再起新建築。</span>')),b.children[1]||null);
+ if(!ok)[].forEach.call(b.querySelectorAll('.card button'),function(bt){if(/^開工/.test(bt.textContent)){bt.textContent='要先填海';bt.disabled=true;}});}
+['stay','tr','zoo','aqua'].forEach(function(t){var f=RENDER['lfb_'+t];if(!f)return;RENDER['lfb_'+t]=function(b){f(b);if(t==='stay'&&!siteOn('hotel'))return;lf57PanelFix(b);};});
+// 舊存檔：v53 之後起咗嘅宗教聖地配返填海地；放得落就搬過去（每個存檔做一次）
+function lf57Migrate(){if(VISIT||!S||S.lf57m||!MAP||!MAP.occ)return;S.lf57m=1;var moved=[],R=S.recl||[];
+ (S.lf||[]).forEach(function(e){if(!relIs(e.k)||e.rp!=null||!e.p)return;var U=lf57Used();
+  for(var i=0;i<R.length;i++)if(!U[i]&&Math.hypot(e.p[0]-R[i][0],e.p[1]-R[i][1])<R[i][2]*0.75){e.rp=i;return;}
+  var F=lf57Free();if(!F.length)return;var j=F[0],p=lf57Spot(j,'stay','lf_'+e.id);e.rp=j;if(p){e.p=p;moved.push(lfName(e));var r=lfRect(e);(MAP.occ||[]).forEach(function(o){if(o[0]==='lf_'+e.id){o[1]=r[0];o[2]=r[1];o[3]=r[2];o[4]=r[3];}});}});
+ save();if(moved.length){relayout();setTimeout(function(){toast(moved.join('、')+'已經搬去新填海嘅土地，唔再俾舊建築遮住',6000);},1500);}}
+var zaTickV57l=zaTick;zaTick=function(dt,t){zaTickV57l(dt,t);if(phase==='play'&&!VISIT&&S&&!S.lf57m&&MAP&&MAP.occ){try{lf57Migrate();}catch(x){errNote(x,'填海地');}}};
+// ================= v57 星空保安（用戶指示：星空刑警改名做星空保安；樣子重新設計、五位一樣大細；追捕時頭頂一直出「咪走！」；能力值排整齊）=================
+// 新外型：外星大圓頭（大眼、面紅、微笑、兩條觸角穿出帽頂）、深藍保安帽（帽帶、黑色帽舌、金色帽章）、淺藍短袖制服（領、深藍領呔、胸袋、金色星章、白色名牌、肩章）、深藍褲、黑皮帶金扣、黑鞋、右手警棍
+// 盧隊長：綠色、金色帽帶同肩章、八字鬚；鐵膽：藍色；阿強：紫色；大孖、細孖：粉紅色孖生（一樣大細）
+COP_SC={};
+function cop57Model(c){var col=COP_COL[c.nm]||0x8fd66b,cap0=c.nm==='盧隊長',rc=copCl(c.rc),g=new T.Group(),b=new T.Group();g.add(b);
+ var sk=M(col),sh=M(0xaecbee),sh2=M(0x93b6e2),nv=M(0x1f2a44),bk=M(0x15161a),gd=M(0xd9a53a),wt=M(0xffffff),dk=M(0x2d2a32);
+ function fz(y){return 0.1-(y-0.115)*0.106+0.004;}
+ b.add(ms(new T.CylinderGeometry(0.082,0.1,0.17,18),sh,0,0.2,0));
+ b.add(ms(new T.CylinderGeometry(0.102,0.102,0.022,18),nv,0,0.124,0));b.add(ms(new T.BoxGeometry(0.03,0.02,0.01),gd,0,0.124,0.103));
+ [-1,1].forEach(function(s){var cl=ms(new T.BoxGeometry(0.046,0.012,0.034),sh2,s*0.027,0.283,0.056);cl.rotation.set(0,-s*0.45,s*0.42);b.add(cl);
+  b.add(ms(new T.BoxGeometry(0.03,0.026,0.004),sh2,s*0.042,0.205,fz(0.205)));b.add(ms(new T.BoxGeometry(0.046,0.009,0.032),nv,s*0.058,0.284,0));if(cap0)b.add(ms(new T.BoxGeometry(0.032,0.01,0.008),gd,s*0.058,0.287,0.008));});
+ b.add(ms(new T.BoxGeometry(0.02,0.075,0.006),nv,0,0.228,fz(0.228)+0.004));b.add(ms(new T.BoxGeometry(0.024,0.016,0.009),nv,0,0.268,fz(0.268)+0.006));
+ var st=ms(starGeo(0.014),gd,-0.042,0.243,fz(0.243)+0.002);st.rotation.y=Math.PI;b.add(st);b.add(ms(new T.BoxGeometry(0.036,0.012,0.004),wt,0.042,0.243,fz(0.243)));
+ var hd=ms(new T.SphereGeometry(0.15,24,18),sk,0,0.43,0);hd.scale.set(1.08,0.96,1);b.add(hd);
+ [-1,1].forEach(function(s){var ew=ms(new T.SphereGeometry(0.036,16,12),wt,s*0.056,0.445,0.124);ew.scale.set(1,1.18,0.55);b.add(ew);var pu=ms(new T.SphereGeometry(0.024,14,10),dk,s*0.056,0.44,0.14);pu.scale.set(1,1.12,0.5);b.add(pu);
+  b.add(ms(new T.SphereGeometry(0.008,8,6),wt,s*0.056+0.009,0.453,0.15));var bl=ms(new T.SphereGeometry(0.02,10,8),M(0xff9aa8),s*0.094,0.402,0.112);bl.scale.set(1,0.6,0.4);b.add(bl);});
+ var mo=ms(new T.TorusGeometry(0.021,0.006,6,12,Math.PI),dk,0,0.393,0.143);mo.rotation.z=Math.PI;b.add(mo);
+ if(cap0)[-1,1].forEach(function(s){var mu=ms(new T.CylinderGeometry(0.009,0.009,0.045,6),dk,s*0.022,0.408,0.146);mu.rotation.z=Math.PI/2-s*0.35;b.add(mu);});
+ var cap=new T.Group();cap.position.set(0,0.517,0);b.add(cap);cap.add(ms(new T.CylinderGeometry(0.13,0.12,0.068,24),nv,0,0.034,0));cap.add(ms(new T.CylinderGeometry(0.124,0.124,0.02,24),cap0?gd:M(0x7fa8d8),0,0.006,0));
+ var vz=ms(new T.CylinderGeometry(0.11,0.11,0.008,20,1,false,-Math.PI/2,Math.PI),bk,0,-0.002,0.088);vz.scale.set(1,1,0.75);vz.rotation.x=0.2;cap.add(vz);
+ var cb=ms(starGeo(0.02),gd,0,0.04,0.126);cb.rotation.y=Math.PI;cap.add(cb);
+ [-1,1].forEach(function(s){var an=ms(new T.CylinderGeometry(0.006,0.006,0.09,5),sk,s*0.05,0.105,0);an.rotation.z=-s*0.3;cap.add(an);cap.add(ms(new T.SphereGeometry(0.018,8,6),M(0xffd54a),s*0.064,0.152,0));});
+ var lg=[],am=[];[-1,1].forEach(function(s){var l=new T.Group();l.userData.dyn=1;l.position.set(s*0.04,0.1,0);l.add(ms(new T.CylinderGeometry(0.027,0.025,0.1,8),nv,0,-0.05,0));var so=ms(new T.SphereGeometry(0.028,10,8),bk,0,-0.095,0.01);so.scale.set(1,0.6,1.35);l.add(so);b.add(l);lg.push(l);
+  var a=new T.Group();a.userData.dyn=1;a.position.set(s*0.097,0.262,0);a.rotation.z=s*0.25;a.add(ms(new T.CylinderGeometry(0.027,0.025,0.045,10),sh,0,-0.018,0));a.add(ms(new T.CylinderGeometry(0.018,0.017,0.07,8),sk,0,-0.07,0));a.add(ms(new T.SphereGeometry(0.022,10,8),sk,0,-0.106,0));
+  if(s>0){var L=0.15+0.012*(rc-1),bt=new T.Group();bt.position.set(0,-0.106,0.012);bt.add(ms(new T.CylinderGeometry(0.011,0.009,L,8),bk,0,-L/2+0.02,0));bt.add(ms(new T.CylinderGeometry(0.014,0.014,0.016,8),M(0x3a3c44),0,0.012,0));a.add(bt);}
+  b.add(a);am.push(a);});
+ mergeRigid(b);g.userData={b:b,lg:lg,am:am,legs:true};g.scale.setScalar(2.3);shadowAll(g);return noCull(g);}
+copModel=cop57Model;
+copPortrait=function(c){return portraitURL('cop57:'+c.nm+'|'+copCl(c.rc),function(){return cop57Model(c);});};
+// ---- 追捕：頭上先出「！」，追嘅時候一直出「咪走！」----
+copSay=function(o,t,sec){if(o.bub){killSprite(o.bub);o.bub=null;}o.bubTx='';if(!t)return;var s=bubble(t,'#2f3f6e','#ffffff',t.length<=1?0.6:0.42);scO.add(s);o.bub=s;o.bubT=sec||2.4;o.bubTx=t;};
+copTick=function(dt,t){copSync();if(!COPS.list.length){copHitFx(dt);return;}var out=where==='out';
+ COPS.list.forEach(function(o){var m=o.m,c=o.c,mv=false;m.visible=out;if(!out)return;
+  if(o.st==='patrol'){if(o.pause>0){o.pause-=dt;o.face+=Math.sin(t*1.1+o.i)*dt*0.9;}
+   else{var C=copCenter(c);if(C.r<0){o.a+=dt*0.2*(o.i%2?-1:1);var R=guardR();mv=copMove(o,C.x+Math.cos(o.a)*R,C.z+Math.sin(o.a)*R,1.1,dt);if(Math.random()<dt*0.1)o.pause=1.5+Math.random()*2;}
+    else{if(!o.wp)o.wp=copWaypoint(o);mv=copMove(o,o.wp[0],o.wp[1],1.1,dt);if(!mv||Math.hypot(o.wp[0]-o.x,o.wp[1]-o.z)<0.15){o.wp=null;o.pause=1.2+Math.random()*2.5;}}}
+   if(VISIT&&STL.n>0&&!STL.caught){var dd=Math.hypot(P.x-o.x,P.z-o.z);if(dd<copDetR(c)*0.6&&Math.random()<(0.25+0.15*copCl(c.al))*dt)copAlert(o);}}
+  else if(o.st==='alert'){o.t-=dt;o.face=Math.atan2(P.x-o.x,P.z-o.z);if(o.t<=0){if(copChaseOK()){o.st='chase';copSay(o,'咪走！',99);}else{o.st='back';copSay(o,'');}}}
+  else if(o.st==='chase'||o.st==='strike'){if(copChaseOK()){if(o.bubTx!=='咪走！')copSay(o,'咪走！',99);o.bubT=99;}
+   if(o.st==='chase'){o.cool-=dt;if(!copChaseOK()){o.st='back';copSay(o,'');}else{var dx=P.x-o.x,dz=P.z-o.z,d=Math.hypot(dx,dz),rr=copReach(c);
+     if(d<=rr&&o.cool<=0){o.st='strike';o.t=0;o.hit=0;o.face=Math.atan2(dx,dz);}else{mv=copMove(o,P.x,P.z,copSpd(c)*(d<rr+0.6?0.6:1),dt);}}}
+   else{o.t+=dt;o.face=Math.atan2(P.x-o.x,P.z-o.z);
+    if(o.t>=0.26&&!o.hit){o.hit=1;if(copChaseOK()&&Math.hypot(P.x-o.x,P.z-o.z)<=copReach(c)+0.35)copCatch(o);else o.hit=2;}
+    if(o.t>=0.45){if(o.hit===2&&copChaseOK()){o.st='chase';o.cool=0.35;}else{o.st='back';if(o.bubTx==='咪走！')copSay(o,'');}}}}
+  else if(o.st==='back'){if(o.bubTx==='咪走！')copSay(o,'');if(!o.wp)o.wp=copWaypoint(o);mv=copMove(o,o.wp[0],o.wp[1],1.6,dt);if(!mv||Math.hypot(o.wp[0]-o.x,o.wp[1]-o.z)<0.2){o.st='patrol';o.wp=null;o.pause=1;}}
+  o.rot=lerpA(o.rot,o.face,dt*8);m.position.set(o.x,standY(o.x,o.z),o.z);m.rotation.y=o.rot;if(mv)o.ph+=dt*(o.st==='chase'?14:9);animWalk(m,o.ph,mv);copArm(o);
+  if(o.bub){o.bubT-=dt;o.bub.position.copy(bendPt(o.x,standY(o.x,o.z)+2.3,o.z));if(o.bubT<=0){killSprite(o.bub);o.bub=null;o.bubTx='';}}});
+ copHitFx(dt);};
+// 捉到之後頭上改講「捉到你喇！」（copCatch 會叫 copSay）
+// ---- 面板：能力值逐行排好（名稱一樣闊、星星對齊）----
+(function(){var st=document.createElement('style');st.textContent='.ab57{display:grid;grid-template-columns:3.6em auto;column-gap:6px;row-gap:1px;align-items:center;margin:2px 0 3px}.ab57 span{white-space:nowrap}.ab57 b{font-weight:400;white-space:nowrap;letter-spacing:1px}.ab57 .stars{color:#e8a22c}';document.head.appendChild(st);})();
+function cop57Ab(c,post){return '<div class="ab57"><span>速度</span><b class="stars">'+starStr(copCl(c.sp))+'</b><span>手長</span><b class="stars">'+starStr(copCl(c.rc))+'</b><span>警覺性</span><b class="stars">'+starStr(copCl(c.al))+'</b>'+(post?'<span>站崗</span><b>'+esc(post)+'</b>':'')+'</div>';}
+RENDER.staff_police=function(b){var L=copList();
+ b.appendChild(note('「星空保安」係穿保安制服嘅外星人，手持警棍，最多聘請 '+COP_MAX+' 位。聘請之後要吩咐佢哋喺邊度站崗：池塘通道、池塘旁、農田旁、花田旁、飛碟旁或者任何建築物旁，佢哋會喺站崗位置附近巡邏。<br>好友探訪時偷你池塘嘅魚，附近嘅星空保安察覺到就會頭上出「！」，然後一路追一路叫「咪走！」，用警棍敲中偷魚賊個頭就即場捉住：罰款 $5,000 交入你嘅戶口，偷到嘅魚全部沒收。'));
+ b.appendChild(note('能力：<b>速度</b>（5 星同星光跑鞋一樣快）、<b>手長</b>（手越長，越遠都敲得中）、<b>警覺性</b>（越敏銳越易察覺偷魚賊）。'));
+ L.forEach(function(c){b.appendChild(card({img:copPortrait(c)},'星空保安'+c.nm,cop57Ab(c,copPostName(c.post)),
+  [{t:'吩咐站崗',fn:function(){closePanel();setTimeout(function(){copAskPost(c);},200);}},{t:'解僱',fn:function(){closePanel();setTimeout(function(){copFireAsk(c);},200);}}]));});
+ b.appendChild(note('求職嘅星空保安（已經聘請 '+L.length+' / '+COP_MAX+' 位）：'));if(L.length>=COP_MAX){b.appendChild(note('已經聘請晒 5 位星空保安。'));return;}
+ copJobs().forEach(function(c){b.appendChild(card({img:copPortrait(c)},'星空保安'+c.nm,cop57Ab(c),[{t:'聘請 $'+fmtC(c.fee),cls:'o',dis:S.coins<c.fee||!!VISIT,fn:function(){copHire(c);}}]));});
+ b.appendChild(card({emo:'🔄'},'即時換一批星空保安','付 $'+COP_RF+' 請林庫再搵三位求職者。',[{t:'換一批 $'+COP_RF,dis:S.coins<COP_RF||!!VISIT,fn:function(){buy(COP_RF,function(){copJobs(true);renderPanel();});}}]));};
+// 對話：能力逐行講
+copTalk=function(c){var o=copRt(c);if(o&&o.st==='patrol'){o.pause=4;o.face=Math.atan2(P.x-o.x,P.z-o.z);}
+ if(VISIT){talk('星空保安'+c.nm,'#2f3f6e','#ffffff',[pick(['我係星空保安'+c.nm+'，正喺度巡邏。','呢個島嘅池塘有我哋星空保安睇住，唔好打啲魚嘅主意啊！','見到有人偷魚，我哋一定會捉！'])]);return;}
+ talk('星空保安'+c.nm,'#2f3f6e','#ffffff',['報告！星空保安'+c.nm+'，而家喺「'+copPostName(c.post)+'」站崗。','速度 '+starStr(copCl(c.sp))+'　手長 '+starStr(copCl(c.rc))+'　警覺性 '+starStr(copCl(c.al))],
+  [{t:'吩咐站崗位置',cb:function(){copAskPost(c);}},{t:'解僱',cb:function(){copFireAsk(c);}},{t:'沒事了',cb:function(){}}]);};
+// ================= v57 宗教聖地：神跡池搬去教堂外面、求籤有支籤跌落地（用戶指示）=================
+// 神跡池：由禮拜堂入面搬去教堂外面（教堂右邊，彩繪玻璃窗旁）；玩法同 v56 一樣（每個鐘拋 3 次）
+// 神農廟求籤：拎起籤筒 → 搖籤筒 → 一支籤跌出嚟、跌落地（彈一彈）→ 籤筒放返落櫈 → 先出籤文
+rinChurch=rinChurchV55;pool56Tick=function(){};
+var POOL57={byId:{},anim:null,e:null,sp:[],fx:[],spT:0},PL57={dx:2.1,dz:-1.2};
+var relChurchV56=relChurch;relChurch=function(e,ico){var g=relChurchV56(e,ico);try{pool57Build(g,e,ico);}catch(x){errNote(x,'神跡池');}return g;};
+function pool57Build(g,e,ico){var px=PL57.dx,pz=PL57.dz,ST=M(0xcfc6b4),ST2=std({c:0xb3a994,r:0.85,side:T.DoubleSide});
+ zA(g,new T.CylinderGeometry(0.62,0.66,0.34,8,1,true),ST,px,0.17,pz);zA(g,new T.CylinderGeometry(0.46,0.46,0.3,8,1,true),ST2,px,0.17,pz);
+ var top=zA(g,new T.RingGeometry(0.46,0.64,8,1),ST2,px,0.342,pz);top.rotation.set(-Math.PI/2,0,Math.PI/8);
+ var wm=std({c:0x6fd4ff,e:0x2fa0e8,r:0.15,tr:1,op:0.9}),w=zA(g,new T.CircleGeometry(0.48,8),wm,px,0.3,pz);w.rotation.set(-Math.PI/2,0,Math.PI/8);w.userData.dyn=1;
+ zA(g,zCy(0.045,0.07,0.42,10),ST,px,0.5,pz);var sm=std({c:0xffe27a,e:0xf2b02a,r:0.35,side:T.DoubleSide}),st=zA(g,starGeo(0.11),sm,px,0.82,pz);st.userData.dyn=1;
+ var sg=roomSign('神跡池','#f6f1e6','#5a78c0',0.5,0.15);sg.position.set(px,0.19,pz+0.67);g.add(sg);
+ if(!ico&&e&&e.id)POOL57.byId[e.id]={e:e,w:w,st:st};}
+var relITOV56=relITO;relITO=function(e){var L=relITOV56(e);if(e.k==='church'&&e.done)L.push({x:e.p[0]+PL57.dx,z:e.p[1]+PL57.dz+0.95,r:1.0,l:'神跡池',fn:function(){pool57Open(e);}});return L;};
+function pool57Open(e){POOL57.e=e;if(VISIT){talk('神跡池','#5a78c0','#ffffff',['朋友星球嘅神跡池：池水閃閃發光。返自己個島先可以拋嘢落去。']);return;}if(POOL57.anim)return;
+ var first=!S.met||!S.met.pool56;if(S.met)S.met.pool56=1;
+ if(pool56Left()<=0){talk('神跡池','#5a78c0','#ffffff',['池水靜靜咁發光……','神跡池每個鐘最多拋 '+POOL56_N+' 次：再等 '+pool56Wait()+' 分鐘先可以再拋。']);return;}
+ if(first){talk('神跡池','#5a78c0','#ffffff',['呢個係「神跡池」：將背包裏面一樣物品拋落去，神跡池會即刻拋返一件物品出嚟。','拋出嚟嘅可以係任何物品，不過越珍貴嘅物品，機會越低。每個鐘最多拋 '+POOL56_N+' 次。'],[{t:'揀物品拋落去',cb:function(){openPanel('pool56','bag');}},{t:'遲啲先',cb:function(){}}]);save();return;}
+ openPanel('pool56','bag');}
+RENDER.pool56_bag=function(b){var left=pool56Left();
+ b.appendChild(note('揀背包裏面一樣物品拋落神跡池，神跡池會即刻拋返一件物品出嚟：乜都有可能，但係越珍貴嘅物品，機會越低。<br>神跡池每個鐘最多可以拋 '+POOL56_N+' 次'+(left>0?'（今個鐘仲可以拋 '+left+' 次）':'：今個鐘已經拋晒，'+pool56Wait()+' 分鐘後再嚟')+'。'));
+ var keys=[];S.bag.s.forEach(function(x){if(keys.indexOf(x.k)<0)keys.push(x.k);});if(!keys.length){b.appendChild(note('背包係空嘅，冇嘢可以拋。'));return;}
+ keys.forEach(function(k){var n=bagCount(k),f=slotInfo({k:k,n:n});b.appendChild(card({ico:f.ico},pool56Name(k),'背包有 '+n+' 個',[{t:'拋 1 個落去',cls:'o',dis:left<=0||!!POOL57.anim,fn:function(){pool57Throw(k);}}]));});};
+pool56Throw=function(k){pool57Throw(k);};
+function pool57Throw(k){var e=POOL57.e;if(POOL57.anim||VISIT||!e||!e.p||bagCount(k)<1)return;if(pool56Left()<=0){renderPanel();return;}var px=e.p[0]+PL57.dx,pz=e.p[1]+PL57.dz;
+ if(where!=='out'||Math.hypot(P.x-px,P.z-pz)>4.5){toast('行近教堂外面嘅神跡池先拋',2600);return;}
+ var res=pool56Pick(),inN=pool56Name(k);if(!bagTake(k,1))return;if(bagRoom(res)<1){bagAdd(k,1);bagFullMsg();return;}
+ pool56St().t.push(Date.now());save();if(panelKind)closePanel();if(D0)closeDlg();
+ var y0=standY(P.x,P.z),mi=pool56Mdl(k),s0=mi.scale.x;mi.position.set(P.x,y0+1.2,P.z);scO.add(mi);P.face=Math.atan2(px-P.x,pz-P.z);
+ POOL57.anim={e:e,k:k,res:res,inN:inN,resN:pool56Name(res),tier:pool56Tier(pool56Val(res)),t:0,mi:mi,s0:s0,sx:P.x,sy:y0+1.2,sz:P.z,mo:null,s1:1,spl:0,px:px,pz:pz,y:standY(px,pz)};}
+function pool57InScene(o){while(o){if(o===scO)return true;o=o.parent;}return false;}
+function pool57Spark(px,py,pz,burst){var a=Math.random()*6.283,r=Math.random()*(burst?0.25:0.42),m=new T.Mesh(new T.SphereGeometry(burst?0.035:0.025,6,5),basicM({c:burst?0xfff2a8:0xbff0ff,tr:1,op:0.9,dw:false}));
+ m.position.set(px+Math.cos(a)*r,py,pz+Math.sin(a)*r);scO.add(m);POOL57.sp.push({m:m,t:0,L:burst?1.0:1.5,vy:burst?1.4:0.45,vx:burst?Math.cos(a)*0.5:0,vz:burst?Math.sin(a)*0.5:0});}
+function pool57Splash(A){var ring=new T.Mesh(new T.TorusGeometry(1,0.03,6,28),basicM({c:0xe8fbff,tr:1,op:0.9,dw:false}));ring.rotation.x=Math.PI/2;ring.position.set(A.px,A.y+0.33,A.pz);ring.scale.setScalar(0.1);scO.add(ring);POOL57.fx.push({m:ring,t:0});for(var i=0;i<14;i++)pool57Spark(A.px,A.y+0.33,A.pz,true);}
+function pool57Tick(dt,t){var A=POOL57.anim,near=null,bd=16;Object.keys(POOL57.byId).forEach(function(id){var q=POOL57.byId[id];if(!pool57InScene(q.w)){delete POOL57.byId[id];return;}
+  q.w.material.emissiveIntensity=0.55+0.25*Math.sin(t*2)+(A&&A.e===q.e?0.9:0);q.st.rotation.y+=dt*(A?5:1.2);var d=Math.hypot(P.x-(q.e.p[0]+PL57.dx),P.z-(q.e.p[1]+PL57.dz));if(d<bd){bd=d;near=q;}});
+ if(where!=='out'){if(A)pool57Done(true);return;}
+ if(near){POOL57.spT-=dt;if(POOL57.spT<=0&&POOL57.sp.length<(A?30:8)){POOL57.spT=A?0.05:0.35;pool57Spark(near.e.p[0]+PL57.dx,standY(near.e.p[0]+PL57.dx,near.e.p[1]+PL57.dz)+0.33,near.e.p[1]+PL57.dz,false);}}
+ for(var i=POOL57.sp.length-1;i>=0;i--){var s=POOL57.sp[i];s.t+=dt;s.m.position.y+=s.vy*dt;s.m.position.x+=s.vx*dt;s.m.position.z+=s.vz*dt;s.m.material.opacity=0.9*(1-s.t/s.L);if(s.t>=s.L){scO.remove(s.m);s.m.geometry.dispose();s.m.material.dispose();POOL57.sp.splice(i,1);}}
+ for(var j=POOL57.fx.length-1;j>=0;j--){var f=POOL57.fx[j];f.t+=dt;f.m.scale.setScalar(0.1+f.t*0.9);f.m.material.opacity=0.9*(1-f.t/0.6);if(f.t>=0.6){scO.remove(f.m);f.m.geometry.dispose();f.m.material.dispose();POOL57.fx.splice(j,1);}}
+ if(!A)return;A.t+=dt;var px=A.px,pz=A.pz,gy=A.y;
+ if(A.t<0.7){var k=A.t/0.7;A.mi.position.set(A.sx+(px-A.sx)*k,A.sy+(gy+0.42-A.sy)*k+Math.sin(k*Math.PI)*0.9,A.sz+(pz-A.sz)*k);A.mi.rotation.y+=dt*6;}
+ else if(A.t<1.3){if(!A.spl){A.spl=1;pool57Splash(A);}var k2=(A.t-0.7)/0.6;A.mi.position.set(px,gy+0.42-k2*0.35,pz);A.mi.scale.setScalar(Math.max(0.001,A.s0*(1-k2)));}
+ else if(A.t<2.4){if(A.mi.parent){A.mi.parent.remove(A.mi);disposeTree(A.mi);}if(!A.mo){A.mo=pool56Mdl(A.res);A.s1=A.mo.scale.x;scO.add(A.mo);for(var q2=0;q2<10;q2++)pool57Spark(px,gy+0.33,pz,true);}var k3=Math.min(1,(A.t-1.3)/0.8);A.mo.position.set(px,gy+0.3+k3*1.3,pz);A.mo.rotation.y+=dt*4;A.mo.scale.setScalar(A.s1*(0.3+0.7*k3));}
+ else if(A.t<2.9){var k4=(A.t-2.4)/0.5,py=standY(P.x,P.z)+1.2;A.mo.position.set(px+(P.x-px)*k4,gy+1.6+(py-gy-1.6)*k4,pz+(P.z-pz)*k4);A.mo.scale.setScalar(Math.max(0.001,A.s1*(1-0.8*k4)));}
+ else pool57Done(false);}
+function pool57Done(quiet){var A=POOL57.anim;if(!A)return;POOL57.anim=null;if(A.mi&&A.mi.parent){A.mi.parent.remove(A.mi);disposeTree(A.mi);}if(A.mo&&A.mo.parent){A.mo.parent.remove(A.mo);disposeTree(A.mo);}
+ if(!bagAdd(A.res,1)){bagFullMsg();save();return;}save();var ex=A.tier>=4?'（神跡！極之珍貴！）':A.tier>=3?'（好罕有！）':A.tier>=2?'（唔錯喎！）':'';
+ if(quiet){toast('神跡池拋咗「'+A.resN+'」出嚟'+ex+'，已經放入背包',4500);return;}vib(A.tier>=3?[80,50,80,50,120]:[40]);
+ talk('神跡池','#5a78c0','#ffffff',['你將「'+A.inN+'」拋落神跡池……','池水閃閃發光，拋咗一件嘢出嚟：「'+A.resN+'」！'+ex,'（已經放入背包；神跡池今個鐘仲可以拋 '+Math.max(0,pool56Left())+' 次）']);}
+var zaTickV57r=zaTick;zaTick=function(dt,t){zaTickV57r(dt,t);try{pool57Tick(dt,t);}catch(x){errNote(x,'神跡池');}};
+// ---- 神農廟求籤：拎起籤筒、搖、跌一支籤落地 ----
+var CIM57=null;
+function cim57Go(){var e=REL_IN.e,qt=REL_IN.qt;if(VISIT||!e||!qt||where!=='reltp'||CIM57){relCim(e);return;}var o=relG();if(Date.now()-(o.kt||0)<3600000){relCim(e);return;}
+ CIM57={t:0,e:e,qt:qt,stick:null,said:0,from:qt.position.clone(),hx:P.x,hz:P.z,t2:0};P.face=Math.PI;}
+function cim57Tick(dt){var C=CIM57;if(!C)return;if(where!=='reltp'){cim57End();return;}C.t+=dt;var qt=C.qt,T0=C.t,hx=C.hx,hy=0.82,hz=C.hz-0.4;
+ if(T0<0.5){var k=T0/0.5,e2=k*k*(3-2*k);qt.position.set(C.from.x+(hx-C.from.x)*e2,C.from.y+(hy-C.from.y)*e2+Math.sin(k*Math.PI)*0.15,C.from.z+(hz-C.from.z)*e2);qt.rotation.x=-0.5*e2;}
+ else if(T0<1.9){qt.position.set(hx+Math.sin(T0*31)*0.015,hy+Math.abs(Math.sin(T0*26))*0.03,hz);qt.rotation.x=-0.55+Math.sin(T0*28)*0.22;}
+ else if(T0<2.6){qt.position.set(hx,hy,hz);qt.rotation.x=-0.7;
+  if(!C.stick){var s=new T.Group();s.add(ms(new T.BoxGeometry(0.032,0.4,0.012),M(0xd8b878),0,0,0));s.add(ms(new T.BoxGeometry(0.033,0.06,0.013),M(0xc0392b),0,0.17,0));qt.updateMatrixWorld(true);var m0=qt.localToWorld(new T.Vector3(0,0.36,0));s.position.copy(m0);s.rotation.x=-0.7;scRT.add(s);C.stick=s;C.s0=m0.clone();C.land=new T.Vector3(hx+0.38,0.014,C.hz-0.05);}
+  var k2=Math.min(1,(T0-1.9)/0.45),p=C.s0.clone().lerp(C.land,k2);p.y=C.s0.y+(C.land.y-C.s0.y)*k2+Math.sin(k2*Math.PI)*0.28;
+  if(k2>=1){var kb=Math.min(1,(T0-2.35)/0.25);p.y=C.land.y+Math.sin(kb*Math.PI)*0.05*(1-kb);}
+  C.stick.position.copy(p);C.stick.rotation.set(-0.7+(-Math.PI/2+0.7)*k2,k2*0.9,0);}
+ else if(T0<3.1){var k3=(T0-2.6)/0.5;qt.position.set(hx+(C.from.x-hx)*k3,hy+(C.from.y-hy)*k3+Math.sin(k3*Math.PI)*0.12,hz+(C.from.z-hz)*k3);qt.rotation.x=-0.7*(1-k3);if(!C.said&&T0>2.7){C.said=1;relCim(C.e);}}
+ else{qt.position.copy(C.from);qt.rotation.x=0;if(!C.said){C.said=1;relCim(C.e);}if(!D0){C.t2+=dt;if(C.t2>2)cim57End();}}}
+function cim57End(){var C=CIM57;if(!C)return;CIM57=null;if(C.qt){C.qt.position.copy(C.from);C.qt.rotation.set(0,0,0);}if(C.stick){if(C.stick.parent)C.stick.parent.remove(C.stick);disposeTree(C.stick);}if(!C.said)relCim(C.e);}
+var rinTickV56=rinTick;rinTick=function(dt,t){rinTickV56(dt,t);if(where==='reltp'){try{cim57Tick(dt);}catch(x){errNote(x,'求籤');}}};
+var zaTickV57c=zaTick;zaTick=function(dt,t){zaTickV57c(dt,t);if(CIM57&&where!=='reltp')cim57End();};
+// ================= v57 廣告欄新消息 =================
+if(typeof AD47_NEWS!=='undefined')AD47_NEWS.unshift({id:'land57',t:'新建築起喺新填海地＋星空保安',lines:['新消息！新消息！由今日開始，每興建一座新建築，都要先填海一次！',
+ '第二、三間住宿、主題餐廳、動物園、水族館、宗教聖地：工程隊會起喺新填海嘅土地上，唔會再俾舊建築遮住。之前起咗嘅宗教聖地，都已經搬去新填海地。（第一間酒店、博物館、主題樂園照舊起喺預留位）',
+ '星球越發展，工程越貴：增建同升級大型設施、升級設施同社區設施嘅價錢，會跟星球發展程度（發展指數、最近每小時收入）調整，面板頂會講而家係原本嘅幾多倍。',
+ '「星空刑警」改名做「星空保安」，仲換咗新制服、新樣！追偷魚賊嗰陣會一路叫「咪走！」。',
+ '神跡池搬咗去教堂外面；喺神農廟求籤，會見到一支籤由籤筒跌落地。']});
 // ---- 模組載入完：開始砌大型設施、牧場外型 ----
 LF_OK=true;if(MAP&&MAP.L&&typeof lfSync==='function')lfSync(true);
 requestAnimationFrame(loop);
