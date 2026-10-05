@@ -2,7 +2,7 @@
 <html lang="zh-Hant-HK">
 <head>
 <meta charset="utf-8">
-<meta name="ths-build" content="2610022240">
+<meta name="ths-build" content="2610051128">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="color-scheme" content="light">
 <!-- iPhone Safari 冇 element fullscreen API：由「分享 → 加入主畫面」開就會冇工具列（同旅款亂Upper 一樣）-->
@@ -1013,7 +1013,7 @@ if(S&&S.chefs)S.chefs.forEach(function(c){if(c&&(c.nm==='俞芯'||c.nm==='乙菱
 if(S&&S.ws!==WS){var f0=WS/(S.ws||1);(S.recl||[]).forEach(function(r){r[0]=+(r[0]*f0).toFixed(2);r[1]=+(r[1]*f0).toFixed(2);r[2]=+(r[2]*f0).toFixed(2);});S.treeL=null;S.houseL=null;S.fbedL=null;S.shopL=null;S.ranchL=null;S.fruit={};if(S.lf)S.lf.forEach(function(e){e.p=null;});if(S.wish){S.wish.x*=f0;S.wish.z*=f0;}S.ws=WS;}
 // ⚠ 重新開始時要先封住 save()：reload 前會觸發 pagehide，唔封就會將舊進度寫返入去，清極都清唔走
 var noSave=false;
-function save(){if(noSave||(typeof VISIT!=='undefined'&&VISIT))return;S.savedAt=Date.now();try{localStorage.setItem(CFG.saveKey,JSON.stringify(S));}catch(e){}if(typeof cloudSave==='function')cloudSave(false);}
+var SAVE0;function save(){if(noSave||(typeof VISIT!=='undefined'&&VISIT))return;if(SAVE0==null)SAVE0=S.savedAt||0;S.savedAt=Date.now();try{localStorage.setItem(CFG.saveKey,JSON.stringify(S));}catch(e){}if(typeof cloudSave==='function')cloudSave(false);}
 
 // ================= Three 基礎 =================
 // 畫質：精美（仿真材質、陰影、光暈、移軸，預設）／流暢（舊畫法，慢機用）。喺手機「設定」切換，要重新載入
@@ -3318,7 +3318,7 @@ function updMac(dt,t){var m=MAC,u=macO.userData;macO.visible=macSh.visible=!maki
 
 // ================= 封面、揀地形 =================
 // 每次開遊戲先見封面；未玩過嘅新玩家：揀地形 → 建立角色 → 開場白
-var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v51',BUILD='2610022240';
+var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v52',BUILD='2610051128';
 function showCoverV42(){phase='cover';$('cover').classList.add('on');$('app').classList.add('cover');CU.uB.value=0;sea.scale.set(4,7,1);sea.position.z=(MAP.bc||[0,0])[1];
  var old=!!(S.me&&S.me.nm);$('cvVer').textContent=BUILD+'V'+VERSION.slice(1);$('cvGo').textContent=old?'繼續遊戲':'開始遊戲';$('cvHint').textContent=old?'歡迎回來，'+S.me.nm+'！':'第一次玩：先揀島嶼地形，再建立角色';}
 function leaveCoverV42(){if(phase!=='cover')return;$('cover').classList.remove('on');if(!S.layout){if(!S.story)openStory();else openTerr();}else startPlay();}
@@ -13024,6 +13024,551 @@ if(typeof AD47_NEWS!=='undefined')AD47_NEWS.unshift({id:'eco50',t:'省電模式�
  '手機同平板已經自動開咗：行路時照樣順暢，企定唔郁或者開住選單時畫面會畫慢啲，手機冇咁熱、仲慳電。想熄可以去「背包 → 設定」。',
  '另外，自動化花圃有新規則：你唔喺度嘅時候，花圃每格最多開一次花（同農田一樣），返嚟時花王會即刻幫你摘晒去賣。',
  '仲有：重開遊戲之後萬聖節服飾唔見咗嘅問題，已經修正咗！']});
+// 50 款新魚（v52）：遊戲數值（稀有度、收購價、拉力、重量範圍、造型、花紋）＋兩面魚卡（資料經網上核實；完整來源網址見「魚卡資料來源（v52）.json」）
+var FISH52=[
+ {k:'hkbream',n:'黃腳鱲',rar:0,p:22,kg:[0.2,1.2],str:2,sh:'tall2',col:0x9aa5ab,col2:0xe6ebee,fin:0xf2c230,pat:'grad'},
+ {k:'blkbream',n:'黑鱲',rar:0,p:22,kg:[0.3,2.0],str:3,sh:'tall2',col:0x5f666d,col2:0xc9cdd0,fin:0x4a4f55,pat:'bars',pc:0x2f3438,pn:6,pw:0.05,pa:0.55},
+ {k:'thread',n:'紅衫魚',rar:0,p:16,kg:[0.08,0.4],str:2,sh:'std',col:0xe88a92,col2:0xf6d8d6,fin:0xf0b040,fin2:0xf5c518,pat:'lstripe',pc:0xf5c518,pn:2,pw:0.03,ex:['tailfil']},
+ {k:'bigeye',n:'大眼雞',rar:0,p:14,kg:[0.05,0.35],str:2,sh:'tall2',col:0xd8433f,col2:0xf1c9c3,fin:0xe3753f,pat:'grad',ex:['bigeye'],tm:'night',deep:1},
+ {k:'pomfret',n:'白鯧',rar:0,p:24,kg:[0.15,0.8],str:2,sh:'tall',col:0xb8c2c8,col2:0xeef2f4,fin:0xc9cfd2,pat:'speck',pc:0x8e9ca6,pn:160},
+ {k:'hairtail',n:'牙帶',rar:0,p:16,kg:[0.2,1.2],str:3,sh:'eel',col:0xc8d2da,col2:0xeef2f5,fin:0xd8dee3,pat:'grad',ex:['teeth']},
+ {k:'scat',n:'金鼓',rar:0,p:14,kg:[0.1,0.7],str:2,sh:'tall',col:0x8f9a52,col2:0xd8d8b8,fin:0xa9ad6a,pat:'polka',pc:0x2f3420,pn:30},
+ {k:'terapon',n:'釘公',rar:0,p:12,kg:[0.05,0.7],str:2,sh:'std',col:0xa99a72,col2:0xe9ebe0,fin:0xd8d6b4,pat:'arcs',pc:0x2f2a24,pn:3},
+ {k:'lizard',n:'狗棍',rar:0,p:12,kg:[0.1,0.9],str:2,sh:'torpedo',col:0xa8957a,col2:0xeee8dc,fin:0xb5a58c,pat:'saddle',pc:0x6b5a46,pn:5,ex:['teeth']},
+ {k:'bombay',n:'九肚魚',rar:0,p:10,kg:[0.05,0.45],str:2,sh:'torpedo',col:0xe8e2d4,col2:0xf5f2ea,fin:0xd3c7b2,pat:'speck',pc:0x8a7a62,pn:120,ex:['teeth']},
+ {k:'goatfish',n:'三鬚',rar:0,p:15,kg:[0.1,1.2],str:2,sh:'std',col:0xb5a37a,col2:0xf1e2dc,fin:0xcfc79e,fin2:0xf2e8c8,pat:'ocel',pc:0x2a2a2a,pv:0.22,ex:['whisk']},
+ {k:'mudskip',n:'大彈塗魚',rar:0,p:12,kg:[0.01,0.08],str:2,sh:'torpedo',col:0x6f7a6a,col2:0xcdc8b4,fin:0x5f7c92,pat:'speck',pc:0x5fc8ff,pn:160,ex:['bugeye']},
+ {k:'rockfish',n:'石狗公',rar:0,p:15,kg:[0.05,0.7],str:2,sh:'std',col:0xa65a3e,col2:0xe3c9b0,fin:0x9a4a34,pat:'mottle',pc:0x4a261f,ex:['spines'],tm:'night'},
+ {k:'threadfin',n:'馬友',rar:0,p:24,kg:[0.5,4],str:3,sh:'torpedo',col:0xa3a99f,col2:0xeef0ea,fin:0xd8cf9c,fin2:0xefe6c0,pat:'grad',ex:['threads']},
+ {k:'spanish',n:'馬鮫',rar:0,p:22,kg:[2.5,12],str:3,sh:'torpedo',col:0x4a6d91,col2:0xdce4e9,fin:0x2f4258,fin2:0x8fa3b8,pat:'bars',pc:0x2b4258,pn:14,pw:0.018,pa:0.8,ex:['finlets']},
+ {k:'flathead',n:'牛鰍',rar:0,p:18,kg:[0.3,3],str:2,sh:'flat',col:0x9b8a50,col2:0xe8deb0,fin:0xbba765,pat:'speck',pc:0x4b3c20,pn:180},
+ {k:'sergeant',n:'豆娘',rar:0,p:10,kg:[0.04,0.15],str:2,sh:'tall2',col:0xc8d07a,col2:0xeef2ee,fin:0xc8d07a,pat:'bars',pc:0x1d2a64,pn:5,pw:0.06,tm:'day'},
+ {k:'knifejaw',n:'石金鼓',rar:1,p:50,kg:[0.9,4.5],str:4,sh:'tall2',col:0xc9ced2,col2:0xe8ebec,fin:0x5b656c,pat:'bars',pc:0x2a2f33,pn:7,pw:0.06},
+ {k:'porcupine',n:'棘泡',rar:1,p:40,kg:[0.1,1.0],str:3,sh:'round',col:0xb9ad88,col2:0xf0ebdc,fin:0xb9ad88,pat:'polka',pc:0x3a2e1d,pn:40,tm:'night'},
+ {k:'boxfish',n:'木盒',rar:1,p:36,kg:[0.2,1.0],str:3,sh:'box',col:0xf0c419,col2:0xf6df74,fin:0xe3c24a,pat:'polka',pc:0x1f1f1f,pn:50},
+ {k:'cowfish',n:'牛角',rar:1,p:40,kg:[0.1,0.6],str:3,sh:'box',col:0xc8c25a,col2:0xe8e2a0,fin:0xd4cc7a,pat:'polka',pc:0x3b8ed0,pn:45,ex:['horns']},
+ {k:'picasso',n:'炮彈魚',rar:1,p:42,kg:[0.05,0.4],str:4,sh:'tall2',col:0xd8cfa0,col2:0xf2efe6,fin:0x7d8996,pat:'diag',pc:0x2a2f3a,pn:4,pw:0.03},
+ {k:'bamboo',n:'條紋斑竹鯊',rar:1,p:48,kg:[0.7,2.2],str:4,sh:'shark',col:0xb9955f,col2:0xeadfc6,fin:0xa98558,pat:'saddle',pc:0x5a3d28,pn:8,ex:['longtail'],tm:'night'},
+ {k:'stingray',n:'鯆魚',rar:1,p:46,kg:[2,8],str:5,sh:'sting',col:0x8a6a48,col2:0xf0a070,fin:0x7a5a3c,pat:'speck',pc:0x6b4e36,pn:60},
+ {k:'idol',n:'角鐮魚',rar:1,p:44,kg:[0.1,0.4],str:3,sh:'tall',col:0xf3edd6,col2:0xfffaf0,fin:0xf2d23a,fin2:0xffffff,pat:'bars',pc:0x18181d,pn:2,pw:0.18,ex:['snout','filament']},
+ {k:'unicorn',n:'單角鼻魚',rar:1,p:42,kg:[1,4.5],str:4,sh:'tall2',col:0x8d998a,col2:0xc9cfc0,fin:0x5b6b8a,pat:'grad',ex:['horn'],tm:'day'},
+ {k:'cleaner',n:'醫生魚',rar:1,p:34,kg:[0.004,0.02],str:3,sh:'torpedo',col:0x4a86c8,col2:0xf4efd8,fin:0x6f9bd2,pat:'lstripe',pc:0x15151b,pn:1,pw:0.06,tm:'day'},
+ {k:'batfish',n:'燕魚',rar:1,p:44,kg:[0.3,2.0],str:4,sh:'tall',col:0xc2bd9c,col2:0xece8d2,fin:0xbfa23a,pat:'bars',pc:0x2c2b2a,pn:2,pw:0.07,ex:['tallfins']},
+ {k:'banner',n:'關刀',rar:1,p:40,kg:[0.04,0.28],str:3,sh:'tall',col:0xf1efe4,col2:0xffffff,fin:0xefc229,fin2:0xffffff,pat:'bars',pc:0x1a1a1c,pn:2,pw:0.13,ex:['filament']},
+ {k:'archer',n:'射水魚',rar:1,p:38,kg:[0.05,0.45],str:3,sh:'std',col:0xc8c8a8,col2:0xeceae0,fin:0x4c4a45,pat:'saddle',pc:0x1c1c1c,pn:4,tm:'day'},
+ {k:'johnsnap',n:'牙點',rar:1,p:52,kg:[1.5,8],str:5,sh:'std',col:0xc9a13e,col2:0xefe6cf,fin:0xd4b24e,pat:'ocel',pc:0x1c1c1c,pv:0.5},
+ {k:'coralgrp',n:'東星斑',rar:2,p:130,kg:[0.7,5],str:6,sh:'std',col:0xd4573a,col2:0xf0a78a,fin:0xc4432c,pat:'speck',pc:0x3fa8ff,pn:160},
+ {k:'humpback',n:'老鼠斑',rar:2,p:128,kg:[1,4],str:6,sh:'napoleon',col:0xd8dacd,col2:0xf0f1ea,fin:0xd9d2bd,pat:'polka',pc:0x2a2a2a,pn:34},
+ {k:'mahi',n:'鬼頭刀',rar:2,p:110,kg:[2,10],str:7,sh:'torpedo',col:0x2c9c8e,col2:0xe8dc6c,fin:0x2f6aa6,pat:'speck',pc:0x173b52,pn:90,ex:['blunt','longdorsal'],deep:1},
+ {k:'barracuda',n:'金梭魚',rar:2,p:108,kg:[2,12],str:7,sh:'torpedo',col:0x7f98a8,col2:0xe9eff2,fin:0x3a424c,pat:'bars',pc:0x4e6476,pn:18,pw:0.02,pa:0.6,ex:['teeth'],tm:'day'},
+ {k:'gt',n:'浪人鰺',rar:2,p:118,kg:[4,20],str:7,sh:'std',col:0x5d6873,col2:0xe0e4e8,fin:0x4d5863,pat:'grad',ex:['blunt']},
+ {k:'zebrashark',n:'豹紋鯊',rar:2,p:115,kg:[15,40],str:6,sh:'shark',col:0xcbb88f,col2:0xe9e0c8,fin:0xc7b283,pat:'polka',pc:0x4b3b2a,pn:70,ex:['longtail'],tm:'night'},
+ {k:'eagleray',n:'雀仔鯆',rar:2,p:120,kg:[15,60],str:7,sh:'eagle',col:0x3d4d4a,col2:0xeef0ec,fin:0x2c3838,pat:'polka',pc:0xf2f5ef,pn:60},
+ {k:'mandarin',n:'七彩麒麟',rar:2,p:105,kg:[0.002,0.006],str:4,sh:'std',col:0x2f6fb8,col2:0xe9a43e,fin:0x3566b8,pat:'scribble',pc:0xf2862e},
+ {k:'stonefish',n:'石頭魚',rar:2,p:100,kg:[0.3,1.5],str:5,sh:'lump',col:0x8f4d3c,col2:0xc68a62,fin:0x7a4636,pat:'mottle',pc:0xd9693f},
+ {k:'moray',n:'豆點裸胸鱔',rar:2,p:112,kg:[1,10],str:6,sh:'eel',col:0xefe9d8,col2:0xf6f1e2,fin:0xd9d1bb,pat:'polka',pc:0x1c1815,pn:90,tm:'night'},
+ {k:'giantgrp',n:'龍躉',rar:3,p:300,kg:[30,150],str:8,sh:'std',col:0x6e5d4a,col2:0xb3a48a,fin:0xc9a13a,pat:'blotch',pc:0x3b2f25,big:1},
+ {k:'sailfish',n:'旗魚',rar:3,p:290,kg:[15,50],str:9,sh:'sword',col:0x1f4e8c,col2:0xdfe6ec,fin:0x1b3f7a,fin2:0x2a5aa0,pat:'bars',pc:0x6aa3d9,pn:14,pw:0.015,ex:['sail'],deep:1},
+ {k:'hammer',n:'雙髻鯊',rar:3,p:285,kg:[15,100],str:9,sh:'shark',col:0x8c8873,col2:0xece9e0,fin:0x6d6a5c,pat:'grad',ex:['hammer'],deep:1},
+ {k:'bumphead',n:'隆頭鸚哥魚',rar:3,p:270,kg:[6,30],str:8,sh:'napoleon',col:0x2e5b45,col2:0x7aa58a,fin:0x2a6070,pat:'grad',tm:'day',big:1},
+ {k:'bluefin',n:'藍鰭吞拿魚',rar:3,p:310,kg:[50,250],str:9,sh:'torpedo',col:0x1e3a5c,col2:0xcfd6dc,fin:0x2c4864,fin2:0xf2c14e,pat:'grad',ex:['finlets'],deep:1,big:1},
+ {k:'leafy',n:'葉海龍',rar:3,p:260,kg:[0.04,0.2],str:6,sh:'dragon',col:0xc9a84a,col2:0xd9c46a,fin:0x8ea34c,fin2:0xc9b24a,pat:'speck',pc:0xe9e2a8,pn:140},
+ {k:'white',n:'大白鯊',rar:4,p:660,kg:[680,1900],str:10,sh:'shark',col:0x6c7a86,col2:0xf3f3ef,fin:0x56626d,pat:'grad',deep:1,big:1},
+ {k:'goblin',n:'哥布林鯊',rar:4,p:600,kg:[70,210],str:9,sh:'shark',col:0xe6b4b9,col2:0xf6e4e2,fin:0xd9a0a6,pat:'grad',ex:['goblin'],deep:1},
+ {k:'frilled',n:'皺鰓鯊',rar:4,p:580,kg:[2.5,18],str:9,sh:'eel',col:0x6a5a4d,col2:0x9a8d80,fin:0x54463b,pat:'grad',ex:['frill'],deep:1}];
+var FISH52_ECO={"hkbream":{"zh":"黃鰭棘鯛（又稱黃鰭鯛；香港俗稱黃腳鱲）","sci":"Acanthopagrus latus","en":"Yellowfin seabream","fam":"鯛科 Sparidae","len":"約 24 厘米開始成熟；最長約 40 厘米（叉長）","wt":"最重紀錄約 1.5 公斤","dist":"西北太平洋：日本（本州、四國、九州）、南韓南部、台灣、中國（上海一帶至華南）及越南北部。","hab":"溫暖的近岸淺水，底棲，多在泥沙底；常進入河口，海水、半鹹淡水以至淡水都能生活。","food":"小魚、蟹、蝦、墨魚，以及雙殼貝、螺和海膽等底棲動物。","life":"先雄後雌：雄魚約兩歲時轉為雌魚；幼魚身體較高，長大後變得較修長。","iucn":"數據缺乏（DD，2009 年評估）","hk":"香港領海有記錄；漁護署稱「黃腳鱲」，街市有售，魚類統營處的冰鮮及活魚價目表均列作「黃腳立」。","fun":"腹鰭和臀鰭呈黃色，香港稱牠為「黃腳鱲」；牠在海水和淡水中都可養殖。","kg":[0.2,1.2],"srcN":"FishBase、漁農自然護理署、《香港海魚名錄》（Ni & Kwok 1999）、食物環境衞生署、魚類統營處、IUCN 紅色名錄、TaiCOL"},"blkbream":{"zh":"黑棘鯛（又稱黑鯛；香港俗稱黑鱲、黑沙鱲）","sci":"Acanthopagrus schlegelii","en":"Blackhead seabream (black seabream, black porgy)","fam":"鯛科 Sparidae","len":"成熟體長約 29 厘米；最長約 50 厘米（標準體長）","wt":"最重紀錄約 3.2 公斤","dist":"西北太平洋：日本北海道南部至朝鮮半島南部、中國沿岸和台灣，不見於琉球群島。","hab":"海灣、淺岩礁及半鹹淡水域，底棲，多在內灣軟底，偶爾進入河口；水深記錄由 15 米起。","food":"底棲甲殼類（蟹、蝦）、軟體動物（蠔、貝、螺）、棘皮動物及多毛類，也吃小魚和石莼。","life":"先雄後雌：約 1 歲成熟為雄魚，大多於約 2 歲轉為雌魚；香港吐露港的記錄在 11–12 月產卵。","iucn":"無危（LC，2009 年評估）","hk":"香港領海有記錄；漁護署稱「黑鱲」（又稱「黑沙鱲」）；FishBase 載有香港水域的食性及吐露港產卵研究。","fun":"漁護署資料記有香港最老的黑鱲達 9 歲；牠體側有垂直黑帶，只有胸鰭是淡黃色。","kg":[0.3,2.0],"srcN":"FishBase、漁農自然護理署、《香港海魚名錄》（Ni & Kwok 1999）、IUCN 紅色名錄、TaiCOL"},"thread":{"zh":"金線魚（香港俗稱紅衫、長尾衫）","sci":"Nemipterus virgatus","en":"Golden threadfin bream (golden thread)","fam":"金線魚科 Nemipteridae","len":"一般約 23 厘米，最長約 35 厘米（標準體長）","dist":"西太平洋：日本南部、東海、南海北部、越南、台灣，至澳洲西北部及阿拉弗拉海。","hab":"泥質或沙質海底，底棲、不作長距離洄游；水深 1–220 米，多在 18–33 米。","food":"甲殼類、魚類及頭足類（魷魚、墨魚）。","life":"雄魚有功能睾丸之餘，終生保留退化的卵巢組織；約 2–6 月產卵，約 15 厘米（叉長）性成熟。","iucn":"易危（VU，2009 年評估）","hk":"香港領海有記錄；街市稱「紅衫」，是食環署列出的常見街市魚；漁護署調查中金線魚科屬主要經濟魚類。","fun":"尾鰭上葉延長成絲狀，香港另稱「長尾衫」；FishBase 指牠可製成魚蛋。","kg":[0.08,0.4],"srcN":"FishBase、漁農自然護理署、《香港海魚名錄》（Ni & Kwok 1999）、食物環境衞生署、魚類統營處、IUCN 紅色名錄、TaiCOL"},"bigeye":{"zh":"大棘大眼鯛（又稱短尾大眼鯛；香港俗稱木棉、大眼雞）","sci":"Priacanthus macracanthus","en":"Red bigeye (bulls-eye perch)","fam":"大眼鯛科 Priacanthidae","len":"最長約 30 厘米（標準體長）","dist":"西太平洋：日本南部至印尼西部、阿拉弗拉海及澳洲。","hab":"沿岸及外海的岩礁，也見於開闊底質地帶（似會聚集成群）；水深約 12–400 米。","food":"小魚（如鰏）、魷魚、墨魚和蝦。","life":"大眼鯛科多在夜間活躍；本種白天常躲在岩架下，或在珊瑚頭旁徘徊。","iucn":"無危（LC，2015 年評估）","hk":"香港領海有記錄；街市稱「木棉」（又稱大眼雞），漁護署記為「齊尾木棉」。","fun":"大眼鯛科的眼睛特別大，眼後有一層明亮的反光層；科學家也研究過本種發聲的情況。","kg":[0.05,0.35],"srcN":"FishBase、漁農自然護理署、《香港海魚名錄》（Ni & Kwok 1999）、食物環境衞生署、魚類統營處、IUCN 紅色名錄、TaiCOL"},"pomfret":{"zh":"銀鯧（香港稱白鯧、粉鯧）","sci":"Pampus argenteus","en":"Silver pomfret (white pomfret)","fam":"鯧科 Stromateidae","len":"一般約 30 厘米，最長約 60 厘米（標準體長）","dist":"印度—西太平洋：波斯灣至印尼，北至日本北海道；亞得里亞海和夏威夷附近曾有零星捕獲。","hab":"近岸泥質海底，成群棲息於底層至中層；水深約 5–110 米。","food":"櫛水母、樽海鞘、水母及其他浮游動物。","life":"成群生活在近岸泥底，常與金線魚類（如紅衫）和鰏類同域；成魚沒有腹鰭，鰓孔縮成一條垂直細縫。","iucn":"未評估（NE）","hk":"香港領海有記錄；漁護署及魚類統營處稱「白鯧」（食環署統稱「鯧魚」）；禁拖後本港鯧科魚類數量及生物量上升。","fun":"銀鯧（白鯧）的背鰭和臀鰭呈鐮刀狀；香港市面另有近親鷹鯧（中國鯧），鰭不呈鐮刀狀，體形較像三角形。","kg":[0.15,0.8],"srcN":"FishBase、漁農自然護理署、《香港海魚名錄》（Ni & Kwok 1999）、食物環境衞生署、魚類統營處、IUCN 紅色名錄、TaiCOL"},"hairtail":{"zh":"白帶魚（又稱高鰭帶魚；香港俗稱牙帶）","sci":"Trichiurus lepturus","en":"Largehead hairtail","fam":"帶魚科 Trichiuridae","len":"一般約 100 厘米，最長約 234 厘米（全長）","wt":"最重紀錄約 5 公斤","dist":"環熱帶及溫帶海域，包括墨西哥灣、加勒比海、地中海、紅海及波斯灣。","hab":"多在淺海泥質海底上方，常進入河口；水深 0–589 米，多在 100–350 米。","food":"幼魚主要吃磷蝦、細小浮游甲殼類和小魚；成魚主要吃魚，偶爾吃魷魚和甲殼類。","life":"會隨日夜在水層間上下移動覓食；香港水域約 3–6 月為主要產卵期。","iucn":"無危（LC，2013 年評估）","hk":"香港領海有記錄；街市稱「牙帶」；漁護署 2011–2015 年圍網調查中，帶魚科按生物量在港島南面水域排第 3。","fun":"牙帶沒有尾鰭和腹鰭，身體像一條逐漸變細的銀帶；學名 Trichiurus 在希臘文意即「毛髮般的尾巴」。","kg":[0.2,1.2],"srcN":"FishBase、漁農自然護理署、《香港海魚名錄》（Ni & Kwok 1999）、食物環境衞生署、魚類統營處、IUCN 紅色名錄、TaiCOL"},"scat":{"zh":"金錢魚（香港俗稱金鼓）","sci":"Scatophagus argus","en":"Spotted scat (argus fish, butterfish)","fam":"金錢魚科 Scatophagidae","len":"一般約 20 厘米，最長約 45 厘米（全長）","dist":"印度—太平洋：科威特至斐濟，北至日本南部，南至新喀里多尼亞。","hab":"港灣、河口、紅樹林及河川下游的混濁淺水，水深約 0–5 米；海水、半鹹淡水和淡水都能生活。","food":"雜食：蠕蟲、甲殼類、昆蟲和植物性食物（如藻類）。","life":"幼魚多見於淡水及半鹹淡水，成魚在近岸混濁淺水；可多次產卵，華南沿岸約 4–8 月產卵。","iucn":"無危（LC，2009 年評估）","hk":"香港領海有記錄；漁護署稱「金鼓」，沿岸半鹹淡魚塘有單養；FishBase 亦記香港活魚市場有售。","fun":"屬名 Scatophagus 在希臘文意即「食糞者」，種名 Argus 取自希臘神話中有一百隻眼的守衛；背鰭和臀鰭的棘有毒。","kg":[0.1,0.7],"srcN":"FishBase、漁農自然護理署、《香港海魚名錄》（Ni & Kwok 1999）、IUCN 紅色名錄、TaiCOL"},"terapon":{"zh":"細鱗鯻（又稱花身鯻；香港俗稱釘公）","sci":"Terapon jarbua","en":"Jarbua terapon (crescent-banded tigerfish)","fam":"鯻科 Terapontidae","len":"一般約 25 厘米（標準體長），最長約 36 厘米（全長）","dist":"印度—太平洋：紅海及東非至薩摩亞，北至日本南部，南至阿拉弗拉海、澳洲及豪勳爵島","hab":"近岸及河口的沙泥底，會游入河川（幼魚、成魚常見於淡水）；水深約 1–25 米","food":"雜食：吃小魚、蝦蟹、昆蟲、藻類和沙中的蟲類，有時也啄食大魚身上的寄生蟲和魚鱗","life":"在海中產卵，幼魚游入淡水生活；雄魚會看守並扇動魚卵","iucn":"無危（LC，2016 年評估）","hk":"香港街市活魚指南列為釘公；漁護署把細鱗鯻列為本港河溪偶見的海洋游移魚類；香港領海有記錄","fun":"從上方看，身上的弧形條紋像箭靶，水族業稱牠為 target fish；牠還能發出聲音","kg":[0.05,0.7],"srcN":"FishBase、《香港海魚名錄》（Ni & Kwok 1999）、香港珊瑚魚普查（114°E）、漁農自然護理署、「街市魚指南」（Choose Right Today）、食物環境衞生署、魚類統營處、教育雲、維基百科、IUCN 紅色名錄、TaiCOL"},"lizard":{"zh":"長蛇鯔（又稱長體蛇鯔；蛇鯔類在香港俗稱狗棍）","sci":"Saurida elongata","en":"Slender lizardfish","fam":"狗母魚科 Synodontidae","len":"最長約 50 厘米（標準體長）","dist":"西北太平洋：自日本（東海）至南海北部，包括南韓、中國、台灣和香港","hab":"底棲，棲於淺水的沙質海底；水深 20–100 米","food":"肉食性，以魚類為主；香港吐露港的研究記錄到鯷魚、籃子魚、鰕虎魚等小魚，甚至有同類","life":"最長紀錄約 7 年；FishBase 評估其族群恢復力高（倍增時間少於 15 個月）","iucn":"無危（LC，2019 年評估）","hk":"街市稱蛇鯔類為狗棍；狗母魚科是漁護署調查中本港多個水域的主要商業魚科；香港領海有記錄","fun":"狗母魚類口內滿佈尖牙，連舌頭上也有；頭部像蜥蜴，所以英文叫 lizardfish","kg":[0.1,0.9],"srcN":"FishBase、《香港海魚名錄》（Ni & Kwok 1999）、食物環境衞生署、香港珊瑚魚普查（114°E）、漁農自然護理署、維基百科、IUCN 紅色名錄、TaiCOL"},"bombay":{"zh":"龍頭魚（香港俗稱九肚魚）","sci":"Harpadon nehereus","en":"Bombay duck (bummalo)","fam":"狗母魚科 Synodontidae","len":"一般約 25 厘米，最長約 61 厘米（全長）","dist":"印度—西太平洋：索馬里至巴布亞新幾內亞，北至日本，南至印尼","hab":"平時棲於離岸深水的沙泥底層（水深 50 米起）；季風期成大群游到河口三角洲覓食","food":"兇猛的肉食性掠食者，吃小魚（含同類）和蝦類","life":"每年可分 6 批產卵；世代時間估計約 1.5 年","iucn":"近危（NT，2018 年評估）","hk":"食環署街市物品冊列有九肚魚，粵菜有椒鹽九肚魚；香港領海有記錄","fun":"身體柔軟，別名豆腐魚、啫喱魚；FishBase 記載牠很會發磷光","kg":[0.05,0.45],"srcN":"FishBase、《香港海魚名錄》（Ni & Kwok 1999）、食物環境衞生署、維基百科、IUCN 紅色名錄、TaiCOL"},"goatfish":{"zh":"印度副緋鯉（香港稱印度三鬚）","sci":"Parupeneus indicus","en":"Indian goatfish","fam":"鬚鯛科 Mullidae","len":"一般約 35 厘米，最長約 45 厘米（全長）","dist":"印度—太平洋：亞丁灣及阿曼南部，沿東非至南非，東至加羅林群島和薩摩亞；日本南部至昆士蘭南部","hab":"沿岸及內潟湖礁區的淺水沙質或泥質底（海草床）；水深 10–30 米","food":"以底棲無脊椎動物為食：小蟹、端足類、蝦、小章魚、沙蠶，也吃小魚","life":"單獨或成小群出沒；幼魚會與其他三鬚魚，甚至隆頭魚混群","iucn":"無危（LC，2015 年評估）","hk":"香港礁魚調查有記錄，中文名印度三鬚（「三鬚」是鬚鯛科的香港名稱）；香港領海有記錄","fun":"下巴有一對鬚，內有化學感受器，像探測器般在沙泥中探索獵物","kg":[0.1,1.2],"srcN":"FishBase、《香港海魚名錄》（Ni & Kwok 1999）、香港珊瑚魚普查（114°E）、維基百科、IUCN 紅色名錄、TaiCOL"},"mudskip":{"zh":"大彈塗魚（又稱花跳）","sci":"Boleophthalmus pectinirostris","en":"Great blue spotted mudskipper","fam":"背眼鰕虎科 Oxudercidae","len":"最長約 17.5 厘米（雌魚可達 22 厘米）","wt":"最重紀錄約 91 克","dist":"西北太平洋：中國、朝鮮半島、日本和台灣","hab":"河口、紅樹林和沿岸的潮間帶泥灘（半鹹淡水至海水）；水深約 0–5 米","food":"退潮時在泥面刮食硅藻、藻類和有機碎屑；台灣資料稱牠也吃浮游動物和小型無脊椎動物","life":"兩棲：退潮時用胸鰭在泥灘爬行或跳動覓食，漲潮時躲進洞穴；皮膚可輔助呼吸；最長約 4 年","iucn":"易危（VU，2024 年評估）","hk":"香港濕地公園紅樹林浮橋可見，是園內三種常見彈塗魚中最大的；香港領海有記錄","fun":"屬名意指「彈出的眼睛」，因牠能把眼睛迅速抬離眼窩；雄魚求偶時會開展背鰭，在泥灘上跳「求偶舞」","kg":[0.01,0.08],"srcN":"FishBase、《香港海魚名錄》（Ni & Kwok 1999）、香港濕地公園、教育雲、維基百科、IUCN 紅色名錄、TaiCOL"},"rockfish":{"zh":"褐菖鮋（香港俗稱石狗公，亦作石九公）","sci":"Sebastiscus marmoratus","en":"False kelpfish (marbled rockfish)","fam":"平鮋科 Sebastidae","len":"最長約 36 厘米（全長）","wt":"最重紀錄約 2.8 公斤","dist":"西太平洋：日本北海道南部至菲律賓","hab":"近岸岩礁區，見於海藻床和礁石底；水深資料不一（台灣資料 0–40 米，日本資料至約 200 米）","food":"肉食性，吃魚類、甲殼類和沙蠶；多固守一處，等獵物靠近才捕食","life":"卵胎生：雌魚直接產出仔魚（日本研究：一次 1,000–94,000 條）；日間藏身物陰，夜間出來覓食","iucn":"未評估（NE）","hk":"香港街市活魚指南列為石狗公；香港生物多樣性資訊站的海洋魚類頁面附有褐菖鮋相片；香港領海有記錄","fun":"鰭棘帶有毒腺，被刺會疼痛，處理時要特別小心","kg":[0.05,0.7],"srcN":"FishBase、《香港海魚名錄》（Ni & Kwok 1999）、「街市魚指南」（Choose Right Today）、香港生物多樣性資訊站、食物環境衞生署、維基百科、IUCN 紅色名錄"},"threadfin":{"zh":"四指馬鮁（香港俗稱馬友）","sci":"Eleutheronema tetradactylum","en":"Fourfinger threadfin (blue threadfin)","fam":"馬鮁科 Polynemidae","len":"一般約 50 厘米，最長約 200 厘米（全長）","wt":"最重紀錄約 145 公斤","dist":"印度—太平洋：波斯灣、巴基斯坦、印度、斯里蘭卡至澳洲北部及新幾內亞；華南沿海近年亦有以 DNA 鑑定的採獲記錄。","hab":"成魚多在沿岸淺水泥底，也會游入河流（冬季溯河）；幼魚棲於河口；水深約 0–23 米。","food":"捕食蝦和魚（多為鯔科、鯷科及石首魚科），偶爾吃多毛類。","life":"先雄後雌的性逆轉魚類；澳洲資料顯示約 1–2 歲出現雌雄同體、2–3 歲才有雌魚。","iucn":"全球未評估（NE）；波斯灣區域評估為瀕危（EN，2015 年公布）","hk":"馬友是香港市面主要的鹹魚品種之一；有論文提到香港野生馬友每公斤價格近 100 美元。","fun":"胸鰭下有 4 條游離的絲狀鰭條，所以叫「四指」；它們像觸鬚，可在泥底探路找食物。","kg":[0.5,4],"srcN":"FishBase、學術期刊、維基百科、香港中文大學、IUCN 紅色名錄、Fishes of Australia、TaiCOL"},"spanish":{"zh":"康氏馬鮫（香港街市統稱鮫魚）","sci":"Scomberomorus commerson","en":"Narrow-barred Spanish mackerel","fam":"鯖科 Scombridae","len":"一般約 120 厘米，最長約 240 厘米（叉長）","wt":"最重紀錄約 70 公斤","dist":"印度—西太平洋：紅海、南非至東南亞，北至中國、日本，南至澳洲東南部及斐濟；亦經蘇伊士運河進入地中海。","hab":"中上層魚，棲於大陸架邊緣至淺水沿岸（常見水渾、低鹽度處），也見於礁坡和潟湖；水深約 10–70 米。","food":"以鯷魚、鯡科和鰺科等小魚為主，也吃魷魚和蝦。","life":"雌魚一季可多次產卵（約每 2–6 天一次），並聚集在礁坡產卵；會作長距離沿岸洄游；最長壽約 22 年。","iucn":"近危（NT，2022 年評估）","hk":"IUCN 列明本種分佈包括香港；本港礁魚普查亦記錄到馬鮫屬魚類（未鑑定到種），街市統稱鮫魚。","fun":"魚身橫紋會隨長大而增加：40 厘米的約 20 條，150 厘米的可多達 65 條。","kg":[2.5,12],"srcN":"FishBase、IUCN 紅色名錄、Fishes of Australia、維基百科、食物環境衞生署、香港珊瑚魚普查（114°E）、TaiCOL"},"flathead":{"zh":"印度牛尾魚（又稱印度鯒；香港俗稱牛鰍）","sci":"Platycephalus indicus","en":"Bartail flathead","fam":"牛尾魚科 Platycephalidae","len":"一般約 60 厘米，最長約 100 厘米（全長）","wt":"最重紀錄約 3.5 公斤","dist":"印度—西太平洋：紅海、東非至菲律賓，北至日本南部及韓國，南至澳洲北部；亦已進入東地中海。","hab":"沿岸沙泥底，常入河口，幼魚可見於淡水；水深約 20–200 米。","food":"小魚和甲殼類（蝦、蟹等）。","life":"常靜伏沙底、身體半埋沙中；香港的繁殖高峰期為 10 月至翌年 2 月，雄魚約 23.5 厘米、雌魚約 45.7 厘米才性成熟。","iucn":"數據缺乏（DD，2009 年評估）","hk":"香港礁魚普查有記錄；食環署街市用語手冊把 Flathead 譯作牛鰍；本港水域有性成熟研究（FishBase 引 Ho 2005）。","fun":"屬名 Platycephalus 源自希臘文「扁平的頭」；尾鰭中央的黃斑和上下緣的黑白條紋是辨認特徵。","kg":[0.3,3],"srcN":"FishBase、香港珊瑚魚普查（114°E）、食物環境衞生署、IUCN 紅色名錄、維基百科、Fishes of Australia、學術期刊、TaiCOL"},"sergeant":{"zh":"五帶豆娘魚（又稱條紋豆娘魚；香港俗稱石剎、可剎）","sci":"Abudefduf vaigiensis","en":"Indo-Pacific sergeant (five-banded damselfish)","fam":"雀鯛科 Pomacentridae","len":"約 12 厘米成熟；最長約 20 厘米（全長）","dist":"印度—太平洋：紅海及東非至萊恩群島、土阿莫土群島，北至日本南部，南至澳洲。","hab":"珊瑚礁外坡上緣及近岸岩礁，水深約 0–15 米；幼魚隨漂浮的海藻或海草生活。","food":"雜食：浮游動物、底棲藻類和小型無脊椎動物。","life":"雌雄配對繁殖，卵黏附在礁石上；常在大潮時大批產卵，讓浮游的幼魚被帶往遠海。","iucn":"無危（LC，2013 年評估）","hk":"香港礁魚普查有記錄；本地魚市場調查曾錄得逾 1,000 條，但有食用後中雪卡毒的報告。","fun":"雄魚是魚卵的「保姆」，會看守魚卵並扇水供氧直至孵化；求偶築巢時背部前方的黃色更明顯。","kg":[0.04,0.15],"srcN":"FishBase、香港珊瑚魚普查（114°E）、IUCN 紅色名錄、Fishes of Australia、維基百科、TaiCOL"},"knifejaw":{"zh":"條石鯛（香港俗稱石金鼓）","sci":"Oplegnathus fasciatus","en":"Barred knifejaw (striped beakfish, rock bream)","fam":"石鯛科 Oplegnathidae","len":"最長約 80 厘米","wt":"最重紀錄約 6.4 公斤","dist":"西北太平洋：日本、韓國、台灣及中國沿海（香港有記錄）；夏威夷亦有記錄；地中海有引入記錄","hab":"沿岸岩礁，水深約 1–10 米；幼魚隨漂浮的海藻生活","food":"藤壺、貝類、甲殼類和海膽等硬殼動物，癒合成喙的牙齒能咬碎外殼","life":"幼魚白色有黑色橫帶；雌性成魚銀灰色、有深灰橫帶，大型雄魚則深灰色、嘴部黑色、橫帶消失；卵散產，親魚不護卵","iucn":"無危（LC，2023 年評估）","hk":"本港礁魚普查（114°E）名錄收錄本種，香港稱石金鼓；通常單獨出沒，幼魚偶爾成小群","fun":"2011 年日本海嘯沖走的一艘漁船漂流兩年多、橫越逾 6,400 公里，2013 年在美國華盛頓州海灘被發現，船艙內竟有 5 尾活的條石鯛","kg":[0.9,4.5],"srcN":"FishBase、香港珊瑚魚普查（114°E）、維基百科、Seaside Aquarium、NOAA、TaiCOL、IUCN 紅色名錄、WoRMS"},"porcupine":{"zh":"六斑二齒魨（又稱六斑刺魨；香港俗稱棘泡）","sci":"Diodon holocanthus","en":"Longspined porcupinefish (freckled porcupinefish, balloonfish)","fam":"二齒魨科 Diodontidae","len":"一般約 15 厘米，最長約 50 厘米","dist":"環熱帶分布：大西洋、印度洋和太平洋的熱帶及亞熱帶海域，太平洋北至日本南部、南至豪勳爵島","hab":"淺水礁區至開闊軟底，亦見於岩礁；水深 2–200 米，通常 2–35 米","food":"夜間捕食軟體動物、海膽、寄居蟹和蟹","life":"幼魚浮游至約 6–9 厘米，常隨漂浮的馬尾藻漂流；多數個體在 20 厘米前性成熟；每年有一個明顯的產卵高峰","iucn":"無危（LC，2011 年評估）","hk":"本港礁魚普查（114°E）名錄收錄本種，香港稱棘泡或六斑刺魨；通常單獨出沒","fun":"受威脅時會吞入大量海水，把身體脹成圓球並豎起全身長刺，嚇退捕食者","kg":[0.1,1.0],"srcN":"FishBase、香港珊瑚魚普查（114°E）、Fishes of Australia、Australian Museum、維基百科、TaiCOL、IUCN 紅色名錄、WoRMS"},"boxfish":{"zh":"粒突箱魨（香港俗稱木盒）","sci":"Ostracion cubicum","en":"Yellow boxfish (cube trunkfish)","fam":"箱魨科 Ostraciidae","len":"最長約 45 厘米","dist":"印度—太平洋：波斯灣、紅海及東非至夏威夷、土阿莫土群島，北至琉球群島，南至豪勳爵島","hab":"潟湖及半遮蔽的外礁，水深 1–280 米，通常 1–50 米；幼魚常躲在鹿角珊瑚或窄縫中","food":"主要吃藻類，也吃海綿、軟體動物、甲殼類、沙中多毛類和小魚","life":"一夫多妻，一條雄魚帶 2–4 條雌魚；幼魚鮮黃色有黑點，長大後黃色轉暗，成年雄魚偏藍色","iucn":"無危（LC，2023 年評估）","hk":"本港礁魚普查（114°E）名錄收錄本種，香港稱木盒（WWF 香港亦稱木盒魚）；成魚多單獨出沒，對潛水員很戒備","fun":"平治 2005 年的 Bionic 概念車模仿牠的方盒身形；但研究發現箱魨的減阻其實比一般魚形差，不穩的身體反而利於急轉彎","kg":[0.2,1.0],"srcN":"FishBase、香港珊瑚魚普查（114°E）、WWF 香港、Fishes of Australia、維基百科、學術期刊、TaiCOL、IUCN 紅色名錄、WoRMS"},"cowfish":{"zh":"角箱魨（香港俗稱牛角）","sci":"Lactoria cornuta","en":"Longhorn cowfish (horned boxfish)","fam":"箱魨科 Ostraciidae","len":"一般約 40 厘米，最長約 46 厘米","dist":"印度—太平洋：紅海及東非至馬克薩斯群島、土阿莫土群島，北至日本南部，南至豪勳爵島","hab":"沿岸泥底或沙底的平靜海灣，常見於港口及河口，亦見於礁石附近的海藻區；水深 1–100 米，通常 1–50 米","food":"底棲無脊椎動物；會向沙面噴水，吹開沙層找食物","life":"成魚單獨活動，大型個體膽小；幼魚常成小群，多在河口及半鹹水的淺灘；卵散產，親魚不護卵","iucn":"無危（LC，2023 年評估）","hk":"本港礁魚普查（114°E）名錄收錄本種，香港稱牛角；通常單獨出沒，幼魚可能成小群","fun":"硬殼由數百塊多邊形骨板拼成；魚長大時骨板數目幾乎不變，只是每塊各自長大、特別是變闊","kg":[0.1,0.6],"srcN":"FishBase、香港珊瑚魚普查（114°E）、Fishes of Australia、學術期刊、維基百科、TaiCOL、IUCN 紅色名錄、WoRMS"},"picasso":{"zh":"尖吻棘魨（又稱叉斑銼鱗魨；鱗魨類在香港俗稱砲彈）","sci":"Rhinecanthus aculeatus","en":"White-banded triggerfish (Picasso triggerfish, lagoon triggerfish)","fam":"鱗魨科 Balistidae","len":"一般約 15 厘米，最長約 30 厘米","dist":"印度—太平洋：東非經澳洲北部至夏威夷、馬克薩斯及土阿莫土群島，北至日本南部","hab":"潮下帶礁坪及淺水潟湖，水深 0–50 米；幼魚躲在碎石區，成魚游動開闊但怕羞","food":"雜食：藻類、碎屑、軟體動物、甲殼類、蠕蟲、海膽、魚、珊瑚和魚卵等","life":"有領域性；雌魚獨力看守魚卵；睡覺時側臥，受驚時發出嗡嗡聲","iucn":"無危（LC，2022 年評估）","hk":"香港記錄極少：本港礁魚普查（114°E）名錄沒有收錄本種，GBIF 只有 1 宗 2021 年荃灣的觀察記錄","fun":"同屬魚類因圖案和色彩鮮豔，被稱為「畢加索魚」（picassofish），名字取自西班牙畫家畢加索","kg":[0.05,0.4],"srcN":"FishBase、香港珊瑚魚普查（114°E）、GBIF、Fishes of Australia、Australian Museum、Animal Diversity Web、維基百科、TaiCOL、IUCN 紅色名錄、WoRMS"},"bamboo":{"zh":"條紋斑竹鯊（又稱條紋狗鯊；香港俗稱狗女鯊）","sci":"Chiloscyllium plagiosum","en":"Whitespotted bambooshark (white-spotted bamboo shark)","fam":"長尾鬚鯊科 Hemiscylliidae","len":"雄魚最長約 83 厘米，雌魚最長約 95 厘米；約 50–63 厘米開始成熟","dist":"印度—西太平洋：由印度、馬爾代夫東至巴布亞新幾內亞，北至日本，南至印尼；韓國亦有報告。","hab":"近岸岩石及珊瑚礁的底層，水深約 0–50 米。","food":"主要吃魚類、甲殼類和頭足類動物。","life":"卵生，每次產下成對的卵；胚胎只靠卵黃發育，孵化時約 10–13 厘米；最長可活約 25 年。","iucn":"近危（NT，2020 年評估）","hk":"香港礁魚普查有記錄，常單獨出沒；本地研究顯示香港水域雌鯊約 5.5 歲、雄鯊約 5.1 歲成熟。","fun":"據 114°E 資料，雌鯊於 3–4 月、雄鯊於 12–1 月性活躍，由此推斷雌鯊交配後會把精子儲存在體內，之後才使卵受精。","kg":[0.7,2.2],"srcN":"FishBase、香港珊瑚魚普查（114°E）、維基百科、TaiCOL、IUCN 紅色名錄"},"stingray":{"zh":"赤魟（又稱赤土魟；香港粵語常把魟類稱作鯆魚）","sci":"Hemitrygon akajei","en":"Whip stingray (also called red stingray)","fam":"魟科 Dasyatidae","len":"一般全長約 100 厘米（連尾），最長約 200 厘米","wt":"最重紀錄約 10.7 公斤","dist":"西北太平洋：由中國中部至日本北部；台灣沿海亦有分布。","hab":"沙泥底的底棲魚，也見於河口和珊瑚礁區，可進入半鹹水；水深約 10–50 米。","food":"小魚和甲殼類。","life":"卵胎生，胚胎先吃卵黃，再從母體的子宮分泌物吸收營養；每胎仔魚數有報告只有 1 尾，早期估計最多 10 尾。","iucn":"近危（NT，2019 年評估）","hk":"香港記錄極少：GBIF 只有 1 筆 2010 年的香港觀察記錄，114°E 礁魚普查名單也沒有本種。","fun":"學名 akajei 來自日語：aka＝紅、jei＝魟，指牠鮮橙紅色的腹面。","kg":[2,8],"srcN":"FishBase、TaiCOL、IUCN 紅色名錄、GBIF、香港珊瑚魚普查（114°E）"},"idol":{"zh":"角鐮魚（香港俗稱神像；台灣正名角蝶魚）","sci":"Zanclus cornutus","en":"Moorish idol","fam":"角蝶魚科 Zanclidae","len":"一般約 21 厘米，最長約 23 厘米","dist":"印度—太平洋：東非至拉帕島、杜西島，北至日本南部及夏威夷，南至豪勳爵島；東太平洋由加利福尼亞灣南部至秘魯。","hab":"潮濁的內潟湖、礁平台，以及清澈的外海岩礁和珊瑚礁；水深 0–182 米（通常 5–182 米）。","food":"主要吃海綿和海鞘，也吃珊瑚蟲和其他附生的小型底棲動物。","life":"常單獨、成對或 2–3 尾小群，偶爾組成大群；浮游幼生期很長，所以分布極廣，各地的顏色幾乎沒有差別。","iucn":"無危（LC，2015 年評估）","hk":"香港礁魚普查有記錄，通常單獨出沒；在其他海域可能組成逾百尾的魚群。","fun":"牠是角蝶魚科唯一的物種；學名 cornutus 意即「有角的」，指成魚眼上方的小骨突。","kg":[0.1,0.4],"srcN":"FishBase、香港珊瑚魚普查（114°E）、Fishes of Australia、TaiCOL、IUCN 紅色名錄"},"unicorn":{"zh":"單角鼻魚（又稱長吻鼻魚；俗稱獨角倒吊）","sci":"Naso unicornis","en":"Bluespine unicornfish (also longnose unicornfish, unicorn tang)","fam":"刺尾鯛科 Acanthuridae","len":"一般約 50 厘米（全長），最長約 70 厘米（叉長）","dist":"印度—太平洋：紅海及東非至夏威夷、馬克薩斯群島及土阿莫土群島，北至日本南部，南至豪勳爵島及拉帕島。","hab":"礁區的水道、礁坪水溝、潟湖和水流強勁的外海礁；水深 0–180 米；幼魚住在淺水海灣和港口。","food":"吃粗大的褐藻，特別是馬尾藻（Sargassum）。","life":"多以小群出沒，有時獨行，主要在日間活動；成對產卵；最長可活約 55 年。","iucn":"無危（LC，2010 年評估）","hk":"香港礁魚普查有記錄；FishBase 記有雪卡毒（ciguatera）中毒報告。","fun":"額上的「角」要長到約 12 厘米才開始長出；雄魚求偶時，角部會迅速變色以突顯那隻角。","kg":[1,4.5],"srcN":"FishBase、香港珊瑚魚普查（114°E）、Fishes of Australia、TaiCOL、IUCN 紅色名錄"},"cleaner":{"zh":"裂唇魚（香港俗稱醫生魚）","sci":"Labroides dimidiatus","en":"Bluestreak cleaner wrasse (common cleanerfish)","fam":"隆頭魚科 Labridae","len":"一般約 10 厘米，最長約 14 厘米","dist":"印度—太平洋：波斯灣、紅海及東非至萊恩群島、馬克薩斯群島和杜西島，北至日本南部，南至豪勳爵島及拉帕島。","hab":"珊瑚豐富的內潟湖和潮下礁平台至外海礁區；水深 0–100 米（通常 1–30 米）。","food":"吃其他魚身上的甲殼類體外寄生蟲和黏液。","life":"先雌後雄；群中的雄魚消失後，雌魚會轉成雄魚，轉性約 14–18 天完成。","iucn":"無危（LC，2008 年評估）","hk":"香港礁魚普查有記錄，通常單獨或一雄多雌小群出沒，會在一處停留作「清潔站」。","fun":"遇到陌生的訪客，牠會用尾部帶動身體後半部上下擺動，像跳舞一樣打招呼。","kg":[0.004,0.02],"srcN":"FishBase、香港珊瑚魚普查（114°E）、Animal Diversity Web、TaiCOL、IUCN 紅色名錄"},"batfish":{"zh":"尖翅燕魚（香港俗稱燕魚、石鯧；台灣亦稱蝙蝠魚）","sci":"Platax teira","en":"Longfin batfish (teira batfish, roundface batfish)","fam":"白鯧科 Ephippidae","len":"最長約 70 厘米（全長）","dist":"印度洋—西太平洋：紅海、東非至巴布亞新畿內亞，北至琉球群島，南至澳洲；新西蘭北部亦有記錄","hab":"珊瑚礁、潟湖及避風海灣，常聚在沉船附近；水深約 3–25 米，大魚也見於更深的外海","food":"雜食，吃浮游動物、底棲無脊椎動物和藻類","life":"幼魚常伴隨漂浮物，並會在大片馬尾藻下結群；成魚多在沉船附近小群活動，偶爾結成大群","iucn":"無危（LC，2018 年評估）","hk":"香港稱燕魚；114°E 香港珊瑚魚普查圖鑑有收錄，GBIF 有 2022–2025 年本港水域（多在西貢）的野外觀察記錄","fun":"幼魚細小時像一片棕色的漂浮樹葉，躲在漂浮物之間；體長超過 35 厘米的成魚頭頂會長出骨質隆起","kg":[0.3,2.0],"srcN":"FishBase、Fishes of Australia、Australian Museum、香港珊瑚魚普查（114°E）、GBIF、IUCN 紅色名錄、TaiCOL、WoRMS"},"banner":{"zh":"白吻雙帶立旗鯛（香港俗稱關刀，又稱馬夫魚）","sci":"Heniochus acuminatus","en":"Pennant coralfish (longfin bannerfish)","fam":"蝴蝶魚科 Chaetodontidae","len":"一般約 15 厘米，最長約 25 厘米","dist":"印度洋至太平洋：波斯灣、東非（坦桑尼亞至南非）、馬達加斯加、馬爾代夫，向東至日本、密克羅尼西亞、澳洲及法屬波利尼西亞","hab":"珊瑚礁區較深的潟湖、水道及外礁坡，常在礁石幾米範圍內活動；水深約 2–178 米，多在 15–75 米","food":"以浮游動物為主，也吃底棲無脊椎動物","life":"幼魚多獨居，成魚多成對活動；卵生，繁殖時配對","iucn":"無危（LC，2009 年評估）","hk":"香港稱關刀或馬夫魚；114°E 香港珊瑚魚普查圖鑑有收錄，GBIF 有 2019–2026 年本港水域（多在西貢）的野外觀察記錄","fun":"幼魚有時會啄食其他魚皮膚上的寄生蟲，扮演「清潔工」；成魚第四根背鰭棘延長成白色長絲","kg":[0.04,0.28],"srcN":"FishBase、Australian Museum、Fishes of Australia、香港珊瑚魚普查（114°E）、GBIF、IUCN 紅色名錄、TaiCOL、WoRMS"},"archer":{"zh":"射水魚（又稱橫帶射水魚）","sci":"Toxotes jaculatrix","en":"Banded archerfish","fam":"射水魚科 Toxotidae","len":"一般約 20 厘米，最長約 30 厘米","dist":"亞洲及大洋洲：印度向東至菲律賓，南至印尼、瓦努阿圖、所羅門群島、巴布亞新畿內亞及澳洲北部","hab":"紅樹林河口的半鹹水，也會游入河流及小溪；常在水面懸垂的植物附近活動","food":"雜食，吃水面漂浮物，以及被水柱擊落的昆蟲和蜘蛛","life":"通常小群活動；成魚獨居或最多約 20 條成群，幼魚常聚在半浸的樹樁或垂枝下；卵生，浮性卵","iucn":"無危（LC，2011 年評估）","hk":"GBIF 及 FishBase 分佈均未見香港記錄，本港有否野生族群未能核實","fun":"舌頭頂住上顎成水管，再急合鰓蓋把水噴出，射程約 1.5 米，瞄準時還懂得補償水面折射","kg":[0.05,0.45],"srcN":"FishBase、Fishes of Australia、Australian Museum、維基百科、TaiCOL、GBIF、IUCN 紅色名錄、WoRMS、香港珊瑚魚普查（114°E）"},"johnsnap":{"zh":"約氏笛鯛（又稱約翰笛鯛、黑斑笛鯛；香港俗稱牙點）","sci":"Lutjanus johnii","en":"John's snapper (also golden snapper)","fam":"笛鯛科 Lutjanidae","len":"一般約 50 厘米，最長約 106 厘米","wt":"最重紀錄約 28.5 公斤","dist":"印度—西太平洋：東非至斐濟，北至琉球群島，南至澳洲。","hab":"珊瑚礁區及河口，可進入半鹹水；水深 0–80 米。","food":"吃魚類和底棲無脊椎動物，如蝦、蟹和頭足類。","life":"幼魚住在紅樹林河口，成魚據推測多在珊瑚礁區；約 52 厘米開始成熟。","iucn":"無危（LC，2015 年評估）","hk":"香港活魚市場有售；FishBase 記載俗名牙點，資料來自香港人工魚礁（Wilson 2003）。","fun":"體側近背鰭前方有一個大黑斑；鱗片中央常有紅褐色小點，連成一行行橫線。","kg":[1.5,8],"srcN":"FishBase、TaiCOL、IUCN 紅色名錄"},"coralgrp":{"zh":"豹紋鰓棘鱸（又稱花斑刺鰓鮨；香港俗稱東星斑）","sci":"Plectropomus leopardus","en":"Leopard coralgrouper (common coral trout)","fam":"石斑魚科 Epinephelidae","len":"一般約 35 厘米，最長約 120 厘米（標準體長）","wt":"最重紀錄約 23.6 公斤","dist":"西太平洋：西澳洲向東至加羅林群島和斐濟，北至日本南部、南至澳洲昆士蘭；湯加近年也有記錄","hab":"珊瑚豐富的潟湖礁及中層陸架礁；水深約 3–100 米；夜間不活躍，躲在岩架下","food":"成魚主要吃魚；幼魚吃小魚和甲殼類、魷魚等無脊椎動物","life":"先雌後雄的性轉變魚；新月前後在礁區集群產卵，卵浮在近水面","iucn":"無危（LC，2016 年評估）","hk":"香港海域有記錄（海下灣、東平洲、鶴咀等）；是香港常吃的活魚，活魚市場有售，漁護署珊瑚礁普查表亦列有牠","fun":"牠的藍點不長在腹部；外觀相似的西星斑（Plectropomus areolatus）藍點遍佈全身，連腹部都有","kg":[0.7,5],"srcN":"FishBase、香港珊瑚魚普查（114°E）、漁農自然護理署、食物環境衞生署、Australian Museum、Fishes of Australia、IUCN 紅色名錄、TaiCOL"},"humpback":{"zh":"駝背鱸（香港俗稱老鼠斑）","sci":"Cromileptes altivelis","en":"Humpback grouper (barramundi cod, high-finned grouper)","fam":"石斑魚科 Epinephelidae","len":"最長約 70 厘米（全長）；雌魚約 30–40 厘米開始成熟","dist":"西太平洋：日本南部至帕勞、關島、新喀里多尼亞及澳洲昆士蘭南部；東印度洋：尼科巴群島至西澳洲布魯姆","hab":"潟湖及外圍礁石，多在死珊瑚或淤泥底的礁區，也見於潮池；水深約 2–40 米，通常 5–25 米","food":"小魚和甲殼類","life":"先雌後雄的性轉變魚，生長很慢；澳洲研究顯示野外至少可活 19 年","iucn":"數據缺乏（DD，2016 年評估）","hk":"香港海域稀少（人工魚礁 400 次潛水調查只見 1 次）；是食用活魚，街市和活魚市場有售，漁護署珊瑚礁普查表亦列有牠","fun":"牠的頭部向上陡斜、背部隆起，形成駝背般的輪廓；幼魚的黑斑較少、較大、較疏落","kg":[1,4],"srcN":"FishBase、香港珊瑚魚普查（114°E）、漁農自然護理署、Australian Museum、Fishes of Australia、維基百科、IUCN 紅色名錄、TaiCOL"},"mahi":{"zh":"鬼頭刀（又稱鯕鰍；香港俗稱牛頭魚）","sci":"Coryphaena hippurus","en":"Common dolphinfish (mahi-mahi, dorado)","fam":"鱰科 Coryphaenidae","len":"一般約 100 厘米，最長約 210 厘米（全長）","wt":"最重紀錄約 40 公斤","dist":"大西洋、印度洋和太平洋的熱帶及亞熱帶水域；高度洄游","hab":"近岸至外海的表層水域，水深 0–85 米（通常 5–10 米）；水溫約 21–30°C，常聚集在漂浮物附近","food":"幾乎各類魚和浮游動物，也吃甲殼類和魷魚","life":"生長極快：約 4–5 個月成熟，壽命最長約 4 年；成群游動，卵和仔魚都隨水漂流","iucn":"無危（LC，2010 年評估）","hk":"香港海域有記錄，屬商業魚種，街市有售；FishBase 引 1972 年香港政府刊物，指夏季數量最多","fun":"成熟雄魚額頭有明顯隆起的骨質冠；漁民會用漂浮的竹束或軟木板誘集牠們，再下網捕撈","kg":[2,10],"srcN":"FishBase、Australian Museum、維基百科、IUCN 紅色名錄、TaiCOL"},"barracuda":{"zh":"大魣（又稱大鱗魣、巴拉金梭魚；香港礁魚普查亦稱海狼）","sci":"Sphyraena barracuda","en":"Great barracuda","fam":"金梭魚科 Sphyraenidae","len":"一般約 140 厘米，最長約 200 厘米（全長）","wt":"最重紀錄約 50 公斤","dist":"印度洋—太平洋（紅海、東非至夏威夷）、西大西洋（美國麻省至巴西）及東大西洋西非沿岸","hab":"多在近水面；幼魚在紅樹林、河口和淺水內礁區，成魚由港灣到外海都有；水深 0–100 米，通常 3–30 米","food":"魚類、頭足類（如魷魚），有時也吃蝦","life":"日間活動，多單獨出沒，也會小群聚集；雌魚最長至少可活 18 年","iucn":"無危（LC，2013 年評估）","hk":"香港礁魚普查有記錄（海下灣、橋咀洲等曾見）；偶爾在本地魚市場出現，是休閒釣魚的名貴魚種","fun":"牠雖是兇猛的獵食者，卻極少攻擊人類；但大型個體有雪卡毒風險，不宜進食","kg":[2,12],"srcN":"FishBase、香港珊瑚魚普查（114°E）、Australian Museum、Fishes of Australia、IUCN 紅色名錄、TaiCOL"},"gt":{"zh":"浪人鰺（又稱珍鰺、牛港鰺；香港俗稱大魚仔）","sci":"Caranx ignobilis","en":"Giant trevally","fam":"鰺科 Carangidae","len":"一般約 100 厘米，最長約 170 厘米（全長）","wt":"最重紀錄約 80 公斤","dist":"印度洋—太平洋：紅海和東非至夏威夷及馬貴斯群島，北至日本南部和小笠原群島，南至澳洲北部","hab":"珊瑚礁、潟湖及外礁；成魚多在沙地和岩礁上空活動，幼魚住在河口；水深約 10–188 米","food":"蟹、龍蝦等甲殼類和魚類，多在夜間捕食","life":"在淺水外礁及離岸淺灘產卵；體長約 60 厘米時成熟；成魚多單獨出沒","iucn":"無危（LC，2015 年評估）","hk":"FishBase 的香港名錄列為本地原生種，數量偶見：人工魚礁 400 次潛水調查見過 2–10 次，幼魚曾在本港數個淺灣記錄","fun":"浪人鰺是鰺屬中最大的魚種，頭部輪廓陡直，尾柄兩側有強壯的硬鱗（稜鱗）","kg":[4,20],"srcN":"FishBase、Australian Museum、維基百科、IUCN 紅色名錄、TaiCOL"},"zebrashark":{"zh":"豹紋鯊（又稱大尾虎鮫）","sci":"Stegostoma tigrinum","en":"Zebra shark (leopard shark)","fam":"豹紋鯊科 Stegostomatidae","len":"成魚至少約 2.4 米，最長約 3.5 米（尾巴約佔全長一半）","dist":"印度—西太平洋：紅海及東非至新喀里多尼亞、斐濟，北至日本南部，南至澳洲新南威爾斯；波斯灣亦有分布。","hab":"熱帶沿岸淺海的沙地、碎石或珊瑚底，與珊瑚礁關係密切；水深 0–90 米，多在 5–30 米；曾進入淡水。","food":"主要吃螺和貝等軟體動物，也吃小魚、蟹、蝦和海蛇；多在夜間覓食。","life":"卵生，卵囊約 17 厘米長，靠毛狀纖維固定在海床；澳洲水族館曾證實雌魚在雄魚移走後，改以孤雌生殖產出有胚胎的卵。","iucn":"瀕危（EN，2023 年評估）","hk":"本港礁魚普查名單沒有本種，亦未能核實香港海域有否記錄。","fun":"幼鯊深褐身上有黃白橫紋似斑馬，長大後變成豹紋斑點，所以有 zebra shark 和 leopard shark 兩個英文名。","kg":[15,40],"srcN":"FishBase、Fishes of Australia、Australian Museum、Virginia Aquarium、學術期刊、維基百科、TaiCOL、IUCN 紅色名錄、香港珊瑚魚普查（114°E）、GBIF"},"eagleray":{"zh":"眼斑鷂鱝（又稱斑點鷂鱝；香港俗稱雀仔鯆）","sci":"Aetobatus ocellatus","en":"Ocellated eagle ray (white-spotted eagle ray)","fam":"鷂鱝科 Aetobatidae","len":"雄魚盤寬約 100–130 厘米、雌魚約 150–160 厘米成熟；最大盤寬約 300 厘米","wt":"最重紀錄約 200 公斤","dist":"印度—西太平洋：東非（包括紅海）至夏威夷群島及法屬波利尼西亞；澳洲見於西澳鯊魚灣至悉尼一帶。","hab":"沿岸水域及河口，常在珊瑚礁一帶游動，也會進入潟湖；半底棲，水深 1–100 米，多在 20–25 米。","food":"吃硬殼底棲無脊椎動物（螺、貝、蠔、寄居蟹），也吃甲殼類、蟲、章魚和魚；常在沙中挖掘獵物。","life":"可單獨或成數百條的大群出沒；卵胎生，懷孕約 12 個月，每胎通常 4 隻或以下，約 5 歲成熟。","iucn":"瀕危（EN，2023 年評估，2024 年公布）","hk":"本港礁魚普查名單列有本類（舊學名 A. narinari），記錄指 1930 年代曾在維多利亞港出沒。","fun":"吻部扁平突出像鴨嘴，英文又叫 duckbill ray；尾巴很長，約為盤寬的 2.3 倍，尾根有毒刺。","kg":[15,60],"srcN":"FishBase、Fishes of Australia、維基百科、香港珊瑚魚普查（114°E）、TaiCOL、IUCN 紅色名錄、GBIF"},"mandarin":{"zh":"花斑連鰭䲗（俗稱七彩麒麟）","sci":"Synchiropus splendidus","en":"Mandarinfish (mandarin dragonet)","fam":"鼠䲗科 Callionymidae","len":"一般約 6 厘米，最長約 7 厘米（全長）","dist":"西太平洋：北起琉球群島，南至澳洲，包括菲律賓、印尼和新幾內亞一帶。","hab":"平靜的淺水潟湖及近岸礁區，常見於有珊瑚碎石的淤泥底；水深 1–18 米。","food":"在海底覓食，吃端足類、等足類等小型甲殼類和小蟲。","life":"雌魚每晚最多產卵一次，雄魚一晚可交配多達 8 次；成對升離礁石約一米才釋放精卵。","iucn":"無危（LC，2018 年評估）","hk":"本港礁魚普查名單沒有本種；香港街市所稱的 Mandarin fish 是食用魚桂花魚，並非此魚。","fun":"身上的藍色來自真正的藍色素細胞（cyanophore），不像多數藍色動物靠光線結構造成。","kg":[0.002,0.006],"srcN":"FishBase、Animal Diversity Web、學術期刊、Australian Geographic、維基百科、中國國際廣播電台、食物環境衞生署、香港珊瑚魚普查（114°E）、TaiCOL、IUCN 紅色名錄、GBIF"},"stonefish":{"zh":"玫瑰毒鮋（又稱腫瘤毒鮋；香港俗稱石頭魚）","sci":"Synanceia verrucosa","en":"Reef stonefish (stonefish)","fam":"毒鮋科 Synanceiidae","len":"一般約 27 厘米（全長），最長約 40 厘米（標準體長）","wt":"最重紀錄約 2.4 公斤","dist":"印度—太平洋：紅海及東非至法屬波利尼西亞，北至琉球及小笠原群島，南至澳洲昆士蘭。","hab":"珊瑚礁礁坪及淺潟湖的沙地或碎石底，退潮時也見於小水池；水深 0–30 米；偽裝成岩石。","food":"吃魚和甲殼類；伏著不動，等獵物游近才以極快速度突襲。","life":"獨居、不遷徙；受驚擾時不游走，反而豎起背鰭的毒刺。","iucn":"無危（LC，2017 年評估，2018 年公布）","hk":"FishBase 記錄香港活魚市場有售（但不常見），香港粵語稱石頭魚；本港礁魚普查名單沒有本種。","fun":"外形像長滿附著物的石頭，卻被澳洲博物館稱為世界上毒性最強的魚。","kg":[0.3,1.5],"srcN":"FishBase、Australian Museum、維基百科、TaiCOL、IUCN 紅色名錄、香港珊瑚魚普查（114°E）、GBIF"},"moray":{"zh":"大斑裸胸鯙（又稱豆點裸胸鱔；香港俗稱花𩺬）","sci":"Gymnothorax favagineus","en":"Honeycomb moray (laced moray, leopard moray)","fam":"鯙科 Muraenidae","len":"最長約 300 厘米（全長），一般遇到的個體小得多","dist":"印度—太平洋：紅海及東非至巴布亞新幾內亞，北至日本南部，南至澳洲。","hab":"珊瑚礁礁坪及外礁斜坡，也見於半鹹水；日間躲在洞穴或石縫；水深 1–50 米。","food":"吃頭足類（如魷魚、章魚）和小魚。","life":"通常單獨出沒；常在洞穴與清潔魚或清潔蝦共處，大型個體可能有攻擊性。","iucn":"無危（LC，2011 年評估）","hk":"本港礁魚普查及 iNaturalist（西貢，2020、2023 年）都有記錄；FishBase 亦有雪卡毒（ciguatera）中毒報告。","fun":"身上黑色斑塊的數目隨成長增多，但每個斑塊反而變小。","kg":[1,10],"srcN":"FishBase、香港珊瑚魚普查（114°E）、Fishes of Australia、維基百科、TaiCOL、IUCN 紅色名錄、GBIF"},"giantgrp":{"zh":"鞍帶石斑魚（香港俗稱龍躉、花尾龍躉）","sci":"Epinephelus lanceolatus","en":"Giant grouper (Queensland groper)","fam":"石斑魚科 Epinephelidae","len":"一般約 190 厘米，最長約 270 厘米","wt":"最重紀錄約 400 公斤","dist":"印度—西太平洋：紅海至南非阿爾戈阿灣，東至夏威夷，北至日本南部，南至澳洲。","hab":"珊瑚礁、岩礁、洞穴、沉船及河口；水深 1–200 米，通常在 50 米以內。","food":"龍蝦、螃蟹和魚類，連小鯊魚、魟魚及幼海龜也吃。","life":"獨居；大魚常懸在水中或伏在海底不動；可能聚集產卵，屬雌雄同體魚類。","iucn":"數據缺乏（DD，2016 年評估）","hk":"本港珊瑚魚普查圖鑑收錄本種（花尾龍躉），FishBase 指香港活魚市場有售；街市常見的雜交「沙巴躉」，是以龍躉精子配老虎斑卵培育而成。","fun":"是珊瑚礁中最大的硬骨魚；超過 1 米長的個體，連岸邊和港口都曾被捕獲。","kg":[30,150],"srcN":"FishBase、Fishes of Australia、香港珊瑚魚普查（114°E）、食物環境衞生署、維基百科、TaiCOL、IUCN 紅色名錄"},"sailfish":{"zh":"平鰭旗魚（又稱雨傘旗魚）","sci":"Istiophorus platypterus","en":"Indo-Pacific sailfish","fam":"旗魚科 Istiophoridae","len":"一般約 270 厘米，最長約 348 厘米","wt":"最重紀錄約 100 公斤","dist":"印度洋及太平洋的熱帶和溫帶海域，也經蘇伊士運河進入地中海；會長距離洄游。","hab":"大洋表層，多在溫躍層以上，近岸及島嶼附近較密集；水深 0–200 米。","food":"魚類、甲殼類和頭足類，如沙丁魚、鯷魚和鯖魚。","life":"全年都可產卵，夏季最旺；雌雄成對，或兩三條雄魚追逐一條雌魚；最長壽約 13 年。","iucn":"易危（VU，2021 年評估）","hk":"FishBase 依聯合國糧農組織的旗魚類漁種目錄，把香港列為分布地區之一。","fun":"常成群合作捕獵，把魚群趕向水面，再用長吻橫掃或輕拍獵物；橫掃的加速度屬水中脊椎動物最高之列。","kg":[15,50],"srcN":"FishBase、Fishes of Australia、Animal Diversity Web、學術期刊、維基百科、TaiCOL、IUCN 紅色名錄"},"hammer":{"zh":"路氏雙髻鯊（又稱路易氏雙髻鯊；香港亦簡稱雙髻鯊）","sci":"Sphyrna lewini","en":"Scalloped hammerhead","fam":"雙髻鯊科 Sphyrnidae","len":"約 140–270 厘米成熟；最長約 430 厘米","wt":"最重紀錄約 152 公斤","dist":"環球暖溫帶及熱帶沿岸海域；西太平洋由日本至新喀里多尼亞，也見於大西洋和印度洋。","hab":"沿岸至近海的中上層水域，常游進海灣和河口；水深 0–1,043 米，多在 25 米以淺。","food":"硬骨魚和頭足類為主，也吃龍蝦、蝦、蟹及較小的鯊魚和魟魚。","life":"胎生（有胎盤），懷孕約 9–10 個月，一胎約 12–41 條；幼鯊成大群，成魚獨游或結群。","iucn":"極危（CR，2018 年評估）","hk":"本港海上罕見，但 2006–2008 年本地魚市場曾錄得 52 條（多為幼鯊）；2014–2015 年魚翅零售樣本中約佔 4%；受《保護瀕危動植物物種條例》管制。","fun":"寬闊的「錘頭」下方佈滿能感應微弱電場的感受器，可探測埋在沙下的獵物。","kg":[15,100],"srcN":"FishBase、Fishes of Australia、NOAA、Animal Diversity Web、WWF 香港、學術期刊、漁農自然護理署、維基百科、TaiCOL、IUCN 紅色名錄"},"bumphead":{"zh":"隆頭鸚哥魚（又稱駝峰大鸚嘴魚）","sci":"Bolbometopon muricatum","en":"Green humphead parrotfish (bumphead parrotfish)","fam":"隆頭魚科 Labridae（鸚哥魚亞科 Scarinae）","len":"一般約 70 厘米，最長約 130 厘米","wt":"最重紀錄約 46 公斤","dist":"印度—西太平洋：紅海及東非至薩摩亞，北至日本八重山群島，南至大堡礁及新喀里多尼亞。","hab":"珊瑚礁，水深 0–40 米；幼魚在潟湖，成魚在外潟湖及向海礁區。","food":"以活珊瑚為主，也吃底棲藻類和貝類。","life":"常成小群覓食；夏季會在外礁大群聚集產卵；夜間睡在洞穴或沉船內。","iucn":"易危（VU，2024 年評估）","hk":"本港礁魚普查名單內的鸚哥魚只有 Scarus、Chlorurus 及 Leptoscarus 屬，未有本種。","fun":"會用頭撞碎珊瑚來進食；估計一條大魚一年最多可吃掉約 5 噸珊瑚礁，並排出大量珊瑚沙。","kg":[6,30],"srcN":"FishBase、Fishes of Australia、香港珊瑚魚普查（114°E）、維基百科、TaiCOL、IUCN 紅色名錄"},"bluefin":{"zh":"太平洋藍鰭金槍魚（香港稱藍鰭吞拿魚；台灣稱太平洋黑鮪）","sci":"Thunnus orientalis","en":"Pacific bluefin tuna (northern bluefin tuna)","fam":"鯖科 Scombridae","len":"一般約 150–200 厘米（叉長），最長約 300 厘米","wt":"最重紀錄約 450 公斤","dist":"北太平洋：東至阿拉斯加灣及南加州，西至庫頁島附近及菲律賓北部；偶見於南半球。","hab":"大洋表層，有時季節性游近岸邊；水深 1–550 米，按體型成群，耐水溫範圍廣。","food":"成群的小魚和魷魚（如沙丁魚、鯷魚、秋刀魚），也吃蟹和磷蝦。","life":"約 5 歲成熟，最長壽可達 26 年；在琉球群島至日本海一帶產卵。","iucn":"近危（NT，2021 年評估）","hk":"香港政府 2013 年 9 月宣布，官方酬酢活動的菜單不再供應魚翅、藍鰭吞拿魚和髮菜。","fun":"部分年輕個體會橫渡太平洋到北美洲西岸覓食，最快約 55 天；長大後再返回日本一帶產卵。","kg":[50,250],"srcN":"FishBase、Fishes of Australia、Animal Diversity Web、NOAA、香港政府新聞公報、維基百科、TaiCOL、IUCN 紅色名錄"},"leafy":{"zh":"葉形海龍（又稱葉海龍、枝葉海馬）","sci":"Phycodurus eques","en":"Leafy seadragon","fam":"海龍科 Syngnathidae","len":"約 20 厘米起成熟，最長約 35 厘米","dist":"澳洲南部特有種，分布於南澳至西澳的溫帶海域，包括袋鼠島。","hab":"海草床及長有海藻的岩礁，常在礁旁沙地；水深約 4–30 米。","food":"糠蝦和其他細小甲殼類，用長管狀的嘴把獵物吸進去。","life":"雄魚把約 250–300 粒卵嵌在尾巴下方孵化，約 6–8 星期；幼魚孵出時已長約 3 厘米。","iucn":"無危（LC，2016 年評估）","hk":"只分布於澳洲南部，香港海域沒有；本港礁魚普查名單內的海龍科魚類只有海馬屬、海龍屬及粗吻海龍屬。","fun":"葉狀附肢用來偽裝成海藻，還會隨海浪來回搖擺；是南澳大利亞州的海洋徽號動物。","kg":[0.04,0.2],"srcN":"FishBase、Fishes of Australia、Reef Life Survey、IUCN 海馬專家小組、香港珊瑚魚普查（114°E）、維基百科、IUCN 紅色名錄"},"white":{"zh":"大白鯊（又稱噬人鯊、食人鯊）","sci":"Carcharodon carcharias","en":"Great white shark (white shark)","fam":"鼠鯊科 Lamnidae","len":"成年約 3.5–5 米，最長約 6.4 米","wt":"最重可達約 2,000 公斤（NOAA 記 4,500 磅）","dist":"遍布全球各大洋，以溫帶及亞熱帶海域為主，能耐 5–25 °C 的水溫。","hab":"多在近岸的上層水域，由碎浪區到遠洋都有；通常水深 0–250 米，最深紀錄逾 1,200 米。","food":"幼鯊吃魷魚和魚類；成鯊主要捕食海豹、海獅、海豚，也吃其他鯊魚及鯨魚屍體。","life":"卵胎生，胚胎在母體內吃未受精的卵；雄魚約 26 歲、雌魚約 33 歲才成熟，壽命可達 70 年或以上。","iucn":"易危（VU，2018 年評估）","hk":"香港稱「大白鯊」；2004 年列入 CITES 附錄 II，受香港《保護瀕危動植物物種條例》管制，進出口及再出口須有許可證。","fun":"科學家利用大氣層核試驗留下的放射性碳為脊椎定年，推算一條叉長約 4.9 米的雄性大白鯊約有 73 歲。","kg":[680,1900],"srcN":"FishBase、TaiCOL、GBIF、學術期刊、Australian Museum、NOAA、Florida Museum、Animal Diversity Web、維基百科、漁農自然護理署、立法會、《香港海魚名錄》（Ni & Kwok 1999）"},"goblin":{"zh":"歐氏尖吻鯊（又稱歐氏尖吻鮫、劍吻鯊；俗稱哥布林鯊）","sci":"Mitsukurina owstoni","en":"Goblin shark (elfin shark)","fam":"尖吻鯊科 Mitsukurinidae","len":"成魚約 2.6–3.8 米；最長估計約 6.2 米（照片推算）","wt":"新聞報道的最重紀錄約 800 公斤（2023 年台灣東北部捕獲的 4.7 米雌魚）","dist":"大西洋、印度洋及太平洋均有零星記錄，日本最多；台灣、澳洲、紐西蘭、南非、歐洲及美國外海亦有。","hab":"大陸架外緣、大陸坡及海山一帶的深海底層，水深約 30–1,300 米，多在 270–960 米。","food":"蝦、章魚、魷魚和魚類等較軟身的獵物，也可能吃蟹。","life":"卵胎生（2023 年台灣捕獲的一條懷孕雌魚帶有 6 尾幼鯊）；估計游得慢，浮力接近中性。","iucn":"無危（LC，2017 年評估）","fun":"進食時下顎會像彈弓般急速向前彈出，最高約 3.1 米／秒，伸出距離達體長約 9%，是已知鯊魚中最快、最遠的。","kg":[70,210],"srcN":"FishBase、TaiCOL、GBIF、學術期刊、Florida Museum、Taiwan News、維基百科、《香港海魚名錄》（Ni & Kwok 1999）"},"frilled":{"zh":"皺鰓鯊（又稱擬鰻鮫、棘沙）","sci":"Chlamydoselachus anguineus","en":"Frilled shark (frill shark)","fam":"皺鰓鯊科 Chlamydoselachidae","len":"雌魚約 1.4–1.5 米成熟，最長約 2 米","dist":"大西洋、太平洋及南非外海零星分布：挪威至納米比亞、日本至紐西蘭（包括台灣）、加州至智利等。","hab":"大陸架外緣及大陸坡上部的深海底層，水深通常 120–1,280 米，最深紀錄約 1,570 米，偶爾在海面被捕獲。","food":"以魷魚等頭足類為主，也吃魚類和其他鯊魚。","life":"卵胎生，每胎約 2–15 尾，初生約 40–60 厘米；懷孕期極長，日本研究推算至少 3.5 年。","iucn":"無危（LC，2023 年評估）","fun":"有 6 對鰓裂，第一對在喉部相連成「皺領」（屬名意即「披風鯊」），牙齒呈三叉形，有「活化石」之稱。","kg":[2.5,18],"srcN":"FishBase、TaiCOL、GBIF、學術期刊、Australian Museum、維基百科、《香港海魚名錄》（Ni & Kwok 1999）"}};
+// ================= v52 50 款新魚（用戶指示）：資料（FISH52／FISH52_ECO，網上核實）、新造型、新花紋 =================
+// 新造型：box 箱魨、sting 魟、eagle 鷹魟、lump 石頭魚、dragon 葉海龍；附加（ex）：horns 角、hammer 錘頭、sail 帆鰭、goblin 長吻、frill 褶鰓、tallfins 高鰭、
+// filament 背鰭長絲、snout 管狀吻、horn 額角、longtail 長尾、bugeye 頂眼、whisk 鬚、threads 游離鰭絲、teeth 尖牙、blunt 大額頭、longdorsal 長背鰭、finlets 小鰭、bigeye 大眼、tailfil 尾絲、spines 背棘
+// 新花紋：bars 橫帶、lstripe 縱紋、polka 大圓點、speck 細點、saddle 背斑、ocel 眼斑、blotch 雲斑、mottle 迷彩、arcs 弧紋、diag 斜紋
+var FM52D={std:[0.9,0.2,0.55],torpedo:[0.9,0.15,0.72],slim:[1.0,0.09,0.75],tall:[0.75,0.3,0.35],tall2:[0.82,0.25,0.42],round:[0.8,0.34,0.9],eel:[1.9,0.1,0.65],oar:[1.9,0.08,0.65],
+ shark:[1.2,0.16,0.8],sword:[0.9,0.15,0.72],sunfish:[0.75,0.42,0.3],angler:[0.8,0.3,0.85],napoleon:[1.0,0.24,0.55],flat:[0.9,0.2,0.55],box:[0.62,0.17,0.5],lump:[0.78,0.24,0.8]};
+function fm52Dim(sh){var d=FM52D[sh]||FM52D.std;return {L:d[0],R:d[1],hZ:d[2],X0:-d[0]/2,X1:d[0]/2,H:d[1]};}
+function fm52V(q){return new T.Vector3(q[0],q[1],q[2]||0);}
+function fm52Tube(g,pts,r,m){var c=new T.CatmullRomCurve3(pts.map(fm52V));var o=new T.Mesh(new T.TubeGeometry(c,24,r,6,false),m);g.add(o);return o;}
+// 移走舊眼（fEye 用 M(0xffffff)／M(0x1d1a22) 嘅球）
+function fm52NoEye(g){var W=M(0xffffff),B=M(0x1d1a22);g.children.slice().forEach(function(c){if(c.isMesh&&c.geometry&&c.geometry.type==='SphereGeometry'&&(c.material===W||c.material===B))g.remove(c);});}
+function fm52EyeR(f,d){return f.sh==='angler'?0.03:f.sh==='shark'?0.02:0.035*(d.R/0.2+0.3);}
+var FM52={},FX52={};
+// ---- 箱魨：圓角方盒身、細尾柄、扇形尾、細細個嘴 ----
+FM52.box=function(f){var g=new T.Group(),bm=fBodyM(f),fin=fFinM(f.fin,0.92),L=0.62,H=0.34,Z=0.3;g.add(new T.Mesh(rbox(L,H,Z,0.09,6),bm));
+ var ped=ms(new T.CylinderGeometry(0.035,0.06,0.12,10),bm,-L/2-0.03,-0.01,0);ped.rotation.z=Math.PI/2;g.add(ped);
+ var tf=new T.Mesh(finShape([[0,0],[-0.06,0.1,-0.15,0.11],[-0.13,0],[-0.15,-0.11],[-0.06,-0.1,0,0]]),fin);tf.position.set(-L/2-0.08,-0.01,0);g.add(tf);
+ var df=new T.Mesh(finShape([[0,0],[0.02,0.08,0.08,0.07],[0.1,0]]),fin);df.position.set(-0.22,H/2-0.03,0);g.add(df);var af=df.clone();af.scale.y=-1;af.position.y=-H/2+0.03;g.add(af);
+ [-1,1].forEach(function(s){var pf=new T.Mesh(finShape([[0,0],[-0.04,0.05,-0.1,0.04],[-0.08,0]]),fin);pf.position.set(0.1,-0.03,s*(Z/2+0.004));pf.rotation.set(s*0.5,0,-0.35);g.add(pf);});
+ fEye(g,L/2-0.13,H*0.2,Z/2*0.86,0.042);var mo=ms(new T.TorusGeometry(0.018,0.008,6,12),M(shC2(f.col,0.75)),L/2+0.004,-0.07,0);mo.rotation.y=Math.PI/2;g.add(mo);return g;};
+// ---- 魟（赤魟）：圓菱形身、背面深色、腹面淺色、長尾有毒棘 ----
+FM52.sting=function(f){var g=new T.Group(),top=std({c:0xffffff,map:fishTex(f),r:0.55}),bot=std({c:f.col2,r:0.65});
+ var s=new T.Shape();s.moveTo(0.42,0);s.quadraticCurveTo(0.3,0.36,0,0.42);s.quadraticCurveTo(-0.32,0.34,-0.38,0);s.quadraticCurveTo(-0.32,-0.34,0,-0.42);s.quadraticCurveTo(0.3,-0.36,0.42,0);
+ var dg=new T.ExtrudeGeometry(s,{depth:0.03,bevelEnabled:true,bevelThickness:0.04,bevelSize:0.03,bevelSegments:3,curveSegments:20});dg.rotateX(Math.PI/2);
+ var p=dg.attributes.position,uv=dg.attributes.uv;for(var i=0;i<p.count;i++)uv.setXY(i,0.5+p.getZ(i)*1.1,0.5+p.getX(i)*1.1);
+ g.add(new T.Mesh(dg,top));var bl=new T.Mesh(dg.clone(),bot);bl.position.y=-0.012;bl.scale.set(0.94,0.5,0.94);g.add(bl);
+ var tl=new T.Mesh(new T.CylinderGeometry(0.004,0.022,0.78,8),M(shC2(f.col,0.85)));tl.rotation.z=Math.PI/2;tl.position.set(-0.75,0.0,0);g.add(tl);
+ var sp=ms(new T.ConeGeometry(0.008,0.09,6),M(0xf2ead8),-0.55,0.03,0);sp.rotation.z=Math.PI/2+0.15;g.add(sp);
+ [-1,1].forEach(function(q){g.add(ms(new T.SphereGeometry(0.03,10,8),top,0.2,0.04,q*0.07));g.add(ms(new T.SphereGeometry(0.018,8,6),M(0x1d1a22),0.215,0.06,q*0.075));g.add(ms(new T.SphereGeometry(0.014,8,6),M(shC2(f.col,0.6)),0.13,0.05,q*0.08));});
+ g.rotation.x=0.5;return g;};
+// ---- 鷹魟：尖翼、鴨嘴吻、長鞭尾，背面白點 ----
+FM52.eagle=function(f){var g=new T.Group(),top=std({c:0xffffff,map:fishTex(f),r:0.5}),bot=std({c:f.col2,r:0.6});
+ var s=new T.Shape();s.moveTo(0.3,0);s.quadraticCurveTo(0.18,0.32,-0.18,0.72);s.quadraticCurveTo(-0.12,0.3,-0.3,0.06);s.lineTo(-0.3,-0.06);s.quadraticCurveTo(-0.12,-0.3,-0.18,-0.72);s.quadraticCurveTo(0.18,-0.32,0.3,0);
+ var wg=new T.ExtrudeGeometry(s,{depth:0.03,bevelEnabled:true,bevelThickness:0.03,bevelSize:0.025,bevelSegments:3,curveSegments:18});wg.rotateX(Math.PI/2);
+ var p=wg.attributes.position,uv=wg.attributes.uv;for(var i=0;i<p.count;i++)uv.setXY(i,0.5+p.getZ(i)*0.7,0.5+p.getX(i)*1.4);
+ g.add(new T.Mesh(wg,top));var bl=new T.Mesh(wg.clone(),bot);bl.position.y=-0.01;bl.scale.set(0.92,0.5,0.92);g.add(bl);
+ var hd=ms(new T.SphereGeometry(0.1,16,12),top,0.3,0.02,0);hd.scale.set(1.1,0.7,0.8);g.add(hd);var bill=ms(new T.SphereGeometry(0.07,14,10),top,0.42,-0.005,0);bill.scale.set(1.3,0.38,0.75);g.add(bill);
+ [-1,1].forEach(function(q){g.add(ms(new T.SphereGeometry(0.022,10,8),M(0xffffff),0.33,0.05,q*0.075));g.add(ms(new T.SphereGeometry(0.013,8,6),M(0x1d1a22),0.345,0.055,q*0.085));});
+ var tl=new T.Mesh(new T.CylinderGeometry(0.003,0.016,1.3,6),M(shC2(f.col,0.8)));tl.rotation.z=Math.PI/2;tl.position.set(-0.95,0.01,0);g.add(tl);g.rotation.x=0.5;return g;};
+// ---- 石頭魚：一舊凹凸唔平嘅石、上翹大口、眼喺頂、大扇形胸鰭 ----
+FM52.lump=function(f){var g=new T.Group(),bm=fBodyM(f),fin=fFinM(f.fin,0.95),L=0.78,R=0.24,X1=L/2;
+ var body=fishBody(f,L,R,1,0.8,[[0.12,0],[0.36,0.12],[0.8,0.34],[1,0.6],[0.96,0.8],[0.72,0.93],[0.02,1]]);body.position.x=-L/2;g.add(body);
+ var r=rng(f.k.length*31+7);for(var i=0;i<38;i++){var a=r()*6.283,t=0.12+r()*0.8,x=-L/2+t*L,rad=R*Math.sin(Math.PI*Math.min(0.98,t*0.95+0.05))*0.92;
+  g.add(ms(new T.SphereGeometry(0.018+r()*0.026,7,5),M(r()<0.5?shC2(f.col,0.82):f.col2),x,Math.cos(a)*rad,Math.sin(a)*rad*0.8));}
+ var tf=new T.Mesh(finShape([[0,0],[-0.08,0.1,-0.14,0.1],[-0.14,-0.1],[-0.08,-0.1,0,0]]),fin);tf.position.x=-L/2+0.02;g.add(tf);
+ for(var k=0;k<9;k++){var sp=ms(new T.ConeGeometry(0.012,0.07,5),M(shC2(f.col,0.7)),X1-0.18-k*0.05,R*0.92,0);sp.rotation.z=0.25;g.add(sp);}
+ [-1,1].forEach(function(s){var pf=new T.Mesh(finShape([[0,0],[-0.06,0.14,-0.2,0.12],[-0.2,-0.04],[-0.08,-0.06,0,0]]),fin);pf.position.set(X1-0.22,-R*0.35,s*R*0.66);pf.rotation.set(s*0.9,0,-0.2);g.add(pf);});
+ fEye(g,X1-0.12,R*0.62,R*0.38,0.026);var mo=ms(new T.TorusGeometry(0.06,0.012,6,16,Math.PI),M(0x5a2a2a),X1-0.03,R*0.12,0);mo.rotation.set(0,Math.PI/2,Math.PI);g.add(mo);return g;};
+// ---- 葉海龍：橫向長身、管狀長吻、卷尾，全身好多葉狀附肢 ----
+FM52.dragon=function(f){var g=new T.Group(),bm=fBodyM(f),lf=fFinM(f.fin,0.95),lf2=fFinM(f.fin2||f.fin,0.95);
+ var cur=new T.CatmullRomCurve3([[0.4,0.07],[0.28,0.08],[0.16,0.1],[0.03,0.08],[-0.1,0.04],[-0.24,-0.02],[-0.35,-0.1],[-0.4,-0.2],[-0.34,-0.27],[-0.27,-0.24]].map(fm52V));
+ for(var i=0;i<=34;i++){var t=i/34,pp=cur.getPoint(t),rr=t<0.1?0.05:t<0.45?0.048-0.01*Math.sin((t-0.1)*9):0.042*(1-(t-0.45)/0.6)+0.006;var sg=ms(new T.SphereGeometry(rr,10,8),bm,pp.x,pp.y,0);sg.scale.z=0.75;g.add(sg);}
+ var sn=ms(new T.CylinderGeometry(0.011,0.017,0.2,8),bm,0.52,0.08,0);sn.rotation.z=Math.PI/2+0.08;g.add(sn);g.add(ms(new T.SphereGeometry(0.055,12,10),bm,0.4,0.085,0));
+ var leaf=finShape([[0,0],[0.035,0.05,0.01,0.12],[-0.012,0.08],[-0.04,0.13],[-0.05,0.06,0,0]]),leaf2=finShape([[0,0],[0.02,0.04,0.0,0.09],[-0.03,0.05,0,0]]);
+ [[0.06,1,0.9],[0.18,1,1.1],[0.3,1,1.2],[0.42,1,1],[0.55,1,0.85],[0.7,1,0.7],[0.84,1,0.55],[0.22,-1,1],[0.4,-1,1.1],[0.6,-1,0.8],[0.78,-1,0.6]].forEach(function(q,i){var pp=cur.getPoint(q[0]);
+  [-1,1].forEach(function(s){var m=new T.Mesh(i%3?leaf:leaf2,i%2?lf:lf2);m.position.set(pp.x,pp.y,s*0.02);m.rotation.set(s*0.5,0,q[1]>0?0.4:Math.PI-0.4);m.scale.setScalar(q[2]*1.15);if(q[1]<0)m.scale.x*=-1;g.add(m);});});
+ [[0.42,0.14,0.4],[0.36,0.15,0.9]].forEach(function(q){var m=new T.Mesh(leaf2,lf);m.position.set(q[0],q[1],0);m.rotation.z=q[2];g.add(m);});
+ fEye(g,0.43,0.1,0.035,0.016);return g;};
+// ---- 附加部分 ----
+FX52.horns=function(g,f,d){[-1,1].forEach(function(s){var h=ms(new T.ConeGeometry(0.028,0.2,10),M(shC2(f.col,0.92)),d.X1+0.05,d.H*0.8,s*0.07);h.rotation.z=-Math.PI/2+0.2;g.add(h);var b=ms(new T.ConeGeometry(0.024,0.15,10),M(shC2(f.col,0.92)),d.X0+0.02,-d.H*0.85,s*0.07);b.rotation.z=Math.PI/2+0.4;g.add(b);});};
+FX52.hammer=function(g,f,d){fm52NoEye(g);var bm=fBodyM(f),hd=ms(new T.SphereGeometry(1,20,10),bm,d.X1-0.03,0.005,0);hd.scale.set(0.095,0.034,0.33);g.add(hd);
+ [-1,1].forEach(function(s){g.add(ms(new T.SphereGeometry(0.024,10,8),M(0xffffff),d.X1-0.035,0.008,s*0.32));g.add(ms(new T.SphereGeometry(0.015,8,6),M(0x1d1a22),d.X1-0.03,0.01,s*0.335));});};
+FX52.sail=function(g,f,d){var sl=new T.Mesh(finShape([[0,0],[0.08,0.16],[0.26,0.34,0.5,0.42],[0.6,0.2],[0.66,0]]),fFinM(f.fin2||f.fin,0.9));sl.position.set(d.X1-0.84,d.H*0.82,0);g.add(sl);
+ for(var i=0;i<12;i++){var sp=ms(new T.CylinderGeometry(0.003,0.004,0.3,4),M(shC2(f.fin2||f.fin,0.7)),d.X1-0.8+i*0.05,d.H*0.82+0.13,0);sp.rotation.z=0.1;sp.scale.y=0.4+0.6*Math.sin(Math.min(1,(i+1)/9)*Math.PI*0.9);g.add(sp);}};
+FX52.goblin=function(g,f,d){var bm=fBodyM(f),sn=ms(new T.ConeGeometry(0.06,0.36,12),bm,d.X1+0.14,0.035,0);sn.rotation.z=-Math.PI/2;sn.scale.set(1,1,0.4);g.add(sn);
+ var jw=ms(new T.BoxGeometry(0.09,0.025,0.08),M(0x4a2a2a),d.X1-0.02,-0.07,0);jw.rotation.z=-0.3;g.add(jw);for(var i=0;i<7;i++){var th=ms(new T.ConeGeometry(0.005,0.03,4),M(0xf6f2ea),d.X1-0.05+i*0.012,-0.055,-0.03+i*0.01);th.rotation.z=Math.PI;g.add(th);}};
+FX52.frill=function(g,f,d){for(var i=0;i<6;i++){var r=ms(new T.TorusGeometry(d.R*0.95,0.012,6,20),M(0xc9535f),d.X1-0.12-i*0.032,0,0);r.rotation.y=Math.PI/2;g.add(r);}
+ for(var k=0;k<6;k++){var th=ms(new T.ConeGeometry(0.004,0.022,4),M(0xf6f2ea),d.X1+0.0,-0.02,-0.025+k*0.01);th.rotation.z=Math.PI;g.add(th);}};
+FX52.tallfins=function(g,f,d){var fin=fFinM(f.fin,0.92),sh=finShape([[0,0],[0.02,0.42,-0.16,0.52],[-0.12,0.25],[0.24,0.03]]),df=new T.Mesh(sh,fin);df.position.set(-0.04,d.H*0.82,0);g.add(df);var af=new T.Mesh(sh,fin);af.scale.y=-1;af.position.set(-0.06,-d.H*0.8,0);g.add(af);};
+FX52.filament=function(g,f,d){var y=d.H*0.85;fm52Tube(g,[[0.05,y+0.08],[-0.05,y+0.17],[-0.22,y+0.2],[-0.42,y+0.14],[-0.62,y+0.03]],0.008,M(f.fin2||0xffffff));var mb=new T.Mesh(finShape([[0,0],[0.06,0.1],[0.0,0.2],[-0.1,0.1]]),fFinM(f.fin2||0xffffff,0.85));mb.position.set(-0.02,y+0.02,0);g.add(mb);};
+FX52.snout=function(g,f,d){var s=ms(new T.CylinderGeometry(0.012,0.022,0.1,10),fBodyM(f),d.X1+0.03,-0.015,0);s.rotation.z=-Math.PI/2+0.2;g.add(s);};
+FX52.horn=function(g,f,d){var h=ms(new T.ConeGeometry(0.032,0.22,10),M(shC2(f.col,0.88)),d.X1-0.06,d.H*0.92,0);h.rotation.z=-1.05;g.add(h);};
+FX52.longtail=function(g,f,d){var t=new T.Mesh(finShape([[0,0.02],[-0.32,0.07,-0.62,0.04],[-0.66,0],[-0.3,-0.04,0,-0.04]]),fFinM(f.fin,0.95));t.position.set(d.X0+0.06,0,0);g.add(t);};
+FX52.bugeye=function(g,f,d){fm52NoEye(g);[-1,1].forEach(function(s){g.add(ms(new T.SphereGeometry(0.034,12,10),fBodyM(f),d.X1-0.1,d.H*0.95,s*0.035));g.add(ms(new T.SphereGeometry(0.026,12,10),M(0xffffff),d.X1-0.095,d.H*1.08,s*0.04));g.add(ms(new T.SphereGeometry(0.016,8,6),M(0x1d1a22),d.X1-0.085,d.H*1.12,s*0.05));});
+ [-1,1].forEach(function(s){var a=new T.Mesh(finShape([[0,0],[-0.03,0.05,-0.09,0.03],[-0.08,-0.01]]),fFinM(f.fin,0.95));a.position.set(d.X1-0.2,-d.H*0.7,s*d.R*d.hZ*0.9);a.rotation.set(s*1.2,0,-0.9);g.add(a);});};
+FX52.whisk=function(g,f,d){[-1,1].forEach(function(s){fm52Tube(g,[[d.X1-0.03,-d.H*0.55,s*0.012],[d.X1+0.02,-d.H*0.8,s*0.02],[d.X1+0.05,-d.H*1.05,s*0.025]],0.004,M(f.fin2||0xf2e8c8));});};
+FX52.threads=function(g,f,d){[-1,1].forEach(function(s){for(var i=0;i<4;i++)fm52Tube(g,[[d.X1-0.24-i*0.012,-d.H*0.6,s*d.R*d.hZ*0.7],[d.X1-0.27-i*0.02,-d.H*1.0,s*d.R*d.hZ*0.8],[d.X1-0.32-i*0.03,-d.H*1.45,s*d.R*d.hZ*0.8]],0.0035,M(f.fin2||0xf2e8c8));});};
+FX52.teeth=function(g,f,d){var jw=ms(new T.ConeGeometry(0.025,0.07,8),fBodyM(f),d.X1+0.03,-d.H*0.25,0);jw.rotation.z=-Math.PI/2;jw.scale.set(1,1,0.6);g.add(jw);
+ [-1,1].forEach(function(s){for(var i=0;i<5;i++){var th=ms(new T.ConeGeometry(0.005,0.026,4),M(0xf6f2ea),d.X1-0.02+i*0.014,-d.H*0.14,s*(d.R*d.hZ*0.45-i*0.006));th.rotation.z=Math.PI;g.add(th);}});};
+FX52.blunt=function(g,f,d){var b=ms(new T.SphereGeometry(1,18,14),M(shC2(f.col,0.92)),d.X1-0.13,d.H*0.2,0);b.scale.set(0.11,d.H*0.8,d.R*d.hZ*0.9);g.add(b);};
+FX52.longdorsal=function(g,f,d){var df=new T.Mesh(finShape([[0,0],[0.03,0.07],[d.L*0.62,0.09],[d.L*0.7,0.0]]),fFinM(f.fin,0.92));df.position.set(d.X0+0.12,d.H*0.72,0);g.add(df);};
+FX52.finlets=function(g,f,d){var m=fFinM(f.fin2||0xf2c14e,1);for(var i=0;i<6;i++){[1,-1].forEach(function(s){var t=new T.Mesh(finShape([[0,0],[0.025,0],[0,0.025*s]]),m);t.position.set(d.X0+0.1+i*0.035,s*d.R*(0.55+i*0.06),0);g.add(t);});}};
+FX52.bigeye=function(g,f,d){fm52NoEye(g);var r=fm52EyeR(f,d)*1.55;fEye(g,d.X1-d.L*0.15,d.H*0.2,d.R*d.hZ*0.62,r);};
+FX52.tailfil=function(g,f,d){fm52Tube(g,[[d.X0-0.16,0.17],[d.X0-0.3,0.22],[d.X0-0.46,0.21]],0.004,M(f.fin2||f.fin));};
+FX52.spines=function(g,f,d){for(var k=0;k<9;k++){var sp=ms(new T.ConeGeometry(0.009,0.11,5),M(shC2(f.fin,0.8)),d.X1-0.2-k*0.042,d.H*0.95+0.04,0);sp.rotation.z=0.3;g.add(sp);}};
+// ---- 接駁 fishModel：新造型由 FM52 砌；任何造型都可以加 ex 附加部分 ----
+var fishModelV51=fishModel;fishModel=function(sp){var f=sp&&sp.sh?sp:(fishOf(sp&&sp.k)||FISH[0]),g;
+ if(FM52[f.sh]){try{g=FM52[f.sh](f);}catch(e){errNote(e,'魚造型');g=fishModelV51(Object.assign({},f,{sh:'std'}));}}else g=fishModelV51(f);
+ if(f.ex)f.ex.forEach(function(e){if(FX52[e]){try{FX52[e](g,f,fm52Dim(f.sh));}catch(x){errNote(x,'魚造型 '+e);}}});if(f.big&&FM52[f.sh])g.scale.setScalar(1.08);return g;};
+// ---- 新花紋（u：0.25 腹、0.75 背；v：畫布上面＝魚頭）----
+var fishTexV51=fishTex;fishTex=function(f){if(FTEX[f.k])return FTEX[f.k];var NP={bars:1,lstripe:1,polka:1,speck:1,saddle:1,ocel:1,blotch:1,mottle:1,arcs:1,diag:1},flatM={box:1,sting:1,eagle:1}[f.sh];if(!NP[f.pat]&&!flatM)return fishTexV51(f);
+ var W=256,H=128,c=document.createElement('canvas');c.width=W;c.height=H;var x=c.getContext('2d'),r=rng(f.k.length*97+(f.p||1)),A=hexS(f.col),B=hexS(f.col2),P=f.pc!=null?hexS(f.pc):'#2d2a32',n=f.pn||0,i,j;
+ if(flatM){x.fillStyle=A;x.fillRect(0,0,W,H);var rg=x.createRadialGradient(W/2,H/2,10,W/2,H/2,W*0.6);rg.addColorStop(0,'rgba(255,255,255,.12)');rg.addColorStop(1,'rgba(0,0,0,.18)');x.fillStyle=rg;x.fillRect(0,0,W,H);}
+ else{var gg=x.createLinearGradient(0,0,W,0);gg.addColorStop(0,A);gg.addColorStop(0.25,B);gg.addColorStop(0.5,A);gg.addColorStop(0.75,hexS(shC2(f.col,0.8)));gg.addColorStop(1,A);x.fillStyle=gg;x.fillRect(0,0,W,H);}x.fillStyle=P;x.strokeStyle=P;
+ var noBelly=function(fn){x.save();x.beginPath();x.rect(W*0.36,0,W*0.64,H);x.rect(0,0,W*0.14,H);x.clip();fn();x.restore();};
+ if(f.pat==='bars'){n=n||5;var bw=(f.pw||0.07)*H;noBelly(function(){for(i=0;i<n;i++){var v=0.14+0.72*(n>1?i/(n-1):0.5),y=H*(1-v);x.globalAlpha=f.pa||1;x.fillRect(0,y-bw/2,W,bw);}x.globalAlpha=1;});}
+ else if(f.pat==='lstripe'){n=n||1;var sw=(f.pw||0.035)*W;[0,0.5,1].forEach(function(u0){for(i=0;i<n;i++){var u=u0+(i-(n-1)/2)*0.07;x.fillRect(u*W-sw/2,H*0.02,sw,H*0.96);}});}
+ else if(f.pat==='polka'){n=n||36;for(i=0;i<n;i++){x.beginPath();x.arc(r()*W,r()*H,4+r()*5,0,6.3);x.fill();}}
+ else if(f.pat==='speck'){n=n||320;for(i=0;i<n;i++){x.beginPath();x.arc(r()*W,r()*H,0.9+r()*1.5,0,6.3);x.fill();}}
+ else if(f.pat==='saddle'){n=n||4;for(i=0;i<n;i++){var v2=0.18+0.66*(n>1?i/(n-1):0.5),y2=H*(1-v2);x.beginPath();x.ellipse(W*0.75,y2,W*0.2,H*0.06,0,0,6.3);x.fill();}}
+ else if(f.pat==='ocel'){var v3=f.pv||0.45,y3=H*(1-v3);[0,0.5,1].forEach(function(u){x.fillStyle='rgba(255,255,255,.55)';x.beginPath();x.arc(u*W,y3,10,0,6.3);x.fill();x.fillStyle=P;x.beginPath();x.arc(u*W,y3,7,0,6.3);x.fill();});}
+ else if(f.pat==='blotch'){n=n||22;x.globalAlpha=0.75;for(i=0;i<n;i++){var cx=r()*W,cy=r()*H;for(j=0;j<4;j++){x.beginPath();x.arc(cx+(r()-0.5)*14,cy+(r()-0.5)*10,5+r()*7,0,6.3);x.fill();}}x.globalAlpha=1;}
+ else if(f.pat==='mottle'){var cs=[P,hexS(shC2(f.pc!=null?f.pc:0x5a4632,0.7)),B];for(i=0;i<140;i++){x.globalAlpha=0.35+r()*0.4;x.fillStyle=cs[i%3];x.beginPath();x.ellipse(r()*W,r()*H,3+r()*9,2+r()*6,r()*3,0,6.3);x.fill();}x.globalAlpha=1;}
+ else if(f.pat==='arcs'){n=n||3;x.lineWidth=f.pw?f.pw*W:5;[0,0.5].forEach(function(u0){for(i=0;i<n;i++){x.beginPath();for(var yy=0;yy<=H;yy+=4){var k=yy/H,xx=W*(u0+0.04+(i-(n-1)/2)*0.075)+Math.sin(k*Math.PI)*W*0.05;if(yy)x.lineTo(xx,yy);else x.moveTo(xx,yy);}x.stroke();if(u0===0){x.save();x.translate(W,0);x.stroke();x.restore();}}});}
+ else if(f.pat==='diag'){n=n||6;x.lineWidth=f.pw?f.pw*W:6;noBelly(function(){for(i=-2;i<n+2;i++){x.beginPath();x.moveTo(i*W/n,0);x.lineTo(i*W/n+W*0.35,H);x.stroke();}});}
+ var t=texEnc(new T.CanvasTexture(c));return FTEX[f.k]=t;};
+// ---- 併入：新魚加落 FISH2／FISH（每個稀有度總機會唔變，平均分）；魚卡資料加落 FISH_ECO ----
+(function(){if(typeof FISH52==='undefined'||!FISH52.length)return;var have={};FISH2.forEach(function(f){have[f.k]=1;});
+ FISH52.forEach(function(f){if(!have[f.k]){FISH2.push(f);have[f.k]=1;}});var W=[0,0,0,0,0];FISH2.forEach(function(f){W[f.rar]++;});
+ FISH2.forEach(function(f){f.w=FISH_RAR[f.rar].w/W[f.rar];if(f.sz==null)f.sz=[0.55,0.8,1.1,1.5,1.9][f.rar];if(f.win==null)f.win=1;if(!f.nib)f.nib=[1,3];if(f.fake==null)f.fake=0.3;});
+ FISH.length=0;FISH2.forEach(function(f){FISH.push(f);});if(typeof FISH52_ECO!=='undefined')for(var k in FISH52_ECO)FISH_ECO[k]=FISH52_ECO[k];})();
+// ================= v52 釣魚：用魚餌時先扔魚餌落水（用戶指示）；唔同等級魚餌唔同顏色 =================
+// 揀咗魚餌、撳住「拋竿」蓄力、放手：左手由畫面下面伸出嚟，揸住一團魚餌向前一兜，魚餌沿弧線飛去浮標落點；
+// 落水有同色水花，水面散開一圈魚餌（普通＝米黃色麵包糠、高級＝橙金色加金粉、特級＝紅色發光加星光），細魚圍埋嚟；扔完先自動拋竿
+var BT52C=[{c:0xc9a26b,d:0x8a6234,hi:0xf0dcb0,sp:0,gl:0},{c:0xe8a23c,d:0xb8661a,hi:0xffe48a,sp:6,gl:0.18},{c:0xe8574f,d:0x9a1f3a,hi:0xffb8dc,sp:14,gl:0.5}];
+var BT52={on:false,t:0,i:0,arm:null,sig:'',ua:null,fa:null,cuff:null,hand:null,fing:[],thumb:null,ball:null,wb:null,w0:new T.Vector3(),w1:new T.Vector3(),fl:0.7,h:3,rel:false,land:-1,
+ trail:[],trT:0,slick:null,sk:{t:0,a:0,r:1,x:0,z:0,s:1},fish:[],spk:[],spl:[],tex:{},relT:0.47,cx:0,cz:0};
+var _bt52a=new T.Vector3(),_bt52b=new T.Vector3(),_bt52c=new T.Vector3(),_bt52d=new T.Vector3(),_bt52m=new T.Matrix4(),_bt52q=new T.Quaternion(),_bt52Y=new T.Vector3(0,1,0);
+// 畫面座標（-1…1）＋深度 → 鏡頭座標（手機直度、橫度都喺畫面入面）
+function bt52P(nx,ny,z,out){var cam=FS.cam,hh=Math.tan(cam.fov*Math.PI/360),hw=hh*cam.aspect;return out.set(nx*hw*(-z),ny*hh*(-z),z);}
+function bt52M(c,o){o=o||{};return std({c:c,r:o.r!=null?o.r:0.7,e:o.e,nb:true});}
+// ---- 左手（跟主角膚色、上衣顏色；長袖去到手腕）----
+function bt52ArmSig(){var mo=meOpts(S.me,S.wear,0);return mo.skin+'|'+((mo.top&&mo.top.c)||0)+'|'+((mo.top&&mo.top.st)||'');}
+function bt52Arm(){var sig=bt52ArmSig();if(BT52.arm&&BT52.sig===sig)return;if(BT52.arm){FS.cam.remove(BT52.arm);disposeTree(BT52.arm);}BT52.sig=sig;
+ var mo=meOpts(S.me,S.wear,0),top=mo.top||{st:'tee',c:0x57b3e8},longS={hood:1,shirt:1,chef:1,space:1,blazer:1,suit:1,cardi:1,blouse:1,maid:1}[top.st],sk=bt52M(mo.skin,{r:0.62}),sl=bt52M(top.c!=null?top.c:0x57b3e8,{r:0.85});
+ var g=new T.Group();g.visible=false;FS.cam.add(g);BT52.arm=g;
+ var ua=new T.Mesh(new T.CylinderGeometry(0.066,0.074,1,16),sl);g.add(ua);BT52.ua=ua;                        // 上臂（衫袖）
+ var fa=new T.Mesh(new T.CylinderGeometry(0.043,0.056,1,16),longS?sl:sk);g.add(fa);BT52.fa=fa;               // 前臂
+ var el0=new T.Mesh(new T.SphereGeometry(0.06,14,10),longS?sl:sk);g.add(el0);BT52.el=el0;                   // 手踭
+ var cuff=new T.Mesh(new T.TorusGeometry(0.046,0.012,8,20),bt52M(longS?shade(top.c,0.82):top.c));g.add(cuff);BT52.cuff=cuff;cuff.visible=!!longS;
+ if(!longS){var sv=new T.Mesh(new T.CylinderGeometry(0.075,0.075,0.09,16,1,true),sl);sv.material.side=T.DoubleSide;g.add(sv);BT52.sv=sv;}else BT52.sv=null;
+ // 手掌：手指沿 -Z、掌心向 +Y、左手掌心向上時拇指喺 -X
+ var h=new T.Group();g.add(h);BT52.hand=h;
+ h.add(ms(new T.SphereGeometry(0.036,12,10),sk,0,0,-0.004));
+ var pm=ms(new T.SphereGeometry(1,18,12),sk,0,0.002,-0.058);pm.scale.set(0.056,0.026,0.062);h.add(pm);
+ BT52.fing=[];[[-0.032,0.056],[-0.011,0.063],[0.011,0.059],[0.031,0.047]].forEach(function(q){var f0=new T.Group();f0.position.set(q[0],0.006,-0.11);h.add(f0);
+  var l0=q[1]*0.55,l1=q[1]*0.45;f0.add(ms(new T.SphereGeometry(0.0118,10,8),sk,0,0,0));var c0=new T.Mesh(new T.CylinderGeometry(0.0112,0.0118,l0,10),sk);c0.rotation.x=Math.PI/2;c0.position.z=-l0/2;f0.add(c0);
+  var f1=new T.Group();f1.position.z=-l0;f0.add(f1);f1.add(ms(new T.SphereGeometry(0.0112,10,8),sk,0,0,0));var c1=new T.Mesh(new T.CylinderGeometry(0.0102,0.0112,l1,10),sk);c1.rotation.x=Math.PI/2;c1.position.z=-l1/2;f1.add(c1);
+  f1.add(ms(new T.SphereGeometry(0.0103,10,8),sk,0,0,-l1));var nl=ms(new T.SphereGeometry(1,10,6),bt52M(shade(mo.skin,1.08),{r:0.35}),0,-0.006,-l1+0.004);nl.scale.set(0.0085,0.004,0.009);f1.add(nl);
+  BT52.fing.push([f0,f1]);});
+ var th=new T.Group();th.position.set(-0.05,-0.004,-0.03);th.rotation.set(0.15,0.75,0.25);h.add(th);th.add(ms(new T.SphereGeometry(0.0145,10,8),sk,0,0,0));
+ var t0=new T.Mesh(new T.CylinderGeometry(0.013,0.0145,0.036,10),sk);t0.rotation.x=Math.PI/2;t0.position.z=-0.018;th.add(t0);var th1=new T.Group();th1.position.z=-0.036;th.add(th1);
+ var t1=new T.Mesh(new T.CylinderGeometry(0.0118,0.013,0.03,10),sk);t1.rotation.x=Math.PI/2;t1.position.z=-0.015;th1.add(t1);th1.add(ms(new T.SphereGeometry(0.012,10,8),sk,0,0,-0.03));BT52.thumb=[th,th1];
+ noCull(g);}
+// ---- 魚餌團：顏色跟等級；高級有金粉、特級會發光 ----
+function bt52Ball(i){var C=BT52C[i],g=new T.Group(),core=new T.Mesh(new T.IcosahedronGeometry(1,2),bt52M(C.c,{r:0.85,e:C.gl?shade(C.c,0.6):null}));
+ var p=core.geometry.attributes.position,R=rng(31+i);for(var k=0;k<p.count;k++){var f=0.9+R()*0.18;p.setXYZ(k,p.getX(k)*f,p.getY(k)*f,p.getZ(k)*f);}core.geometry.computeVertexNormals();g.add(core);
+ for(var q=0;q<14;q++){var a=R()*6.283,b=Math.acos(2*R()-1),cr=ms(new T.IcosahedronGeometry(0.16+R()*0.12,0),bt52M(q%3?C.d:C.hi,{r:0.8,e:C.gl&&q%3===0?C.hi:null}),Math.sin(b)*Math.cos(a)*0.95,Math.cos(b)*0.95,Math.sin(b)*Math.sin(a)*0.95);g.add(cr);}
+ if(C.gl){var gs=new T.Sprite(new T.SpriteMaterial({map:bt52Tex('glow'),color:lc(C.hi),transparent:true,opacity:0.35+C.gl,depthWrite:false,blending:T.AdditiveBlending,fog:false}));gs.scale.setScalar(3.4);g.add(gs);g.userData.gs=gs;}
+ g.scale.setScalar(0.042);noCull(g);return g;}
+// ---- 貼圖（圓點光、魚影、魚餌浮層）----
+function bt52Tex(k){if(BT52.tex[k])return BT52.tex[k];var c=document.createElement('canvas'),x=c.getContext('2d'),i;
+ if(k==='glow'||k==='star'){c.width=c.height=64;var g=x.createRadialGradient(32,32,0,32,32,32);g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(k==='star'?0.12:0.3,'rgba(255,255,255,'+(k==='star'?0.9:0.6)+')');g.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=g;x.fillRect(0,0,64,64);
+  if(k==='star'){x.fillStyle='rgba(255,255,255,.95)';x.beginPath();x.moveTo(32,2);x.lineTo(35,29);x.lineTo(62,32);x.lineTo(35,35);x.lineTo(32,62);x.lineTo(29,35);x.lineTo(2,32);x.lineTo(29,29);x.closePath();x.fill();}}
+ else if(k==='fish'){c.width=128;c.height=64;x.fillStyle='#fff';x.beginPath();x.ellipse(70,32,40,13,0,0,6.283);x.fill();x.beginPath();x.moveTo(34,32);x.lineTo(8,16);x.quadraticCurveTo(16,32,8,48);x.closePath();x.fill();
+  x.beginPath();x.moveTo(66,20);x.lineTo(80,10);x.lineTo(84,22);x.closePath();x.fill();}
+ else if(k.indexOf('slick')===0){var lv=+k.slice(5)||0,C=BT52C[lv],R=rng(77+lv);c.width=c.height=256;var g2=x.createRadialGradient(128,128,0,128,128,128);g2.addColorStop(0,'rgba(255,255,255,.95)');g2.addColorStop(0.45,'rgba(255,255,255,.7)');g2.addColorStop(0.78,'rgba(255,255,255,.28)');g2.addColorStop(1,'rgba(255,255,255,0)');
+  x.fillStyle=g2;x.fillRect(0,0,256,256);x.globalCompositeOperation='destination-out';for(i=0;i<70;i++){var a=R()*6.283,r=R()*118;x.fillStyle='rgba(0,0,0,'+(0.15+R()*0.35)+')';x.beginPath();x.arc(128+Math.cos(a)*r,128+Math.sin(a)*r,4+R()*14,0,6.283);x.fill();}
+  x.globalCompositeOperation='source-over';for(i=0;i<140;i++){var a2=R()*6.283,r2=Math.pow(R(),0.7)*112;x.fillStyle=i%3?'rgba(120,80,40,.55)':'rgba(255,255,255,.9)';x.beginPath();x.arc(128+Math.cos(a2)*r2,128+Math.sin(a2)*r2,1+R()*2.6,0,6.283);x.fill();}}
+ var t=new T.CanvasTexture(c);BT52.tex[k]=t;return t;}
+// ---- 開始扔魚餌（fsUp 拋竿之後即刻接住）----
+function bt52Start(i){bt52Clear();bt52Arm();BT52.on=true;BT52.t=0;BT52.i=i;BT52.rel=false;BT52.land=-1;BT52.trT=0;FS.st='bait';FS.t=0;
+ BT52.ball=bt52Ball(i);BT52.hand.add(BT52.ball);BT52.ball.position.set(0,0.045,-0.066);BT52.arm.visible=true;
+ BT52.fl=0.55+0.3*Math.min(1,Math.max(0,(FS.D-6)/26));BT52.h=1.1+FS.D*0.085;fsBtnTxt('扔魚餌…');fsMsg('先扔'+BAITS[i].n+'落水，引啲魚埋嚟！',1.5);bt52Pose(0);}
+// 動作關鍵格：[時間, 畫面x, 畫面y, 深度, 手指屈曲, 前臂方向混合]
+var BT52K=[[0,-0.82,-1.7,-1.0,1,0],[0.2,-0.55,-0.6,-1.0,1,0],[0.32,-0.6,-0.82,-0.93,1,0.1],[0.47,-0.2,-0.1,-1.36,0.85,1],[0.56,-0.1,-0.15,-1.46,0.08,1],[0.92,-0.8,-1.75,-1.0,0.3,0.4]];
+function bt52Ease(k){return k<0.5?2*k*k:1-Math.pow(-2*k+2,2)/2;}
+function bt52Pose(t){var K=BT52K,j=0;while(j<K.length-2&&t>K[j+1][0])j++;var a=K[j],b=K[j+1],k=Math.max(0,Math.min(1,(t-a[0])/(b[0]-a[0]))),e=bt52Ease(k),L=function(u){return a[u]+(b[u]-a[u])*e;};
+ var W=bt52P(L(1),L(2),L(3),_bt52a),mix=L(5),D=_bt52b.set(0.22+0.0*mix,0.4+0.42*mix,-0.88+0.3*mix).normalize(),E=_bt52c.copy(W).addScaledVector(D,-0.3),Sh=bt52P(-1.35,-2.3,-0.45,_bt52d);
+ // 上臂：肩（畫面外）→ 手踭；前臂：手踭 → 手腕
+ var seg=function(m,p0,p1){var v=new T.Vector3().subVectors(p1,p0),len=v.length();m.position.copy(p0).addScaledVector(v,0.5);m.quaternion.setFromUnitVectors(_bt52Y,v.normalize());m.scale.set(1,len,1);};
+ seg(BT52.ua,Sh,E);seg(BT52.fa,E,W);BT52.el.position.copy(E);
+ if(BT52.cuff){BT52.cuff.position.copy(W).addScaledVector(D,-0.02);BT52.cuff.quaternion.setFromUnitVectors(new T.Vector3(0,0,1),D);}
+ if(BT52.sv){BT52.sv.position.copy(E).addScaledVector(D,-0.01);BT52.sv.quaternion.setFromUnitVectors(_bt52Y,D);}
+ // 手掌方向：手指沿前臂（-Z）、掌心大致向上
+ var z=new T.Vector3().copy(D).negate(),x=new T.Vector3().crossVectors(_bt52Y,z).normalize(),y=new T.Vector3().crossVectors(z,x);_bt52m.makeBasis(x,y,z);BT52.hand.quaternion.setFromRotationMatrix(_bt52m);BT52.hand.position.copy(W);
+ var cu=L(4);BT52.fing.forEach(function(f,i){f[0].rotation.x=cu*(0.95+i*0.06);f[1].rotation.x=cu*1.0;});BT52.thumb[0].rotation.x=0.15+cu*0.35;BT52.thumb[1].rotation.x=cu*0.5;}
+// ---- 每格更新 ----
+function bt52Tick(dt){var t=FS.uT||0;
+ if(BT52.on&&FS.st==='bait'){BT52.t+=dt;var T0=BT52.t;if(T0<0.95)bt52Pose(T0);else if(BT52.arm)BT52.arm.visible=false;
+  if(!BT52.rel&&T0>=BT52.relT){BT52.rel=true;var b=BT52.ball;b.getWorldPosition(BT52.w0);BT52.hand.remove(b);FS.sc.add(b);b.position.copy(BT52.w0);b.scale.setScalar(0.042);BT52.wb=b;
+   BT52.w1.set(FS.bx,fsWaveH(FS.bx,FS.bz,t),FS.bz);vib(18);}
+  if(BT52.wb){var k=Math.min(1,(T0-BT52.relT)/BT52.fl),b2=BT52.wb,p=b2.position;p.lerpVectors(BT52.w0,BT52.w1,k);p.y+=Math.sin(k*Math.PI)*BT52.h;var dc=p.distanceTo(FS.cam.position);b2.scale.setScalar(0.042*(1+Math.max(0,dc-1.5)*0.055));b2.rotation.x+=dt*7;b2.rotation.z+=dt*4;
+   BT52.trT-=dt;if(BT52.trT<=0){BT52.trT=0.028;bt52Trail(p,b2.scale.x);}
+   if(k>=1){bt52Land();FS.sc.remove(b2);disposeTree(b2);BT52.wb=null;BT52.land=T0;}}
+  if(BT52.land>=0&&T0-BT52.land>0.18){BT52.on=false;if(BT52.arm)BT52.arm.visible=false;FS.st='fly';FS.t=0;fsBtnTxt('等魚上釣…');}}
+ // 拖尾
+ for(var i=BT52.trail.length-1;i>=0;i--){var r=BT52.trail[i];r.t+=dt;var q=r.t/0.4;r.s.material.opacity=0.75*(1-q);r.s.scale.setScalar(r.sz*(1-q*0.6));if(q>=1){FS.sc.remove(r.s);r.s.material.dispose();BT52.trail.splice(i,1);}}
+ // 同色水花
+ for(var j=BT52.spl.length-1;j>=0;j--){var s=BT52.spl[j];s.t+=dt;s.vy-=9*dt;s.m.position.x+=s.vx*dt;s.m.position.z+=s.vz*dt;s.m.position.y+=s.vy*dt;if(s.ring){var rq=s.t/0.9;s.m.scale.setScalar(s.sz*(1+rq*3));s.m.material.opacity=0.7*(1-rq);if(rq>=1){FS.sc.remove(s.m);s.m.material.dispose();BT52.spl.splice(j,1);}continue;}
+  if(s.t>1.2||s.m.position.y<-0.8){FS.sc.remove(s.m);BT52.spl.splice(j,1);}}
+ bt52SlickTick(dt,t);}
+function bt52Trail(p,sz){var C=BT52C[BT52.i],s=new T.Sprite(new T.SpriteMaterial({map:bt52Tex(C.gl?'star':'glow'),color:lc(BT52.trail.length%2?C.hi:C.c),transparent:true,opacity:0.75,depthWrite:false,blending:C.gl?T.AdditiveBlending:T.NormalBlending,fog:false}));
+ s.position.copy(p);var z=sz*(C.gl?2.4:1.6);s.scale.setScalar(z);FS.sc.add(s);BT52.trail.push({s:s,t:0,sz:z});if(BT52.trail.length>40){var o=BT52.trail.shift();FS.sc.remove(o.s);o.s.material.dispose();}}
+var BT52G=null;
+function bt52Land(){var C=BT52C[BT52.i],x=FS.bx,z=FS.bz,y=fsWaveH(x,z,FS.uT),ds=1+Math.max(0,-z-4)*0.09;if(!BT52G)BT52G=new T.SphereGeometry(1,7,5);
+ var mats=[std({c:C.c,r:0.6,nb:true}),std({c:C.hi,r:0.5,nb:true,e:C.gl?C.hi:null}),new T.MeshLambertMaterial({color:0xffffff})];
+ for(var i=0;i<18;i++){var m=new T.Mesh(BT52G,mats[i%3]),a=Math.random()*6.283,sp=(0.6+Math.random()*1.1)*ds;m.scale.setScalar((0.07+Math.random()*0.07)*ds);m.position.set(x,y,z);FS.sc.add(m);BT52.spl.push({m:m,vx:Math.cos(a)*sp,vz:Math.sin(a)*sp,vy:(2.2+Math.random()*2.4)*Math.sqrt(ds),t:0});}
+ var rg=new T.Mesh(new T.RingGeometry(0.8,1,36),new T.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0.7,depthWrite:false}));rg.rotation.x=-Math.PI/2;rg.position.set(x,y+0.04,z);FS.sc.add(rg);BT52.spl.push({m:rg,ring:1,sz:0.45*ds,vx:0,vy:0,vz:0,t:0});
+ if(typeof fsSplash==='function')fsSplash(x,z,6,0.7);bt52SlickMake(x,z,ds);}
+// ---- 水面魚餌浮層：跟浪起伏；細魚喺附近兜圈，魚上釣時散開 ----
+function bt52SlickMake(x,z,ds){var C=BT52C[BT52.i],g=new T.PlaneGeometry(2,2,12,12);g.rotateX(-Math.PI/2);
+ var m=new T.Mesh(g,new T.MeshBasicMaterial({map:bt52Tex('slick'+BT52.i),color:lc(C.c),transparent:true,opacity:0,depthWrite:false,fog:false,toneMapped:false}));m.frustumCulled=false;m.renderOrder=3;FS.sc.add(m);
+ var base=g.attributes.position.array.slice();BT52.slick=m;BT52.sk={t:0,a:0,r:1,x:x,z:z,s:ds,base:base,ang:Math.random()*6.283};
+ var n=[2,3,4][BT52.i];BT52.fish=[];for(var i=0;i<n;i++){var f=new T.Mesh(new T.PlaneGeometry(1,0.5).rotateX(-Math.PI/2),new T.MeshBasicMaterial({map:bt52Tex('fish'),color:lc(0x0b2a3c),transparent:true,opacity:0,depthWrite:false,fog:false}));f.frustumCulled=false;f.renderOrder=2;FS.sc.add(f);
+  BT52.fish.push({m:f,a:Math.random()*6.283,w:(0.55+Math.random()*0.45)*(i%2?1:-1),r:0.55+Math.random()*0.6,ph:Math.random()*6,sz:0.5+Math.random()*0.3,go:0});}
+ BT52.spk=[];for(var j=0;j<C.sp;j++){var s=new T.Sprite(new T.SpriteMaterial({map:bt52Tex('star'),color:lc(j%2?C.hi:0xffffff),transparent:true,opacity:0,depthWrite:false,blending:T.AdditiveBlending,fog:false}));s.frustumCulled=false;FS.sc.add(s);
+  var a=Math.random()*6.283,r=Math.sqrt(Math.random())*0.85;BT52.spk.push({s:s,x:Math.cos(a)*r,z:Math.sin(a)*r,ph:Math.random()*6,sp:1.5+Math.random()*2.5});}}
+function bt52SlickTick(dt,t){var m=BT52.slick;if(!m)return;var K=BT52.sk,st=FS.st;K.t+=dt;
+ var tgt=st==='fight'||st==='catch'||st==='fail'||st==='ready'?0:K.t<1.2?1:0.85;K.a+=(tgt-K.a)*Math.min(1,dt*(tgt?2.5:1.2));
+ K.r=K.s*(1.15+0.95*(1-Math.exp(-K.t*1.4)))*(1+0.04*Math.sin(t*1.3));K.ang+=dt*0.05;m.material.opacity=K.a;
+ var p=m.geometry.attributes.position,b=K.base,ca=Math.cos(K.ang),sa=Math.sin(K.ang);for(var i=0;i<p.count;i++){var lx=b[i*3],lz=b[i*3+2],wx=K.x+(lx*ca-lz*sa)*K.r,wz=K.z+(lx*sa+lz*ca)*K.r;p.setXYZ(i,wx,fsWaveH(wx,wz,t)+0.035,wz);}p.needsUpdate=true;
+ // 細魚：等魚時喺魚餌附近兜圈；上釣時第一條衝去浮標，其餘散開
+ BT52.fish.forEach(function(f,i){var calm=st==='bait'||st==='fly'||st==='wait',biter=st==='bite'&&i===0;
+  if(biter)f.go=Math.min(1,f.go+dt*2.2);else if(!calm)f.sc=(f.sc||0)+dt;f.a+=f.w*dt*(1+0.4*Math.sin(t*0.7+f.ph));
+  var rr=K.r*f.r*(1+0.12*Math.sin(t*1.1+f.ph)+(f.sc||0)*1.6),x=K.x+Math.cos(f.a)*rr,z=K.z+Math.sin(f.a)*rr,dx=-Math.sin(f.a)*f.w,dz=Math.cos(f.a)*f.w;
+  if(biter){var ex=FS.bx-x,ez=FS.bz-z;x+=ex*f.go;z+=ez*f.go;if(f.go<0.98){dx=ex;dz=ez;}}
+  var tg=calm?0.5:biter?0.5*(1-f.go*0.7):Math.max(0,0.5*(1-(f.sc||0)*1.5)),mo=f.m.material;mo.opacity+=(tg-mo.opacity)*Math.min(1,dt*(calm?2.2:4));
+  f.m.position.set(x,fsWaveH(x,z,t)+0.03,z);f.m.rotation.y=-Math.atan2(dz,dx);f.m.scale.setScalar(f.sz*K.s*(1+0.06*Math.sin(t*9+f.ph)));});
+ BT52.spk.forEach(function(s){var x=K.x+s.x*K.r,z=K.z+s.z*K.r;s.s.position.set(x,fsWaveH(x,z,t)+0.08,z);var tw=Math.max(0,Math.sin(t*s.sp+s.ph));s.s.material.opacity=K.a*tw*0.95;s.s.scale.setScalar(0.22*K.s*(0.6+tw));});
+ if(K.a<0.01&&(st==='fight'||st==='catch'||st==='fail'))bt52Clear(true);}
+function bt52Clear(keepArm){var sc=FS.sc;if(!sc)return;if(BT52.wb){sc.remove(BT52.wb);disposeTree(BT52.wb);BT52.wb=null;}if(BT52.ball&&BT52.ball.parent){BT52.ball.parent.remove(BT52.ball);disposeTree(BT52.ball);}BT52.ball=null;
+ BT52.trail.forEach(function(r){sc.remove(r.s);r.s.material.dispose();});BT52.trail=[];BT52.spl.forEach(function(s){sc.remove(s.m);if(s.ring)s.m.material.dispose();});BT52.spl=[];
+ if(BT52.slick){sc.remove(BT52.slick);BT52.slick.geometry.dispose();BT52.slick.material.dispose();BT52.slick=null;}BT52.fish.forEach(function(f){sc.remove(f.m);f.m.geometry.dispose();f.m.material.dispose();});BT52.fish=[];
+ BT52.spk.forEach(function(s){sc.remove(s.s);s.s.material.dispose();});BT52.spk=[];if(!keepArm){BT52.on=false;if(BT52.arm)BT52.arm.visible=false;}}
+// ---- 接駁：拋竿（放手）時如果用咗魚餌，就先做扔魚餌動作 ----
+var fsUpV51=fsUp;fsUp=function(){var was=FS.on&&FS.st==='charge';fsUpV51();if(was&&FS.st==='fly'&&FS.baitLv>0){if(typeof qAdd==='function')qAdd('bait',1);try{bt52Start(Math.max(0,Math.min(2,FS.baitLv-1)));}catch(e){errNote(e,'扔魚餌');FS.st='fly';FS.t=0;}}};
+var fsResetV51=fsReset;fsReset=function(){fsResetV51();try{bt52Clear();}catch(e){}};
+var fsCloseV51=fsClose;fsClose=function(){try{bt52Clear();}catch(e){}fsCloseV51();};
+var FSTK51=fsTick;fsTick=function(dt){FSTK51(dt);try{bt52Tick(dt);}catch(e){errNote(e,'扔魚餌');if(FS.st==='bait'){FS.st='fly';FS.t=0;}}};
+// 魚餌掣加返顏色點（同扔出去嗰團魚餌一樣顏色）
+var fsBaitUIV51=fsBaitUI;fsBaitUI=function(){fsBaitUIV51();var box=$('fsBait');if(!box)return;[].forEach.call(box.children,function(b){BAITS.forEach(function(B,i){if(b.textContent.indexOf(B.n)===0&&!b.querySelector('.bt52d')){var d=el('span','bt52d'+(i===2?' hot':''));d.style.background=hexS(BT52C[i].c);b.insertBefore(d,b.firstChild);}});});};
+(function(){var st=document.createElement('style');st.textContent='.bt52d{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.55),0 0 0 1px rgba(90,70,50,.35);}.bt52d.hot{box-shadow:inset 0 0 0 2px rgba(255,255,255,.6),0 0 6px 2px rgba(255,120,170,.75);}';document.head.appendChild(st);})();
+// ================= v52 農務人員：玩家逐格要求種乜（用戶指示）=================
+// 同農務人員傾偈 →「安排種植」：先揀作物、再撳田（或者全部田一齊改）；只可以揀本島星際市場有賣嘅種子（cropAvail）
+// 人員自己用你嘅錢行去星際市場買種子（孭住種子袋返嚟，放入田邊種子箱）→ 播種、淋水、收成 → 用籃裝住，行去農場入口嘅食材交收箱送去餐廳廚房
+// 「我自己打理」嘅田：人員同播種收割機都唔郁；自動化（第 4、5 級）都跟呢個安排：播種收割機用種子箱嘅種子，冇種子就等人員去買
+// 存檔：S.fauto.plan（每格：作物／''＝自動跟主要作物／'-'＝自己打理）、sd（種子箱）、tr（買咗喺路上）、bk（收成喺路上）
+var FA52={shop:null,cd:0,log:[],brush:null,box:null,boxSig:'',msgT:25,bought:{}};
+function fa52St(){var o=faSt();if(!Array.isArray(o.plan))o.plan=[];['sd','tr','bk'].forEach(function(k){if(!o[k]||typeof o[k]!=='object')o[k]={};});return o;}
+function fa52Ok(k){return !!(k&&CROPS[k]&&PROD[k]&&cropAvail(k));}
+function fa52Self(i){return fa52St().plan[i]==='-';}
+function fa52Want(i){var k=fa52St().plan[i];if(k==='-')return '';if(fa52Ok(k))return k;return faCrop();}
+function fa52Cov(){return Math.min(S.plots.length,(FAUTO[faLv()]||{}).cov||0);}
+function fa52Sum(o){var n=0;for(var k in o)n+=o[k]||0;return n;}
+function fa52Txt(o){return Object.keys(o).filter(function(k){return o[k]>0;}).map(function(k){return iname(k)+' ×'+o[k];}).join('、');}
+function fa52Log(s){var d=new Date();FA52.log.unshift(('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)+'　'+s);if(FA52.log.length>8)FA52.log.length=8;}
+function fa52Near(x,z,r){return where==='out'&&Math.hypot(P.x-x,P.z-z)<(r||16);}
+function fa52PlanTxt(){var cov=fa52Cov(),c={},self=0,L=[];for(var i=0;i<cov;i++){if(fa52Self(i)){self++;continue;}var k=fa52Want(i);if(k)c[k]=(c[k]||0)+1;}
+ Object.keys(c).forEach(function(k){L.push(iname(k)+' '+c[k]+' 格');});if(self)L.push('你自己打理 '+self+' 格');return L.length?L.join('、'):'未有作物種得';}
+// ---- 要買幾多種子：有空田／熟咗嘅田等緊種、而種子箱唔夠，先去買；一次過買夠嗰款作物全部格數 ----
+function fa52BuyList(){var o=fa52St(),cov=fa52Cov(),want={},now={},L=[];
+ for(var i=0;i<cov;i++){var k=fa52Want(i);if(!k)continue;want[k]=(want[k]||0)+1;var s=plotState(S.plots[i]);if(s==='empty'||s==='ready')now[k]=(now[k]||0)+1;}
+ Object.keys(now).forEach(function(k){var have=(o.sd[k]||0)+(o.tr[k]||0);if(now[k]>have)L.push([k,Math.max(now[k],want[k])-have]);});return L.length?L:null;}
+function fa52Pay(L){var got={},cost=0;L.forEach(function(q){var p=CROPS[q[0]].seed,n=Math.min(q[1],Math.floor((S.coins-cost)/p));if(n>0){got[q[0]]=n;cost+=n*p;}});if(cost>0){S.coins-=cost;coinsUI();}return {got:got,cost:cost};}
+// ---- 位置：田邊種子箱（圍欄入面西北角）、西面走廊、圍欄開口、食材交收箱 ----
+function fa52Pts(){var fx=MAP.farm[0],fz=MAP.farm[1],zS=fz+1.6*(farmRows()-1);return {fx:fx,fz:fz,zS:zS,sb:[fx-0.93,fz-0.95],sbS:[fx-0.93,fz-0.42],cor:fx-0.92,id:[fx-0.92,fz+1.7],od:[fx-1.72,fz+1.7],fb:[MAP.boxF[0]+0.8,MAP.boxF[1]]};}
+function fa52In(w){var Q=fa52Pts();return w.x>Q.fx-1.2&&w.x<Q.fx+4.4&&w.z>Q.fz-1.2&&w.z<Q.zS+1.2;}
+function fa52Exit(w){var Q=fa52Pts();return fa52In(w)?[[Q.cor,Math.max(Q.fz-0.4,Math.min(Q.zS,w.z))],Q.id,Q.od]:[Q.od];}
+function fa52MktRoute(){var T0=MAP.pathTo;if(!T0||!T0.gate||!T0.mkt||T0.gate.length<2||T0.mkt.length<2||!MAP.gate)return null;var L=[[MAP.gate[0],MAP.gate[1]]],i;
+ for(i=T0.gate.length-1;i>=0;i--)L.push([T0.gate[i][0],T0.gate[i][1]]);for(i=0;i<T0.mkt.length;i++)L.push([T0.mkt[i][0],T0.mkt[i][1]]);var e=T0.mkt[T0.mkt.length-1];L.push([e[0]+0.55,e[1]-0.15]);return L;}
+function fa52Go(w,pts,spd,fn){w.route=pts;w.ri=0;w.spd=spd||1.5;w.onArr=fn||null;w.st='route';}
+// ---- 道具：收成籃、種子袋（掛喺人員身上）----
+function fa52Basket(w){var u=w.m.userData,b=w.pBk;if(!b){b=new T.Group();var wk=M(0xb98a4a),dk=M(0x8a5f34);b.add(ms(new T.CylinderGeometry(0.06,0.048,0.05,14,1,true),wk,0,0,0));b.children[0].material=std({c:0xb98a4a,side:T.DoubleSide});
+  b.add(ms(new T.CylinderGeometry(0.048,0.048,0.006,14),dk,0,-0.024,0));var hd=ms(new T.TorusGeometry(0.052,0.005,6,16,Math.PI),dk,0,0.022,0);b.add(hd);b.userData.fr=new T.Group();b.add(b.userData.fr);
+  b.position.set(0,0.13,0.1);u.b.add(b);w.pBk=b;}
+ var fr=b.userData.fr;while(fr.children.length)fr.remove(fr.children[0]);var ks=[];Object.keys(w.carry||{}).forEach(function(k){for(var i=0;i<Math.min(3,w.carry[k]);i++)ks.push(k);});
+ ks.slice(0,6).forEach(function(k,i){var a=i*2.1,r=i?0.026:0;fr.add(ms(new T.SphereGeometry(0.02,8,6),M((PROD[k]||{}).c||0xe8473f),Math.cos(a)*r,0.022+(i>2?0.012:0),Math.sin(a)*r));});b.visible=ks.length>0;}
+function fa52Sack(w,on){var u=w.m.userData;if(on&&!w.pSk){var g=new T.Group(),sm=M(0xd2b07a);var s=ms(new T.SphereGeometry(1,12,10),sm,0,0,0);s.scale.set(0.065,0.08,0.05);g.add(s);g.add(ms(new T.CylinderGeometry(0.018,0.03,0.03,10),sm,0,0.08,0));
+  g.add(ms(new T.TorusGeometry(0.02,0.005,6,12),M(0x8a5f34),0,0.075,0).rotateX(Math.PI/2));var pc=ms(new T.BoxGeometry(0.05,0.04,0.004),M(0xf4c542),0,0.005,-0.05);g.add(pc);g.userData.pc=pc;g.position.set(0,0.19,-0.1);u.b.add(g);w.pSk=g;}
+ if(w.pSk){w.pSk.visible=!!on;if(on){var k=Object.keys(w.sack||{})[0];if(k)w.pSk.userData.pc.material=M((PROD[k]||{}).c||0xf4c542);}}}
+function fa52Say(w,t,sec){if(w.bub){killSprite(w.bub);w.bub=null;}if(!t)return;var s=bubble(t,'#fffaeb','#4f6a3a',0.36);scO.add(s);w.bub=s;w.bubT=sec||2.6;}
+// ---- 田邊種子箱（西北角）：木箱＋面頭排住買咗嘅種子包（顏色跟作物）----
+function fa52Box(){var lv=faLv(),o=fa52St(),sig=lv?(MAP.farm||[]).join(',')+'|'+Object.keys(o.sd).filter(function(k){return o.sd[k]>0;}).sort().join(','):'';if(FA52.boxSig===sig)return;FA52.boxSig=sig;
+ if(FA52.box){scO.remove(FA52.box);disposeTree(FA52.box);FA52.box=null;}if(!lv||!MAP.farm)return;var Q=fa52Pts(),g=new T.Group(),wd=M(0xc49058),dk=M(0x8a5a34);
+ g.add(ms(rbox(0.46,0.26,0.32,0.03),wd,0,0.13,0));[0.06,0.2].forEach(function(y){g.add(ms(new T.BoxGeometry(0.47,0.03,0.33),dk,0,y,0));});
+ var lid=ms(rbox(0.48,0.04,0.2,0.015),wd,0,0.29,-0.12);lid.rotation.x=-0.9;g.add(lid);
+ var sg=new T.Mesh(new T.PlaneGeometry(0.3,0.11),basicM({c:0xffffff,map:signTex('種子箱',0.3,0.11,'#fbf3e0','#6a4a2a')}));sg.position.set(0,0.15,0.163);g.add(sg);
+ Object.keys(o.sd).filter(function(k){return o.sd[k]>0;}).slice(0,5).forEach(function(k,i){var pk=ms(new T.BoxGeometry(0.075,0.1,0.014),M((PROD[k]||{}).c||0xe8d2a6),-0.16+i*0.08,0.3,0.02+(i%2)*0.04);pk.rotation.set(-0.25,0,(i%2?1:-1)*0.12);g.add(pk);});
+ g.position.set(Q.sb[0],0,Q.sb[1]);g.rotation.y=Math.PI;g.scale.setScalar(1.25);noCull(g);shadowAll(g,true,true);scO.add(g);FA52.box=g;}
+// ---- 每個人員做嘢 ----
+function fa52Job(w,cov){var L=S.plots,o=fa52St(),best=null,bp=0,taken={},used={};FAW.list.forEach(function(q){if(q!==w&&q.job){taken[q.job.i]=1;if(q.job.k==='empty'&&q.job.c)used[q.job.c]=(used[q.job.c]||0)+1;}});var lv=faLv();
+ for(var i=0;i<Math.min(L.length,cov);i++){if(taken[i]||fa52Self(i))continue;var s=plotState(L[i]),pr=0,c='';
+  if(s==='ready')pr=lv>=5?0:3;else if(s==='empty'&&lv<5){c=fa52Want(i);if(c&&(o.sd[c]||0)-(used[c]||0)>0)pr=2;}else if(s==='dry'&&lv<4)pr=1;
+  if(pr>bp){bp=pr;best={i:i,k:s,c:c};}}return best;}
+function fa52Do(w,J){var p=S.plots[J.i],o=fa52St();if(!p)return;var s=plotState(p),lv=faLv();
+ if(s==='ready'){var k=p.c,n=CFG.yield;p.c=null;p.p=0;p.w=0;o.n=(o.n||0)+1;w.carry=w.carry||{};w.carry[k]=(w.carry[k]||0)+n;o.bk[k]=(o.bk[k]||0)+n;fa52Basket(w);}
+ else if(s==='empty'){var c=fa52Want(J.i);if(!c||!(o.sd[c]>0))return;o.sd[c]--;p.c=c;p.p=0;p.w=lv>=4?Date.now()+86400000:Date.now()+CFG.wetSec*1000;FA52.boxSig='';}
+ else if(s==='dry'){p.w=Date.now()+CFG.wetSec*1000;}
+ prevSt[J.i]=plotState(p);save();}
+// 送收成：交收箱 → 廚房（S.inv）
+function fa52Drop(w){var o=fa52St(),c=w.carry||{},ks=Object.keys(c).filter(function(k){return c[k]>0;});if(!ks.length)return;
+ ks.forEach(function(k){S.inv[k]=(S.inv[k]||0)+c[k];seen(k);o.bk[k]=Math.max(0,(o.bk[k]||0)-c[k]);if(!o.bk[k])delete o.bk[k];FAW.got[k]=(FAW.got[k]||0)+c[k];});
+ var t=fa52Txt(c);fa52Log(w.nm+'將 '+t+' 放入食材交收箱，送咗去餐廳廚房');fa52Say(w,'送咗去廚房！',2.2);w.carry={};fa52Basket(w);save();}
+// 買種子：用你嘅錢；錢唔夠就買得幾多得幾多
+function fa52Buy(w){var L=fa52BuyList(),o=fa52St();if(!L){fa52Say(w,'種子夠用喇',2);return false;}var r=fa52Pay(L);
+ if(!r.cost){fa52Say(w,'唔夠錢買種子…',3);fa52Log(w.nm+'去咗星際市場，但係你唔夠錢買種子');FA52.cd=60;if(fa52Near(MAP.mkt[0],MAP.mkt[1],18)||fa52Near(MAP.farm[0],MAP.farm[1]))toast(w.nm+'想買種子，但係你唔夠錢',3200);return false;}
+ w.sack=r.got;Object.keys(r.got).forEach(function(k){o.tr[k]=(o.tr[k]||0)+r.got[k];});var t=Object.keys(r.got).map(function(k){return iname(k)+'種子 ×'+r.got[k];}).join('、');
+ fa52Log(w.nm+'喺星際市場買咗 '+t+'（$'+fmtC(r.cost)+'）');fa52Say(w,'買咗種子！',2.4);if(fa52Near(MAP.mkt[0],MAP.mkt[1],18)||fa52Near(MAP.farm[0],MAP.farm[1]))toast(w.nm+'喺星際市場買咗 '+t+'，用咗 $'+fmtC(r.cost),3600);fa52Sack(w,true);save();return true;}
+function fa52Stock(w){var o=fa52St(),s=w.sack||{};Object.keys(s).forEach(function(k){o.sd[k]=(o.sd[k]||0)+s[k];o.tr[k]=Math.max(0,(o.tr[k]||0)-s[k]);if(!o.tr[k])delete o.tr[k];});w.sack=null;fa52Sack(w,false);FA52.boxSig='';fa52Say(w,'種子放好喇',2);save();}
+// 收返未完成嘅運送（遊戲重開、人員重新安排）：路上嘅種子入箱、路上嘅收成入廚房
+function fa52Flush(){if(VISIT||!S||!S.fauto)return;var o=fa52St(),ch=false;Object.keys(o.tr).forEach(function(k){o.sd[k]=(o.sd[k]||0)+o.tr[k];ch=true;});o.tr={};
+ Object.keys(o.bk).forEach(function(k){if(o.bk[k]>0){S.inv[k]=(S.inv[k]||0)+o.bk[k];seen(k);ch=true;}});o.bk={};FA52.shop=null;FA52.boxSig='';if(ch)save();}
+var faSyncV51=faSync;faSync=function(){var lv=faLv(),n=(FAUTO[lv].w||0),sig=n+'|'+(MAP.farm?MAP.farm.join(','):'');if(FAW.sig!==sig){fa52Flush();FAW.list.forEach(function(w){fa52Say(w,null);});}faSyncV51();};
+function fa52Idle(w,wi,cov){var o=fa52St(),Q=fa52Pts(),c=fa52Sum(w.carry||{});
+ // ① 收成籃滿咗（或者冇嘢收）→ 送去交收箱
+ if(c>0&&(c>=6||!fa52HasReady(w,cov))){w.trip='drop';fa52Say(w,'送收成去廚房',2.2);
+  fa52Go(w,fa52Exit(w).concat([Q.fb]),1.6,function(){w.st='drop';w.t=1.1;w.face=-Math.PI/2;});return;}
+ // ② 種子唔夠 → 一個人去星際市場買
+ if(!FA52.shop&&FA52.cd<=0&&!c&&fa52BuyList()){var R=fa52MktRoute();FA52.shop=w;w.trip='shop';
+  if(!R){fa52Buy(w);fa52Stock(w);FA52.shop=null;w.trip='';fa52Log(w.nm+'打電話向阿康訂咗種子');w.t=1;return;}
+  fa52Say(w,'去市場買種子',2.6);fa52Go(w,fa52Exit(w).concat(R),1.75,function(){w.st='buy';w.t=1.6;w.face=Math.atan2(MAP.mkt[0]-w.x,MAP.mkt[1]-w.z);});return;}
+ // ③ 田裏面嘅工作
+ w.job=fa52Job(w,cov);if(w.job){var q=plotXZ(w.job.i),tx=q[0]+0.78,tz=q[1]+0.15-wi*0.18;fa52Go(w,fa52In(w)?[[tx,tz]]:[Q.od,Q.id,[tx,tz]],1.5,function(){w.st='act';w.t=1.3;var q2=plotXZ(w.job.i);w.face=Math.atan2(q2[0]-w.x,q2[1]-w.z);});return;}
+ // ④ 冇嘢做：喺田附近行吓
+ var a=Math.random()*6.283,tx2=Q.fx+1.6+Math.cos(a)*1.4,tz2=Q.fz+1.6+Math.sin(a)*1.2;fa52Go(w,fa52In(w)?[[tx2,tz2]]:[Q.od,Q.id,[tx2,tz2]],1.2,function(){w.st='idle';w.t=1+Math.random()*2;});}
+function fa52HasReady(w,cov){for(var i=0;i<Math.min(S.plots.length,cov);i++){if(fa52Self(i))continue;if(plotState(S.plots[i])!=='ready')continue;if(FAW.list.some(function(q){return q!==w&&q.job&&q.job.i===i;}))continue;return true;}return false;}
+faTick=function(dt,t){if(VISIT){faSync();return;}if(!S||!S.plots||!MAP.farm)return;faSync();fa52Box();var lv=faLv(),cov=(FAUTO[lv].cov||0);if(!lv)return;if(FA52.cd>0)FA52.cd-=dt;
+ FAW.list.forEach(function(w,wi){var mv=false,u=w.m.userData,Q=fa52Pts();
+  if(w.st==='idle'||w.st==='go'||w.st==='wander'){w.t-=dt;if(w.t<=0)fa52Idle(w,wi,cov);}
+  if(w.st==='route'){var tg=w.route[w.ri];if(!tg){w.st='idle';w.t=0.3;}else{var dx=tg[0]-w.x,dz=tg[1]-w.z,d=Math.hypot(dx,dz),s0=(w.spd||1.5)*dt;
+    if(d<=s0+1e-4){w.x=tg[0];w.z=tg[1];w.ri++;if(w.ri>=w.route.length){w.st='idle';w.t=0.4;var fn=w.onArr;w.onArr=null;if(fn)fn();}}else{w.x+=dx/d*s0;w.z+=dz/d*s0;w.face=Math.atan2(dx,dz);}mv=true;}}
+  else if(w.st==='act'){w.t-=dt;if(u.am){u.am[0].rotation.x=-0.9+Math.sin(t*9+wi)*0.4;u.am[1].rotation.x=-0.9-Math.sin(t*9+wi)*0.4;}if(w.t<=0){if(w.job)fa52Do(w,w.job);w.job=null;w.st='idle';w.t=0.4;if(u.am){u.am[0].rotation.x=u.am[1].rotation.x=0;}}}
+  else if(w.st==='buy'||w.st==='drop'||w.st==='stock'){w.t-=dt;if(u.am){u.am[0].rotation.x=-0.7+Math.sin(t*6)*0.25;u.am[1].rotation.x=-0.7-Math.sin(t*6)*0.25;}
+   if(w.t<=0){if(u.am){u.am[0].rotation.x=u.am[1].rotation.x=0;}var kind=w.st;w.st='idle';w.t=0.5;
+    if(kind==='buy'){fa52Buy(w);var R=fa52MktRoute()||[];fa52Go(w,R.slice().reverse().concat([Q.od,Q.id,[Q.cor,Q.fz+0.6],Q.sbS]),1.75,function(){if(w.sack){w.st='stock';w.t=1.0;w.face=Math.PI;}else{FA52.shop=null;w.trip='';}});}
+    else if(kind==='stock'){fa52Stock(w);FA52.shop=null;w.trip='';}
+    else if(kind==='drop'){fa52Drop(w);w.trip='';fa52Go(w,[Q.od,Q.id],1.5,null);}}}
+  w.rot=lerpA(w.rot,w.face,dt*7);w.m.position.set(w.x,standY(w.x,w.z),w.z);w.m.rotation.y=w.rot;if(mv)w.ph+=dt*9;if(w.st!=='act'&&w.st!=='buy'&&w.st!=='drop'&&w.st!=='stock')animWalk(w.m,w.ph,mv);
+  if(fa52Sum(w.carry||{})>0&&u.am&&w.st!=='act'&&w.st!=='drop'){u.am[0].rotation.x=u.am[1].rotation.x=-1.0;}   // 捧住收成籃
+  w.it.x=w.x;w.it.z=w.z;if(w.bub){w.bubT-=dt;w.bub.position.copy(bendPt(w.x,standY(w.x,w.z)+1.95,w.z));if(w.bubT<=0){killSprite(w.bub);w.bub=null;}}});
+ FA52.msgT-=dt;if(FA52.msgT<=0){FA52.msgT=25;var ks=Object.keys(FAW.got);if(ks.length){if(fa52Near(MAP.farm[0],MAP.farm[1],14)||fa52Near(MAP.boxF[0],MAP.boxF[1],10))toast('農務人員收成咗 '+ks.map(function(k){return iname(k)+' ×'+FAW.got[k];}).join('、')+'，已經送去餐廳廚房',3200);FAW.got={};}}};
+// 自動化：播種收割機（第 5 級）用種子箱嘅種子；收成直接送去廚房；「自己打理」嘅田唔郁
+faAuto=function(){if(VISIT||!S||!S.plots)return;var lv=faLv();if(lv<4)return;var now=Date.now(),ch=false,o=fa52St();
+ S.plots.forEach(function(p,i){if(lv>=5&&!fa52Self(i)){var s=plotState(p);if(s==='ready'){var k=p.c,n=CFG.yield;S.inv[k]=(S.inv[k]||0)+n;seen(k);p.c=null;p.p=0;p.w=0;o.n=(o.n||0)+1;FAW.got[k]=(FAW.got[k]||0)+n;prevSt[i]='empty';ch=true;}
+   if(!p.c){var c=fa52Want(i);if(c&&o.sd[c]>0){o.sd[c]--;p.c=c;p.p=0;p.w=now+86400000;prevSt[i]=plotState(p);FA52.boxSig='';ch=true;}}}
+  if(p.c&&p.w<now+43200000){p.w=now+86400000;ch=true;}});if(ch)save();};
+// ---- 對話：同農務人員講想種乜 ----
+var faTalkV51=faTalk;faTalk=function(w){if(VISIT||!w||!S||!S.fauto){faTalkV51(w);return;}var o=fa52St(),sd=fa52Txt(o.sd),L=[];
+ if(w.trip==='shop')L.push('我而家去緊星際市場買種子，好快返嚟！');else if(w.trip==='drop')L.push('我攞緊收成去食材交收箱，送去餐廳廚房！');
+ L.push('你好！我係農務人員'+w.nm+'。你想我哋種乜，可以逐格話我知：只可以揀本島星際市場有賣嘅種子。');
+ L.push('而家嘅安排：'+fa52PlanTxt()+'。'+(sd?'種子箱有：'+sd+'。':'種子箱冇種子，我哋會自己去星際市場買（用你嘅錢）。'));
+ talk(w.nm+'（農務人員）','#4f8a4a','#ffffff',L,[{t:'安排種植',cb:function(){openPanel('faplan');}},{t:'冇嘢喇',cb:function(){}}]);};
+// ---- 面板：種植安排 ----
+PANELS.faplan={t:'種植安排・農務人員',tabs:[['plan','種植安排']]};
+function fa52BagSeeds(){var o=fa52St(),cov=fa52Cov(),need={},L=[];for(var i=0;i<cov;i++){var k=fa52Want(i);if(k)need[k]=1;}Object.keys(need).forEach(function(k){var n=bagCount('seed:'+k);if(n>0)L.push([k,n]);});return L;}
+RENDER.faplan_plan=function(b){var o=fa52St(),lv=faLv(),cov=fa52Cov(),L=faCrops(),def=faCrop();
+ if(!lv){b.appendChild(note('未有農務人員：去建材行搵嘉禧聘請先。'));return;}
+ if(FA52.brush==null||(FA52.brush&&FA52.brush!=='-'&&!fa52Ok(FA52.brush)))FA52.brush=L[0]||'';
+ b.appendChild(note('<b>話俾農務人員知每格田種乜</b>：先揀一款作物，再撳下面嘅田；撳「全部改做」就成片一齊改。只可以揀本島星際市場有賣嘅種子。<br>人員會自己用你嘅錢去星際市場買種子（放入田邊種子箱），種好、淋水、收成，再用籃裝住送去農場入口嘅食材交收箱（餐廳廚房）。已經種咗嘅田，會等收成之後先轉種新安排。'));
+ var pal=el('div','fp52p'),chip=function(k,lab,sub){var c=el('button','fp52k'+(FA52.brush===k?' on':''));c.innerHTML=(k&&k!=='-'?'<img src="'+icoURL('seedpk:'+k)+'" alt="">':'<i class="fp52x'+(k==='-'?' me':'')+'"></i>')+'<span><b>'+esc(lab)+'</b><small>'+esc(sub)+'</small></span>';c.onclick=function(){FA52.brush=k;renderPanel();};pal.appendChild(c);};
+ L.forEach(function(k){chip(k,iname(k),tierTag(k)+'・種子 $'+CROPS[k].seed);});chip('','自動','跟主要作物（'+(def?iname(def):'未有')+'）');chip('-','我自己打理','人員唔郁呢格');b.appendChild(pal);
+ var g=el('div','fp52g');S.plots.forEach(function(p,i){var on=i<cov,k=o.plan[i]||'',me=k==='-',kk=me?'':fa52Want(i),s=plotState(p),c=el('button','fp52c'+(on?'':' off')+(me?' me':''));
+  var cur=p.c?iname(p.c)+(s==='ready'?'（熟咗）':'（'+Math.min(99,Math.floor(p.p/(3*cropStage(p.c))*100))+'%）'):'空田';
+  c.innerHTML='<span class="n">'+(i+1)+'</span>'+(!on?'<i class="fp52x"></i><b>人員未照顧到</b>':me?'<i class="fp52x me"></i><b>你自己打理</b>':(kk?'<img src="'+icoURL('seedpk:'+kk)+'" alt="">':'<i class="fp52x"></i>')+'<b>'+esc(kk?iname(kk):'未有')+(k?'':'<em>（自動）</em>')+'</b>')+'<small>而家：'+esc(cur)+'</small>';
+  if(on&&!VISIT)c.onclick=function(){if((o.plan[i]||'')!==FA52.brush){o.plan[i]=FA52.brush;qAdd('fplan',1);}save();renderPanel();};g.appendChild(c);});b.appendChild(g);
+ if(cov<S.plots.length)b.appendChild(note('而家嘅人員只照顧頭 '+cov+' 格田；想照顧更多，可以搵建材行嘉禧再請人。'));
+ var bl=FA52.brush==='-'?'我自己打理':FA52.brush?iname(FA52.brush):'自動';
+ b.appendChild(card({ico:'seedpk:'+(FA52.brush&&FA52.brush!=='-'?FA52.brush:(def||'tomato'))},'全部田一齊改','將人員照顧緊嘅 '+cov+' 格田全部改做「'+esc(bl)+'」。',[{t:'全部改做「'+bl+'」',cls:'o',dis:!!VISIT,fn:function(){var n=0;for(var i=0;i<cov;i++){if((o.plan[i]||'')!==FA52.brush)n++;o.plan[i]=FA52.brush;}if(n)qAdd('fplan',n);save();renderPanel();}},{t:'清除安排',dis:!!VISIT,fn:function(){o.plan=[];save();renderPanel();}}]));
+ var sd=fa52Txt(o.sd),need=fa52BuyList(),bs=fa52BagSeeds(),sk=Object.keys(o.sd).filter(function(k){return o.sd[k]>0;});
+ b.appendChild(card({ico:'seedpk:'+(sk[0]||def||'tomato')},'田邊種子箱',(sd?'有：'+esc(sd):'冇種子')+(FA52.shop?'<br>'+esc(FA52.shop.nm)+'去緊星際市場買種子':need?'<br>就快要買：'+esc(need.map(function(q){return iname(q[0])+' ×'+q[1];}).join('、'))+'（人員會自己去買）':''),
+  bs.length?[{t:'背包種子放入種子箱',cls:'o',dis:!!VISIT,fn:function(){bs.forEach(function(q){if(bagTake('seed:'+q[0],q[1]))o.sd[q[0]]=(o.sd[q[0]]||0)+q[1];});FA52.boxSig='';save();toast('放咗 '+bs.map(function(q){return iname(q[0])+'種子 ×'+q[1];}).join('、')+' 入種子箱',3000);renderPanel();}}]:[]));
+ if(FA52.log.length)b.appendChild(note('<b>人員工作紀錄</b><br>'+FA52.log.slice(0,6).map(esc).join('<br>')));};
+// 嘉禧面板：加一句提示＋直接打開種植安排
+var RAF51=RENDER.auto_farm;RENDER.auto_farm=function(b){RAF51(b);if(!faLv())return;b.insertBefore(card({ico:'seedpk:'+(faCrop()||'tomato')},'逐格安排種植','而家：'+esc(fa52PlanTxt())+'。<br>都可以直接喺田度同農務人員傾偈安排。',[{t:'安排種植',cls:'o',dis:!!VISIT,fn:function(){openPanel('faplan');}}]),b.children[2]||null);};
+(function(){var st=document.createElement('style');st.textContent=
+ '.fp52p{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 10px}.fp52k{display:flex;align-items:center;gap:6px;border:2px solid #f1e6c8;background:#fff;border-radius:12px;padding:4px 10px 4px 4px;color:#5a4632;font:inherit;text-align:left;cursor:pointer}'+
+ '.fp52k img{width:30px;height:30px}.fp52k b{display:block;font-size:14px}.fp52k small{display:block;font-size:11px;color:#8a7a62}.fp52k.on{border-color:#f4c542;background:#fff4cf;box-shadow:0 2px 0 rgba(200,160,40,.35)}'+
+ '.fp52g{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:2px 0 10px}.fp52c{position:relative;border:2px solid #d9c7a0;background:#f3e3c4;border-radius:12px;padding:8px 4px 6px;display:flex;flex-direction:column;align-items:center;gap:2px;color:#5a4632;font:inherit;min-height:96px;cursor:pointer}'+
+ '.fp52c img{width:36px;height:36px}.fp52c b{font-size:13px;line-height:1.25;text-align:center}.fp52c em{font-style:normal;font-size:11px;color:#8a7a62}.fp52c small{font-size:11px;color:#8a7a62;text-align:center}.fp52c .n{position:absolute;left:7px;top:4px;font-size:11px;color:#a8946e}'+
+ '.fp52c.off{opacity:.45;cursor:default}.fp52c.me{background:#eaf1f7;border-color:#b8c8d8}.fp52x{display:inline-block;width:30px;height:30px;border-radius:50%;background:#efe6d2;border:2px dashed #c8b58e;box-sizing:border-box}.fp52x.me{background:#dde8f2;border-color:#9aaabb}';
+ document.head.appendChild(st);})();
+// ================= v52 任務同玩家進度同步（用戶指示）=================
+// 問題：自動化咗耕田（農務人員、播種收割機）或者花圃（花王）之後，「收成」「交食材」「賣花」「插花」呢啲要親自做嘅任務做唔到
+// 做法：① 每款任務有「適用條件」（按島嘅發展：耕田自動化、花王、池塘、牧場、博物館、樂園、魚類圖鑑……），唔適用就唔會出；
+//       ② 每期（日／週／月）第一次出任務就固定落嚟（S.qst[期].L）；之後先自動化咗而做唔到、又未完成嘅任務，會自動換過一個；
+//       ③ 新增任務：魚餌、新魚種、稀有魚、池塘養魚、牧場餵動物、插花、樂園攤位遊戲、博物館展品、影相、同農務人員安排種植；
+//       ④ 招待食客、交食材、收成嘅份量跟星球等級加
+function q52Dex(){var D=S.fdex||{};return Object.keys(D).filter(function(k){return fishOf(k).k===k;}).length;}
+function q52FarmManual(){return faLv()<1||S.plots.length>fa52Cov();}
+function q52FlowerManual(){return gardLv()<1&&!!MAP.fbed;}
+function q52Pond(){try{return !!S.pond&&pondCap()>(S.pond.fish||[]).length;}catch(e){return false;}}
+function q52Ranch(){try{return raLv()<1&&!!ranchP()&&ranchSt().a.length>0;}catch(e){return false;}}
+var Q52OK={harvest:q52FarmManual,deliver:function(){return faLv()<3;},flower:q52FlowerManual,wish:function(){return true;}};
+var Q52SC={serve:0.1,deliver:0.08,harvest:0.06};
+var QX52={
+ d:[{k:'bait',t:'魚餌釣魚',d:'用魚餌釣魚 {n} 次（揀咗魚餌先拋竿）',n:[2,3],ok:function(){return q52Dex()>0;}},
+  {k:'newfish',t:'新魚種',d:'釣到 {n} 種未釣過嘅魚',n:[1,1],ok:function(){return q52Dex()<FISH.length;}},
+  {k:'rarefish',t:'稀有魚',d:'釣到 {n} 條「稀有」或以上嘅魚',n:[1,1],ok:function(){return (S.rod||0)>=1;}},
+  {k:'pondin',t:'池塘養魚',d:'放 {n} 條魚入池塘',n:[1,2],ok:q52Pond},
+  {k:'feed',t:'餵動物',d:'喺牧場飼料槽餵 {n} 次動物',n:[1,2],ok:q52Ranch},
+  {k:'arr',t:'插花',d:'喺伊伊花店插 {n} 束花',n:[1,1],ok:q52FlowerManual},
+  {k:'play',t:'樂園遊戲',d:'玩主題樂園攤位遊戲 {n} 次',n:[1,2],ok:function(){return parkBuilt();}},
+  {k:'photo',t:'影相留念',d:'用相機影 {n} 張相',n:[1,2]},
+  {k:'fplan',t:'種植安排',d:'同農務人員安排 {n} 格田種嘢（傾偈揀「安排種植」）',n:[3,6],ok:function(){return faLv()>=1;}}],
+ w:[{k:'newfish',t:'圖鑑新頁',d:'本週釣到 {n} 種未釣過嘅魚',n:[3,3],ok:function(){return FISH.length-q52Dex()>=3;}},
+  {k:'rarefish',t:'稀有魚獵人',d:'本週釣到 {n} 條「稀有」或以上嘅魚',n:[3,4],ok:function(){return (S.rod||0)>=1;}},
+  {k:'bait',t:'魚餌專家',d:'本週用魚餌釣魚 {n} 次',n:[10,10],ok:function(){return q52Dex()>0;}},
+  {k:'pondin',t:'池塘生態',d:'本週放 {n} 條魚入池塘',n:[5,5],ok:q52Pond},
+  {k:'art',t:'博物館策展',d:'本週博物館新增 {n} 件展品',n:[1,2],ok:function(){return bld('dome');}},
+  {k:'play',t:'樂園常客',d:'本週玩主題樂園攤位遊戲 {n} 次',n:[8,8],ok:function(){return parkBuilt();}},
+  {k:'feed',t:'牧場好幫手',d:'本週喺牧場餵 {n} 次動物',n:[8,8],ok:q52Ranch},
+  {k:'fplan',t:'農場經理',d:'本週同農務人員安排 {n} 格田種嘢',n:[12,12],ok:function(){return faLv()>=1;}},
+  {k:'photo',t:'旅遊相簿',d:'本週影 {n} 張相',n:[6,6]}],
+ m:[{k:'newfish',t:'魚類學家',d:'本月釣到 {n} 種未釣過嘅魚',n:[8,8],ok:function(){return FISH.length-q52Dex()>=8;}},
+  {k:'rarefish',t:'深海傳說',d:'本月釣到 {n} 條「稀有」或以上嘅魚',n:[12,12],ok:function(){return (S.rod||0)>=2;}},
+  {k:'art',t:'星級博物館',d:'本月博物館新增 {n} 件展品',n:[4,4],ok:function(){return bld('dome');}},
+  {k:'photo',t:'星球攝影師',d:'本月影 {n} 張相',n:[15,15]},
+  {k:'pondin',t:'池塘養殖場',d:'本月放 {n} 條魚入池塘',n:[15,15],ok:q52Pond}]};
+function q52Tpl(p){return (p==='d'?QD:p==='w'?QW:QM).concat(QX52[p]);}
+function q52T(p,k){var L=q52Tpl(p);for(var i=0;i<L.length;i++)if(L[i].k===k)return L[i];return null;}
+function q52Ok(q){var f=q.ok||Q52OK[q.k];if(!f)return true;try{return !!f();}catch(e){return true;}}
+function q52Seed(p){return ((pSeed()>>>0)^(p==='d'?dayNo()*2654435761:p==='w'?weekNo()*40503:(new Date().getFullYear()*12+new Date().getMonth())*97531))>>>0;}
+function q52Gen(p,ex,cnt){var r=rng((q52Seed(p)+ex.length*7919)>>>0),L=q52Tpl(p).filter(function(q){return ex.indexOf(q.k)<0&&q52Ok(q);}),seen={},out=[],lv=typeof planetLv==='function'?planetLv():1;
+ for(var i=L.length-1;i>0;i--){var j=Math.floor(r()*(i+1)),t=L[i];L[i]=L[j];L[j]=t;}
+ L.forEach(function(q){if(out.length>=cnt||seen[q.k])return;seen[q.k]=1;var need=q.n[0]+Math.floor(r()*(q.n[1]-q.n[0]+1)),sc=q.sc||Q52SC[q.k];if(sc)need=Math.round(need*(1+sc*(lv-1)));out.push({k:q.k,need:need});});return out;}
+qList=function(p){var o=qSt(),P=o[p],n=p==='d'?3:4;if(!Array.isArray(P.L)||!P.L.length)P.L=q52Gen(p,[],n);
+ for(var i=0;i<P.L.length;i++){var e=P.L[i],T0=q52T(p,e.k);if((!T0||!q52Ok(T0))&&!P.got[e.k]&&(P.c[e.k]||0)<e.need){var rp=q52Gen(p,P.L.map(function(x){return x.k;}),1)[0];if(rp)P.L[i]=rp;}}
+ return P.L.map(function(e){var T0=q52T(p,e.k)||{t:e.k,d:'{n}'};return {k:e.k,t:T0.t,d:T0.d.replace('{n}',e.need),need:e.need,have:Math.min(e.need,P.c[e.k]||0),id:e.k};});};
+// ---- 新任務計數 ----
+var fsCatchV51=fsCatch;fsCatch=function(){var f=FS.f,isNew=!!(f&&!(S.fdex||{})[f.k]);fsCatchV51();if(!f)return;if(isNew)qAdd('newfish',1);if(f.rar>=2)qAdd('rarefish',1);};
+var releaseFishV51=releaseFish;releaseFish=function(fk){var n0=S.pond.fish.length;releaseFishV51(fk);if(S.pond.fish.length>n0)qAdd('pondin',S.pond.fish.length-n0);};
+var releaseAllV51=releaseAll;releaseAll=function(){var n0=S.pond.fish.length;releaseAllV51();if(S.pond.fish.length>n0)qAdd('pondin',S.pond.fish.length-n0);};
+var ranchFeedV51=ranchFeed;ranchFeed=function(k){var o=ranchSt(),f0=o.feed;ranchFeedV51(k);if(!VISIT&&ranchSt().feed<f0)qAdd('feed',1);};
+var takePhotoV51=takePhoto;takePhoto=function(){var ok=SHOT.on&&!SHOT.busy;takePhotoV51();if(ok&&!VISIT)qAdd('photo',1);};
+// ================= v52 兩部機同步（用戶反映：手機、iPad 輪流玩同一個 Google 帳戶，進度唔跟最新嗰部機）=================
+// 原因：① 另一部機嘅分頁一直開喺背景，返嚟時唔會重新讀雲端，照用舊進度玩、存檔，再上載就蓋過咗新進度；
+//       ② 開遊戲要等幾秒先登入完，嗰段時間一存檔，本機「最後儲存時間」就變咗「而家」，舊進度反而當咗較新；
+//       ③ 切走 App 時雲端上載有 45 秒節流，最後一段進度未上載就換咗部機；兩部機時鐘唔一樣都會令比較時間出錯
+// 做法：每次上載有版本編號（v）；本機記低同步咗邊個版本（S.syncV）同之後有冇真正玩過（S.act52：遊戲畫面撳畫面／鍵盤）
+//   登入後即時聽住雲端版本（只讀 t、v 兩個細欄位）；雲端版本唔係自己上載嘅：
+//     呢部機自上次同步之後未真正玩過 → 返嚟呢部機（或者撳第一下）就自動載入最新進度；兩邊都玩過 → 問玩家揀（被取代嗰份留備份）
+//   切走分頁即刻上載；冇玩過只係自動化有變化就唔會一直上載（兩部機開住都唔會互相重載）
+//   登入時用版本編號比較；舊存檔冇版本就用開遊戲時讀到嘅存檔時間（SAVE0），唔再俾登入前嘅存檔搶先改咗
+var SYNC52={dev:'',cv:null,ct:0,unsub:null,pend:false,told:false,asked:false,loading:false,skipUp:false,up:false,T:null};
+(function(){try{var d=localStorage.getItem('ths-dev');if(!d){d=Math.random().toString(36).slice(2,10);localStorage.setItem('ths-dev',d);}SYNC52.dev=d;}catch(e){SYNC52.dev='t'+Math.random().toString(36).slice(2,8);}})();
+var SYNC52A=0;
+function sync52Act(e){if(phase!=='play'||!S||VISIT)return;
+ if(SYNC52.pend&&NET.user&&!SYNC52.loading&&sync52Newer()&&!sync52Played()){try{e.stopPropagation();e.preventDefault();}catch(x){}sync52Load('☁️ 載入緊另一部機嘅最新進度……');return;}
+ var n=Date.now();if(n-SYNC52A<1000)return;SYNC52A=n;S.act52=(S.act52||0)+1;}
+window.addEventListener('pointerdown',sync52Act,true);window.addEventListener('keydown',sync52Act,true);
+function sync52Played(){return (S.act52||0)>=15;}
+function sync52Newer(){if(!NET.user)return false;if(SYNC52.cv)return SYNC52.cv!==S.syncV;return !!SYNC52.ct&&SYNC52.ct!==S.syncT;}
+function sync52Sub(){if(SYNC52.unsub||!NET.user||!DBI||!DBI.on)return;var p='saves/'+NET.user.uid,u=NET.user;
+ var a=DBI.on(p+'/v',function(v){if(NET.user!==u)return;SYNC52.cv=v||null;sync52Seen();}),b=DBI.on(p+'/t',function(v){if(NET.user!==u)return;SYNC52.ct=+v||0;sync52Seen();});SYNC52.unsub=function(){a();b();};}
+function sync52Seen(){clearTimeout(SYNC52.T);SYNC52.T=setTimeout(sync52Eval,700);}
+function sync52Eval(){if(!NET.user||VISIT||noSave||SYNC52.loading||SYNC52.up||(typeof A43!=='undefined'&&A43.on)||!sync52Newer())return;
+ if(sync52Played()){if(!document.hidden)sync52Ask();else SYNC52.pend=true;return;}
+ SYNC52.pend=true;if(!document.hidden&&!SYNC52.told){SYNC52.told=true;toast('☁️ 另一部機有較新嘅進度：撳一下畫面就會同步',5000);}}
+function sync52Load(msg){if(SYNC52.loading)return;SYNC52.loading=true;var u=NET.user;DBI.get('saves/'+u.uid).then(function(cs){if(cs&&cs.json){try{sessionStorage.removeItem('ths-cloudload');}catch(e){}acct43Load(cs,msg,u.uid);}else SYNC52.loading=false;}).catch(function(){SYNC52.loading=false;});}
+function sync52Ask(){if(SYNC52.asked)return;SYNC52.asked=true;var u=NET.user;DBI.get('saves/'+u.uid).then(function(cs){SYNC52.asked=false;if(!cs||!cs.json||!sync52Newer())return;acct43Ask(u,cs,true,true);}).catch(function(){SYNC52.asked=false;});}
+// ---- 上載：雲端有另一部機較新嘅進度就唔好蓋過；冇真正玩過就唔使一直上載 ----
+cloudSave=function(now){if(!NET.user||VISIT||noSave)return;NET.dirty=true;if(!now&&Date.now()-NET.upT<45000)return;if(!now&&!(S.act52>0))return;
+ if(sync52Newer()){sync52Eval();return;}
+ if(SYNC52.skipUp){SYNC52.skipUp=false;NET.dirty=false;NET.upT=Date.now();return;}
+ NET.upT=Date.now();NET.dirty=false;var t=Date.now(),v=SYNC52.dev+'-'+t.toString(36);S.savedAt=t;S.syncT=t;S.syncV=v;S.act52=0;var j=JSON.stringify(S);
+ try{localStorage.setItem(CFG.saveKey,j);}catch(e){}SYNC52.up=true;var pr=DBI.set('saves/'+NET.user.uid,{t:t,json:j,v:v,dev:SYNC52.dev});
+ (pr&&pr.then?pr:Promise.resolve()).then(function(){SYNC52.up=false;SYNC52.cv=v;SYNC52.ct=t;sync52Sub();},function(){SYNC52.up=false;});};
+netTick=function(dt){if(!NET.user)return;NET.pubT+=dt;if(NET.dirty&&Date.now()-NET.upT>45000&&S.act52>0)cloudSave(true);if(NET.pubT>120){NET.pubT=0;publish();}presenceTick(dt);};
+document.addEventListener('visibilitychange',function(){if(!NET.user||VISIT||noSave)return;if(document.hidden){if(NET.dirty||(S.savedAt||0)>(S.syncT||0))cloudSave(true);}else if(SYNC52.pend||sync52Newer()){
+ if(sync52Newer()&&!sync52Played()&&!SYNC52.loading)sync52Load('☁️ 已載入另一部機嘅最新進度');else sync52Eval();}});
+// ---- 登入：用版本編號比較；啱啱載入嘅版本唔使即刻再上載 ----
+onLogin=function(u){if(NET.user&&NET.user.uid===u.uid)return;if(NET.pend&&NET.pend.uid===u.uid)return;NET.pend=u;var uid=u.uid;
+ DBI.get('saves/'+uid).then(function(cs){if(NET.pend!==u)return;
+  var hasC=!!(cs&&cs.json),cloudT=cs&&cs.t||0,cv=cs&&cs.v||'',fresh0=!(S.me&&S.me.nm),loc0=SAVE0!=null?SAVE0:(S.savedAt||0),
+   bound=S.acct===uid||(!!S.fcode&&S.fcode===codeOf(uid))||(hasC&&!!cloudT&&(S.savedAt===cloudT||loc0===cloudT||S.syncT===cloudT));
+  if(hasC&&!fresh0&&!bound){acct43Ask(u,cs);return;}
+  var once=false;try{once=sessionStorage.getItem('ths-cloudload')===String(cloudT);}catch(e){}
+  if(hasC&&once){S.syncV=cv;S.syncT=cloudT;S.act52=0;SYNC52.skipUp=true;loginDone43(u);return;}
+  if(hasC){if(fresh0){acct43Load(cs,'☁️ 已載入雲端進度',uid);return;}
+   var same=(S.syncV||S.syncT)?(cv?cv===S.syncV:cloudT===S.syncT):cloudT<=loc0;
+   if(!same){if(!sync52Played()){acct43Load(cs,'☁️ 已載入另一部機嘅最新進度',uid);return;}acct43Ask(u,cs,true);return;}}
+  loginDone43(u);}).catch(function(e){if(NET.pend!==u)return;NET.pend=null;console.warn(e);var go=CV43.auto;CV43.auto=false;
+  toast('☁️ 未能讀取雲端存檔（'+((e&&(e.code||e.message))||'網絡')+'），暫時未登入：請檢查網絡，之後喺「設定」再登入',6000);if(go&&phase==='cover')$('cvHint').textContent='未能讀取雲端進度：請再撳「開始遊戲」再試';});};
+var loginDone43V51=loginDone43;loginDone43=function(u){loginDone43V51(u);setTimeout(sync52Sub,SYNC52.up?3000:300);};
+var onLogoutV51=onLogout;onLogout=function(){if(SYNC52.unsub){SYNC52.unsub();SYNC52.unsub=null;}SYNC52.cv=null;SYNC52.ct=0;SYNC52.pend=false;onLogoutV51();};
+// ---- 揀進度：兩部機都玩過（另一部機較新）時嘅講法；玩緊途中問就唔顯示「取消登入」----
+var acct43AskV51=acct43Ask;acct43Ask=function(u,cs,both,mid){acct43AskV51(u,cs);A43.mid=!!mid;var sub=document.querySelector('#acct43 .sub'),x=$('a43X');
+ if(sub)sub.textContent=both?'另一部機上載咗較新嘅進度，而呢部機都有未上載嘅進度。揀一份繼續玩，另一份會被取代（被取代嗰份會喺呢部機留低備份）：':'呢個 Google 帳戶本身已經有雲端進度，而呢部機都有另一份進度。要揀一份繼續玩，另一份會被取代：';
+ var hc=document.querySelector('#acct43 .a43c b');if(hc)hc.textContent=both?'另一部機（雲端）':'雲端進度';if(x)x.style.display=mid?'none':'';};
+var acct43PickV51=acct43Pick;acct43Pick=function(k){if(!A43.mid)return acct43PickV51(k);if(!A43.on||k==='x')return;var u=A43.u,cs=A43.cs;
+ if(A43.arm!==k){A43.arm=k;acct43Btns();clearTimeout(A43.tm);A43.tm=setTimeout(function(){A43.arm='';if(A43.on)acct43Btns();},5000);return;}
+ A43.on=false;A43.mid=false;$('acct43').classList.remove('on');
+ if(k==='c'){acct43Bak('local',JSON.stringify(S));acct43Load(cs,'☁️ 已改用另一部機嘅進度',u.uid);}
+ else{acct43Bak('cloud',cs.json);SYNC52.cv=null;SYNC52.ct=0;S.syncV=cs.v||'';S.syncT=cs.t||0;SYNC52.pend=false;cloudSave(true);toast('☁️ 已改用呢部機嘅進度，雲端已經更新',3600);}};
+// ================= v52 廣告欄新消息（一切新增都喺廣告欄刊登）=================
+if(typeof AD47_NEWS!=='undefined')AD47_NEWS.unshift({id:'fish52',t:'50 款新魚＋扔魚餌＋農務人員聽你講',lines:['新消息！新消息！大海多咗 50 款新魚！',
+ '普通嘅黃腳鱲、牙帶、馬友，少見嘅木盒、牛角、燕魚，稀有嘅東星斑、老鼠斑、石頭魚，珍貴嘅龍躉、雙髻鯊、葉海龍，仲有傳說中嘅大白鯊、哥布林鯊、皺鰓鯊！每款都有兩面魚卡同資料來源。',
+ '釣魚時揀咗魚餌，會見到自己將魚餌扔出水面：普通魚餌係米黃色、高級魚餌係橙金色、特級魚餌係紅色仲會發光，落水之後仲有細魚圍埋嚟。',
+ '請咗農務人員嘅朋友：同人員傾偈揀「安排種植」，就可以逐格話佢哋知種乜（只限本島星際市場有賣嘅種子）。人員會自己去市場買種子、種好、收成，再送去餐廳廚房！',
+ '任務都跟你個島嘅發展：自動化咗耕田或者請咗花王，就唔會再出要親自收成、賣花嘅任務；仲多咗釣新魚種、稀有魚、池塘養魚、牧場、樂園、博物館、影相等新任務。',
+ '用兩部機（例如手機同 iPad）玩同一個 Google 帳戶：另一部機有較新進度，返嚟呢部機會自動同步；兩部機都玩過就會問你揀邊份。']});
 // ---- 模組載入完：開始砌大型設施、牧場外型 ----
 LF_OK=true;if(MAP&&MAP.L&&typeof lfSync==='function')lfSync(true);
 requestAnimationFrame(loop);
