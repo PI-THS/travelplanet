@@ -2,7 +2,7 @@
 <html lang="zh-Hant-HK">
 <head>
 <meta charset="utf-8">
-<meta name="ths-build" content="2610052249">
+<meta name="ths-build" content="2610052255">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="color-scheme" content="light">
 <!-- iPhone Safari 冇 element fullscreen API：由「分享 → 加入主畫面」開就會冇工具列（同旅款亂Upper 一樣）-->
@@ -3319,7 +3319,7 @@ function updMac(dt,t){var m=MAC,u=macO.userData;macO.visible=macSh.visible=!maki
 
 // ================= 封面、揀地形 =================
 // 每次開遊戲先見封面；未玩過嘅新玩家：揀地形 → 建立角色 → 開場白
-var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v57',BUILD='2610052249';
+var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v58',BUILD='2610052255';
 function showCoverV42(){phase='cover';$('cover').classList.add('on');$('app').classList.add('cover');CU.uB.value=0;sea.scale.set(4,7,1);sea.position.z=(MAP.bc||[0,0])[1];
  var old=!!(S.me&&S.me.nm);$('cvVer').textContent=BUILD+'V'+VERSION.slice(1);$('cvGo').textContent=old?'繼續遊戲':'開始遊戲';$('cvHint').textContent=old?'歡迎回來，'+S.me.nm+'！':'第一次玩：先揀島嶼地形，再建立角色';}
 function leaveCoverV42(){if(phase!=='cover')return;$('cover').classList.remove('on');if(!S.layout){if(!S.story)openStory();else openTerr();}else startPlay();}
@@ -3835,7 +3835,7 @@ function fishSellNote(){var n=fsellSt().n;return '今日已經賣咗 '+n+' 條�
 // ---- 優惠碼（YHP「優惠碼」）：6 個英文字母或數字，唔分大細楷；每個存檔每個碼用一次（重新開始可以再用） ----
 // ⚠ 原始碼只放 PBKDF2 雜湊（20 萬次，網頁公開都唔易逐個試出嚟）；優惠碼本身寫喺 iCloud「優惠碼（YHP專用・唔好上載）.txt」
 // 加新碼：用同一個 PROMO_SALT、PROMO_IT 計 PBKDF2-SHA256（32 bytes，hex），喺 PROMOS 加一行 {h,c,n}
-var PROMO_SALT='ths-promo-f493f5f0273a',PROMO_IT=200000,PROMOS=[{h:'0f96fe3e845a49761be54d1e59fc50bce981163a170e94f1b35b519e35b6ef6e',c:5000000,n:'獎勵'},{h:'0ad9a4be63bec467f7b67c39cfb33caf402216d58e8edb25349904ca11b4275c',c:999999,n:'測試獎勵'},{h:'afb7a51c25f57c1e7f79b976923370f694bfcd781caf37f07718be70ee123f09',c:10000,n:'獎勵'},{h:'fc022e362ef25fe9670a12bb3695b29e9e693ae8ba806a3a2871721a04832203',c:50000,n:'獎勵'}],PROMO_TRY={n:0,until:0,busy:false};
+var PROMO_SALT='ths-promo-f493f5f0273a',PROMO_IT=200000,PROMOS=[{h:'0f96fe3e845a49761be54d1e59fc50bce981163a170e94f1b35b519e35b6ef6e',c:5000000,n:'獎勵'},{h:'0ad9a4be63bec467f7b67c39cfb33caf402216d58e8edb25349904ca11b4275c',c:999999,n:'測試獎勵'},{h:'afb7a51c25f57c1e7f79b976923370f694bfcd781caf37f07718be70ee123f09',c:10000,n:'獎勵'},{h:'fc022e362ef25fe9670a12bb3695b29e9e693ae8ba806a3a2871721a04832203',c:50000,n:'獎勵'},{h:'88540f4120095abd6e481c69fb2b47b37f36599a7626ea4c7ddebe8faca9bd65',c:1000000,n:'獎勵'}],PROMO_TRY={n:0,until:0,busy:false};
 function promoHash(code){var te=new TextEncoder();return crypto.subtle.importKey('raw',te.encode(code),'PBKDF2',false,['deriveBits']).then(function(k){return crypto.subtle.deriveBits({name:'PBKDF2',hash:'SHA-256',salt:te.encode(PROMO_SALT),iterations:PROMO_IT},k,256);}).then(function(b){return Array.from(new Uint8Array(b)).map(function(x){return ('0'+x.toString(16)).slice(-2);}).join('');});}
 function promoRedeem(v){var msg=$('pmMsg');function say(t){if(msg)msg.textContent=t;}
  if(VISIT){say('參觀期間唔可以用優惠碼。');return;}if(PROMO_TRY.busy)return;var now=Date.now();
