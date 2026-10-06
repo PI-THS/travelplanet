@@ -2,7 +2,7 @@
 <html lang="zh-Hant-HK">
 <head>
 <meta charset="utf-8">
-<meta name="ths-build" content="2610061228">
+<meta name="ths-build" content="2610061415">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="color-scheme" content="light">
 <!-- iPhone Safari 冇 element fullscreen API：由「分享 → 加入主畫面」開就會冇工具列（同旅款亂Upper 一樣）-->
@@ -3319,7 +3319,7 @@ function updMac(dt,t){var m=MAC,u=macO.userData;macO.visible=macSh.visible=!maki
 
 // ================= 封面、揀地形 =================
 // 每次開遊戲先見封面；未玩過嘅新玩家：揀地形 → 建立角色 → 開場白
-var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v62',BUILD='2610061228';
+var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v63',BUILD='2610061415';
 function showCoverV42(){phase='cover';$('cover').classList.add('on');$('app').classList.add('cover');CU.uB.value=0;sea.scale.set(4,7,1);sea.position.z=(MAP.bc||[0,0])[1];
  var old=!!(S.me&&S.me.nm);$('cvVer').textContent=BUILD+'V'+VERSION.slice(1);$('cvGo').textContent=old?'繼續遊戲':'開始遊戲';$('cvHint').textContent=old?'歡迎回來，'+S.me.nm+'！':'第一次玩：先揀島嶼地形，再建立角色';}
 function leaveCoverV42(){if(phase!=='cover')return;$('cover').classList.remove('on');if(!S.layout){if(!S.story)openStory();else openTerr();}else startPlay();}
@@ -15016,6 +15016,29 @@ if(typeof AD47_NEWS!=='undefined'){
  AD47_NEWS.unshift({id:'zoo62',t:'動物園擴建',lines:['動物園可以升級做「動物王國」同「星際野生王國」，新增老虎、河馬、白犀牛、狐獴：搵林庫升級，再向邦邦引入動物啦！']});
  AD47_NEWS.unshift({id:'aq62',t:'水族館海洋大屏幕',lines:['水族館新增海洋大屏幕：一入門就見到，放你釣到嘅魚入去俾旅客欣賞，最多 15 條！']});
  AD47_NEWS.unshift({id:'eq62',t:'餐廳新設備',lines:['新增 10 樣餐廳設備（焗爐、蒸櫃、燒味爐、炸爐、咖啡機、榨汁機、雪糕機、製冰機、洗碗機、消毒碗櫃），主題餐廳都用得，去建材行嘉禧買啦！']});}
+// ================= v63 玩家統計（用戶指示：老師 control panel 睇登入電郵、每日／週／月上線時數、收入同支出）=================
+// 只限有 Google 登入嘅玩家；寫入 stats/{uid}（規則：自己寫、只有 admins 讀得晒）：
+//   p＝{em 登入電郵, gn Google 名, nm 遊戲名, t 最後上線（伺服器時間）, v 版本}
+//   d/{YYYYMMDD}＝{s 上線秒數, i 收入, e 支出, x 大額收入（單次 >$20,000：優惠碼、提款、離線結算等）}，用 ServerValue.increment 累加（兩部機同時開都唔會蓋過）
+// 上線時數：分頁喺前面、遊戲進行緊、10 分鐘內有撳過／郁過先計（探訪好友都計時）；收支只計自己個島（探訪、換存檔嗰下唔計）
+var ST63={s:0,i:0,e:0,x:0,coins:null,S:null,act:Date.now(),pushT:0};
+function st63Day(){var d=new Date();return ''+(d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate());}
+['pointerdown','keydown','touchstart','wheel'].forEach(function(k){window.addEventListener(k,function(){ST63.act=Date.now();},{passive:true,capture:true});});
+function st63Tick(dt){try{if(!S||phase!=='play')return;
+ if(VISIT||ST63.S!==S){ST63.S=VISIT?null:S;ST63.coins=VISIT?null:S.coins;}
+ else{var d=S.coins-ST63.coins;if(d>0){if(d>20000)ST63.x+=d;else ST63.i+=d;}else if(d<0)ST63.e+=-d;ST63.coins=S.coins;}
+ if(!document.hidden&&Date.now()-ST63.act<600000)ST63.s+=Math.min(dt,1);
+ ST63.pushT+=dt;if(ST63.pushT>=60)st63Push();}catch(e){}}
+function st63Push(){ST63.pushT=0;try{if(!NET||!NET.user||!DBI||MOCK||typeof firebase==='undefined'||!firebase.database)return;
+ var day=st63Day(),inc=firebase.database.ServerValue.increment,o={},s=Math.round(ST63.s),i=Math.round(ST63.i),e=Math.round(ST63.e),x=Math.round(ST63.x);
+ if(s||i||e||x){o['d/'+day+'/s']=inc(s);o['d/'+day+'/i']=inc(i);o['d/'+day+'/e']=inc(e);o['d/'+day+'/x']=inc(x);}
+ ST63.s-=s;ST63.i-=i;ST63.e-=e;ST63.x-=x;
+ o['p/em']=String(NET.user.email||'').slice(0,200);o['p/gn']=String(NET.user.displayName||'').slice(0,60);o['p/nm']=String((S&&!VISIT&&S.me&&S.me.nm)||(OWN_S&&OWN_S.me&&OWN_S.me.nm)||'').slice(0,60);o['p/t']=firebase.database.ServerValue.TIMESTAMP;o['p/v']=VERSION;
+ DBI.update('stats/'+NET.user.uid,o).catch(function(){});}catch(err){}}
+var incTickV63=incTick;incTick=function(dt){incTickV63(dt);st63Tick(dt);};
+document.addEventListener('visibilitychange',function(){if(document.hidden)st63Push();});window.addEventListener('pagehide',function(){st63Push();});
+// 登入畫面講明老師睇到乜
+(function(){try{var a=$('lgGx');if(a&&!$('lgPriv')){var d=document.createElement('div');d.className='lgx';d.id='lgPriv';d.textContent='登入之後，老師可以睇到你嘅登入電郵、每日上線時間同遊戲收支。';a.parentNode.insertBefore(d,a.nextSibling);}}catch(e){}})();
 // ---- 模組載入完：開始砌大型設施、牧場外型 ----
 LF_OK=true;if(MAP&&MAP.L&&typeof lfSync==='function')lfSync(true);
 requestAnimationFrame(loop);

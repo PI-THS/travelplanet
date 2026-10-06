@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="zh-HK">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>旅遊星球玩家資料</title>
+<style>
+:root{--bg:#f6f3ee;--card:#ffffff;--ink:#2d2a32;--sub:#6b6470;--line:#e6dfd4;--acc:#3a7bd5;--acc2:#e8f0fc;--good:#2f8a3a;--bad:#c0392b;--bar:#57a8e8;--head:#faf7f2}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1c1b20;--card:#26252c;--ink:#ece8f2;--sub:#a49fb0;--line:#3a3842;--acc:#7aa8f0;--acc2:#2c3446;--good:#6fcf7a;--bad:#ff8a7a;--bar:#5a9ae0;--head:#2b2a31}}
+:root[data-theme="dark"]{--bg:#1c1b20;--card:#26252c;--ink:#ece8f2;--sub:#a49fb0;--line:#3a3842;--acc:#7aa8f0;--acc2:#2c3446;--good:#6fcf7a;--bad:#ff8a7a;--bar:#5a9ae0;--head:#2b2a31}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,"PingFang HK","Noto Sans HK","Microsoft JhengHei",sans-serif}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px;max-width:1180px;margin:0 auto}
+h1{font-size:20px;margin:0}
+#who{font-size:13px;color:var(--sub);display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+main{max-width:1180px;margin:0 auto;padding:0 16px 40px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+button,select,input{font:inherit;color:inherit}
+.btn{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:7px 14px;cursor:pointer}
+.btn:hover{border-color:var(--acc)}
+.btn.pri{background:var(--acc);border-color:var(--acc);color:#fff}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:0;background:var(--card);padding:7px 14px;cursor:pointer}
+.seg button.on{background:var(--acc);color:#fff}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:14px 0}
+.bar input[type=date],.bar input[type=search]{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:6px 10px}
+.bar .grow{flex:1}
+#range{font-size:13px;color:var(--sub)}
+.sum{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.sum .card{padding:14px}
+.sum b{display:block;font-size:22px;margin-top:2px;font-variant-numeric:tabular-nums}
+.sum span{font-size:13px;color:var(--sub)}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+table{border-collapse:collapse;width:100%;min-width:860px}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{background:var(--head);font-size:13px;color:var(--sub);cursor:pointer;user-select:none;position:sticky;top:0}
+th.num,td.num{text-align:right;font-variant-numeric:tabular-nums}
+th .ar{font-size:11px}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:var(--acc2)}
+td.em{color:var(--sub);font-size:13px}
+.neg{color:var(--bad)}.pos{color:var(--good)}
+.muted{color:var(--sub);font-size:13px}
+#detail{margin-top:14px}
+#detail h2{font-size:17px;margin:0 0 4px}
+.chart{margin:12px 0 4px}
+.chart svg{width:100%;height:150px;display:block}
+.chart .lbl{fill:var(--sub);font-size:10px}
+.chart rect{fill:var(--bar)}
+code{background:var(--acc2);padding:2px 6px;border-radius:6px;font-size:13px;word-break:break-all}
+.center{max-width:560px;margin:40px auto;text-align:center}
+.center p{color:var(--sub)}
+@media (max-width:720px){.sum{grid-template-columns:repeat(2,1fr)}header{flex-direction:column;align-items:flex-start}#who{justify-content:flex-start}}
+</style>
+</head>
+<body>
+<header><h1>旅遊星球・玩家資料</h1><div id="who"></div></header>
+<main>
+ <section id="vLoad" class="center card"><p>載入緊……</p></section>
+ <section id="vSign" class="center card" hidden>
+  <h2>老師登入</h2>
+  <p>用你喺遊戲入面用開嘅 Google 帳戶登入，就可以睇到有登入嘅玩家嘅上線時數同收支。</p>
+  <button class="btn pri" id="bSign">用 Google 登入</button>
+  <p class="muted" id="signErr"></p>
+ </section>
+ <section id="vDeny" class="center card" hidden>
+  <h2>未有權限</h2>
+  <p>呢個帳戶未加入管理員名單。請喺 Firebase 主控台 → Realtime Database，喺 <b>admins</b> 底下加一項：</p>
+  <p><code id="myUid"></code>　：　<code>true</code></p>
+  <button class="btn" id="bCopy">複製 ID</button>
+  <p class="muted">加好之後撳「重新載入」。</p>
+  <button class="btn pri" id="bRetry">重新載入</button>
+ </section>
+ <section id="vApp" hidden>
+  <div class="bar">
+   <div class="seg" id="seg"><button data-p="today" class="on">今日</button><button data-p="week">本週</button><button data-p="month">本月</button><button data-p="custom">自訂</button></div>
+   <span id="custom" hidden><input type="date" id="dFrom"> 至 <input type="date" id="dTo"></span>
+   <span id="range"></span>
+   <span class="grow"></span>
+   <input type="search" id="q" placeholder="搜尋名稱或電郵">
+   <button class="btn" id="bRefresh">重新載入</button>
+   <button class="btn" id="bCsv">匯出 CSV</button>
+  </div>
+  <div class="sum">
+   <div class="card"><span>期間有上線嘅玩家</span><b id="sN">0</b></div>
+   <div class="card"><span>總上線時數</span><b id="sH">0</b></div>
+   <div class="card"><span>總收入</span><b id="sI">$0</b></div>
+   <div class="card"><span>總支出</span><b id="sE">$0</b></div>
+  </div>
+  <div class="tw"><table><thead><tr id="thr"></tr></thead><tbody id="tb"></tbody></table></div>
+  <p class="muted">收入＝遊戲入面賺到嘅錢；「其中大額」＝單次超過 $20,000 嘅收入（例如優惠碼、提款、離線結算）。只計有 Google 登入嘅玩家；上線時數只計遊戲開喺前面、10 分鐘內有操作嘅時間。撳一行睇每日紀錄。</p>
+  <div id="detail" class="card" hidden></div>
+ </section>
+</main>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+(function(){
+var FB_CONFIG={apiKey:"AIzaSyAJDmTcuSHf107bYjkIPqoBl-0fQvE9-CM",authDomain:"travelplanet-d6415.firebaseapp.com",databaseURL:"https://travelplanet-d6415-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"travelplanet-d6415",storageBucket:"travelplanet-d6415.firebasestorage.app",messagingSenderId:"828797353251",appId:"1:828797353251:web:a12fc56fa2d8af24fce096"};
+function $(id){return document.getElementById(id);}
+function show(v){['vLoad','vSign','vDeny','vApp'].forEach(function(k){$(k).hidden=k!==v;});}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function money(n){n=Math.round(n||0);return (n<0?'-$':'$')+Math.abs(n).toLocaleString('en-US');}
+function hrs(s){s=Math.round(s||0);var h=Math.floor(s/3600),m=Math.round((s%3600)/60);if(m===60){h++;m=0;}return h+' 小時 '+m+' 分';}
+function key(d){return ''+(d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate());}
+function fromKey(k){return new Date(+k.slice(0,4),+k.slice(4,6)-1,+k.slice(6,8));}
+function fmtDay(k){var d=fromKey(k);return (d.getMonth()+1)+'月'+d.getDate()+'日（'+'日一二三四五六'[d.getDay()]+'）';}
+function fmtT(t){if(!t)return '—';var d=new Date(t);return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)+' '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);}
+var DATA={},PER='today',SORT={k:'s',d:-1},auth,db;
+function range(){var now=new Date(),a,b=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+ if(PER==='today')a=b;else if(PER==='week'){a=new Date(b);a.setDate(b.getDate()-((b.getDay()+6)%7));}else if(PER==='month')a=new Date(b.getFullYear(),b.getMonth(),1);
+ else{var f=$('dFrom').value,t=$('dTo').value;a=f?new Date(f+'T00:00'):b;b=t?new Date(t+'T00:00'):b;if(a>b){var x=a;a=b;b=x;}}
+ return [key(a),key(b),a,b];}
+var COLS=[{k:'nm',t:'玩家'},{k:'em',t:'登入電郵'},{k:'s',t:'上線時數',n:1},{k:'i',t:'收入',n:1},{k:'x',t:'其中大額',n:1},{k:'e',t:'支出',n:1},{k:'net',t:'淨額',n:1},{k:'t',t:'最後上線',n:1}];
+function rows(){var R=range(),a=R[0],b=R[1],q=($('q').value||'').trim().toLowerCase(),L=[];
+ Object.keys(DATA).forEach(function(uid){var u=DATA[uid]||{},p=u.p||{},d=u.d||{},r={uid:uid,nm:p.nm||p.gn||'（未有名）',gn:p.gn||'',em:p.em||'',t:p.t||0,s:0,i:0,e:0,x:0};
+  Object.keys(d).forEach(function(k){if(k>=a&&k<=b){var v=d[k]||{};r.s+=+v.s||0;r.i+=(+v.i||0)+(+v.x||0);r.x+=+v.x||0;r.e+=+v.e||0;}});
+  r.net=r.i-r.e;if(q&&(r.nm+' '+r.gn+' '+r.em).toLowerCase().indexOf(q)<0)return;L.push(r);});
+ L.sort(function(p,q2){var A=p[SORT.k],B=q2[SORT.k];if(typeof A==='string')return SORT.d*A.localeCompare(B,'zh-HK');return SORT.d*((A||0)-(B||0));});return L;}
+function render(){var R=range(),L=rows();
+ $('range').textContent=R[0]===R[1]?fmtDay(R[0]):fmtDay(R[0])+' 至 '+fmtDay(R[1]);
+ $('thr').innerHTML=COLS.map(function(c){return '<th class="'+(c.n?'num':'')+'" data-k="'+c.k+'">'+c.t+(SORT.k===c.k?' <span class="ar">'+(SORT.d<0?'▼':'▲')+'</span>':'')+'</th>';}).join('');
+ var act=L.filter(function(r){return r.s>0||r.i||r.e;}),S={s:0,i:0,e:0};act.forEach(function(r){S.s+=r.s;S.i+=r.i;S.e+=r.e;});
+ $('sN').textContent=act.length+' / '+L.length;$('sH').textContent=hrs(S.s);$('sI').textContent=money(S.i);$('sE').textContent=money(S.e);
+ $('tb').innerHTML=L.length?L.map(function(r){return '<tr data-uid="'+esc(r.uid)+'"><td>'+esc(r.nm)+(r.gn&&r.gn!==r.nm?'<div class="muted">'+esc(r.gn)+'</div>':'')+'</td><td class="em">'+esc(r.em)+'</td><td class="num">'+hrs(r.s)+'</td><td class="num">'+money(r.i)+'</td><td class="num">'+(r.x?money(r.x):'—')+'</td><td class="num">'+money(r.e)+'</td><td class="num '+(r.net<0?'neg':r.net>0?'pos':'')+'">'+money(r.net)+'</td><td class="num">'+fmtT(r.t)+'</td></tr>';}).join(''):'<tr><td colspan="8" class="muted">未有資料：學生要用 Google 登入遊戲（新版本）之後先會有紀錄。</td></tr>';}
+function detail(uid){var u=DATA[uid]||{},p=u.p||{},d=u.d||{},box=$('detail'),today=new Date(),K=[];
+ for(var i=29;i>=0;i--){var x=new Date(today.getFullYear(),today.getMonth(),today.getDate()-i);K.push(key(x));}
+ var mx=1;K.forEach(function(k){var v=d[k];if(v&&v.s>mx)mx=v.s;});var W=600,H=130,bw=W/K.length;
+ var svg='<svg viewBox="0 0 '+W+' '+(H+18)+'" preserveAspectRatio="none">'+K.map(function(k,j){var v=d[k]||{},h=Math.round((+v.s||0)/mx*(H-8));return '<rect x="'+(j*bw+2)+'" y="'+(H-h)+'" width="'+(bw-4)+'" height="'+h+'" rx="2"><title>'+fmtDay(k)+'：'+hrs(v.s)+'</title></rect>'+(j%5===0?'<text class="lbl" x="'+(j*bw+2)+'" y="'+(H+14)+'">'+(+k.slice(4,6))+'/'+(+k.slice(6,8))+'</text>':'');}).join('')+'</svg>';
+ var rowsH=K.slice().reverse().filter(function(k){return d[k];}).map(function(k){var v=d[k];return '<tr><td>'+fmtDay(k)+'</td><td class="num">'+hrs(v.s)+'</td><td class="num">'+money((+v.i||0)+(+v.x||0))+'</td><td class="num">'+(v.x?money(v.x):'—')+'</td><td class="num">'+money(v.e)+'</td></tr>';}).join('');
+ box.innerHTML='<h2>'+esc(p.nm||p.gn||'玩家')+'</h2><div class="muted">'+esc(p.em||'')+'　最後上線 '+fmtT(p.t)+'　遊戲版本 '+esc(p.v||'—')+'</div><div class="chart"><div class="muted">最近 30 日每日上線時數</div>'+svg+'</div>'+
+  '<div class="tw"><table style="min-width:520px"><thead><tr><th>日期</th><th class="num">上線時數</th><th class="num">收入</th><th class="num">其中大額</th><th class="num">支出</th></tr></thead><tbody>'+(rowsH||'<tr><td colspan="5" class="muted">最近 30 日冇紀錄</td></tr>')+'</tbody></table></div>';
+ box.hidden=false;box.scrollIntoView({behavior:'smooth',block:'start'});}
+function csv(){var R=range(),L=rows(),out=[['玩家','Google 名','登入電郵','上線（分鐘）','收入','其中大額','支出','淨額','最後上線']];
+ L.forEach(function(r){out.push([r.nm,r.gn,r.em,Math.round(r.s/60),Math.round(r.i),Math.round(r.x),Math.round(r.e),Math.round(r.net),fmtT(r.t)]);});
+ var s='﻿'+out.map(function(a){return a.map(function(v){v=String(v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}).join(',');}).join('\n');
+ var b=new Blob([s],{type:'text/csv;charset=utf-8'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='旅遊星球玩家資料_'+R[0]+'-'+R[1]+'.csv';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(u);a.remove();},500);}
+function load(){show('vLoad');db.ref('stats').once('value').then(function(s){DATA=s.val()||{};show('vApp');render();}).catch(function(e){if(String(e&&e.code||e).indexOf('PERMISSION')>=0||/permission/i.test(String(e)))deny();else{show('vLoad');$('vLoad').innerHTML='<p>讀取失敗：'+esc(e&&e.message||e)+'</p>';}});}
+function deny(){var u=auth.currentUser;$('myUid').textContent=u?u.uid:'';show('vDeny');}
+function who(u){$('who').innerHTML=u?esc(u.email||'')+' <button class="btn" id="bOut">登出</button>':'';if(u)$('bOut').onclick=function(){auth.signOut();};}
+try{firebase.initializeApp(FB_CONFIG);auth=firebase.auth();db=firebase.database();}catch(e){$('vLoad').innerHTML='<p>載入唔到 Firebase：'+esc(e.message)+'</p>';return;}
+auth.onAuthStateChanged(function(u){who(u);if(!u){show('vSign');return;}db.ref('admins/'+u.uid).once('value').then(function(s){if(s.val()===true)load();else deny();}).catch(function(){deny();});});
+$('bSign').onclick=function(){$('signErr').textContent='';auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(function(e){$('signErr').textContent='登入唔到：'+(e&&e.message||e);});};
+$('bRetry').onclick=function(){var u=auth.currentUser;if(u)db.ref('admins/'+u.uid).once('value').then(function(s){if(s.val()===true)load();else deny();}).catch(deny);};
+$('bCopy').onclick=function(){try{navigator.clipboard.writeText($('myUid').textContent);$('bCopy').textContent='已複製';}catch(e){}};
+$('seg').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;PER=b.getAttribute('data-p');[].forEach.call($('seg').children,function(x){x.classList.toggle('on',x===b);});$('custom').hidden=PER!=='custom';$('detail').hidden=true;render();};
+$('dFrom').onchange=$('dTo').onchange=function(){render();};$('q').oninput=function(){render();};
+$('bRefresh').onclick=function(){load();};$('bCsv').onclick=csv;
+$('thr').onclick=function(ev){var th=ev.target.closest('th');if(!th)return;var k=th.getAttribute('data-k');if(SORT.k===k)SORT.d=-SORT.d;else{SORT.k=k;SORT.d=(k==='nm'||k==='em')?1:-1;}render();};
+$('tb').onclick=function(ev){var tr=ev.target.closest('tr[data-uid]');if(tr)detail(tr.getAttribute('data-uid'));};
+(function(){function ymd(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);}var t=new Date();$('dTo').value=ymd(t);$('dFrom').value=ymd(new Date(t.getFullYear(),t.getMonth(),t.getDate()-6));})();
+})();
+</script>
+</body>
+</html>
