@@ -2,7 +2,7 @@
 <html lang="zh-Hant-HK">
 <head>
 <meta charset="utf-8">
-<meta name="ths-build" content="2610060759">
+<meta name="ths-build" content="2610061228">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="color-scheme" content="light">
 <!-- iPhone Safari 冇 element fullscreen API：由「分享 → 加入主畫面」開就會冇工具列（同旅款亂Upper 一樣）-->
@@ -857,9 +857,9 @@ function fishModel(sp){var f=sp&&sp.sh?sp:(fishOf(sp&&sp.k)||FISH[0]),g=new T.Gr
 // ---- 選魚：時間、天氣、地點、拋竿距離、魚竿、魚餌 ----
 function fishPick(ctx){var night=typeof nk==='number'&&nk>0.55,rain=typeof RAIN!=='undefined'&&RAIN.i>0.3,rod=S.rod||0,bait=ctx.bait||0,L=[],tot=0;
  FISH.forEach(function(f){if(f.tm==='day'&&night)return;if(f.tm==='night'&&!night)return;if(f.rain&&!rain)return;if(f.rar===3&&rod<2)return;if(f.rar===4&&rod<4)return;
-  var w=f.w;w*=fsDist60(f.rar,ctx.dist);if(f.rar>=2)w*=(ctx.pier?1.25:1)*fsRare38(rod);if(f.rar>=3)w*=1+0.15*rod;if(f.rar===4)w*=1+0.12*rod;if(f.rar>=1)w*=1+0.15*bait;if(f.rar>=3)w*=1+0.25*bait;if(f.deep)w*=ctx.pier||ctx.dist>0.75?1.3:0.4;
+  var w=f.w;w*=fsDist60(f.rar,ctx.dist);if(f.rar>=2)w*=(ctx.pier?1.25:1)*fsRare38(rod);if(f.rar>=3)w*=1+0.15*rodPw(rod);if(f.rar===4)w*=1+0.12*rodPw(rod);if(f.rar>=1)w*=1+0.15*bait;if(f.rar>=3)w*=1+0.25*bait;if(f.deep)w*=ctx.pier||ctx.dist>0.75?1.3:0.4;
   L.push([f,w]);tot+=w;});var r=Math.random()*tot;for(var i=0;i<L.length;i++){r-=L[i][1];if(r<=0)return L[i][0];}return L[0][0];}
-function fishRollKg(f){var r=Math.pow(Math.random(),1.6)*Math.min(1,0.75+0.05*(S.rod||0));if(f.rar>=2)r*=0.69;var kg=f.kg[0]+(f.kg[1]-f.kg[0])*r,q=(kg-f.kg[0])/(f.kg[1]-f.kg[0]||1);return {kg:+kg.toFixed(kg<0.1?3:kg<1?2:1),cl:q<0.35?'S':q<0.7?'M':q<0.92?'L':'XL'};}
+function fishRollKg(f){var r=Math.pow(Math.random(),1.6)*Math.min(1,0.75+0.05*rodPw(S.rod||0));if(f.rar>=2)r*=0.69;var kg=f.kg[0]+(f.kg[1]-f.kg[0])*r,q=(kg-f.kg[0])/(f.kg[1]-f.kg[0]||1);return {kg:+kg.toFixed(kg<0.1?3:kg<1?2:1),cl:q<0.35?'S':q<0.7?'M':q<0.92?'L':'XL'};}
 
 // 背包：cap＝格數。每款種子只佔一格（v49，數量不限）；農作物每格疊 10 個；魚每條佔一格。喺服務中心芷華度買更大嘅背包
 var BAGS=[{cap:10,n:'小背包',p:0,col:0xf39a3d},{cap:15,n:'郊遊背包',p:600,col:0x6fb58c},{cap:20,n:'登山背包',p:1500,col:0x5b7fd6},{cap:30,n:'探險背包',p:3200,col:0xe8574f},{cap:40,n:'旅行背包',p:8000,col:0xf4c542},{cap:50,n:'環球背包',p:15000,col:0x2fbf8f},{cap:60,n:'星際背包',p:25000,col:0xa98bff}];
@@ -904,7 +904,7 @@ function wearFits(it){var g=myG();return !it.g||!g||it.g===g;}
 // 採摘器（百貨櫃檯）：同澆水器一樣，連按兩下 A 一次過收成幾格
 var HARVS=[{n:'普通採摘器',k:1,p:0,c:0x9ad48a},{n:'銅採摘器',k:2,p:300,c:0xc87533},{n:'銀採摘器',k:3,p:700,c:0xc9cfd8},{n:'金採摘器',k:4,p:1200,c:0xf2c14e},{n:'鑽石採摘器',k:6,p:2000,c:0x9fe8ff},{n:'紅鑽採摘器',k:9,p:3500,c:0xe8414f},{n:'翡翠採摘器',k:12,p:8000,c:0x2fbf8f},{n:'星光採摘器',k:15,p:15000,c:0xa98bff}];
 // 魚竿（百貨櫃檯）：越高級，珍貴魚越常上釣、拉竿時限越長、試咬越易分、仲有機會一釣就係中／大魚
-var RODS=[{n:'普通魚竿',p:0,c:0x8a5a34},{n:'竹魚竿',p:400,c:0x9bbf5a},{n:'碳纖魚竿',p:1000,c:0x3d3f47},{n:'金魚竿',p:2000,c:0xf2c14e},{n:'星光魚竿',p:3500,c:0xa98bff},{n:'鈦金魚竿',p:6000,c:0x8fa3b8},{n:'龍紋魚竿',p:12000,c:0xc0392b},{n:'彩虹魚竿',p:20000,c:0xff7ac8}];
+var RODS=[{n:'普通魚竿',p:0,c:0x8a5a34},{n:'竹魚竿',p:400,c:0x9bbf5a},{n:'碳纖魚竿',p:1000,c:0x3d3f47},{n:'金魚竿',p:2000,c:0xf2c14e},{n:'星光魚竿',p:3500,c:0xa98bff},{n:'鈦金魚竿',p:6000,c:0x8fa3b8},{n:'龍紋魚竿',p:12000,c:0xc0392b},{n:'彩虹魚竿',p:20000,c:0xff7ac8},{n:'火焰魚竿',p:35000,c:0xff5a1f},{n:'金之魚竿',p:60000,c:0xffd84a},{n:'凰鳳魚竿',p:100000,c:0xd6304a},{n:'麒麟魚竿',p:160000,c:0x2fbf8f},{n:'神之魚竿',p:250000,c:0xfff1c2}];
 // 播種器（百貨櫃檯）：同澆水器一樣，連按兩下 A 一次過播幾格
 var SEEDRS=[{n:'普通播種器',k:1,p:0,c:0xc9a26b},{n:'銅播種器',k:2,p:300,c:0xc87533},{n:'銀播種器',k:3,p:700,c:0xc9cfd8},{n:'金播種器',k:4,p:1200,c:0xf2c14e},{n:'鑽石播種器',k:6,p:2000,c:0x9fe8ff},{n:'紅鑽播種器',k:9,p:3500,c:0xe8414f},{n:'翡翠播種器',k:12,p:8000,c:0x2fbf8f},{n:'星光播種器',k:15,p:15000,c:0xa98bff}];
 // 跑鞋（芷華時裝）：行快少少，唔會快到失控
@@ -2935,11 +2935,11 @@ function counts(){var c={dry:0,ready:0,empty:0};S.plots.forEach(function(p){var 
 function remindMsg(){var c=counts(),L=[];if(!VISIT&&S.cmp&&S.cmp.cur)L.push('意見欄有居民投訴：快啲去服務中心搵羊鷹回應（仲有 '+Math.ceil(S.cmp.cur.left/60)+' 分鐘）');if(!VISIT&&typeof qReady==='function'&&qReady())L.push('有任務完成咗：撳畫面上面嘅「任務」掣領取獎金');if(c.ready)L.push('🧺 有 '+c.ready+' 格農作物可以採摘');if(c.dry)L.push('💧 有 '+c.dry+' 格農田乾了：站在農田上按 A 澆水'+(S.can>0?'（連按兩下澆 '+CANS[S.can].k+' 格）':''));if(c.empty)L.push(seedCount()?'🌱 有 '+c.empty+' 格空地，可以播種':'🌱 背包沒有種子了，到星際市場找阿康買吧');
  var rt=0;TREEV.forEach(function(tr,i){if(tr.kind!=='pine'&&treeReady(i))rt++;});if(rt)L.push('🍎 有 '+rt+' 棵樹結了果或者有蜂蜜：站在樹旁邊按 A 採摘');
  if(bagFree()<1)L.push('🎒 背包滿了：可以賣掉東西、把農作物交到餐廳，或者到服務中心的垃圾桶扔掉不要的東西');else if(bagKeys('ing:').length&&where!=='in')L.push('📦 背包有農作物，記得交到旅款餐廳出菜檯的「食材交收」');
- if(!hiredChefs().length)L.push('🧑‍🍳 餐廳沒有廚師：到服務中心搵市長林庫請人');else if(!availDishes().length)L.push('🍽️ 廚房沒有食材可以煮菜，客人不會來');
+ if(!hiredChefs().length)L.push('🧑‍🍳 餐廳沒有廚師：到服務中心搵勞工主任小馬請人');else if(!availDishes().length)L.push('🍽️ 廚房沒有食材可以煮菜，客人不會來');
  var fl=fountLv(),fn=fl<3&&UP.fount.L[fl+1];if(fn&&S.coins>=fn.c*1.5)L.push('儲夠錢了：可以到服務中心搵市長林庫申請，把噴水池升級做「'+fn.d.split('：')[0]+'」，許願禮物更好更多');
  if(!VISIT&&wishLeft()>0&&S.coins>=WISH_CO[fl]*3)L.push('今天還可以在噴水池許願 '+wishLeft()+' 次');
  var plv=planetLv(),pnx=LV_EARN[plv+1];if(pnx&&cropPoolOf().some(function(k){return !cropAvail(k);}))L.push('累積收入到 $'+fmtC(pnx)+' 就升上星球 Lv'+(plv+1)+'，市場會解鎖新的本島蔬果');
- if(!VISIT&&typeof facLv==='function'){if(!facLv('tram')&&S.coins>=30000)L.push('儲夠錢可以向市長林庫申請興建懷舊電車：可以搭去島上各處，旅客亦會多啲');else if(!facLv('lamp')&&S.coins>=4000)L.push('可以向市長林庫申請興建街燈：夜晚旅客會多啲');if(!perfHired().length&&S.coins>=2500)L.push('可以向市長林庫聘請街頭表演者，喺噴水池附近表演吸引旅客');}return L.length?L[(remIdx++)%L.length]:'';}
+ if(!VISIT&&typeof facLv==='function'){if(!facLv('tram')&&S.coins>=30000)L.push('儲夠錢可以向市長林庫申請興建懷舊電車：可以搭去島上各處，旅客亦會多啲');else if(!facLv('lamp')&&S.coins>=4000)L.push('可以向市長林庫申請興建街燈：夜晚旅客會多啲');if(!perfHired().length&&S.coins>=2500)L.push('可以去服務中心搵勞工主任小馬聘請街頭表演者，喺噴水池附近表演吸引旅客');}return L.length?L[(remIdx++)%L.length]:'';}
 // v17：唔再提示農作物成熟、農田乾、果實（用戶：讓玩家自己觀察）；想知可以問 YHP「我而家應該做乜？」
 function remindTick(dt){S.plots.forEach(function(p,i){prevSt[i]=plotState(p);});var b=$('badge');if(b.style.display!=='none')b.style.display='none';}
 
@@ -3037,15 +3037,15 @@ var RENDER={
    var sw=(cat==='floor'||cat==='wall')?{img:durl(cat,it.id)}:{col:it.sw};
    var btn=cur?{t:'使用中',cls:'g',dis:true,fn:function(){}}:own?{t:'使用',fn:function(){useDeco(cat,it.id);}}:{t:'購買 $'+it.p,cls:'o',dis:S.coins<it.p,fn:function(){buy(it.p,function(){S.deco.own[cat].push(it.id);S.deco.cur[cat]=it.id;applyDeco();toast('🛠️ 裝修完成：'+it.n);});}};
    b.appendChild(card(sw,it.n,'美觀 +'+it.b+(own?'　已擁有':''),[btn],cur));});},
- manage_chef:function(b){var n=chefSlots();b.appendChild(note('廚藝越高，菜越好味（「味道」星數越高、每道菜收入越多）；手速越高，煮得越快。聘請或解僱：到服務中心找市長林庫。'));
-  for(var k=0;k<n;k++){var d=S.chefs[k];b.appendChild(d?card({ico:'chef:'+npcSex(d.nm)},d.nm,'廚藝 '+abil(d.ck)+'<br>手速 '+abil(d.sp)+'　每道菜約 '+Math.round(cookSec(d)*10)/10+' 秒',[]):card({emo:'➕'},'空置廚位','到服務中心找林庫聘請廚師。',[]));}},
+ manage_chef:function(b){var n=chefSlots();b.appendChild(note('廚藝越高，菜越好味（「味道」星數越高、每道菜收入越多）；手速越高，煮得越快。聘請或解僱：到服務中心找勞工主任小馬。'));
+  for(var k=0;k<n;k++){var d=S.chefs[k];b.appendChild(d?card({ico:'chef:'+npcSex(d.nm)},d.nm,'廚藝 '+abil(d.ck)+'<br>手速 '+abil(d.sp)+'　每道菜約 '+Math.round(cookSec(d)*10)/10+' 秒',[]):card({emo:'➕'},'空置廚位','到服務中心找小馬聘請廚師。',[]));}},
  manage_menu:function(b){b.appendChild(note('已研發的菜式。有廚師、廚房又有足夠食材，才會出現在餐單上。想要更多菜式：到服務中心找大地博士研發。'));recipeCards(b);},
  manage_report:function(b){var si=starInfo(),t=sumDays(1),w=sumDays(7),kv=el('div','kv');function row(k,v){kv.appendChild(el('span',null,k));kv.appendChild(el('span',null,v));}
   row('旅客好感',starsHtml(gwStars()));row('感官五方面','平均 '+starsHtml(si.ss.avg)+'（詳情看旅遊雜誌）');row('餐單','供應 '+si.n+' / '+MENU_CAP+' 款');
   row('人流',si.n?'大約每 '+Math.round(si.interval)+' 秒一位旅客':'暫停營業：沒有可以煮的菜式');b.appendChild(kv);
   kv=el('div','kv');row('今日旅客',t.n+' 位（收入 $'+t.rev+'）');row('近 7 日旅客',w.n+' 位');row('累積收入','$'+S.st.earned);row('不滿離開（累積）',S.st.angry+' 位');b.appendChild(kv);
   var low=SENSES.slice().sort(function(a,c){return si.ss[a.k]-si.ss[c.k];})[0];
-  var tip=!hiredChefs().length?'餐廳沒有廚師：到服務中心找市長林庫請人。':!si.n?'廚房沒有可以煮的菜：到農田採摘，把食材交給廚房；或者到市場買其他星球的食材；也要檢查餐單。':si.ss[low.k]<2.5?'「'+low.n+'」最弱：到服務中心的建材行（嘉禧）買設備改善。':si.taste<3?'廚師廚藝較低：找市長林庫聘請廚藝更高的廚師，或者簽管理合約。':'看看旅遊雜誌的「旅客統計」：有沒有旅客因為沒有合適的食物（例如清真、素食）而離開？';
+  var tip=!hiredChefs().length?'餐廳沒有廚師：到服務中心找勞工主任小馬請人。':!si.n?'廚房沒有可以煮的菜：到農田採摘，把食材交給廚房；或者到市場買其他星球的食材；也要檢查餐單。':si.ss[low.k]<2.5?'「'+low.n+'」最弱：到服務中心的建材行（嘉禧）買設備改善。':si.taste<3?'廚師廚藝較低：找勞工主任小馬聘請廚藝更高的廚師，或者簽管理合約。':'看看旅遊雜誌的「旅客統計」：有沒有旅客因為沒有合適的食物（例如清真、素食）而離開？';
   b.appendChild(note('💡 '+tip));},
  store_put:function(b){var ks=bagKeys('ing:'),fs=bagKeys('fish:');
   b.appendChild(note('把背包裏的農作物交給廚房，廚師就可以用來煮菜。魚可以處理成鮮魚放進雪櫃：小魚 1 份、巨魚 4 份。'));
@@ -3080,7 +3080,7 @@ var RENDER={
  lab_book:function(b){b.appendChild(note('已研發 '+S.recipes.length+' 款菜式。'));recipeCards(b);},
  staff_hire:function(b){var left=Math.max(0,Math.ceil((S.jobs.next-Date.now())/1000)),fs=freeSlot();
   b.appendChild(note('廚位 '+hiredChefs().length+' / '+chefSlots()+'（'+(fs<0?'已滿，可以先解僱，或者找建材行嘉禧升級爐具':'還有空位')+'）。約 <span id="jbcd">'+mmss(left)+'</span>後有新一批求職者。'));
-  b.appendChild(card({emo:'🔄'},'即時換一批求職者','付 $'+CFG.refreshFee+' 請市長林庫再找人。',[{t:'換一批 $'+CFG.refreshFee,dis:S.coins<CFG.refreshFee,fn:function(){buy(CFG.refreshFee,function(){refreshJobs();});}}]));
+  b.appendChild(card({emo:'🔄'},'即時換一批求職者','付 $'+CFG.refreshFee+' 請小馬再找人。',[{t:'換一批 $'+CFG.refreshFee,dis:S.coins<CFG.refreshFee,fn:function(){buy(CFG.refreshFee,function(){refreshJobs();});}}]));
   S.jobs.list.forEach(function(c){b.appendChild(card({ico:'chef:'+npcSex(c.nm)},c.nm,'廚藝 '+abil(c.ck)+'<br>手速 '+abil(c.sp),[{t:fs<0?'廚位已滿':'聘請 $'+c.fee,cls:'o',dis:fs<0||S.coins<c.fee,fn:function(){hire(c);}}]));});},
  staff_list:function(b){var n=chefSlots();b.appendChild(note('解僱之後可以騰出廚位，請廚藝更高的廚師。'));
   for(var k=0;k<n;k++)(function(k){var d=S.chefs[k];b.appendChild(d?card({ico:'chef:'+npcSex(d.nm)},d.nm,'廚藝 '+abil(d.ck)+'<br>手速 '+abil(d.sp),[{t:'解僱',cls:'g',fn:function(){fire(k);}}]):card({emo:'➕'},'空置廚位','可以在「聘請廚師」請人。',[]));})(k);},
@@ -3156,7 +3156,7 @@ function kcTalk(){var T0=sumDays(1),nm='啟聰（餐廳經理）',bg='#2d2a32',f
  var intro=first?['老闆，你好！我是餐廳經理啟聰，以前喺勞工處做，而家負責喺門口招呼客人。','有甚麼想知，隨時問我。']:['老闆，你好！有甚麼吩咐？'];
  talk(nm,bg,'#ffffff',intro,[{t:'今日生意點樣？',cb:function(){talk(nm,bg,'#ffffff',['今日有 '+T0.n+' 位旅客，食完 '+T0.served+' 位，餐廳收入 $'+fmtC(T0.rev)+'。',T0.angry?'有 '+T0.angry+' 位旅客不滿離開，要留意餐單同等候時間。':'客人都食得好開心！']);}},
   {t:'有甚麼建議？',cb:function(){talk(nm,bg,'#ffffff',[kcTip()]);}},{t:'打開管理面板',cb:function(){openPanel('manage');}},{t:'沒事了',cb:function(){}}]);}
-function kcTip(){if(!hiredChefs().length)return '廚房未有廚師：到服務中心搵市長林庫聘請廚師，客人先會嚟。';if(!availDishes().length)return '廚房冇食材煮菜：把背包嘅農作物交到出菜檯的「食材交收」，或者到市場買食材。';
+function kcTip(){if(!hiredChefs().length)return '廚房未有廚師：到服務中心搵勞工主任小馬聘請廚師，客人先會嚟。';if(!availDishes().length)return '廚房冇食材煮菜：把背包嘅農作物交到出菜檯的「食材交收」，或者到市場買食材。';
  var si=starInfo(),ss=si.ss,low=SENSES.slice().sort(function(a,b){return ss[a.k]-ss[b.k];})[0];if(ss[low.k]<2.5)return '客人覺得餐廳「'+low.n+'」一般：可以到服務中心建材行搵嘉禧裝修，改善氣氛。';
  if(si.taste<3)return '菜式味道仲有進步空間：可以聘請廚藝更高嘅廚師，或者簽管理合約。';if(si.n<4)return '餐單款式少咗少少：多研發幾款新菜，客人會更多。';return '而家生意幾好！記住多啲同客人傾偈，了解佢哋需要。';}
 // ================= v23 背包：7 級背包都有模型（以前 4 級之後尺寸係 undefined → 背包消失）=================
@@ -3319,7 +3319,7 @@ function updMac(dt,t){var m=MAC,u=macO.userData;macO.visible=macSh.visible=!maki
 
 // ================= 封面、揀地形 =================
 // 每次開遊戲先見封面；未玩過嘅新玩家：揀地形 → 建立角色 → 開場白
-var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v60',BUILD='2610060759';
+var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v62',BUILD='2610061228';
 function showCoverV42(){phase='cover';$('cover').classList.add('on');$('app').classList.add('cover');CU.uB.value=0;sea.scale.set(4,7,1);sea.position.z=(MAP.bc||[0,0])[1];
  var old=!!(S.me&&S.me.nm);$('cvVer').textContent=BUILD+'V'+VERSION.slice(1);$('cvGo').textContent=old?'繼續遊戲':'開始遊戲';$('cvHint').textContent=old?'歡迎回來，'+S.me.nm+'！':'第一次玩：先揀島嶼地形，再建立角色';}
 function leaveCoverV42(){if(phase!=='cover')return;$('cover').classList.remove('on');if(!S.layout){if(!S.story)openStory();else openTerr();}else startPlay();}
@@ -3651,7 +3651,7 @@ function sowAskV37(i){var ks=bagKeys('seed:').map(function(sk){return sk.slice(5
 function buySow(i){buy(SEEDRS[i].p,function(){S.sow=i;if(typeof qAdd==='function')qAdd('upgrade',1);sowHinted=false;drawBoard();toast('🌱 買了'+SEEDRS[i].n+'：揀好種子之後連按兩下 A，一次過播 '+SEEDRS[i].k+' 格',4500);});}
 
 // ---- 工具要逐級買：只可以買「下一級」----
-function tierBtn(cur,i,price,fn){return i===cur?{t:'使用中',cls:'g',dis:true,fn:function(){}}:i<cur?{t:'已有更好',cls:'g',dis:true,fn:function(){}}:i>cur+1?{t:'要先買上一級',cls:'g',dis:true,fn:function(){}}:{t:'購買 $'+price,cls:'o',dis:S.coins<price,fn:fn};}
+function tierBtn(cur,i,price,fn){return i===cur?{t:'使用中',cls:'g',dis:true,fn:function(){}}:i<cur?{t:'已有更好',cls:'g',dis:true,fn:function(){}}:i>cur+1?{t:'要先買上一級',cls:'g',dis:true,fn:function(){}}:{t:'購買 $'+fmtC(price),cls:'o',dis:S.coins<price,fn:fn};}
 
 // ---- 食材交收箱（池塘邊、農場入口）：喺外面都可以交食材俾廚房 ----
 function boxTalk(){if(visitBlock())return;var n=0;bagKeys('ing:').forEach(function(k){n+=bagCount(k);});var fs=bagKeys('fish:').length;
@@ -3740,7 +3740,7 @@ var HELP=[
  {t:'點樣賺錢？',say:['最主要的收入來自旅款餐廳：旅客吃完就付錢。菜式越多、廚師越好、餐廳五感越舒服，旅客越多。','另外可以把農作物、水果、蜂蜜和漁獲賣給市場的阿康；魚先放入池塘養大，價錢會高很多。','晚上在中央廣場噴水池放煙花，或者聘請導遊帶團，都可以吸引更多旅客。']},
  {t:'農田同工具',say:['空田按 A 播種，未熟的田按 A 澆水，成熟了按 A 收成。','星球上有五十種蔬果，分一級、二級、三級：等級越高，種子越貴、生長越耐（要澆多幾次水），但賣得越貴、做的菜越值錢。每個星球有 10 款本島蔬果，星球等級越高（累積收入越多），市場解鎖越多。其他蔬果要朋友送，收到之後市場先有得買；賣外來蔬果，收購價高五成。','在服務中心建材行（嘉禧）可以買更好的澆水器、採摘器、播種器：揀好之後快快連按兩下 A，就可以一次過處理幾格。','工具要逐級買，不可以一下子跳到最高級。']},
  {t:'釣魚同池塘',say:['站在任何海邊、面向大海按 A 就會打開釣魚畫面；碼頭是深水，大魚多啲。','按住「拋竿」蓄力，放手拋出去（拋得越遠，越易釣到貴魚）；浮標大力沉落就撳「拉！」；之後按住「收線」，將拉力保持喺綠色範圍，慢慢拉近條魚；拉力去到紅色、或者魚大力掙扎就要鬆手，否則會斷線。','海裏有三十三種魚，分普通、少見、稀有、珍貴、傳說：好啲的魚竿收線快、拉力耐，珍貴和傳說的魚要碳纖或者星光魚竿先釣到。有啲魚只喺夜晚、日頭或者落雨出現，可以喺「背包 → 魚類圖鑑」睇提示。','池塘可以養魚：魚會長大、會繁殖。池塘面板有「全部放入」和「全部撈起」，會由貴到平處理。','阿康每日收購魚有上限：頭 40 條照價，第 41–80 條六折，之後三折；用魚做菜、放入池塘養大就唔受影響。','釣魚有時限：上釣之後畫面上面有「時限」倒數，越珍貴嘅魚時限越短、越大力、越會掙扎，時間到魚就會逃走。所以稀有、珍貴、傳說魚都賣得貴啲。','魚類圖鑑撳釣到咗嘅魚，就睇到兩面魚卡：正面係基本資料，翻轉係生態資料（資料經網上核實）。珍貴同傳說魚要放入池塘養大先賣得好價：傳說魚大約要 1 日先長到「巨」。']},
- {t:'擴建同大型設施',say:['服務中心的市長林庫負責審批：「升級設施」（農場、池塘、花圃、噴水池、填海）、「增建社區設施」（電車、長椅、街燈、主道路）、「增建大型設施」（住宿、博物館、主題樂園、主題餐廳）同「升級大型設施」；批准之後由建材行嘉禧的工程隊施工。','大型設施只要儲夠錢就可以開工：住宿（商務酒店、精品酒店、渡假村各一間）、博物館、主題樂園工期 24 小時；主題餐廳（10 款揀最多 3 間）工期 12 小時。第二間起嘅住宿同主題餐廳，工程隊會起喺新填海嘅土地上（每座要先填海一次；唔會壓住建築物同行人路），重疊嘅樹會斬走，仲會鋪一條行人路去門口。','工具、雪櫃、爐具、銷售點系統同餐廳五感裝修，就搵建材行的嘉禧。','星球後期（主題樂園、第一間住宿、博物館都落成）先可以申請填海：之後走到海邊、面向大海按 A，就會填出一塊新土地。','農作物、水果可以放入池塘邊或農場入口的「食材交收箱」，直接送到餐廳廚房。']},
+ {t:'擴建同大型設施',say:['服務中心的市長林庫負責審批：「升級設施」（農場、池塘、花圃、噴水池、填海）、「增建社區設施」（電車、長椅、街燈、主道路）、「增建 → 大型項目」（住宿、博物館、主題樂園、主題餐廳）同「升級 → 大型項目」；批准之後由建材行嘉禧的工程隊施工。','大型設施只要儲夠錢就可以開工：住宿（商務酒店、精品酒店、渡假村各一間）、博物館、主題樂園工期 24 小時；主題餐廳（10 款揀最多 3 間）工期 12 小時。第二間起嘅住宿同主題餐廳，工程隊會起喺新填海嘅土地上（每座要先填海一次；唔會壓住建築物同行人路），重疊嘅樹會斬走，仲會鋪一條行人路去門口。','工具、雪櫃、爐具、銷售點系統同餐廳五感裝修，就搵建材行的嘉禧。','星球後期（主題樂園、第一間住宿、博物館都落成）先可以申請填海：之後走到海邊、面向大海按 A，就會填出一塊新土地。','農作物、水果可以放入池塘邊或農場入口的「食材交收箱」，直接送到餐廳廚房。']},
  {t:'信箱同好友',say:['飛碟站下面有一個信箱。成為好友之後，可以用信箱把種子、農作物、水果、漁獲、花送給好友，每 15 分鐘可以送一次。','好友送給你的禮物會寄到你的信箱：信箱上面出現彈吓彈吓嘅禮物盒（旗仔亦會升起），就是有禮物，按 A 就會放進背包。','互相送禮物會增加大家的好友度；收到其他島的特產，你的星際市場以後都有得買。','同好友企近，按 A 就可以一齊揮手、拍手、擊掌、拖手；影相時鏡頭入面有好友，喺麥仔攝影室就可以揀好友名，相片會加上「合照」字眼同日期時間。']},
  {t:'花圃同各島特產',say:['星球上有一個花圃：到星際市場買花種子，種在花圃，不用澆水，時間到了就會開花。開花後按 A 摘花，花可以賣給市場，或者送給朋友；摘完之後會再開。','每個島都有自己的特產水果（果樹上）和特產花。其他島的特產，要朋友用信箱送給你，之後你的市場才有得買，還可以用來研發新菜式。']},
  {t:'噴水池同原居民',say:['廣場中間的噴水池是許願池：投錢許願，池裏會送你一份神秘禮物，每日最多許願 3 次。','向服務中心的市長林庫申請，可以把噴水池升級（石砌噴泉、花園噴泉、星空噴泉）：外型更漂亮，許願送的禮物更好更多，最高級還有機會得到外來蔬果種子。','每個星球的原居民和他們的屋都不一樣：有動物、有外星人，住在茶壺屋、南瓜屋、冰屋、樹屋等等。他們平時在屋前散步，走近按 A 就可以傾偈；說服他們開民宿，旅客就可以入住。']},
@@ -3772,7 +3772,7 @@ RENDER.quest_d=function(b){qRender(b,'d');};RENDER.quest_w=function(b){qRender(b
 function questDot(){var b=$('bquest');if(!b)return;var on=false;try{if(S&&!VISIT&&S.me){var o=qSt();on=qList('d').some(function(q){return !o.d.got[q.id];})||qReady();}}catch(e){}b.classList.toggle('dot',on);}
 // ================= v25 YHP 選單歸納重組（用戶指示：太長）：主選單 7 項，入面再分細項；開場白「師兄！有咩幫到你？」=================
 var YHP_NM='YHP（星球管理員）',YHP_BG='#6f82d9';
-var HELP_K={ranch:{t:'牧場',say:['原始島已經有牧場（紅色穀倉），可以入去。向星際市場阿康買小乳牛、小雞、小羊，買咗就會喺牧場出現；再買糧草。','每隻動物每 12 小時要喺飼料槽按 A 餵一次（每隻一份糧草）；連續三日冇餵，動物會離開。動物會慢慢長大：越大出產越多。乳牛同羊壽命大約一個月，雞大約兩星期。','牛奶、雞蛋經收集箱自動送去餐廳廚房（要有雪櫃位）；羊毛喺「剪羊毛」位剪落嚟放背包（一格放 100 件），賣俾不定時嚟牧場嘅羊毛商人羊堅，收購價可升可跌。','向市長林庫申請「升級設施 → 牧場」，可以升級外型同飼養數量。']},ops:HELP[0],earn:HELP[1],farm:HELP[2],fish:HELP[3],build:HELP[4],mail:HELP[5],flower:HELP[6],fount:HELP[7],shops:HELP[8],promo:HELP[11],restart:HELP[12],
+var HELP_K={ranch:{t:'牧場',say:['原始島已經有牧場（紅色穀倉），可以入去。向星際市場阿康買小乳牛、小雞、小羊，買咗就會喺牧場出現；再買糧草。','每隻動物每 12 小時要喺飼料槽按 A 餵一次（每隻一份糧草）；連續三日冇餵，動物會離開。動物會慢慢長大：越大出產越多。乳牛同羊壽命大約一個月，雞大約兩星期。','牛奶、雞蛋經收集箱自動送去餐廳廚房（要有雪櫃位）；羊毛喺「剪羊毛」位剪落嚟放背包（一格放 100 件），賣俾不定時嚟牧場嘅羊毛商人羊堅，收購價可升可跌。','向市長林庫申請「升級 → 社區設施 → 牧場」，可以升級外型同飼養數量。']},ops:HELP[0],earn:HELP[1],farm:HELP[2],fish:HELP[3],build:HELP[4],mail:HELP[5],flower:HELP[6],fount:HELP[7],shops:HELP[8],promo:HELP[11],restart:HELP[12],
  quest:{t:'任務同獎金',say:['背包下面嘅「任務」掣：每日任務（交食材、釣魚、摘果……）、每週同每月任務（累積量、升級工具、聘請員工、擴建、回應投訴），完成之後撳「領取」就有獎金；一個時段嘅任務全部完成，仲有額外獎勵。','每日任務未做完、或者有獎金未領，「任務」掣會有紅點提你。星球等級越高，獎金越多。']},
  cmp:{t:'意見欄（居民投訴）',say:[HELP[9].say[0],HELP[9].say[1]]},
  bday:{t:'生日',say:['開始遊戲時要填生日（月同日）；想改可以喺「設定」→「改變造型」。','生日當日，星球上嘅居民、職員同旅客見到你，都會同你講「生日快樂！」。']}};
@@ -4008,7 +4008,7 @@ var TRAVEL_TR=[
  {k:'stay',h:'慢遊留宿：一晚不夠',dek:'留宿過夜的旅客，消費更多',p:['旅客留宿過夜，會在目的地吃晚飯、逛夜市，消費自然更多。','課本：住宿是旅遊業的重要組成部分，完善的住宿設施可以吸引旅客留得更久。'],ok:function(){return bld('hotel');},tip:'到服務中心搵市長林庫，申請興建星際酒店。',ph:function(){return bld('hotel')?'bld:hotel':'island';}},
  {k:'photo',h:'打卡熱潮：餐廳要夠靚',dek:'「相機食先」：環境漂亮的餐廳最受歡迎',p:['社交平台盛行，旅客喜歡在漂亮的餐廳拍照打卡，再分享給朋友。餐廳的裝修、燈光和擺設，變得和食物同樣重要。','課本：視覺是營造餐廳氣氛的五種感官元素之一。'],ok:function(){return senseScore().vis>=3;},tip:'到服務中心建材行（嘉禧）買視覺設備，或者換更靚的地板、牆身（視覺達三星）。',ph:function(){return 'rest';}},
  {k:'eco',h:'生態旅遊：親近大自然',dek:'觀賞魚群、欣賞自然景色，旅客追求慢活',p:['生態旅遊強調欣賞和保護大自然，例如觀賞池塘魚群、在樹下休息，讓旅客遠離城市的繁囂。','發展生態旅遊時，要注意保護環境，做到可持續發展。'],ok:function(){return ((S.pond&&S.pond.fish)||[]).length>=4;},tip:'池塘養最少 4 條魚（釣到魚放入池塘）。',ph:function(){return 'island';}},
- {k:'guided',h:'導賞團熱潮',dek:'有導遊講解，旅程更有意義',p:['跟隨導遊遊覽，可以聽到景點背後的故事，對目的地的認識更深入。','導遊的服務質素十分重要：可靠性、保證、有形性、同理心和回應性（RATER），都會影響旅客的滿意度。'],ok:function(){return (S.guides||[]).some(function(g){return Date.now()<g.until;});},tip:'到服務中心搵市長林庫聘請導遊。',ph:function(){return 'island';}},
+ {k:'guided',h:'導賞團熱潮',dek:'有導遊講解，旅程更有意義',p:['跟隨導遊遊覽，可以聽到景點背後的故事，對目的地的認識更深入。','導遊的服務質素十分重要：可靠性、保證、有形性、同理心和回應性（RATER），都會影響旅客的滿意度。'],ok:function(){return (S.guides||[]).some(function(g){return Date.now()<g.until;});},tip:'到服務中心搵勞工主任小馬聘請導遊。',ph:function(){return 'island';}},
  {k:'night',h:'夜遊經濟起飛',dek:'日落之後，旅程才剛剛開始',p:['夜間活動例如煙花匯演、夜市和夜景，可以令旅客留得更晚、消費更多，帶動「夜間經濟」。','晚上吸引旅客留下，也有助推動住宿和餐飲的生意。'],ok:function(){return (S.fw||0)>0||(S.fwLast&&Date.now()-S.fwLast<7*86400000);},tip:'到星際市場買煙花，晚上喺中央廣場噴水池放。',ph:function(){return bld('wheel')?'bld:wheel':'island';}},
  {k:'safe',h:'安心旅遊：衛生最重要',dek:'旅客選擇餐廳，衛生是首要考慮',p:['經歷過疫情，旅客比以前更重視衛生。獲得衛生獎章的餐廳，令人吃得更安心。','課本：食物安全五要點——精明選擇、保持清潔、生熟分開、煮熟食物、安全溫度。'],ok:function(){return hygLv()>=1;},tip:'回答衛生督察的問題，取得衛生獎章（達到銅級）。',ph:function(){return 'rest';}},
  {k:'smart',h:'智慧旅遊：一機在手',dek:'電子支付、快速點餐，旅客講求效率',p:['年輕一代旅客習慣用手機處理一切：電子支付、網上點餐，越快越方便越好。','餐廳引入銷售點系統（POS），可以縮短旅客等候的時間，提升服務質素。'],ok:function(){return !!S.pos;},tip:'到服務中心建材行搵嘉禧，安裝銷售點系統（POS）。',ph:function(){return 'rest';}}];
@@ -4333,7 +4333,7 @@ RENDER.staff_guide=function(b){if(!S.gjobs||!S.gjobs.list.length||Date.now()>=S.
  act.forEach(function(g){var left=g.until-Date.now();b.appendChild(card({img:portraitURL('gp:'+g.nm+'|'+g.h,function(){return guideModel(g);})},g.nm+'（合約中）','<span>'+abilRow(g)+'</span><br>還有 '+Math.floor(left/3600000)+' 小時 '+Math.floor(left%3600000/60000)+' 分鐘　已帶 '+g.tours+' 團、賺 $'+g.earned,[]));});
  b.appendChild(note('求職導遊（同時最多聘請 '+GUIDE_MAX+' 位）：'));
  S.gjobs.list.forEach(function(c){b.appendChild(card({img:portraitURL('gp:'+c.nm+'|'+c.h,function(){return guideModel(c);})},c.nm,'<span>'+abilRow(c)+'</span>',[{t:act.length>=GUIDE_MAX?'已滿':'聘請 $'+c.fee,cls:'o',dis:act.length>=GUIDE_MAX||S.coins<c.fee,fn:function(){hireGuide(c);}}]));});
- b.appendChild(card({emo:'🔄'},'即時換一批導遊','付 $'+CFG.refreshFee+' 請林庫再找人。',[{t:'換一批 $'+CFG.refreshFee,dis:S.coins<CFG.refreshFee,fn:function(){buy(CFG.refreshFee,function(){refreshGuideJobs();});}}]));bindInfo(b);};
+ b.appendChild(card({emo:'🔄'},'即時換一批導遊','付 $'+CFG.refreshFee+' 請小馬再找人。',[{t:'換一批 $'+CFG.refreshFee,dis:S.coins<CFG.refreshFee,fn:function(){buy(CFG.refreshFee,function(){refreshGuideJobs();});}}]));bindInfo(b);};
 
 // ---- 導遊模型、帶團 ----
 var GD=[];// 每位導遊：{g(資料),m,st,route,ri,x,z,trail,fol,t,cool,stopT,bub}
@@ -4395,7 +4395,7 @@ function folTick(d,dt){var F=d.fol,same=where==='out',gw=d.st==='walk'&&!!d.gmv;
   var pl=Math.hypot(px,pz),mx=0.12;if(pl>1e-5){var sc=Math.min(kS,mx/pl);tryPush(A,px*sc,pz*sc);}}
  // 腳步：按實際行咗幾遠（唔會原地踏步、唔會行得慢腳又郁得快）
  F.forEach(function(f){var mvd=f.__lx==null?0:Math.hypot(f.x-f.__lx,f.z-f.__lz);f.__lx=f.x;f.__lz=f.z;f.ph+=mvd*5;f.m.position.set(f.x,0,f.z);f.m.rotation.y=f.rot;animWalk(f.m,f.ph,mvd>0.002);});}
-function guideTickV34(dt,t){if(!S.guides)S.guides=[];if(GD.length!==(S.guides||[]).filter(function(g){return Date.now()<g.until;}).length||GD.some(function(d){return Date.now()>=d.g.until&&d.st==='idle';})){var ex=GD.filter(function(d){return Date.now()>=d.g.until;});if(!VISIT)ex.forEach(function(d){toast('🚩 導遊'+d.g.nm+'的 24 小時合約完結了，可以到服務中心搵林庫再請',4500);});syncGuides();}
+function guideTickV34(dt,t){if(!S.guides)S.guides=[];if(GD.length!==(S.guides||[]).filter(function(g){return Date.now()<g.until;}).length||GD.some(function(d){return Date.now()>=d.g.until&&d.st==='idle';})){var ex=GD.filter(function(d){return Date.now()>=d.g.until;});if(!VISIT)ex.forEach(function(d){toast('🚩 導遊'+d.g.nm+'的 24 小時合約完結了，可以到服務中心搵小馬再請',4500);});syncGuides();}
  GD.forEach(function(d,i){if(d.st==='mus')return;var mv=false,spd=GD_SP*dt;
   if(d.st==='idle'){var h=homeOf(i);if(d.hofs)h=[h[0]+d.hofs[0],h[1]+d.hofs[1]];d.x+=(h[0]-d.x)*Math.min(1,dt*2);d.z+=(h[1]-d.z)*Math.min(1,dt*2);d.cool-=dt;if(d.cool<=0&&where==='out'&&phase==='play'&&!making&&tourOpen())startTour(d);}
   else if(d.st==='arrive'){d.t+=dt;var k=Math.min(1,d.t/1.4);d.fol.forEach(function(f){f.m.position.y=2.4*(1-k);f.m.scale.setScalar(f.s0*(0.3+0.7*k));f.m.rotation.y+=dt*6;});beam.visible=true;if(k>=1){d.st='walk';gBub(d,null);d.fol.forEach(function(f){f.x=f.m.position.x;f.z=f.m.position.z;f.rot=f.m.rotation.y;f.m.position.y=0;f.m.scale.setScalar(f.s0);});var r0=d.route[0]||{x:d.x,z:d.z+1},bx=d.x-r0.x,bz=d.z-r0.z,bl=Math.hypot(bx,bz)||1;d.trail=[];for(var q=0;q<(d.fol.length+1)*GD_GAP+2;q++)d.trail.push([d.x+bx/bl*q*0.12,d.z+bz/bl*q*0.12,Math.atan2(-bx,-bz)]);}}
@@ -6037,7 +6037,7 @@ function perfStart(sh){var k=sh.k,p=perfOf(k),o=perfModel(k),Q=MAP.plaza||[0,0],
  perfSt().n=(perfSt().n||0)+1;if(where==='out'&&phase==='play'&&Math.hypot(P.x-o.x,P.z-o.z)<22)toast((sh.free?'街頭表演者':'')+p.n+p.nm+'喺噴水池旁邊表演緊！',3500);}
 function perfStopV25(o){perfPuff(o.x,o.z);scO.remove(o.m);scO.remove(o.pr);disposeTree(o.m);disposeTree(o.pr);var i=CIR_O.indexOf(o.col);if(i>=0)CIR_O.splice(i,1);killSprite(o.bub);o.bub=null;var j=PERF.act.indexOf(o);if(j>=0)PERF.act.splice(j,1);PERF.cur=PERF.act[0]||null;
  if(!o.free&&o.sh.e<=Date.now()+1000){toast(o.p.n+o.p.nm+'嘅 1 小時表演完滿結束！',3500);S.gw=Math.min(100,(S.gw||0)+1);save();}
- if(o.free&&!perfHired().length&&!(S.flags&&S.flags.perfTip)){S.flags=S.flags||{};S.flags.perfTip=1;save();toast('想請表演者嚟表演？到服務中心搵市長林庫，就可以聘請街頭表演者（每場 1 小時）',5500);}}
+ if(o.free&&!perfHired().length&&!(S.flags&&S.flags.perfTip)){S.flags=S.flags||{};S.flags.perfTip=1;save();toast('想請表演者嚟表演？到服務中心搵勞工主任小馬，就可以聘請街頭表演者（每場 1 小時）',5500);}}
 function perfPuff(x,z){if(typeof shoot==='function')shoot(x,0.8,z,x,1.4,z,M(0xfff3c4),14,1.2);}
 function perfNote(o,txt,col){var c=document.createElement('canvas');c.width=c.height=64;var x=c.getContext('2d');x.font='700 46px '+FONT;x.textAlign='center';x.textBaseline='middle';x.fillStyle=col||'#6a4fb0';x.strokeStyle='#ffffff';x.lineWidth=5;x.strokeText(txt,32,34);x.fillText(txt,32,34);
  var t=new T.CanvasTexture(c),sp=new T.Sprite(new T.SpriteMaterial({map:t,transparent:true,depthWrite:false}));sp.scale.set(0.42,0.42,1);sp.layers.set(1);sp.renderOrder=5;var dx=(Math.random()-0.5)*0.6;sp.position.copy(bendPt(o.x+dx,1.5,o.z));scO.add(sp);PERF.notes.push({s:sp,t:0,x:o.x+dx,z:o.z,vx:(Math.random()-0.5)*0.3});}
@@ -6070,7 +6070,7 @@ function perfTipFx(o,amt){var c=document.createElement('canvas');c.width=160;c.h
 function perfMul(){var m=1;PERF.act.forEach(function(o){m*=o.free?1.04:1.1;});return m;}
 function perfLeft(o){var ms0=Math.max(0,o.sh.e-Date.now());return Math.floor(ms0/3600000)+' 小時 '+Math.floor(ms0%3600000/60000)+' 分';}
 function perfTalkV25(o){o=o||PERF.act[0];if(!o)return;var p=o.p;talkPt('perf:'+p.k,function(){return perfModel(p.k).m;});
- talk(p.nm+'（'+p.n+'）',p.col,'#ffffff',o.free?['你好！我是'+p.n+p.nm+'，今日路過呢度表演，會喺度表演到 '+hhmm(o.sh.e)+'。','如果想我哋專登嚟表演，可以去服務中心搵市長林庫聘請（每場 1 小時）！']
+ talk(p.nm+'（'+p.n+'）',p.col,'#ffffff',o.free?['你好！我是'+p.n+p.nm+'，今日路過呢度表演，會喺度表演到 '+hhmm(o.sh.e)+'。','如果想我哋專登嚟表演，可以去服務中心搵勞工主任小馬聘請（每場 1 小時）！']
   :['你好，'+me()+'！多謝你聘請我！','我會喺噴水池旁邊表演 1 小時（仲有 '+perfLeft(o)+'）。旅客睇得開心會打賞，亦會更鍾意呢個星球。',p.k==='singer'?'我唱嘅都係自己寫嘅歌，希望你鍾意！':pick(p.say)]);}
 function hhmm(t){var d=new Date(t);return p2(d.getHours())+':'+p2(d.getMinutes());}
 function PERF_PT(n){for(var i=0;i<PERFS.length;i++){var p=PERFS[i];if(p.nm&&n.indexOf(p.nm+'（')===0)return portraitURL('perf:'+p.k,function(){return perfModel(p.k).m;});}return '';}
@@ -7198,7 +7198,7 @@ function musExt(lv){var g=dome();if(lv>=1){var wt=M(0xf6f1e8);for(var i=0;i<6;i+
  return g;}
 function musExtSync(){var lv=musLv('ext');if(domeO.userData.lv===lv||!S)return;while(domeO.children.length){var c=domeO.children[0];domeO.remove(c);disposeSafe(c);}var m=musExt(lv);m.children.slice().forEach(function(c){domeO.add(c);});mergeRigid(domeO);domeO.userData.lv=lv;}
 // ---- 升級（市長林庫「申請擴建」→「博物館」）----
-RENDER.build_mus=function(b){if(!bld('dome')){b.appendChild(note('要先向市長林庫申請「增建大型設施 → 博物館」，先可以升級。'));return;}var o=musSt(),n=musShown().length;
+RENDER.build_mus=function(b){if(!bld('dome')){b.appendChild(note('要先向市長林庫申請「增建 → 大型項目 → 博物館」，先可以升級。'));return;}var o=musSt(),n=musShown().length;
  var LY0=musLay();var lc=card({img:musLayImg(musLayK())},'展廳佈局：'+LY0.n,esc(LY0.d),[{t:'改佈局',cls:'o',dis:!!VISIT,fn:function(){musLayPick(null);}}]);var lsw=lc.querySelector('.sw');if(lsw)lsw.classList.add('lay');b.appendChild(lc);
  b.appendChild(note('星球博物館而家展出緊 <b>'+n+'</b> 件藝術品。藝術品向考古專家志華老師買（佢不定時坐船嚟碼頭，停留 1 小時）。展品越多、越有名，參觀收入越多（喺遊戲入面每兩分半鐘一次）；累積參觀收入 $'+fmtC(o.earn||0)+'。'));
  ['ext','int','cap'].forEach(function(k){var U=MUS_UP[k],lv=o[k]||0,nx=U.L[lv+1];b.appendChild(card({ico:'bld:dome'},U.n+'：'+U.L[lv].n,esc(U.L[lv].d)+(nx?'<br>下一級「'+nx.n+'」：'+esc(nx.d)+'　$'+fmtC(nx.c):'<br><span class="good">已經係最高級</span>'),
@@ -7471,7 +7471,7 @@ function htlChoose(done){talk('星際酒店','#6f82d9','#ffffff',['星際酒店�
  ['biz','btq','rst'].filter(function(k){return !stayOwned(k,htlSt());}).map(function(k){return {t:HTL_T[k].n,cb:function(){talk('星際酒店','#6f82d9','#ffffff',[HTL_T[k].d,'客房 '+HTL_T[k].rooms+' 間。確定揀「'+HTL_T[k].n+'」？'],[{t:'確定',cb:function(){var o=htlSt();o.type=k;o.last=dayKey();save();htlExtSync(true);addNews('星際酒店開業','星際酒店以「'+HTL_T[k].n+'」形式開業。','ev');toast('星際'+HTL_T[k].n+'開業！向市長林庫申請「酒店改善」，同酒店經理定價',5000);if(done)done();}},{t:'再諗吓',cb:function(){htlChoose(done);}}]);}};}).concat([{t:'遲啲先',cb:function(){}}]));}
 // ---- 改善面板（市長林庫）----
 PANELS.hotel={t:'酒店改善・市長林庫',tabs:[['rate','評級'],['fac','設施'],['loc','地點'],['staff','人手'],['room','客房']]};
-function htlOpen(tab){if(!HTL_CUR&&!bld('hotel')){toast('要先向市長林庫申請「增建大型設施 → 住宿」',3000);return;}PANELS.hotel.t='星際'+htlT().n+'改善・市長林庫';if(!htlSt().type){htlChoose(function(){openPanel('hotel',tab||'rate');});return;}openPanel('hotel',tab||'rate');}
+function htlOpen(tab){if(!HTL_CUR&&!bld('hotel')){toast('要先向市長林庫申請「增建 → 大型項目 → 住宿」',3000);return;}PANELS.hotel.t='星際'+htlT().n+'改善・市長林庫';if(!htlSt().type){htlChoose(function(){openPanel('hotel',tab||'rate');});return;}openPanel('hotel',tab||'rate');}
 function htlRow(lbl,val,sc,w){return '<tr><td>'+lbl+'</td><td>'+val+'</td><td>'+sc+'</td><td>'+w+'</td></tr>';}
 RENDER.hotel_rate=function(b){var o=htlSt(),c=htlCalc(o),T0=htlT(o);b.appendChild(note('<b>星際'+T0.n+'</b>：客房 '+c.R+' 間。按課本（香港旅遊發展局）五個指標加權計分，<b>總評 '+c.tot.toFixed(2)+' 分＝「'+c.grade+'」</b>。評級越高，星球旅客越多（中價 +3%、乙級高價 +6%、甲級高價 +10%）；評級一變就刊登喺《星旅》。'));
  var t=el('div','note');t.innerHTML='<table class="htlT"><tr><th>指標</th><th>而家</th><th>分數</th><th>比重</th></tr>'+htlRow('酒店設施：飲食',c.P.fnb+'／8','×0.09','25%')+htlRow('酒店設施：電訊',c.P.tel+'／4','×0.05','')+htlRow('酒店設施：商務',c.P.biz+'／6','×0.06','')+htlRow('酒店設施：康樂及其他',c.P.rec+'／6','×0.05','')
@@ -7743,7 +7743,7 @@ function parkArt(D){return {kick:'樂園評級',h:'星際樂園獲評 '+starTxt(
   D.up?'評分上升，預計會吸引更多旅客。':'評分下降，樂園需要檢討機動遊戲和配套服務。']};}
 // ---- 改善面板（市長林庫）----
 PANELS.park={t:'主題樂園改善・市長林庫',tabs:[['rate','評級'],['ride','機動遊戲'],['act','品牌設計'],['svc','延伸服務'],['toy','獎品']]};
-function parkOpen(tab){if(!parkBuilt()){toast('要先向市長林庫申請「增建大型設施 → 主題樂園」',3000);return;}openPanel('park',tab||'rate');}
+function parkOpen(tab){if(!parkBuilt()){toast('要先向市長林庫申請「增建 → 大型項目 → 主題樂園」',3000);return;}openPanel('park',tab||'rate');}
 RENDER.park_rate=function(b){var c=parkCalc(),o=parkSt();b.appendChild(note('星際樂園 <b>'+starTxt(c.stars)+'</b>（'+c.tot.toFixed(1)+'／5 分）。課本：Kotler 將產品分為三個層次。評分越高，星球旅客越多（而家 +'+Math.round(c.tot*2)+'%）；評分一變就刊登喺《星旅》。累積門票收入 $'+fmtC(o.earn||0)+'。'));
  [['核心產品（興奮）',c.core,'旅客購買嘅最重要原因，性質主觀而且無形。主題樂園嘅核心產品＝「興奮」（仲有歡樂、家庭樂、夢幻）。機動遊戲本身唔係核心產品，而係傳遞興奮嘅有形載體。分數：由機動遊戲嘅刺激程度、城堡匯演、花車巡遊帶出。'],
   ['實際產品',c.actual,'實際購買、有形嘅產品，包括功能、品牌、質素、設計與包裝。樂園：機動遊戲（功能）、吉祥物（品牌）、機動遊戲級數（質素）、主題裝飾同城堡（設計）、套票（包裝）。'],
@@ -8110,7 +8110,7 @@ RENDER.lfu_all=function(b){var any=false;b.appendChild(note('揀一間大型設�
   var q=trCalc(e);add('tr:'+e.t,lfName(e),starTxt(q.stars)+'（'+q.avg.toFixed(1)+'／5）　每兩分半鐘收入約 $'+fmtC(q.inc),{t:'升級',cls:'o',fn:function(){trOpen(e,'sense');}});});
  (S.lf||[]).forEach(function(e){if(e.k!=='zoo'&&e.k!=='aqua')return;if(!e.done){add('lfz:'+e.k,lfName(e),'興建中：還有 '+fmtLeft(Math.max(0,lfDur(e)-lfEl(e))),{t:'興建中',cls:'g',dis:true,fn:function(){}});return;}
   var z=zaSt(e),U=zaUP(e)[zaLv(e)];add('lfz:'+e.k,lfName(e),U.n+'（Lv'+zaLv(e)+'）　展出 '+z.a.length+'／'+U.cap+' 種'+(e.k==='aqua'?'　魚缸 '+z.f.length+'／'+U.fc+' 條':'')+'　每兩分半鐘收入約 $'+fmtC(zaInc(e)),{t:'升級',cls:'o',fn:function(){zaOpen(e,'up');}});});
- if(!any)b.appendChild(note('未有大型設施：先向市長申請「增建大型設施」。'));};
+ if(!any)b.appendChild(note('未有大型設施：先向市長申請「增建 → 大型項目」。'));};
 // ② 增建社區設施：每樣一張卡（興建之後同一個掣變升級）
 PANELS.facil={t:'增建社區設施・市長林庫',tabs:[['all','社區設施']]};
 RENDER.facil_all=function(b){b.appendChild(note('社區設施由市長林庫批准、建材行嘉禧嘅工程隊施工（即刻完成）。每樣設施一張卡：未興建就撳「興建」；興建之後，<b>同一個掣會變「升級」</b>，最多三級。'));
@@ -8282,7 +8282,7 @@ roomDef('trr',{sc:scTR,b:TR_B,door:{x:0,w:1.3},nm:'主題餐廳',camK:1.12,
  out:function(){var e=TR_CUR;return e&&e.p?[e.p[0],e.p[1]+2.2]:[MAP.plaza[0],MAP.plaza[1]+3];},
  mapPos:function(){var e=TR_CUR;return e&&e.p?[e.p[0],e.p[1],lfName(e)+'裏面']:[0,0,'主題餐廳'];},
  onEnter:function(){trBuild();},tick:function(dt,t){trSceneTick(dt,t);},npc:function(){return [[TRS.mp.x,TRS.mp.z,0.35]];}});
-function trEnter(e){if(!e||!e.done)return;TR_CUR=e;roomEnter('trr',0,3.8,Math.PI);if(!e.r.hi&&!VISIT){e.r.hi=1;save();setTimeout(function(){toast('歡迎嚟到'+trTh(e.t).n+'！同侍應傾偈可以睇評級；向市長林庫申請「升級大型設施」可以按感官五個方面升級',6500);},700);}}
+function trEnter(e){if(!e||!e.done)return;TR_CUR=e;roomEnter('trr',0,3.8,Math.PI);if(!e.r.hi&&!VISIT){e.r.hi=1;save();setTimeout(function(){toast('歡迎嚟到'+trTh(e.t).n+'！同侍應傾偈可以睇評級；向市長林庫申請「升級 → 大型項目」可以按感官五個方面升級',6500);},700);}}
 function trPat(kind,c1,c2){return cvs(function(x){var W=256;x.fillStyle=c1;x.fillRect(0,0,W,W);x.fillStyle=c2;x.strokeStyle=c2;var i,j;
  if(kind==='metal'){for(i=0;i<4;i++)for(j=0;j<4;j++){x.strokeRect(i*64+2,j*64+2,60,60);x.fillRect(i*64+6,j*64+6,4,4);x.fillRect(i*64+54,j*64+54,4,4);}}
  else if(kind==='panel'){for(i=0;i<4;i++){x.fillRect(0,i*64+60,W,4);x.fillRect(i*64,0,3,W);}x.fillStyle='rgba(90,208,255,.35)';for(i=0;i<8;i++)x.fillRect(i*32+10,20,12,3);}
@@ -8432,7 +8432,7 @@ function trSceneTick(dt,t){if(where!=='trr')return;var mp=TRS.mp,m=TRS.wt;if(!m)
  TRS.fx.forEach(function(f){var k=((t*0.35+f[3]/3)%1);f[0].position.set(f[1]+Math.sin(t+f[3])*0.08,1.0+k*0.8,f[2]);f[0].scale.setScalar(0.6+k*1.2);f[0].material.opacity=0.4*(1-k);});}
 function trStaffTalk(){var e=TR_CUR;if(!e)return;var T0=trTh(e.t),q=trCalc(e),nm=T0.staff.nm+'（'+T0.n+'）';
  var L=[{t:'招牌菜',cb:function(){talk(nm,T0.bg,'#ffffff',['今日招牌菜有：'+T0.menu.join('、')+'。','主題餐廳嘅菜式、裝修、音樂同制服都圍繞同一個主題，客人食嘅唔只係食物，仲有成個體驗。']);}},
-  {t:'餐廳氣氛',cb:function(){talk(nm,T0.bg,'#ffffff',['課本：餐廳氣氛由感官五個方面決定：視覺、觸覺、聽覺、嗅覺、溫度。','我哋而家：'+TR_SK.map(function(k){return trSense(k).n+' '+q.st[k].toFixed(1);}).join('、')+'（每項 1–5 分）。'].concat(VISIT?[]:['想升級，可以向市長林庫申請「升級大型設施」。']));}}];
+  {t:'餐廳氣氛',cb:function(){talk(nm,T0.bg,'#ffffff',['課本：餐廳氣氛由感官五個方面決定：視覺、觸覺、聽覺、嗅覺、溫度。','我哋而家：'+TR_SK.map(function(k){return trSense(k).n+' '+q.st[k].toFixed(1);}).join('、')+'（每項 1–5 分）。'].concat(VISIT?[]:['想升級，可以向市長林庫申請「升級 → 大型項目」。']));}}];
  if(!VISIT)L.push({t:'感官升級',cb:function(){trOpen(e,'sense');}});L.push({t:'沒事了',cb:function(){}});
  talk(nm,T0.bg,'#ffffff',['歡迎光臨'+T0.n+'！'+T0.hi,'我哋而家係 '+starTxt(q.stars)+'（'+q.avg.toFixed(1)+'／5）。'],L);}
 // ================= v32 修正 =================
@@ -8510,7 +8510,7 @@ function pkCrowdTick(dt,t){if(where!=='park'||!PARK.g)return;PKC.t+=dt;if(PKC.t>
 // ================= v32 牧場（用戶指示）=================
 // 原始島已經有：紅色穀倉＋圍欄（可以入去）；向星際市場阿康買小乳牛、小雞、小羊同糧草；每 12 小時餵一次；動物隨時間長大，越大出產越多；
 // 連續三日冇餵會死；壽命：乳牛、羊一個月，雞兩星期；牛奶、雞蛋經收集箱直接送去餐廳（要有雪櫃位）；羊毛剪落嚟放背包（一格 100 件）；
-// 羊毛商人羊堅（男）不定時喺牧場附近出現，收購價可升可跌；市長林庫「升級設施 → 牧場」升級外型同飼養數量
+// 羊毛商人羊堅（男）不定時喺牧場附近出現，收購價可升可跌；市長林庫「升級 → 社區設施 → 牧場」升級外型同飼養數量
 // ⚠ applyLayout 喺載入時已經會行 → ranchOcc／ranchPlace／ranchCollide 只用 S 同函數入面嘅常數
 var RA={cow:{n:'乳牛',bn:'小乳牛',p:1200,life:30,g:[2,5,10],rate:[0,2,3,4],prod:'milk',pn:'牛奶'},
  chick:{n:'雞',bn:'小雞',p:150,life:14,g:[1,3,6],rate:[0,1,2,3],prod:'egg',pn:'雞蛋'},
@@ -8871,12 +8871,12 @@ var TUT_T=[
  {k:'box',n:'放入交收箱',d:'行去農場入口嘅「食材交收箱」按 A，將農作物交俾餐廳廚房。',r:200,at:'boxF'},
  {k:'fish',n:'釣魚',d:'行去碼頭，面向大海按 A 拋竿；魚竿震嘅時候再按 A 拉，成功釣到一條魚。',r:300,at:'pier'},
  {k:'fruit',n:'摘果',d:'行去掛滿果嘅果樹旁邊按 A 摘果。',r:150,at:'tree'},
- {k:'hire',n:'聘請人員',d:'入服務中心，同市長林庫傾偈，揀「聘請人員」請一位廚師。',r:300,at:'svc'},
+ {k:'hire',n:'聘請人員',d:'入服務中心，同勞工主任小馬傾偈，揀「聘請廚師」請一位廚師。',r:300,at:'svc'},
  {k:'buy',n:'買嘢',d:'去星際市場搵阿康，喺「種子」買一包種子（或者買任何嘢）。',r:100,at:'mkt'},
  {k:'sell',n:'賣嘢',d:'喺星際市場「出售」賣出農作物、水果或者魚。',r:100,at:'mkt'},
  {k:'friend',n:'加好友',d:'去飛碟站搵通訊員 526 傾偈，打開「加好友」。',r:150,at:'comm'},
  {k:'rest',n:'去餐廳',d:'入去你嘅旅款餐廳睇吓廚師同客人。',r:100,at:'rest'},
- {k:'svc',n:'去服務中心',d:'入去服務中心：市長林庫、建材行嘉禧、研發室大地博士都喺度。',r:100,at:'svc'},
+ {k:'svc',n:'去服務中心',d:'入去服務中心：市長林庫、勞工主任小馬、建材行嘉禧、研發室大地博士都喺度。',r:100,at:'svc'},
  {k:'bnb',n:'邀請開民宿',d:'行去原居民嘅屋，同佢傾偈，邀請佢將屋企開放做民宿。',r:300,at:'house'}];
 var TUT_BONUS=500,TUT_NM='YHP（新手指引）';
 var TUT={x:null,z:null,rot:0,face:0,path:null,pi:0,tk:null,t:0,bub:null,bubT:0,home:false,hop:0};
@@ -9079,7 +9079,7 @@ function zaSwim(q,dt,t,pick,spd){var dx=q.tx-q.x,dy=q.ty-q.y,dz=q.tz-q.z,d=Math.
  if(d>0.01){var s=Math.min(d,spd*dt);q.x+=dx/d*s;q.y+=dy/d*s;q.z+=dz/d*s;q.rot=lerpA(q.rot,Math.atan2(-dz,dx),dt*2.2);q.pit+=((Math.max(-0.5,Math.min(0.5,dy/Math.max(0.2,Math.hypot(dx,dz)))))-q.pit)*Math.min(1,dt*2);}
  q.m.position.set(q.x,q.y+Math.sin(t*1.3+q.ph)*0.03,q.z);q.m.rotation.set(0,q.rot+Math.sin(t*7+q.ph)*0.07,q.pit*0.6);}
 // ================= v34 動物園、水族館（用戶指示：兩項可增建嘅大型設施，可以入去、可以升級）=================
-// 動物由動物引薦商「邦邦」（男）引入：佢不定時喺服務中心附近出現；釣到嘅魚都可以放入水族館嘅近海魚缸
+// 動物由動物引薦商「邦邦」（男）引入：佢不定時喺服務中心附近出現；釣到嘅魚都可以放入水族館嘅海洋大屏幕
 // 狀態喺 S.lf 入面：{id,k:'zoo'|'aqua',t,p,t0,done,z:{lv,a:[動物],f:[魚 key],t,earn}}
 // 動物資料（p 引入價、ap 吸引力、n0 展出隻數、hab 展區環境）
 var ZA={
@@ -9103,8 +9103,8 @@ var ZOO_UP=[{n:'星際動物園',d:'4 個動物展區',cap:4},
  {n:'教育動物園',d:'加建動物教育中心；6 個展區；參觀收入多 20%',cap:6,c:8000},
  {n:'保育動物園',d:'加建保育研究中心；8 個展區；參觀收入再多 20%',cap:8,c:16000},
  {n:'星光野生動物園',d:'觀景天橋、晚間燈飾；參觀收入再多 20%、旅客多 3%',cap:8,c:26000}];
-var AQ_UP=[{n:'星際水族館',d:'3 個海洋生物展區；近海魚缸放得 6 條魚',cap:3,fc:6},
- {n:'大型魚缸',d:'4 個展區；近海魚缸擴大到 10 條魚；參觀收入多 20%',cap:4,fc:10,c:7000},
+var AQ_UP=[{n:'星際水族館',d:'3 個海洋生物展區；海洋大屏幕放得 6 條魚',cap:3,fc:6},
+ {n:'大型魚缸',d:'4 個展區；海洋大屏幕擴大到 10 條魚；參觀收入多 20%',cap:4,fc:10,c:7000},
  {n:'海洋教育館',d:'6 個展區；魚缸 14 條魚；加建海洋教育角；參觀收入再多 20%',cap:6,fc:14,c:15000},
  {n:'海底隧道',d:'加建海底隧道（行入魚缸，魚喺你頭頂游過）；魚缸 20 條魚；參觀收入再多 20%、旅客多 3%',cap:6,fc:20,c:24000}];
 var ZA_CUR=null;
@@ -9184,34 +9184,34 @@ function zaExtTick(dt,t){if(where!=='out'||typeof LFO==='undefined'||!LFO)return
 function lfBuildZA(k){if(VISIT||zaE(k))return;var c=lfPrice(k);if(S.coins<c){toast('金幣不足：要 $'+fmtC(c),2600);return;}var p=lfFind('stay',MAP.block);if(!p){lfNoRoom();return;}
  buy(c,function(){lfStart({id:(k==='zoo'?'z':'q')+Date.now().toString(36),k:k,t:k,p:p,t0:Date.now(),z:{lv:0,a:[],f:[],t:0,earn:0}},c);});}
 function zaBuildCard(b,k){var e=zaE(k),c=lfPrice(k),nm=k==='zoo'?'星際動物園':'星際水族館';
- b.appendChild(colB(card({ico:'lfz:'+k},nm+(e&&e.done?'（已開業）':''),(k==='zoo'?'可以引入大熊貓、大象、獅子、長頸鹿、樹熊、斑馬、袋鼠、紅鶴 8 種動物，每個展區都有配合動物嘅環境。':'可以引入海獅、海龜、企鵝、章魚、水母、海星 6 種海洋生物；仲可以將你釣到嘅魚放入近海魚缸展出。')+'<br>費用 $'+fmtC(c)+'　工期 24 小時　旅客多 5%'+(e||S.coins>=c?'':'<br>'+lfGoal(c)),
+ b.appendChild(colB(card({ico:'lfz:'+k},nm+(e&&e.done?'（已開業）':''),(k==='zoo'?'可以引入大熊貓、大象、獅子、長頸鹿、樹熊、斑馬、袋鼠、紅鶴 8 種動物，每個展區都有配合動物嘅環境。':'可以引入海獅、海龜、企鵝、章魚、水母、海星 6 種海洋生物；仲可以將你釣到嘅魚放入海洋大屏幕展出。')+'<br>費用 $'+fmtC(c)+'　工期 24 小時　旅客多 5%'+(e||S.coins>=c?'':'<br>'+lfGoal(c)),
   [lfBtn(e&&e.done,e&&!e.done?Math.max(0,lfDur(e)-lfEl(e)):null,c,function(){lfBuildZA(k);})])));}
 PANELS.lfb.tabs.push(['zoo','動物園'],['aqua','水族館']);
 RENDER.lfb_zoo=function(b){b.appendChild(note('星際動物園由工程隊喺新填海嘅土地上興建（每座要先填海一次；唔會壓住建築物同行人路），工期 24 小時。落成之後向動物引薦商<b>邦邦</b>引入動物（佢不定時喺服務中心附近出現）；展區唔夠可以向市長林庫申請升級。<br>現代動物園有四個任務：<b>康樂、教育、保育、研究</b>。'));zaBuildCard(b,'zoo');};
-RENDER.lfb_aqua=function(b){b.appendChild(note('星際水族館由工程隊喺新填海嘅土地上興建（每座要先填海一次），工期 24 小時。落成之後向動物引薦商<b>邦邦</b>引入海洋生物；你釣到嘅魚都可以放入「近海魚缸」展出——越稀有、越大嘅魚越吸引旅客。最高級有海底隧道。'));zaBuildCard(b,'aqua');};
+RENDER.lfb_aqua=function(b){b.appendChild(note('星際水族館由工程隊喺新填海嘅土地上興建（每座要先填海一次），工期 24 小時。落成之後向動物引薦商<b>邦邦</b>引入海洋生物；你釣到嘅魚都可以放入「海洋大屏幕」展出——越稀有、越大嘅魚越吸引旅客。最高級有海底隧道。'));zaBuildCard(b,'aqua');};
 // ================= 升級、展出（市長林庫：升級大型設施）=================
 PANELS.zau={t:'星際動物園・市長林庫',tabs:[['up','升級'],['ex','展出']]};
 function zaOpen(e,tab){if(!e||!e.done)return;ZA_CUR=e;PANELS.zau.t=lfName(e)+'・市長林庫';openPanel('zau',tab||'up');}
 RENDER.zau_up=function(b){var e=ZA_CUR;if(!e)return;var z=zaSt(e),U=zaUP(e),lv=zaLv(e),cur=U[lv],nx=U[lv+1];
- b.appendChild(note('<b>'+lfName(e)+'</b>：'+cur.n+'（Lv'+lv+'）。展出緊 '+z.a.length+'／'+cur.cap+' 種'+(e.k==='aqua'?'海洋生物，近海魚缸有 '+z.f.length+'／'+cur.fc+' 條魚':'動物')+'。每兩分半鐘參觀收入大約 $'+fmtC(zaInc(e))+'；累積收入 $'+fmtC(z.earn||0)+'。'));
+ b.appendChild(note('<b>'+lfName(e)+'</b>：'+cur.n+'（Lv'+lv+'）。展出緊 '+z.a.length+'／'+cur.cap+' 種'+(e.k==='aqua'?'海洋生物，海洋大屏幕有 '+z.f.length+'／'+cur.fc+' 條魚':'動物')+'。每兩分半鐘參觀收入大約 $'+fmtC(zaInc(e))+'；累積收入 $'+fmtC(z.earn||0)+'。'));
  b.appendChild(card({ico:'lfz:'+e.k},cur.n+'（Lv'+lv+'）','而家：'+esc(cur.d)+(nx?'<br>升級做「'+nx.n+'」：'+esc(nx.d)+'　$'+fmtC(nx.c):'<br><span class="good">已經係最高級</span>'),
   [nx?{t:'升級 $'+fmtC(nx.c),cls:'o',dis:S.coins<nx.c||!!VISIT,fn:function(){buy(nx.c,function(){z.lv=lv+1;noteInvest(nx.c,'bld');ZOS.sig='';AQS.sig='';lfSync(false);if(where===zaRoom(e)){if(e.k==='zoo')zooBuild();else aqBuild();}
    addNews('「'+lfName(e)+'」升級','「'+lfName(e)+'」升級做「'+nx.n+'」：'+nx.d+'。','ev');toast(lfName(e)+'升級做「'+nx.n+'」',3500);});}}:{t:'最高級',cls:'g',dis:true,fn:function(){}}]));};
 RENDER.zau_ex=function(b){var e=ZA_CUR;if(!e)return;var z=zaSt(e),cap=zaCap(e);
- b.appendChild(note((e.k==='zoo'?'動物展區 ':'海洋生物展區 ')+z.a.length+'／'+cap+'：向動物引薦商邦邦引入（佢不定時喺服務中心附近出現，每次留一個半鐘）。'+(e.k==='aqua'?'<br>近海魚缸 '+z.f.length+'／'+aqFCap(e)+' 條魚。':'')));
- if(e.k==='aqua')b.appendChild(card({ico:'fish:clown'},'近海魚缸','放你釣到嘅魚入去展出：越稀有、越大嘅魚越吸引旅客。',[{t:'放魚／攞返',cls:'o',dis:!!VISIT,fn:function(){aqFishOpen(e);}}]));
+ b.appendChild(note((e.k==='zoo'?'動物展區 ':'海洋生物展區 ')+z.a.length+'／'+cap+'：向動物引薦商邦邦引入（佢不定時喺服務中心附近出現，每次留一個半鐘）。'+(e.k==='aqua'?'<br>海洋大屏幕 '+z.f.length+'／'+aqFCap(e)+' 條魚。':'')));
+ if(e.k==='aqua')b.appendChild(card({ico:'fish:clown'},'海洋大屏幕','放你釣到嘅魚入去展出：越稀有、越大嘅魚越吸引旅客。',[{t:'放魚／攞返',cls:'o',dis:!!VISIT,fn:function(){aqFishOpen(e);}}]));
  z.a.forEach(function(k){var A=ZA[k];if(!A)return;b.appendChild(card({ico:'za:'+k},A.n,esc(A.fun)+'<br>吸引力 '+A.ap,[{t:'資料卡',fn:function(){zaCard(k);}}]));});
  if(!z.a.length)b.appendChild(note('未有'+(e.k==='zoo'?'動物':'海洋生物')+'：等邦邦嚟到就可以引入。'));};
-// ================= 近海魚缸：放魚／攞返 =================
-PANELS.aqf={t:'近海魚缸',tabs:[['put','放魚入魚缸'],['tank','魚缸入面']]};
+// ================= 海洋大屏幕：放魚／攞返 =================
+PANELS.aqf={t:'海洋大屏幕',tabs:[['put','放魚入魚缸'],['tank','魚缸入面']]};
 function aqFishOpen(e){e=e||zaE('aqua');if(!e||!e.done)return;if(visitBlock('呢個係朋友嘅水族館'))return;ZA_CUR=e;openPanel('aqf','put');}
 RENDER.aqf_put=function(b){var e=ZA_CUR;if(!e)return;var z=zaSt(e),fc=aqFCap(e),keys=bagKeys('fish:');
- b.appendChild(note('近海魚缸 <b>'+z.f.length+'／'+fc+'</b> 條。揀背包入面嘅魚放入魚缸展出：越稀有、越大嘅魚越吸引旅客（每兩分半鐘有參觀收入）。'+(z.f.length>=fc?'<br><span class="bad">魚缸滿咗：可以向市長林庫申請升級水族館。</span>':'')));
+ b.appendChild(note('海洋大屏幕 <b>'+z.f.length+'／'+fc+'</b> 條。揀背包入面嘅魚放入魚缸展出：越稀有、越大嘅魚越吸引旅客（每兩分半鐘有參觀收入）。'+(z.f.length>=fc?'<br><span class="bad">魚缸滿咗：可以向市長林庫申請升級水族館。</span>':'')));
  if(!keys.length){b.appendChild(note('背包未有魚：去碼頭或者海邊釣魚先啦！'));return;}
  keys.forEach(function(bk){var fk=bk.slice(5),p=parseKey(fk),n=bagCount(bk);b.appendChild(card({ico:'fish:'+p.k},fishLab(fk)+' ×'+n,FISH_RAR[p.f.rar].n+'魚　吸引力 '+(+fishAp(fk).toFixed(1)),[{t:'放入魚缸',cls:'o',dis:z.f.length>=fc,fn:function(){aqFishPut(e,fk);}}]));});};
 RENDER.aqf_tank=function(b){var e=ZA_CUR;if(!e)return;var z=zaSt(e);if(!z.f.length){b.appendChild(note('魚缸入面未有魚。'));return;}
  z.f.forEach(function(fk,i){var p=parseKey(fk);b.appendChild(card({ico:'fish:'+p.k},fishLab(fk),FISH_RAR[p.f.rar].n+'魚　吸引力 '+(+fishAp(fk).toFixed(1)),[{t:'攞返入背包',fn:function(){aqFishTake(e,i);}}]));});};
-function aqFishPut(e,fk){var z=zaSt(e);if(z.f.length>=aqFCap(e)){toast('魚缸滿咗',2500);return;}if(!bagTake('fish:'+fk,1))return;z.f.push(fk);save();AQS.sig='';if(where==='aqua')aqBuild();renderPanel();toast(fishLab(fk)+' 放咗入近海魚缸',2600);}
+function aqFishPut(e,fk){var z=zaSt(e);if(z.f.length>=aqFCap(e)){toast('魚缸滿咗',2500);return;}if(!bagTake('fish:'+fk,1))return;z.f.push(fk);save();AQS.sig='';if(where==='aqua')aqBuild();renderPanel();toast(fishLab(fk)+' 放咗入海洋大屏幕',2600);}
 function aqFishTake(e,i){var z=zaSt(e),fk=z.f[i];if(!fk)return;if(!bagAdd('fish:'+fk,1)){bagFullMsg();return;}z.f.splice(i,1);save();AQS.sig='';if(where==='aqua')aqBuild();renderPanel();toast(fishLab(fk)+' 放返入背包',2400);}
 // ================= 動物引薦商邦邦（男）：不定時喺服務中心附近出現（每日兩次，每次一個半鐘）=================
 var XY_NM='邦邦（動物引薦商）',XY_BG='#7a5a2a',XY={m:null,cr:null,id:null,x:0,z:0,rot:0.3,bub:null};
@@ -9238,10 +9238,10 @@ function xyTalk(){var v=xyNow();if(!v)return;var first=!S.met.xy;S.met.xy=1;save
   {t:'啲動物由邊度嚟？',cb:function(){talk(XY_NM,XY_BG,'#ffffff',['我只會引入喺動物園、水族館出世，或者受咗傷救返嚟、冇辦法放返野外嘅動物，絕對唔會捉野生動物。','現代動物園同水族館有四個任務：康樂（俾旅客欣賞）、教育（認識動物）、保育（保護瀕危物種）、研究（了解動物）。']);}},
   {t:'點解叫邦邦？',cb:function(){talk(XY_NM,XY_BG,'#ffffff',['因為我成日「幫幫」動物搵新屋企，大家就叫我邦邦！','幫動物、幫你，我最叻㗎！']);}},{t:'沒事了',cb:function(){}}];
  talk(XY_NM,XY_BG,'#ffffff',(first?['你好！我叫邦邦，係動物引薦商，專門幫動物園同水族館引入動物。']:['又見面喇！'])
-  .concat([zo||aq?'想引入咩動物？引入咗會直接送去'+(zo&&aq?'動物園或者水族館':zo?'動物園':'水族館')+'展出。':'你個星球未有動物園或者水族館：可以先向市長林庫申請「增建大型設施」。','你釣到嘅魚，都可以放入水族館嘅近海魚缸展出。','我會留到 '+hhmm(v.e)+'。']),L);}
+  .concat([zo||aq?'想引入咩動物？引入咗會直接送去'+(zo&&aq?'動物園或者水族館':zo?'動物園':'水族館')+'展出。':'你個星球未有動物園或者水族館：可以先向市長林庫申請「增建 → 大型項目」。','你釣到嘅魚，都可以放入水族館嘅海洋大屏幕展出。','我會留到 '+hhmm(v.e)+'。']),L);}
 PANELS.xy={t:'邦邦・動物引薦',tabs:[['zoo','動物園動物'],['aqua','水族館海洋生物']]};
 function xyList(b,f){var e=zaE(f),z=e?zaSt(e):null,nm=f==='zoo'?'動物園':'水族館',cap=e?zaCap(e):0,full=z&&z.a.length>=cap;
- b.appendChild(note(!e?'你未有'+nm+'：先向市長林庫申請「增建大型設施 → '+nm+'」。':!e.done?nm+'仲興建緊：落成之後先可以引入。':nm+'展區 <b>'+z.a.length+'／'+cap+'</b>。引入之後即刻送去'+nm+'展出，展品越多、吸引力越高，參觀收入越多。'+(full?'<br><span class="bad">展區滿咗：可以向市長林庫申請升級'+nm+'。</span>':'')));
+ b.appendChild(note(!e?'你未有'+nm+'：先向市長林庫申請「增建 → 大型項目 → '+nm+'」。':!e.done?nm+'仲興建緊：落成之後先可以引入。':nm+'展區 <b>'+z.a.length+'／'+cap+'</b>。引入之後即刻送去'+nm+'展出，展品越多、吸引力越高，參觀收入越多。'+(full?'<br><span class="bad">展區滿咗：可以向市長林庫申請升級'+nm+'。</span>':'')));
  Object.keys(ZA).filter(function(k){return ZA[k].f===f;}).forEach(function(k){var A=ZA[k],own=z&&z.a.indexOf(k)>=0;
   b.appendChild(colB(card({ico:'za:'+k},A.n+'　$'+fmtC(A.p),esc(A.fun)+'<br>吸引力 '+A.ap+(A.n0>1?'　一次引入 '+A.n0+' 隻':'')+(A.iucn?'　保育狀況：'+A.iucn:''),
    [{t:'資料卡',fn:function(){zaCard(k);}},own?{t:'展出緊',cls:'g',dis:true,fn:function(){}}:{t:'引入 $'+fmtC(A.p),cls:'o',dis:!e||!e.done||full||S.coins<A.p||!!VISIT||!xyNow(),fn:function(){xyBuy(k);}}])));});}
@@ -9274,7 +9274,7 @@ roomDef('zoo',{sc:scZOO,b:ZOO_B,door:{x:0,w:1.4},nm:'動物園',camK:1.15,
  out:function(){var e=ZA_CUR;return e&&e.p?[e.p[0],e.p[1]+2.4]:[MAP.plaza[0],MAP.plaza[1]+3];},
  mapPos:function(){var e=ZA_CUR;return e&&e.p?[e.p[0],e.p[1],lfName(e)+'裏面']:[0,0,'動物園'];},
  onEnter:function(){zooBuild();},tick:function(dt,t){zooTick(dt,t);},npc:function(){return ZOS.kp?[[ZOS.kp.x,ZOS.kp.z,0.35]]:[];}});
-function zaEnter(e){if(!e||!e.done)return;ZA_CUR=e;var R=ROOMS[zaRoom(e)];roomEnter(zaRoom(e),0,R.b[3]-1.0,Math.PI);var z=zaSt(e);if(!z.hi&&!VISIT){z.hi=1;save();setTimeout(function(){toast(e.k==='zoo'?'歡迎嚟到星際動物園！行近展區嘅介紹牌按 A 可以睇動物資料卡；動物向服務中心附近嘅邦邦引入':'歡迎嚟到星際水族館！行近近海魚缸按 A 可以放你釣到嘅魚；海洋生物向服務中心附近嘅邦邦引入',7000);},700);}}
+function zaEnter(e){if(!e||!e.done)return;ZA_CUR=e;var R=ROOMS[zaRoom(e)];roomEnter(zaRoom(e),0,R.b[3]-1.0,Math.PI);var z=zaSt(e);if(!z.hi&&!VISIT){z.hi=1;save();setTimeout(function(){toast(e.k==='zoo'?'歡迎嚟到星際動物園！行近展區嘅介紹牌按 A 可以睇動物資料卡；動物向服務中心附近嘅邦邦引入':'歡迎嚟到星際水族館！行近海洋大屏幕按 A 可以放你釣到嘅魚；海洋生物向服務中心附近嘅邦邦引入',7000);},700);}}
 var ZWALL=null,ZFLOOR=null;
 function zooWallMat(){if(ZWALL)return ZWALL;var c=document.createElement('canvas');c.width=1024;c.height=256;var x=c.getContext('2d'),gr=x.createLinearGradient(0,0,0,256);gr.addColorStop(0,'#8fd0f2');gr.addColorStop(0.7,'#dff3fb');x.fillStyle=gr;x.fillRect(0,0,1024,256);
  x.fillStyle='rgba(255,255,255,.85)';[[120,50],[430,34],[760,60],[930,40]].forEach(function(q){for(var i=0;i<4;i++){x.beginPath();x.arc(q[0]+i*22,q[1]+(i%2)*6,18+(i%2)*6,0,6.283);x.fill();}});
@@ -9378,9 +9378,9 @@ function aqDecor(g,x0,x1,z0,z1,y,n){var cc=[0xe86a8a,0xf2a33a,0xb86ae0,0x5ad0c8,
   else{var r=zA(g,new T.DodecahedronGeometry(0.28,0),M(0x5a6a7a),x,y+0.12,z);r.scale.y=0.6;}}}
 function aqBuild(){var e=ZA_CUR;if(!e)return;var z=zaSt(e),cap=zaCap(e),lv=zaLv(e),sig=[e.id,lv,z.a.join(','),z.f.join(',')].join('|');if(AQS.g&&AQS.sig===sig)return;AQS.sig=sig;
  if(AQS.g){scAQ.remove(AQS.g);disposeRoom(AQS.g);}AQS.an=[];AQS.fish=[];AQS.bub=[];AQS.vis=[];AQS.kp=null;var g=AQS.g=zG();scAQ.add(g);var R=ROOMS.aqua;R.cir.length=0;R.box.length=0;R.items.length=0;var b=R.b;
- roomShell(g,b,aqFloorMat(),aqWallMat(),0x0a2238,4.0);
- // ---- 近海魚缸（後面成排）；Lv3 中間有海底隧道 ----
- var tun=lv>=3,TX=8.8,TZ0=-7.45,TZ1=-5.2,Y0=0.45,Y1=3.3,cz=(TZ0+TZ1)/2,dz=TZ1-TZ0,wm=aqWater(0x3a9ad8,0x0a3a5a,0.22),HW=1.55;
+ roomShell(g,b,aqFloorMat(),aqWallMat(),0x0a2238,4.8);
+ // ---- 海洋大屏幕（後面成排）；Lv3 中間有海底隧道 ----
+ var tun=lv>=3,TX=8.8,TZ0=-7.45,TZ1=-5.2,Y0=0.3,Y1=4.1,cz=(TZ0+TZ1)/2,dz=TZ1-TZ0,wm=aqWater(0x3a9ad8,0x0a3a5a,0.22),HW=1.55;
  zA(g,new T.PlaneGeometry(2*TX,Y1-0.05),aqOceanMat(),0,(Y1-0.05)/2+0.02,TZ0+0.01);
  function seg(xa,xb,floorY){var w=xb-xa,mx=(xa+xb)/2;zA(g,zBx(w,floorY,dz+0.2),M(0x1d2a38),mx,floorY/2,cz);zA(g,new T.PlaneGeometry(w,dz),zaMat('sand'),mx,floorY+0.005,cz,-Math.PI/2);
   zA(g,zBx(w,Y1-floorY,dz),wm,mx,(Y1+floorY)/2,cz);zA(g,new T.PlaneGeometry(w,Y1-floorY),aqGlass(),mx,(Y1+floorY)/2,TZ1+0.01);aqDecor(g,xa+0.3,xb-0.3,TZ0+0.25,TZ1-0.35,floorY,Math.round(w*1.4));}
@@ -9390,24 +9390,24 @@ function aqBuild(){var e=ZA_CUR;if(!e)return;var z=zaSt(e),cap=zaCap(e),lv=zaLv(
   zA(g,new T.PlaneGeometry(2*HW,dz),M(0x14324a),0,0.012,cz,-Math.PI/2);var ar=zA(g,new T.TorusGeometry(HW,0.08,8,28,Math.PI),M(0x2f7fb0),0,0,TZ1+0.02);
   var ts=roomSign('海底隧道','#1f5a8a','#9fdcff',1.3,0.28);ts.position.set(0,HW+0.35,TZ1+0.05);g.add(ts);}
  (tun?[[0,Y1+0.06,TZ1+0.04,2*TX+0.2,0.12,0.12],[-(TX+HW)/2,0.47,TZ1+0.04,TX-HW,0.06,0.1],[(TX+HW)/2,0.47,TZ1+0.04,TX-HW,0.06,0.1]]:[[0,Y1+0.06,TZ1+0.04,2*TX+0.2,0.12,0.12],[0,0.47,TZ1+0.04,2*TX+0.2,0.06,0.1]]).concat([[-TX-0.05,Y1/2,TZ1+0.04,0.12,Y1,0.12],[TX+0.05,Y1/2,TZ1+0.04,0.12,Y1,0.12]]).forEach(function(q){zA(g,zBx(q[3],q[4],q[5]),M(0x1d2a38),q[0],q[1],q[2]);});
- var sg=roomSign('星球近海魚缸','#0a3050','#9fdcff',3.2,0.5);sg.position.set(0,Y1+0.42,TZ1+0.05);g.add(sg);
+ var sg=roomSign('海洋大屏幕','#0a3050','#9fdcff',3.2,0.5);sg.position.set(0,Y1+0.36,TZ1+0.05);g.add(sg);
  [[-9.4,-6.35],[9.4,-6.35]].forEach(function(q){zA(g,zBx(1.2,Y1+0.4,2.3),M(0x14283a),q[0],(Y1+0.4)/2,q[1]);R.box.push([q[0]-0.6,q[0]+0.6,-7.5,-5.2]);});
- R.items.push({x:tun?-3.2:0,z:TZ1+0.75,r:1.4,th:1.7,tr:0.8,l:'近海魚缸（放魚）',fn:function(){aqFishOpen(e);}});
+ R.items.push({x:tun?-3.2:0,z:TZ1+0.75,r:1.4,th:1.7,tr:0.8,l:'海洋大屏幕（放魚）',fn:function(){aqFishOpen(e);}});
  // 魚：由背包放入嘅魚，喺魚缸入面游
  z.f.forEach(function(fk,i){var p=parseKey(fk),f=p.f,m;try{m=fishModel(f);}catch(err){return;}mergeRigid(m);var bb=new T.Box3().setFromObject(m),sz=bb.getSize(new T.Vector3()),ln=Math.max(0.05,sz.x,sz.y*1.1,sz.z*0.6);
-  var want=Math.min(1.5,(0.5+0.1*Math.max(0,FCLS.indexOf(p.cl))+0.12*(f.rar||0))*(f.whale?1.5:1));m.scale.multiplyScalar(want/ln);var w=zG();w.add(m);w.userData.dyn=1;shadowAll(w,true,false);noCull(w);g.add(w);
+  var want=Math.min(2.3,(0.75+0.14*Math.max(0,FCLS.indexOf(p.cl))+0.18*(f.rar||0))*(f.whale?1.5:1));m.scale.multiplyScalar(want/ln);var w=zG();w.add(m);w.userData.dyn=1;shadowAll(w,true,false);noCull(w);g.add(w);
   var q={m:w,x:(Math.random()*2-1)*(TX-1),y:Y0+0.5+Math.random()*(Y1-Y0-1.1),z:cz+(Math.random()-0.5)*(dz-0.8),tx:0,ty:1.5,tz:cz,tt:0,rot:Math.random()*6,pit:0,ph:Math.random()*6,spd:0.35+Math.random()*0.35+(f.sh==='shark'||f.sh==='torpedo'?0.25:0)};
   if(tun&&Math.abs(q.x)<HW+0.3)q.x=(q.x<0?-1:1)*(HW+0.8);AQS.fish.push(q);});
- for(var bi=0;bi<10;bi++){var bs=zA(g,zSp(0.04+Math.random()*0.04,6,5),std({c:0xffffff,tr:1,op:0.45}),(Math.random()*2-1)*(TX-0.4),Y0+Math.random()*(Y1-Y0),cz+(Math.random()-0.5)*(dz-0.4));bs.userData.dyn=1;AQS.bub.push(bs);}
+ for(var bi=0;bi<18;bi++){var bs=zA(g,zSp(0.04+Math.random()*0.04,6,5),std({c:0xffffff,tr:1,op:0.45}),(Math.random()*2-1)*(TX-0.4),Y0+Math.random()*(Y1-Y0),cz+(Math.random()-0.5)*(dz-0.4));bs.userData.dyn=1;AQS.bub.push(bs);}
  // ---- 海洋生物展區 ----
- var bands={back:[[-5.5,-4.7,Math.PI],[-2.2,-4.7,Math.PI],[2.4,-4.7,Math.PI],[5.6,-4.7,Math.PI]],left:[],right:[],mid:[[0,1.4,Math.PI]],front:[[-2.6,3.6,Math.PI],[2.2,4.2,0],[0,3.2,Math.PI]]};
+ var bands={back:[[-7.2,-4.5,Math.PI],[-5.5,-4.7,Math.PI],[-3.8,-4.3,Math.PI],[-2.2,-4.7,Math.PI],[0.6,-4.2,Math.PI],[2.4,-4.7,Math.PI],[4.0,-4.4,Math.PI],[5.6,-4.7,Math.PI],[7.2,-4.5,Math.PI]],left:[],right:[],mid:[[0,1.4,Math.PI]],front:[[-2.6,3.6,Math.PI],[2.2,4.2,0],[0,3.2,Math.PI]]};
  if(tun)bands.mid.push([0,-6.4,Math.PI]);
  AQ_SL.forEach(function(sl,i){var open=i<cap,k=open?z.a[i]:null;aqEx(g,R,sl,k,open,bands);});
  // ---- 前面：教育角（Lv2）、職員 ----
  if(lv>=2){var eb=roomSign('海洋教育角','#2f7fb0','#ffffff',1.6,0.32);eb.position.set(-6.6,1.85,5.72);g.add(eb);zA(g,zBx(2.4,1.3,0.1),M(0xeef6fa),-6.6,1.15,5.68);R.box.push([-7.9,-5.3,5.5,5.9]);
   R.items.push({x:-6.6,z:4.9,r:1.2,th:1.6,l:'海洋教育角',fn:function(){talk('海洋教育角','#2f7fb0','#ffffff',['海洋垃圾（特別係膠樽、膠袋）會令海龜、海鳥誤食；自己帶水樽、少用即棄膠袋，就係幫緊海洋生物。','香港水域有中華白海豚、綠海龜；綠海龜間中會喺南丫島深灣上岸產卵，每年 4 月至 10 月嗰度係限制地區，唔可以入去。']);}});}
  zaKeeper(AQS,g,R,3.4,4.3,{t:'h',hs:'short',eye:'shine',skin:0xe8b98f,hair:0x2a2020,top:{st:'polo',c:0x2f5a8a},bot:{st:'pants',c:0x3d4a73}},'水族館館員',function(){aqKeeperTalk();});
- zaVisBuild(AQS,g,[bands.back,bands.mid,bands.left.length?bands.left:bands.front,bands.right.length?bands.right:bands.back],4);
+ zaVisBuild(AQS,g,[bands.back,bands.back,bands.mid,bands.left.length?bands.left:bands.front,bands.back,bands.right.length?bands.right:bands.back,bands.back],8);
  R.items.push({x:0,z:b[3]-0.3,r:0.9,l:'離開',th:1.8,tr:0.8,fn:function(){roomLeave();}});
  shadowAll(g,true,true);mergeRigid(g);noCull(g);}
 // 一個海洋生物展區：水缸（海龜、章魚、水母）或者開放式（企鵝、海獅、海星）
@@ -9447,8 +9447,8 @@ function aqEx(g,R,sl,k,open,bands){var x0=sl[0],x1=sl[1],z0=sl[2],z1=sl[3],fs=sl
   else if(k==='penguin'){var land=g.userData.land;q.x=land[0]+Math.random()*(land[1]-land[0]);q.z=land[2]+Math.random()*(land[3]-land[2]);q.tx=q.x;q.tz=q.z;q.st='graze';q.wait=Math.random()*3;q.bd=land;m.position.set(q.x,0.02,q.z);}
   AQS.an.push(q);}}
 function aqTick(dt,t){if(!AQS.g)return;var e=ZA_CUR,tun=e&&zaLv(e)>=3,TX=8.8,cz=-6.325,HW=1.55;
- AQS.fish.forEach(function(q){zaSwim(q,dt,t,function(){for(var i=0;i<8;i++){var x=(Math.random()*2-1)*(TX-0.9),y=0.95+Math.random()*1.95,z=cz+(Math.random()-0.5)*1.4;if(tun&&Math.abs(x)<HW+0.4&&y<HW+0.5)continue;return [x,y,z];}return [(Math.random()<0.5?-1:1)*5,2,cz];},q.spd);});
- AQS.bub.forEach(function(b,i){b.position.y+=dt*(0.35+(i%3)*0.1);if(b.position.y>3.25){b.position.y=0.5;b.position.x=(Math.random()*2-1)*(TX-0.4);}});
+ AQS.fish.forEach(function(q){zaSwim(q,dt,t,function(){for(var i=0;i<8;i++){var x=(Math.random()*2-1)*(TX-0.9),y=0.75+Math.random()*2.95,z=cz+(Math.random()-0.5)*1.4;if(tun&&Math.abs(x)<HW+0.4&&y<HW+0.5)continue;return [x,y,z];}return [(Math.random()<0.5?-1:1)*5,2,cz];},q.spd);});
+ AQS.bub.forEach(function(b,i){b.position.y+=dt*(0.35+(i%3)*0.1);if(b.position.y>3.95){b.position.y=0.4;b.position.x=(Math.random()*2-1)*(TX-0.4);}});
  AQS.an.forEach(function(q){var u=q.m.userData;
   if(q.k==='turtle'){var V=q.vb;zaSwim(q,dt,t,function(){return [V[0]+Math.random()*(V[1]-V[0]),V[2]+Math.random()*(V[3]-V[2]),V[4]+Math.random()*(V[5]-V[4])];},0.28);(u.fl3||[]).forEach(function(f){f.p.rotation.x=f.s*Math.sin(t*2+q.ph)*(f.fr?0.55:0.25);});}
   else if(q.k==='jelly'){var ph=(t*0.9+q.ph)%1,pulse=ph<0.3?Math.sin(ph/0.3*Math.PI):0;if(u.bell)u.bell.scale.set(1+pulse*0.12,0.62-pulse*0.14,1+pulse*0.12);q.vy+=pulse*dt*0.9-dt*0.12;q.vy*=0.97;q.y+=q.vy*dt;if(q.y>2.35){q.y=2.35;q.vy=-0.05;}if(q.y<0.85){q.y=0.85;q.vy=0.08;}q.m.position.set(q.x+Math.sin(t*0.3+q.ph)*0.15,q.y,q.z+Math.cos(t*0.27+q.ph)*0.15);q.m.rotation.y+=dt*0.1;}
@@ -9458,7 +9458,7 @@ function aqTick(dt,t){if(!AQS.g)return;var e=ZA_CUR,tun=e&&zaLv(e)>=3,TX=8.8,cz=
   else if(q.k==='penguin'){var B=q.bd;zaStep(q,dt,t,function(){return [B[0]+Math.random()*(B[1]-B[0]),B[2]+Math.random()*(B[3]-B[2])];},0.3);}});
  zaVisTick(AQS,dt);zaKpTick(AQS,dt,t);}
 function aqKeeperTalk(){var e=ZA_CUR;if(!e)return;var z=zaSt(e),lv=zaLv(e),U=AQ_UP[lv];
- talk('衍文（水族館館員）','#2f7fb0','#ffffff',['歡迎嚟到'+lfName(e)+'！我係館員衍文。','而家係「'+U.n+'」：展出緊 '+z.a.length+'／'+U.cap+' 種海洋生物，近海魚缸有 '+z.f.length+'／'+U.fc+' 條魚；每兩分半鐘參觀收入大約 $'+fmtC(zaInc(e))+'。','你釣到嘅魚可以放入近海魚缸：越稀有、越大嘅魚越吸引旅客。'],
+ talk('衍文（水族館館員）','#2f7fb0','#ffffff',['歡迎嚟到'+lfName(e)+'！我係館員衍文。','而家係「'+U.n+'」：展出緊 '+z.a.length+'／'+U.cap+' 種海洋生物，海洋大屏幕有 '+z.f.length+'／'+U.fc+' 條魚；每兩分半鐘參觀收入大約 $'+fmtC(zaInc(e))+'。','你釣到嘅魚可以放入海洋大屏幕：越稀有、越大嘅魚越吸引旅客。'],
   [{t:'放魚入魚缸',cb:function(){aqFishOpen(e);}},{t:'睇展出生物',cb:function(){zaOpen(e,'ex');}},{t:'沒事了',cb:function(){}}]);}
 // ================= v35 修正 =================
 // ---- NPC 卡住（用戶指示＋圖 2）：去餐廳嘅旅客喺門口俾兩盆盆栽嘅繞路推嚟推去，永遠行唔到門口（座位全部俾佢哋預留咗，餐廳冇客）----
@@ -9988,8 +9988,8 @@ function tick38b(dt,t){if(!F38.old&&phase==='play'&&S&&!VISIT){F38.old=1;fastOld
 // ================= v38 魚竿（用戶指示）：愈高級，收線限時愈長、上釣反應時間愈長、愈易釣到珍貴魚；愈低級就愈短、愈難 =================
 // 以前限時按「用緊嗰支魚竿」嘅理想收線時間計，魚竿愈好、收線愈快、限時反而愈短；而家改用「呢條魚最低要求嘅魚竿」計基準，再按你支魚竿乘倍數
 function fsRodT(r){return 0.85+0.09*(r||0);}           // 收線限時倍數：普通 ×0.85 … 彩虹 ×1.48
-function fsWin38(r){return 0.75+0.1*(r||0);}            // 浮標沉落之後嘅反應時間（秒）：普通 0.75 … 彩虹 1.45
-function fsRare38(r){return 0.55+0.21*(r||0);}          // 稀有或以上嘅魚上釣機會：普通 ×0.55 … 彩虹 ×2.0
+function fsWin38(r){return 0.75+0.1*rodPw(r);}            // 浮標沉落之後嘅反應時間（秒）：普通 0.75 … 彩虹 1.45
+function fsRare38(r){return 0.55+0.21*rodPw(r);}          // 稀有或以上嘅魚上釣機會：普通 ×0.55 … 彩虹 ×2.0
 function fsLim(f,rod,D){return Math.round((fsSim(f,fsMinRod(f),D)*FS_SLACK[f.rar]+4)*fsRodT(rod)*2)/2;}
 RENDER.shop_rod=function(b){b.appendChild(note('魚竿越高級：<b>收線限時越長</b>、浮標沉落之後反應時間越長、<b>珍貴嘅魚越常上釣</b>、越易釣到大魚；越低級就越短、越難釣到珍貴魚。第 3 級起先會有珍貴魚上釣，第 5 級起先有傳說魚。工具要<b>逐級購買</b>。'));
  RODS.forEach(function(c,i){b.appendChild(card({ico:'rod:'+i},c.n,'收線限時 ×'+fsRodT(i).toFixed(2)+'、反應時間 '+fsWin38(i).toFixed(2)+' 秒、稀有魚機會 ×'+fsRare38(i).toFixed(1)+(i>=4?'（可以釣傳說魚）':i>=2?'（可以釣珍貴魚）':'')+(i?'　$'+c.p:'　開局的魚竿'),[tierBtn(S.rod||0,i,c.p,function(){buyRod(i);})],i===(S.rod||0)));});};
@@ -10031,12 +10031,12 @@ var TUT39_I={
  box:['農場入口有個「食材交收箱」：將背包嘅蔬果放入去，就會送去餐廳廚房。','廚師有食材先煮到菜；一份菜賣俾旅客，通常賺得多過直接賣食材。呢個係星球最穩定嘅收入來源！'],
  fish:['去碼頭，面向大海按 A 就可以釣魚：按住「拋竿」蓄力，放手拋出去（拋得越遠，越易釣到貴魚）；浮標沉落就快啲撳「拉！」；之後按住收線，將拉力保持喺綠色範圍，慢慢拉近條魚；拉力去到紅色或者魚大力掙扎就要鬆手。','釣到嘅魚有三個用途：①放入池塘養大，養到「巨」先賣，價錢高好多；②做鮮魚食材送去餐廳（要有雪櫃）；③喺市場直接賣錢。','魚竿越高級，收線越快、拉力越穩，越易釣到珍貴嘅魚。'],
  fruit:['島上嘅果樹會不時結果：行到結咗果嘅樹旁邊按 A 就摘得。','水果可以送去餐廳做奶昔、果汁同甜品，亦可以直接賣。蜂巢樹搖一搖會有蜜糖，不過會有蜜蜂追住你，小心啲！'],
- hire:['餐廳要有廚師先煮到菜。入服務中心搵市長林庫，揀「聘請人員」就可以請廚師。','廚藝越高，菜越好食、旅客越滿意；手速越快，出菜越快，一日可以做多啲生意。'],
+ hire:['餐廳要有廚師先煮到菜。入服務中心搵勞工主任小馬，揀「聘請廚師」就可以請廚師。','廚藝越高，菜越好食、旅客越滿意；手速越快，出菜越快，一日可以做多啲生意。'],
  buy:['星際市場嘅阿康有種子、魚餌、煙花，仲有其他星球嘅食材。','種子用完就要補貨；用魚餌更易釣到好魚；夜晚喺中央廣場噴水池放煙花，當晚嘅旅客會多好多。'],
  sell:['喺阿康度揀「出售」，可以賣蔬果、水果、魚，同埋喺海邊拾到嘅貝殼海星。','唔急用錢嘅話，蔬果留俾餐廳煮成菜通常賺得更多；魚就養大先賣。'],
  friend:['飛碟站嘅通訊員 526 幫你交朋友：輸入朋友嘅好友碼，或者分享你嘅邀請連結。','好友之間可以互相探訪星球（一齊做好友任務、耕種、釣魚、打理牧場、玩攤位遊戲）、用信箱互送禮物。'],
  rest:['旅款餐廳係你星球嘅核心：由飛碟落嚟嘅旅客都會嚟食嘢。','入去睇下廚師煮菜、客人食飯。之後可以裝修（五感）、研發新菜、升級廚房，吸引更多旅客。'],
- svc:['服務中心有三位好幫手：市長林庫（增建設施、聘請人員）、建材行嘉禧（工具、擴建、五感裝修、農場牧場人手）、研發室大地博士（研發新菜）。','星球大部分發展，都係由呢度開始。'],
+ svc:['服務中心有四位好幫手：市長林庫（增建、升級設施、填海）、勞工主任小馬（聘請人手）、建材行嘉禧（工具、餐廳設備、自動化）、研發室大地博士（研發新菜）。','星球大部分發展，都係由呢度開始。'],
  bnb:['島上嘅原居民住喺自己屋企：入去同佢傾偈，答啱佢嘅旅遊問題，就可以說服佢開民宿。','開咗民宿之後，旅客有地方住，每晚嘅租金你同居民一人一半，你唔喺度都有收入！']};
 var TUT39={w:0};
 function tut39Tick(dt){var o=S&&S.tut;if(!o||!o.on||o.fin||VISIT||!tutOn())return;var T0=tutCur();if(!T0)return;o.i=o.i||{};if(o.i[T0.k]){TUT39.w=0;return;}
@@ -10049,11 +10049,11 @@ function tutFinish(){var o=S.tut;if(!o||o.fin)return;o.on=0;o.fin=Date.now();S.c
 // ================= 唔知做咩好？YHP 賺錢攻略（先講急事，再按你嘅發展階段俾建議）=================
 var ADV39={n:0};
 function adv39Urgent(){var L=[];try{var c=counts();if(!VISIT&&S.cmp&&S.cmp.cur)L.push('意見欄有居民投訴：快啲去服務中心搵羊鷹回應');if(!VISIT&&typeof qReady==='function'&&qReady())L.push('有任務完成咗：撳右上角「任務」領獎金');
- if(!hiredChefs().length)L.push('餐廳冇廚師：入服務中心搵林庫請一位');else if(!availDishes().length)L.push('廚房冇食材煮菜：收成之後放入交收箱');
+ if(!hiredChefs().length)L.push('餐廳冇廚師：入服務中心搵小馬請一位');else if(!availDishes().length)L.push('廚房冇食材煮菜：收成之後放入交收箱');
  if(c.ready)L.push('有 '+c.ready+' 格田熟咗：快啲收成');if(c.dry)L.push('有 '+c.dry+' 格田乾咗：淋水先會繼續生長');if(c.empty)L.push(seedCount()?'有 '+c.empty+' 格田空咗：播種啦':'背包冇種子：去星際市場搵阿康買');
  if(bagFree()<1)L.push('背包滿咗：賣走啲嘢、去服務中心門口嘅垃圾桶扔走唔要嘅嘢，或者去芷華時裝換個大啲嘅背包');}catch(e){}return L;}
 function adv39Grow(){var L=[],co=S.coins||0,chk=function(f,t){try{if(f())L.push(t);}catch(e){}};
- chk(function(){return hiredChefs().length<chefSlots();},'廚房仲有位：去服務中心搵林庫多請一位廚師，一次煮多啲菜，收入即刻多。');
+ chk(function(){return hiredChefs().length<chefSlots();},'廚房仲有位：去服務中心搵小馬多請一位廚師，一次煮多啲菜，收入即刻多。');
  chk(function(){return !(S.up&&S.up.fridge);},'搵建材行嘉禧裝雪櫃：可以用雞蛋、牛奶、鮮魚煮貴啲嘅菜。');
  chk(function(){return (S.recipes||[]).length<8;},'搵研發室大地博士研發新菜：餐單越多元化，旅客越多；用貴食材研發，售價都會高啲。');
  chk(function(){return (S.can||0)<2||(S.sow||0)<2||(S.harv||0)<2;},'升級澆水器、播種器、採摘器（建材行嘉禧）：連按兩下 A 一次過做幾格，時間就係金錢。');
@@ -10061,7 +10061,7 @@ function adv39Grow(){var L=[],co=S.coins||0,chk=function(f,t){try{if(f())L.push(
  chk(function(){return (typeof NATV!=='undefined'?NATV:[]).some(function(N,i){return N&&!bnbOn(i);});},'邀請原居民開民宿：每晚都有租金，你唔喺度都照收，一人一半。');
  chk(function(){return typeof faLv==='function'&&faLv()===0&&co>=3000;},'你有 $'+fmtC(co)+'：搵嘉禧請農務人員，佢哋幫你淋水、播種、收成，你可以專心做其他嘢。');
  ['wheel','hotel','dome'].forEach(function(k){chk(function(){return !bld(k)&&!(S.build&&S.build[k]);},co>=BLD[k].c?'你有 $'+fmtC(co)+'：夠錢向市長林庫申請興建「'+BLD[k].n+'」（$'+fmtC(BLD[k].c)+'），可以吸引大量旅客。':'儲夠 $'+fmtC(BLD[k].c)+' 就可以向市長林庫申請興建「'+BLD[k].n+'」，吸引更多旅客。');});
- chk(function(){return !(S.guides&&S.guides.length);},'聘請導遊（市長林庫）：導遊會帶旅行團嚟，餐廳同景點都受惠。');
+ chk(function(){return !(S.guides&&S.guides.length);},'聘請導遊（勞工主任小馬）：導遊會帶旅行團嚟，餐廳同景點都受惠。');
  chk(function(){return typeof nk==='number'&&nk>=0.55&&(S.fw||0)>0&&!fwActive();},'而家係夜晚，你有煙花：去中央廣場噴水池放一場，當晚旅客多好多！');
  chk(function(){return !(S.fw>0)&&!fwActive();},'喺星際市場買煙花，夜晚喺中央廣場噴水池放：當晚旅客多三成幾。');
  chk(function(){return typeof NET!=='undefined'&&NET.user&&FR.list&&!FR.list.length;},'加好友（飛碟站 526）：互相探訪、送禮，一齊做好友任務。');
@@ -10955,7 +10955,7 @@ RENDER.mag_cycle=function(b){var I=butlerInfo(),B=I.B,st=I.st;
  var path=el('div','bt');[1,2,3,4].forEach(function(k){var d=el('span','bts'+(st===k?' on':''));d.textContent=BUTLER[k].n.replace('階段','');path.appendChild(d);});var d2=el('span','bts'+(st===5||st===6?' on':''));d2.textContent=st===5?'衰落':st===6?'重生':'重生／衰落';path.appendChild(d2);b.appendChild(path);
  b.appendChild(card({ico:'bld:wheel'},'現在：'+BUTLER[st].n,esc(BUTLER[st].d)+'<br>觀光旅客大約 '+(SEE_TGT[st]||6)+' 位喺島上遊覽（未計去餐廳食飯嘅客人同郵輪旅客）；近 7 日餐廳旅客 '+I.a+' 位。',[]));
  b.appendChild(note('大型設施 '+B.n+' 個，平均升級 '+B.u.toFixed(1)+'／3 級。<b>發展指數＝設施數目 ×（1＋平均升級）÷ 2＝'+B.idx.toFixed(1)+'</b>'));
- if(!B.L.length)b.appendChild(note('未有大型設施：向市長林庫申請「增建大型設施」（住宿、博物館、主題樂園、主題餐廳、動物園、水族館）。'));
+ if(!B.L.length)b.appendChild(note('未有大型設施：向市長林庫申請「增建 → 大型項目」（住宿、博物館、主題樂園、主題餐廳、動物園、水族館）。'));
  B.L.forEach(function(q){var s='';for(var i=1;i<=3;i++)s+=q.lv>=i-0.25?'★':'☆';b.appendChild(el('div','cond ok',esc(q.n)+'　'+s+'（'+q.lv.toFixed(1)+' 級）'));});
  b.appendChild(note('階段條件（發展指數）：投入＝1 以下；發展＝1 至 4；鞏固＝4 至 8；停滯＝8 或以上（旅客人數到達最高點）。停滯之後 3 日冇新投資就會衰落；停滯或者衰落期間，2 日內再投資 $20,000 或以上就會重生。'));
  if(I.to){b.appendChild(note('進入「'+BUTLER[I.to].n+'」的條件：'));I.C.forEach(function(c){b.appendChild(el('div','cond'+(c.ok?' ok':''),(c.ok?'✅ ':'⬜ ')+esc(c.t)));});}
@@ -11107,7 +11107,7 @@ function ito41(){return gardITO().concat(seeITO());}
 // YHP 賺錢攻略：加花王、郵輪、發展指數
 var adv39GrowV40=adv39Grow;adv39Grow=function(){var L=adv39GrowV40(),co=S.coins||0;
  try{if(MAP.fbed&&gardLv()===0&&co>=3000)L.push('你有花圃：搵建材行嘉禧聘請花王，開花自動摘、送去伊伊花店賣，唔使自己淋花摘花。');}catch(e){}
- try{var B=big41c();if(B.n<2)L.push('起夠兩個大型設施，就會有郵輪泊碼頭，一大班旅客上岸消費。');else if(B.idx<8)L.push('升級大型設施（市長林庫「升級大型設施」）：發展指數越高，生命週期越成熟，嚟觀光嘅旅客越多。');}catch(e){}
+ try{var B=big41c();if(B.n<2)L.push('起夠兩個大型設施，就會有郵輪泊碼頭，一大班旅客上岸消費。');else if(B.idx<8)L.push('升級大型設施（市長林庫「升級 → 大型項目」）：發展指數越高，生命週期越成熟，嚟觀光嘅旅客越多。');}catch(e){}
  return L;};
 // ================= v42 攤位遊戲主角改做瘦瘦蛇型外星生物（用戶指示：唔要肥波，要樣子怪旦）=================
 // 捲埋嘅尾做底座；身由 7 節組成（逐節扭得郁）；頭扁長、兩隻眼喺眼柄上面（一大一細、望唔同方向）、闊嘴笑、兩隻尖牙、分叉舌頭伸出嚟
@@ -13564,7 +13564,7 @@ if(typeof AD47_NEWS!=='undefined')AD47_NEWS.unshift({id:'fish52',t:'50 款新魚
  '任務都跟你個島嘅發展：自動化咗耕田或者請咗花王，就唔會再出要親自收成、賣花嘅任務；仲多咗釣新魚種、稀有魚、池塘養魚、牧場、樂園、博物館、影相等新任務。',
  '用兩部機（例如手機同 iPad）玩同一個 Google 帳戶：另一部機有較新進度，返嚟呢部機會自動同步；兩部機都玩過就會問你揀邊份。']});
 // ================= v53 宗教聖地（用戶指示）：中式廟宇、日式神社、教堂；大型設施，可以升級 =================
-// 向市長林庫「增建大型設施 → 宗教聖地」；工程隊喺島上搵空地興建（同動物園一樣，24 小時）；每款一間
+// 向市長林庫「增建 → 大型項目 → 宗教聖地」；工程隊喺島上搵空地興建（同動物園一樣，24 小時）；每款一間
 // 日式神社：鳥居、參道石燈籠、手水舍（淨手）、拜殿連本殿（參拜：賽錢箱、鈴、注連繩）、授與所（御守）、狛犬
 //   Lv1 繪馬掛所＋御神籤結所／Lv2 千本鳥居／Lv3 御神木（注連繩）＋夜燈
 // 中式廟宇：牌坊、大香爐（上香）、正殿（求籤）、石獅、平安符櫃位／Lv1 鐘樓、鼓樓／Lv2 許願樹、化寶爐、解籤檔／Lv3 燈籠長廊、三門牌坊
@@ -13871,7 +13871,7 @@ var fishPickV53=fishPick;fishPick=function(ctx){var r=relFishRule(),f=fishPickV5
  for(var i=0;i<400&&!ok(f);i++)f=fishPickV53(ctx);if(ok(f))return f;var night=typeof nk==='number'&&nk>0.55,L=FISH.filter(function(x){return ok(x)&&!(x.tm==='day'&&night)&&!(x.tm==='night'&&!night)&&!x.rain&&!(x.rar===3&&(S.rod||0)<2)&&!(x.rar===4&&(S.rod||0)<4);});return L.length?L[Math.floor(Math.random()*L.length)]:f;};
 // ================= v53 廣告欄新消息 =================
 if(typeof AD47_NEWS!=='undefined')AD47_NEWS.unshift({id:'rel53',t:'新大型設施：宗教聖地',lines:['新消息！新消息！星球可以興建宗教聖地喇！',
- '向市長林庫申請「增建大型設施 → 宗教聖地」：神農廟（中式廟宇）、魚之神社（日式神社）、教堂，每款一間，工期 24 小時。',
+ '向市長林庫申請「增建 → 大型項目 → 宗教聖地」：神農廟（中式廟宇）、魚之神社（日式神社）、教堂，每款一間，工期 24 小時。',
  '魚之神社有鳥居、手水舍、拜殿、授與所：可以淨手、參拜、入殿抽籤（大吉至大凶，影響釣到嘅魚）、請御守；升級仲有繪馬、御神籤結所、千本鳥居、御神木。',
  '神農廟可以上香、入殿求籤（上上籤至下下籤，影響農作物生長快慢）、請平安符；升級加建鐘鼓樓、許願樹、解籤檔、燈籠長廊。教堂可以點蠟燭祈禱；升級有鐘樓尖塔、婚禮花園、彩繪玻璃。',
  '參觀宗教場所要尊重信仰、遵守禮儀：第一次參拜會教你點做！']});
@@ -14170,7 +14170,7 @@ function copPortrait(c){return portraitURL('cop56:'+c.nm+'|'+copCl(c.rc),functio
 // ---- 每格：巡邏、察覺、追捕、警棍 ----
 function copMigrate(){if(VISIT||!S||!S.guard||!(S.guard.lv>0)||copList().length)return;var lv=Math.max(1,Math.min(5,S.guard.lv));
  S.cops=[{nm:'盧隊長',sp:lv,rc:2,al:2,post:{k:'pond'},t:Date.now()}];S.guard={lv:0,mig:1};save();
- setTimeout(function(){toast('你嘅保安已經升職做「星空保安盧隊長」，繼續守住池塘！（可以喺市長林庫度聘請更多星空保安）',6000);},3000);}
+ setTimeout(function(){toast('你嘅保安已經升職做「星空保安盧隊長」，繼續守住池塘！（可以搵勞工主任小馬聘請更多星空保安）',6000);},3000);}
 function copSync(){copMigrate();var L=copList(),sig=(VISIT?VISIT.uid:'me')+'|'+(MAP&&MAP.id||'')+'|'+L.map(function(c){return c.nm+c.sp+c.rc+c.al+JSON.stringify(c.post||{});}).join(';');if(COPS.sig===sig)return;COPS.sig=sig;
  var old={};COPS.list.forEach(function(o){old[o.c.nm+'|'+o.c.rc]=o;});var keep=[];
  L.forEach(function(c,i){var o=old[c.nm+'|'+c.rc];if(o){delete old[c.nm+'|'+c.rc];o.c=c;o.i=i;o.wp=null;if(o.st==='patrol')o.st='back';}
@@ -14247,7 +14247,7 @@ RENDER.staff_police=function(b){var L=copList();
   [{t:'吩咐站崗',fn:function(){closePanel();setTimeout(function(){copAskPost(c);},200);}},{t:'解僱',fn:function(){closePanel();setTimeout(function(){copFireAsk(c);},200);}}]));});
  b.appendChild(note('求職嘅星空保安（已經聘請 '+L.length+' / '+COP_MAX+' 位）：'));if(L.length>=COP_MAX){b.appendChild(note('已經聘請晒 5 位星空保安。'));return;}
  copJobs().forEach(function(c){b.appendChild(card({img:copPortrait(c)},'星空保安'+c.nm,'速度 '+copStars(c.sp)+'　手長 '+copStars(c.rc)+'　警覺性 '+copStars(c.al),[{t:'聘請 $'+fmtC(c.fee),cls:'o',dis:S.coins<c.fee||!!VISIT,fn:function(){copHire(c);}}]));});
- b.appendChild(card({emo:'🔄'},'即時換一批星空保安','付 $'+COP_RF+' 請林庫再搵三位求職者。',[{t:'換一批 $'+COP_RF,dis:S.coins<COP_RF||!!VISIT,fn:function(){buy(COP_RF,function(){copJobs(true);renderPanel();});}}]));};
+ b.appendChild(card({emo:'🔄'},'即時換一批星空保安','付 $'+COP_RF+' 請小馬再搵三位求職者。',[{t:'換一批 $'+COP_RF,dis:S.coins<COP_RF||!!VISIT,fn:function(){buy(COP_RF,function(){copJobs(true);renderPanel();});}}]));};
 var linkTalkV55=linkTalk;linkTalk=function(){var T0=talk;talk=function(nm,bg,fg,lines,opts,done){if(Array.isArray(opts)){var i=-1;opts.forEach(function(o,j){if(o.t==='聘請人員')i=j;});if(i>=0)opts.splice(i+1,0,{t:'聘請星空保安',cb:function(){openPanel('staff','police');}});}return T0(nm,bg,fg,lines,opts,done);};try{linkTalkV55();}finally{talk=T0;}};
 // ---- 公開（好友探訪用）：刑警能力同站崗位置 ----
 var publishV55=publish;publish=function(){publishV55();if(NET.user&&!VISIT)DBI.update('planets/'+NET.user.uid,{cops:copList().map(function(c){var p=c.post||null;return {nm:c.nm,sp:copCl(c.sp),rc:copCl(c.rc),al:copCl(c.al),post:p?{k:p.k,n:p.n||'',x:p.x!=null?+p.x:null,z:p.z!=null?+p.z:null}:null};})}).catch(function(){});};
@@ -14265,7 +14265,7 @@ stealApply=function(a){var L=thfList(),id='th'+(a.t||Date.now())+(a.by||'').slic
  setTimeout(function(){toast(a.op==='steal'?'你嘅池塘有 '+n+' 條魚俾 '+nm+' 偷咗！去廣告欄睇「星球日報」':'有好友想偷你嘅魚，俾'+(cop?'星空保安'+cop:'保安')+'捉住'+(fine?'，罰款 $'+fmtC(fine)+' 已經撥入你嘅戶口':'')+'！去廣告欄睇「星球日報」',6500);},1200);};
 var thfPaperV55=thfPaper;thfPaper=function(e,done){thfPaperV55(e,done);var box=$('thfPaper'),tx=box&&box.querySelector('.tx');if(!tx)return;
  var d=new Date(e.t),ds=d.getFullYear()+' 年 '+(d.getMonth()+1)+' 月 '+d.getDate()+' 日　'+hhmm(e.t),nm=esc(e.nm),nn=e.names?'（'+esc(e.names)+'）':'';
- if(e.kind==='steal')tx.innerHTML='（本報訊）'+ds+'，'+nm+'趁探訪本島嘅時候，偷偷撈走咗池塘 '+e.n+' 條魚'+nn+'，仲成功坐飛碟離開。<br>池塘負責人呼籲島主加強防範：可以向市長林庫聘請「星空保安」，吩咐佢哋喺池塘旁、池塘通道或者飛碟旁站崗。';
+ if(e.kind==='steal')tx.innerHTML='（本報訊）'+ds+'，'+nm+'趁探訪本島嘅時候，偷偷撈走咗池塘 '+e.n+' 條魚'+nn+'，仲成功坐飛碟離開。<br>池塘負責人呼籲島主加強防範：可以搵勞工主任小馬聘請「星空保安」，吩咐佢哋喺池塘旁、池塘通道或者飛碟旁站崗。';
  else if(e.cop){var cop=esc(e.cop);tx.innerHTML='（本報訊）'+ds+'，'+nm+'企圖偷走本島池塘嘅魚，點知俾星空保安'+cop+'當場發現，追上去一警棍敲中個頭，即場捉住！<br>'+nm+'被罰款 $'+fmtC(e.fine||0)+'，罰款已經撥入島主戶口；偷到嘅 '+e.n+' 條魚'+nn+'全部追返，池塘冇損失。星空保安'+cop+'話：「偷魚係唔啱㗎！」';
   var cap=box.querySelector('figcaption');if(cap)cap.textContent=e.nm+'（被星空保安'+e.cop+'捉住）';}};
 // ================= v56 教堂神跡池（用戶指示）=================
@@ -14337,7 +14337,7 @@ var rinTickV55=rinTick;rinTick=function(dt,t){rinTickV55(dt,t);if(where==='relch
 var zaTickV56p=zaTick;zaTick=function(dt,t){zaTickV56p(dt,t);if(POOL56.anim&&where!=='relch')pool56Done(true);};
 // ================= v56 廣告欄新消息 =================
 if(typeof AD47_NEWS!=='undefined')AD47_NEWS.unshift({id:'cop56',t:'星空保安＋神跡池',lines:['新消息！新消息！星球有「星空保安」喇！',
- '向市長林庫申請「聘請星空保安」：穿保安制服嘅外星人，手持警棍，最多聘請 5 位（盧隊長、鐵膽、阿強、大孖、細孖）。林庫每次介紹三位求職者，$100 可以換一批。',
+ '搵勞工主任小馬聘請「星空保安」：穿保安制服嘅外星人，手持警棍，最多聘請 5 位（盧隊長、鐵膽、阿強、大孖、細孖）。林庫每次介紹三位求職者，$100 可以換一批。',
  '每位星空保安有三項能力：速度（5 星同星光跑鞋一樣快）、手長（手越長，越遠都敲得中）、警覺性（越敏銳越易察覺偷魚賊）。',
  '聘請之後要吩咐佢哋喺邊度站崗：池塘通道、池塘旁、農田旁、花田旁、飛碟旁，或者任何建築物旁。好友偷魚俾佢哋見到，就會追上去用警棍敲個頭即場捉住：罰款 $5,000 會交入被偷魚島主嘅戶口！',
  '原本嘅保安已經升職做「星空保安盧隊長」。',
@@ -14390,7 +14390,7 @@ function lf57Spot(i,kind,skip){var q=(S.recl||[])[i];if(!q||!MAP)return null;var
 // 起新建築：工程隊只會喺未用過嘅新填海地搵位（由最新嗰塊開始）
 var lfFindV56=lfFind;lfFind=function(kind,block){if(LF57.want){var F=lf57Free();for(var j=F.length-1;j>=0;j--){var p=lf57Spot(F[j],kind);if(p){LF57.found={i:F[j],p:p};return p;}}LF57.found=null;return null;}return lfFindV56(kind,block);};
 var lfNoRoomV56=lfNoRoom;lfNoRoom=function(){if(!LF57.want)return lfNoRoomV56();if(!lf57LandOK())lf57Need();else talk(LINK_NM,LINK_BG,'#ffffff',['新填海嘅土地唔夠位放呢座建築。','可以喺另一邊海岸再填海。']);};
-function lf57Need(){talk(LINK_NM,LINK_BG,'#ffffff',['星球土地唔夠喇！每興建一座新建築，都要先填海一次：新建築會起喺新填海嘅土地上。',lf57LandTxt(),'可以向我申請「升級設施 → 填海」，再去海邊面向大海按 A 填海。']);}
+function lf57Need(){talk(LINK_NM,LINK_BG,'#ffffff',['星球土地唔夠喇！每興建一座新建築，都要先填海一次：新建築會起喺新填海嘅土地上。',lf57LandTxt(),'可以向我申請「升級 → 社區設施 → 填海」，再去海邊面向大海按 A 填海。']);}
 function lf57Wrap(fn){return function(){if(VISIT)return fn.apply(this,arguments);LF57.want=1;LF57.found=null;try{return fn.apply(this,arguments);}finally{LF57.want=0;}};}
 lfBuildStay=lf57Wrap(lfBuildStay);lfBuildTR=lf57Wrap(lfBuildTR);if(typeof lfBuildZA==='function')lfBuildZA=lf57Wrap(lfBuildZA);
 relBuild=lf57Wrap(function(k){if(VISIT||relE(k))return;if(!lf57LandOK()){lf57Need();return;}return relBuildV53(k);});
@@ -14467,7 +14467,7 @@ RENDER.staff_police=function(b){var L=copList();
   [{t:'吩咐站崗',fn:function(){closePanel();setTimeout(function(){copAskPost(c);},200);}},{t:'解僱',fn:function(){closePanel();setTimeout(function(){copFireAsk(c);},200);}}]));});
  b.appendChild(note('求職嘅星空保安（已經聘請 '+L.length+' / '+COP_MAX+' 位）：'));if(L.length>=COP_MAX){b.appendChild(note('已經聘請晒 5 位星空保安。'));return;}
  copJobs().forEach(function(c){b.appendChild(card({img:copPortrait(c)},'星空保安'+c.nm,cop57Ab(c),[{t:'聘請 $'+fmtC(c.fee),cls:'o',dis:S.coins<c.fee||!!VISIT,fn:function(){copHire(c);}}]));});
- b.appendChild(card({emo:'🔄'},'即時換一批星空保安','付 $'+COP_RF+' 請林庫再搵三位求職者。',[{t:'換一批 $'+COP_RF,dis:S.coins<COP_RF||!!VISIT,fn:function(){buy(COP_RF,function(){copJobs(true);renderPanel();});}}]));};
+ b.appendChild(card({emo:'🔄'},'即時換一批星空保安','付 $'+COP_RF+' 請小馬再搵三位求職者。',[{t:'換一批 $'+COP_RF,dis:S.coins<COP_RF||!!VISIT,fn:function(){buy(COP_RF,function(){copJobs(true);renderPanel();});}}]));};
 // 對話：能力逐行講
 copTalk=function(c){var o=copRt(c);if(o&&o.st==='patrol'){o.pause=4;o.face=Math.atan2(P.x-o.x,P.z-o.z);}
  if(VISIT){talk('星空保安'+c.nm,'#2f3f6e','#ffffff',[pick(['我係星空保安'+c.nm+'，正喺度巡邏。','呢個島嘅池塘有我哋星空保安睇住，唔好打啲魚嘅主意啊！','見到有人偷魚，我哋一定會捉！'])]);return;}
@@ -14568,7 +14568,7 @@ function reclFill59(land,g1,g2,rlk,N,rc,INF){var seen=new Uint8Array(N*N),qq=new
  rel53:['新大型設施：宗教聖地','新增大型設施：神農廟、魚之神社、星際教堂！你可以搵林庫申請興建。'],
  steal54:['星球日報','廣告欄新增「星球日報」：有好友偷你池塘嘅魚，就會喺度報道！'],
  rel55:['宗教聖地可以入內','神農廟、魚之神社、星際教堂可以行入去參拜、求籤！'],
- cop56:['星空保安＋神跡池','新增星空保安，負責捉偷魚賊，你可以搵林庫聘請啦！','星際教堂外面新增神跡池：拋一樣物品落去，會拋返一件出嚟！'],
+ cop56:['星空保安＋神跡池','新增星空保安，負責捉偷魚賊，你可以搵服務中心嘅小馬聘請啦！','星際教堂外面新增神跡池：拋一樣物品落去，會拋返一件出嚟！'],
  land57:['填海起新建築','起新建築之前要先填海：你可以搵林庫申請填海，新建築會起喺新填海嘅土地上。']};
  for(var i=AD47_NEWS.length-1;i>=0;i--){var n=AD47_NEWS[i];if(n.id==='eco50'){AD47_NEWS.splice(i,1);continue;}var r=R[n.id];if(r){n.t=r[0];n.lines=r.slice(1);}}})();
 // ================= v60 釣魚改版（用戶指示：拋得越遠越易釣到貴魚；參考 Ultimate Fishing：保持拉力喺控制範圍先慢慢拉近條魚；冇限時）=================
@@ -14594,12 +14594,12 @@ var F60={};
 function fsDist60(r,d){return Math.pow(0.55+1.1*Math.max(0,Math.min(1,d||0)),r||0);}
 function fs60Zone(){var bar=document.querySelector('#fsFight .fs-bar'),z=document.getElementById('fsZone');if(!z&&bar){z=document.createElement('div');z.id='fsZone';bar.insertBefore(z,bar.firstChild);}return z;}
 function fsJump60(f){var jm=fishModel(f),bb=new T.Box3().setFromObject(jm),bs=bb.getBoundingSphere(new T.Sphere()).radius;jm.scale.multiplyScalar((f.rar>=3?2.4:1.5)*(1+FS.D*0.03)/Math.max(0.2,bs));FS.sc.add(jm);FS.jump={m:jm,t:0,x:FS.bx,z:FS.bz};fsSplash(FS.bx,FS.bz,12,1);}
-fsFightStart=function(){var f=FS.f,rar=f.rar,rod=S.rod||0,s=f.str/10,P=FP60,g=fs60Gap(f,rod);FS.D+=1.2*rar;FS.D0=FS.D;FS.T=0.35;FS.left=null;FS.rush=0;FS.rushNext=(P.rushI+Math.random()*P.rushR)/(1+P.kF*g);
+fsFightStart=function(){var f=FS.f,rar=f.rar,rod=rodPw(S.rod||0),s=f.str/10,P=FP60,g=fs60Gap(f,rod);FS.D+=1.2*rar;FS.D0=FS.D;FS.T=0.35;FS.left=null;FS.rush=0;FS.rushNext=(P.rushI+Math.random()*P.rushR)/(1+P.kF*g);
  F60={E:1,q:1,ft:0,fatMsg:0,g:g,upK:(1+P.kU*g)/(1+P.uprod*rod),Fs:P.Fs+P.kFs*g,Tp:(P.Tp0+P.Tpr*rar+P.Tps*(s-0.25))*(0.75+0.25*FS.D0/32)*(1-P.Tprod*rod)*(1+P.kT*g),slack:0,slackMsg:0,jk:1,C:P.C,W:Math.min(0.44,Math.max(0.05,(P.W0-P.Wr*rar-P.Ws*(s-0.5)+P.Wrod*rod)/(1+P.kW*g))),amp:rar>=2?P.dA0+P.dA1*rar:0,fr:P.dF0+P.dF1*rar,slackLim:P.slackT-P.slackR*rar,zoneEl:fs60Zone()};
  var ff=$('fsFight');ff.classList.remove('late','danger','slack','inz');var tl=document.querySelector('#fsFight .fs-time span');if(tl)tl.textContent='魚體力';
  var first=!(S.flags&&S.flags.fs60);if(first){S.flags=S.flags||{};S.flags.fs60=1;save();}
  fsMsg(first?'上釣！按住「收線」，將拉力保持喺綠色範圍，就可以慢慢拉近條魚。拉力去到紅色會斷線，太鬆魚會甩鈎。':(g>=2?'上釣！魚竿唔夠力，條魚好難拉，小心斷線！':'上釣！保持拉力喺綠色範圍'+(rar>=3?'（'+FISH_RAR[rar].n+'魚好大力，小心！）':'')),first?5:2.4);};
-function fsFight60(dt,t){var f=FS.f,G=F60,rod=S.rod||0,s=f.str/10,rar=f.rar,P=FP60;FS.ph+=dt;G.ft+=dt;var fat=Math.max(0,Math.min(1,(G.ft-G.Fs)/P.Fd));
+function fsFight60(dt,t){var f=FS.f,G=F60,rod=rodPw(S.rod||0),s=f.str/10,rar=f.rar,P=FP60;FS.ph+=dt;G.ft+=dt;var fat=Math.max(0,Math.min(1,(G.ft-G.Fs)/P.Fd));
  G.C=P.C+G.amp*Math.sin(G.fr*FS.ph);var lo=G.C-G.W/2,hi=G.C+G.W/2;
  FS.rushNext-=dt;if(FS.rush>0)FS.rush-=dt;else if(FS.rushNext<=0&&fat<0.5){FS.rush=(P.rushD+Math.random()*P.rushDr)*(0.6+s);FS.rushNext=(P.rushI+Math.random()*P.rushR)*(1-P.rushRar*rar)/(1+P.kF*G.g);fsMsg('魚大力掙扎！鬆手！',Math.min(1.6,FS.rush));if(!FS.jump&&Math.random()<0.55){try{fsJump60(f);}catch(x){}}}
  if(fat>=0.5&&!G.fatMsg){G.fatMsg=1;fsMsg('條魚冇晒力喇！快啲收線！',2.5);}
@@ -14630,13 +14630,392 @@ function fsFight60(dt,t){var f=FS.f,G=F60,rod=S.rod||0,s=f.str/10,rar=f.rar,P=FP
   '#fsFight.slack .fs-bar{box-shadow:inset 0 0 0 2px #57a8e8,0 0 10px #57a8e8}#fsFight .fs-time .fs-pb i{background:linear-gradient(90deg,#f4c542,#e8473f)}#fsPowM{min-width:46px;text-align:left}';document.head.appendChild(st);})();
 var fsTickV59=fsTick;fsTick=function(dt){fsTickV59(dt);if(FS.st==='charge'){var m=$('fsPowM');if(m)m.textContent=Math.round(6+26*FS.pow)+' 米';}};
 // 魚竿店：講新嘅魚竿效果
-function fs60RodTxt(i){var P=FP60;return (i?'收線快 '+Math.round((1/(1-P.Tprod*i)-1)*100)+'%、拉力升得慢 '+Math.round((1-1/(1+P.uprod*i))*100)+'%、':'')+'反應時間 '+fsWin38(i).toFixed(2)+' 秒'+(i>=4?'（可以釣傳說魚）':i>=2?'（可以釣珍貴魚）':'');}
+function fs60RodTxt(i){var P=FP60,w=rodPw(i);return (i?'收線快 '+Math.round((1/(1-P.Tprod*w)-1)*100)+'%、拉力升得慢 '+Math.round((1-1/(1+P.uprod*w))*100)+'%、':'')+'反應時間 '+fsWin38(i).toFixed(2)+' 秒'+(i>=4?'（可以釣傳說魚）':i>=2?'（可以釣珍貴魚）':'');}
 RENDER.shop_rod=function(b){b.appendChild(note('魚竿越高級：拉力嘅綠色範圍闊少少、拉力升得慢少少、收線快少少、浮標沉落之後反應時間長啲、稀有魚越常上釣。第 3 級起先會有珍貴魚上釣，第 5 級起先有傳說魚。<br>魚竿唔夠力，條魚好難拉（綠色範圍窄好多、拉力升得快、好易斷線）：稀有魚建議用金魚竿、珍貴魚建議用鈦金魚竿、傳說魚建議用彩虹魚竿。<br>拋得越遠，越易釣到貴魚。工具要<b>逐級購買</b>。'));
  RODS.forEach(function(c,i){b.appendChild(card({ico:'rod:'+i},c.n,fs60RodTxt(i)+(i?'　$'+fmtC(c.p):'　開局的魚竿'),[tierBtn(S.rod||0,i,c.p,function(){buyRod(i);})],i===(S.rod||0)));});};
 // 魚卡「點樣釣」：講拉力難度
-function fsDiff60(f){var s=f.str/10,d=Math.max(1,Math.min(5,Math.round(1+f.rar+(s-0.5)*1.5))),r0=fsMinRod(f),rc=REC60[f.rar],mine=S.rod||0;return starStr(d)+(mine<r0?'（要用「'+RODS[r0].n+'」或以上魚竿先會上釣）':mine<rc?'（建議用「'+RODS[rc].n+'」'+(rc<RODS.length-1?'或以上':'')+'，魚竿唔夠力好難拉）':'');}
+function fsDiff60(f){var s=f.str/10,d=Math.max(1,Math.min(5,Math.round(1+f.rar+(s-0.5)*1.5))),r0=fsMinRod(f),rc=rec61(f.rar),mine=S.rod||0;return starStr(d)+(mine<r0?'（要用「'+RODS[r0].n+'」或以上魚竿先會上釣）':mine<rc?'（建議用「'+RODS[rc].n+'」'+(rc<RODS.length-1?'或以上':'')+'，魚竿唔夠力好難拉）':'');}
 // ================= v60 廣告欄新消息 =================
 if(typeof AD47_NEWS!=='undefined')AD47_NEWS.unshift({id:'fish60',t:'釣魚新玩法',lines:['釣魚有新玩法：拋得越遠，越易釣到貴魚；收線時要將拉力保持喺綠色範圍，就可以慢慢拉近條魚！']});
+// ================= v61 新魚竿（用戶指示）：彩虹之上加火焰、金之、凰鳳、麒麟、神之魚竿 =================
+// RODS 原文已加五支（存檔可能已經用緊新魚竿，載入時 rodMat 要用到）。
+// 能力平均分佈：第 i 支＝舊等級 7.7×i／12（神之＝舊彩虹 7 級再勁一成；彩虹變做 4.5 級）。
+// 上釣門檻照舊用第幾支（第 3 支碳纖起有珍貴魚、第 5 支星光起有傳說魚）；其餘能力（反應時間、稀有魚機會、大魚、拉魚）全部用 rodPw。
+function rodPw(i){var n=RODS.length-1;return 7.7*Math.max(0,Math.min(n,i||0))/n;}
+// 建議魚竿：能力夠 REC60 要求嘅第一支
+function rec61(rar){var t=REC60[rar]||0;for(var i=0;i<RODS.length;i++)if(rodPw(i)>=t-1e-6)return i;return RODS.length-1;}
+RENDER.shop_rod=function(b){b.appendChild(note('魚竿越高級：拉力嘅綠色範圍闊少少、拉力升得慢少少、收線快少少、浮標沉落之後反應時間長啲、稀有魚越常上釣。第 3 支起先會有珍貴魚上釣，第 5 支起先有傳說魚。<br>魚竿唔夠力，條魚好難拉（綠色範圍窄好多、拉力升得快、好易斷線）：稀有魚建議用'+RODS[rec61(2)].n+'、珍貴魚建議用'+RODS[rec61(3)].n+'、傳說魚建議用'+RODS[rec61(4)].n+'。<br>拋得越遠，越易釣到貴魚。工具要<b>逐級購買</b>。'));
+ RODS.forEach(function(c,i){b.appendChild(card({ico:'rod:'+i},c.n,fs60RodTxt(i)+(i?'　$'+fmtC(c.p):'　開局的魚竿'),[tierBtn(S.rod||0,i,c.p,function(){buyRod(i);})],i===(S.rod||0)));});};
+// ---- 新魚竿外型（釣魚畫面 fsRod39 用 ROD39[等級]）：火焰、金之、凰鳳、麒麟、神之 ----
+ROD39.push(
+ {bl:'flame',grip:'eva',gc:0x2a1a14,gd:0xffb03a,wr:0xff5a1f,rb:0x3a1f14,rs:0xffb03a,ra:0xffe07a,ln:[0xffa03a,0xff5a1f],bb:[0xff5a1f,0xfff0c0],glow:0xff7a2a,spark:1},
+ {bl:'goldx',grip:'ivory',gc:0xfff4dc,gd:0xffd84a,wr:0xd4a017,rb:0xffd84a,rs:0xfff0b0,ra:0xffffff,ln:[0xfff0a0,0xffd84a],bb:[0xffd84a,0xffffff],met:1,glow:0xffe07a},
+ {bl:'phoenix',grip:'cord',gc:0x8a1a2a,gd:0xffc84a,wr:0xffc84a,rb:0xa8203a,rs:0xffd27a,ra:0xff7a5a,ln:[0xff5a6a,0xffd24a],bb:[0xd6304a,0xffd24a],tassel:1,glow:0xff6a5a,spark:1},
+ {bl:'qilin',grip:'pearl',gc:0xe8f6ee,gd:0xffd24a,wr:0x2fbf8f,rb:0x1f8a64,rs:0xffd24a,ra:0x9af0c8,ln:[0x7af0c0,0xffd24a],bb:[0x2fbf8f,0xffd24a],tassel:1,glow:0x7af0c0,charm:1},
+ {bl:'divine',grip:'pearl',gc:0xfffaf0,gd:0xfff1c2,wr:0xffe7a0,rb:0xfff6dc,rs:0xffffff,ra:0xbfe8ff,ln:'rainbow',bb:[0xfff1c2,0xbfe8ff],met:1,glow:0xfff6c8,spark:1,charm:1});
+var fxBlankTexV61=fxBlankTex;fxBlankTex=function(k){if(k!=='flame'&&k!=='goldx'&&k!=='phoenix'&&k!=='qilin'&&k!=='divine')return fxBlankTexV61(k);if(FX_TEX[k])return FX_TEX[k];
+ var t=fxTex(64,512,function(x,W,H){var i,j,g;
+  if(k==='flame'){g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#ffd24a');g.addColorStop(0.5,'#ff6a1f');g.addColorStop(1,'#a8200f');x.fillStyle=g;x.fillRect(0,0,W,H);
+   for(i=0;i<26;i++){var fx0=Math.random()*W,fy=Math.random()*H;x.fillStyle='rgba(255,236,150,'+(0.25+Math.random()*0.35)+')';x.beginPath();x.moveTo(fx0-6,fy+30);x.quadraticCurveTo(fx0-8,fy+6,fx0,fy-24);x.quadraticCurveTo(fx0+8,fy+6,fx0+6,fy+30);x.fill();}}
+  else if(k==='goldx'){g=x.createLinearGradient(0,0,W,0);g.addColorStop(0,'#c8901a');g.addColorStop(0.5,'#fff6c8');g.addColorStop(1,'#c8901a');x.fillStyle=g;x.fillRect(0,0,W,H);
+   for(j=30;j<H;j+=60){x.fillStyle='rgba(255,255,255,.55)';x.fillRect(0,j,W,2);x.fillStyle='#b07a10';x.fillRect(0,j+4,W,2);}for(i=0;i<60;i++){x.fillStyle='rgba(255,255,255,'+(0.4+Math.random()*0.5)+')';x.fillRect(Math.random()*W,Math.random()*H,1.5,1.5);}}
+  else if(k==='phoenix'){g=x.createLinearGradient(0,0,W,0);g.addColorStop(0,'#7a0e1e');g.addColorStop(0.5,'#e0304a');g.addColorStop(1,'#7a0e1e');x.fillStyle=g;x.fillRect(0,0,W,H);
+   x.strokeStyle='#ffc84a';x.lineWidth=2;for(j=0;j<H;j+=34){x.beginPath();x.moveTo(4,j);x.quadraticCurveTo(W*0.5,j+16,W-4,j+4);x.stroke();x.beginPath();x.moveTo(W*0.3,j+10);x.quadraticCurveTo(W*0.6,j+26,W-6,j+18);x.stroke();}}
+  else if(k==='qilin'){g=x.createLinearGradient(0,0,W,0);g.addColorStop(0,'#0f5a40');g.addColorStop(0.5,'#3fd09a');g.addColorStop(1,'#0f5a40');x.fillStyle=g;x.fillRect(0,0,W,H);
+   x.strokeStyle='#ffd24a';x.lineWidth=1.6;for(j=0;j<H+12;j+=12)for(i=-10;i<W+10;i+=20){x.beginPath();x.moveTo(i,j);x.lineTo(i+10,j+6);x.lineTo(i+20,j);x.stroke();}}
+  else{g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#ffffff');g.addColorStop(0.5,'#fff1c2');g.addColorStop(1,'#e6f4ff');x.fillStyle=g;x.fillRect(0,0,W,H);
+   for(i=0;i<90;i++){x.fillStyle=['rgba(255,215,120,.7)','rgba(150,210,255,.6)','rgba(255,255,255,.9)'][i%3];x.beginPath();x.arc(Math.random()*W,Math.random()*H,0.8+Math.random()*1.8,0,6.283);x.fill();}
+   x.fillStyle='rgba(255,200,90,.6)';for(j=80;j<H;j+=120)x.fillRect(0,j,W,3);}
+ });FX_TEX[k]=t;return t;};
+// ================= v61 市長林庫：增建／升級／填海；興建條件；填海由 Lv1 開始（用戶指示）=================
+// 林庫只負責增建同升級設施、填海；聘請人手全部交俾服務中心嘅勞工主任小馬（v61_staff.js）
+// 選單：增建（社區設施／大型項目）、升級（社區設施／大型項目）、填海
+linkTalk=function(){var first=!S.met.lk;S.met.lk=1;S.flags=S.flags||{};var news=!first&&!S.flags.lk61;S.flags.lk61=1;save();npcHop.link=0.8;
+ var nm=LINK_NM,bg=LINK_BG;
+ function sub(t,a,b){talk(nm,bg,'#ffffff',[t],[a,b,{t:'返回',cb:function(){linkTalk();}}]);}
+ var L=[{t:'增建',cb:function(){sub('想增建邊類設施？',{t:'社區設施',cb:function(){openPanel('facil','all');}},{t:'大型項目',cb:function(){openPanel('lfb','stay');}});}},
+  {t:'升級',cb:function(){sub('想升級邊類設施？',{t:'社區設施',cb:function(){openPanel('build','fac');}},{t:'大型項目',cb:function(){openPanel('lfu','all');}});}},
+  {t:'填海',cb:function(){openPanel('recl61','recl');}},
+  {t:'沒事了',cb:function(){}}];
+ talk(nm,bg,'#ffffff',first?['你好，'+me()+'！我是市長林庫，負責星球嘅發展。','增建、升級設施同填海，都可以向我申請；聘請人手就去服務中心搵勞工主任小馬。今天想辦理甚麼？']:
+  news?['你好，'+me()+'！而家聘請人手由服務中心嘅勞工主任小馬負責；我專心處理增建、升級同填海。','今天想辦理甚麼？']:['你好，'+me()+'！今天想辦理甚麼？'],L);};
+// ---- 社區設施：增建（未興建嘅）同升級（已興建嘅）分開 ----
+function fac61Card(b,k,mode){var F=FAC[k],lv=facLv(k),cur=F.L[lv],nx=F.L[lv+1];
+ var btn=mode==='add'?(lv?{t:'已興建',cls:'g',dis:true,fn:function(){}}:{t:'興建 $'+fmtC(nx.c),cls:'o',dis:S.coins<nx.c||!!VISIT,fn:function(){facBuy(k,1);}}):
+  (!lv?{t:'未興建',cls:'g',dis:true,fn:function(){}}:nx?{t:'升級 $'+fmtC(nx.c),cls:'o',dis:S.coins<nx.c||!!VISIT,fn:function(){facBuy(k,lv+1);}}:{t:'最高級',cls:'g',dis:true,fn:function(){}});
+ var txt=mode==='add'?(lv?esc(cur.d)+'<br>已經興建（Lv'+lv+'）；要升級就揀林庫嘅「升級 → 社區設施」。':esc(F.note)+'<br>興建「'+nx.n+'」：'+esc(nx.d)+'　$'+fmtC(nx.c)):
+  (!lv?esc(F.note)+'<br>未興建：要先喺林庫嘅「增建 → 社區設施」興建。':esc(cur.d)+(nx?'<br>下一級「'+nx.n+'」：'+esc(nx.d)+'　$'+fmtC(nx.c):'<br><span class="good">已經係最高級</span>'));
+ b.appendChild(colB(card({ico:'fac:'+k+':'+Math.max(1,lv)},F.n+(lv?'　Lv'+lv+'・'+cur.n:'（未興建）'),txt,[btn],lv>0)));}
+PANELS.facil={t:'增建社區設施・市長林庫',tabs:[['all','社區設施']]};
+RENDER.facil_all=function(b){b.appendChild(note('社區設施由市長林庫批准、建材行嘉禧嘅工程隊施工（即刻完成）。興建之後，可以喺林庫嘅「升級 → 社區設施」逐級升級，最多三級。'));
+ ['tram','bench','lamp','road'].forEach(function(k){fac61Card(b,k,'add');});};
+PANELS.build.t='升級社區設施・市長林庫';
+PANELS.build.tabs=[['fac','社區設施']].concat(PANELS.build.tabs.filter(function(q){return q[0]!=='recl'&&q[0]!=='fac';}));
+RENDER.build_fac=function(b){b.appendChild(note('已經興建嘅社區設施可以喺度升級，最多三級；未興建嘅要先喺林庫嘅「增建 → 社區設施」興建。'));
+ ['tram','bench','lamp','road'].forEach(function(k){fac61Card(b,k,'up');});};
+// ---- 填海：由 Lv1 開始，一開始已經可以申請；每興建一座新建築都要先填海一次 ----
+// 價錢跟星球發展程度（同其他建築一樣用 pm57 倍數）；最多 12 級（住宿 2、主題餐廳 3、動物園、水族館、宗教聖地 3 都要用地）
+var RECL61=[3000,5000,8000,12000,16000,20000,25000,30000,36000,42000,50000,60000];
+function recl61N(){return (S.recl||[]).length;}
+reclCost=function(){var n=Math.min(RECL61.length-1,recl61N());return pm57P(RECL61[n]);};
+PANELS.recl61={t:'填海・市長林庫',tabs:[['recl','填海']]};
+RENDER.recl61_recl=function(b){var n=recl61N(),c=reclCost();
+ b.appendChild(note('填海造地可以擴大島嶼面積：申請之後，走到海邊、<b>面向大海按 A「填海」</b>，就會喺你面前填出一塊新土地（太近碼頭唔可以填）。填出嚟嘅新土地會連住原本個島。<br>每興建一座新建築（第二、三間住宿、主題餐廳、動物園、水族館、宗教聖地），都要先填海一次。<br>填海等級：<b>'+(n?'Lv'+n:'未填過海')+'</b>'));
+ if(S.reclPend)b.appendChild(card({emo:'🏝️'},'已經申請咗填海 Lv'+(n+1),'走到海邊，面向大海按 A 就可以開始。',[]));
+ else if(n>=RECL61.length)b.appendChild(card({emo:'🏝️'},'已經填到最大（Lv'+n+'）','星球嘅填海範圍已經用盡。',[]));
+ else b.appendChild(card({emo:'🏝️'},'申請填海 Lv'+(n+1),'費用 $'+fmtC(c)+'：付款後到海邊填一塊地。',[{t:'申請 $'+fmtC(c),cls:'o',dis:S.coins<c||!!VISIT,fn:function(){buy(c,function(){S.reclPend=1;toast('已申請填海 Lv'+(n+1)+'：走到海邊、面向大海按 A「填海」',5000);});}}]));
+ try{b.appendChild(note(esc(relLandTxt())));}catch(e){}};
+if(typeof PM57_PANELS!=='undefined'&&PM57_PANELS.indexOf&&PM57_PANELS.indexOf('recl61')<0)PM57_PANELS.push('recl61');
+// ---- 大型項目興建條件 ----
+// 住宿：最少有三間餐廳（旅款餐廳＋主題餐廳）；博物館、主題樂園、動物園：最少開咗兩間住宿；宗教聖地：填過海＋博物館、主題樂園、動物園都已開業
+function rest61N(){return 1+lfTRs().filter(function(e){return e.done;}).length;}
+function stay61N(){return (bld('hotel')?1:0)+lfStays().filter(function(e){return e.done;}).length;}
+function zoo61Open(){var e=zaE('zoo');return !!(e&&e.done);}
+function req61(kind){var r=rest61N(),s=stay61N();
+ if(kind==='stay')return [{t:'最少有 3 間餐廳（而家 '+r+' 間）',ok:r>=3}];
+ if(kind==='mus'||kind==='park'||kind==='zoo')return [{t:'最少開咗 2 間住宿（而家 '+s+' 間）',ok:s>=2}];
+ if(kind==='rel')return [{t:'填過海',ok:recl61N()>0},{t:'博物館已開業',ok:bld('dome')},{t:'主題樂園已開業',ok:bld('wheel')},{t:'動物園已開業',ok:zoo61Open()}];
+ return [];}
+function req61OK(kind){return req61(kind).every(function(q){return q.ok;});}
+function req61Txt(kind){return req61(kind).filter(function(q){return !q.ok;}).map(function(q){return q.t;}).join('、');}
+function req61Chk(kind){if(req61OK(kind))return true;toast('未符合興建條件：'+req61Txt(kind),4500);return false;}
+var lfBuildStayV61=lfBuildStay;lfBuildStay=function(t){if(!req61Chk('stay'))return;return lfBuildStayV61.apply(this,arguments);};
+var startBuildV61=startBuild;startBuild=function(k){if(k==='dome'&&!req61Chk('mus'))return;if(k==='wheel'&&!req61Chk('park'))return;if(k==='hotel'&&!req61Chk('stay'))return;return startBuildV61.apply(this,arguments);};
+var lfBuildZAV61=lfBuildZA;lfBuildZA=function(k){if(k==='zoo'&&!req61Chk('zoo'))return;return lfBuildZAV61.apply(this,arguments);};
+var relBuildV61=relBuild;relBuild=function(k){if(!req61Chk('rel'))return;return relBuildV61.apply(this,arguments);};
+// 面板：頂部寫明條件；未達成就將「開工」掣改做「未符合條件」
+function req61Panel(b,kind,only){var R=req61(kind);if(!R.length)return;var ok=R.every(function(q){return q.ok;});
+ var el=note('<b>興建條件</b>：'+R.map(function(q){return '<span style="color:'+(q.ok?'#2f8a3a':'#c0392b')+'">'+esc(q.t)+(q.ok?'（已達成）':'（未達成）')+'</span>';}).join('、'));b.insertBefore(el,b.firstChild);
+ if(ok)return;[].forEach.call(b.querySelectorAll('.card'),function(c){if(only&&!only(c))return;var bt=c.querySelector('button');if(bt&&/開工|要先填海/.test(bt.textContent)){bt.textContent='未符合條件';bt.disabled=true;bt.className=bt.className.replace(/\bo\b/,'g');}});}
+[['stay','stay'],['mus','mus'],['park','park'],['zoo','zoo'],['rel','rel']].forEach(function(q){var f=RENDER['lfb_'+q[0]];if(!f)return;RENDER['lfb_'+q[0]]=function(b){f(b);req61Panel(b,q[1]);};});
+PANELS.lfb.t='增建大型項目・市長林庫';if(PANELS.lfu){PANELS.lfu.t='升級大型項目・市長林庫';if(PANELS.lfu.tabs[0])PANELS.lfu.tabs[0][1]='全部大型項目';}
+// ================= v61 勞工主任小馬（用戶指示：女、嬌小，喺服務中心，負責一切聘請人手）=================
+// 聘請廚師、導遊、街頭表演者、星空保安、博物館導賞員、酒店人手、樂園卡通人物、餐廳管理合約、現有員工 → 全部搵小馬
+// 林庫唔再聘請（v61_mayor）；Tiffany 嘅「聘請導賞員」改做叫你搵小馬；酒店改善、主題樂園改善面板唔再有人手／卡通人物分頁
+// 農務人員、牧場人員、花王屬於自動化，留喺嘉禧（v61_jian）
+var MA_NM='小馬（勞工主任）',MA_BG='#d8608a';
+function maModel(){var m=kid({skin:0xffe2cc,hair:0x2a1a14,hs:'twin',eye:'lash',iris:0x5a3a2a,top:{st:'cardi',c:0xf3a6bd,c2:0xffffff},bot:{st:'skirt',c:0x4a5a8a},acc:{st:'earring',c:0xffffff}}),b=m.userData.b;
+ // 掛頸工作證：紅色頸帶＋白色證件
+ var tg=new T.Group();tg.position.set(0,0.2,0.098);b.add(tg);
+ tg.add(ms(new T.BoxGeometry(0.046,0.06,0.006),M(0xffffff),0,-0.02,0.004));tg.add(ms(new T.BoxGeometry(0.03,0.012,0.007),M(0xd8608a),0,0.0,0.006));
+ [-1,1].forEach(function(s){var st=ms(new T.BoxGeometry(0.006,0.075,0.004),M(0xd8608a),s*0.026,0.03,-0.002);st.rotation.z=-s*0.35;tg.add(st);});
+ mergeRigid(b);m.scale.setScalar(2.0);return m;}
+var maM=maModel(),MA_HOME=[-2.05,0.55];maM.position.set(MA_HOME[0],0,MA_HOME[1]);scC.add(maM);
+CCN.push({k:'ma',m:maM,hx:MA_HOME[0],hz:MA_HOME[1],r:0.6,x:MA_HOME[0],z:MA_HOME[1],tx:MA_HOME[0],tz:MA_HOME[1],wait:1.2,rot:0,face:0,ph:5});
+IT_C.push({c:CCN.length-1,r:1.4,l:'對話',fn:function(){maTalk();}});
+PT_REG.push(['小馬',function(){return maModel();}]);
+function maTalk(){S.met=S.met||{};var first=!S.met.ma;S.met.ma=1;save();npcHop.ma=0.8;
+ if(VISIT){talk(MA_NM,MA_BG,'#ffffff',['你好！我係呢個島嘅勞工主任小馬。','探訪緊好友個島，唔可以聘請人手啊。']);return;}
+ var L=[{t:'聘請廚師',cb:function(){openPanel('staff','hire');}},{t:'聘請導遊',cb:function(){openPanel('staff','guide');}},{t:'街頭表演者',cb:function(){openPanel('staff','perf');}},
+  {t:'星空保安',cb:function(){openPanel('staff','police');}},{t:'博物館導賞員',cb:function(){openPanel('staff','mdoc');}},{t:'酒店人手',cb:function(){ma61Hotel();}},
+  {t:'樂園卡通人物',cb:function(){ma61Park();}},{t:'餐廳管理合約',cb:function(){openPanel('staff','mgmt');}},{t:'現有員工',cb:function(){openPanel('staff','list');}},{t:'沒事了',cb:function(){}}];
+ talk(MA_NM,MA_BG,'#ffffff',first?['你好，'+me()+'！我係勞工主任小馬，負責聘請星球上所有人手。','廚師、導遊、街頭表演者、星空保安、博物館導賞員、酒店人手、樂園卡通人物，同埋餐廳管理合約，都可以搵我。今日想請邊類人手？']:['你好，'+me()+'！今日想請邊類人手？'],L);}
+// ---- 聘請面板：全部人手集中喺度 ----
+PANELS.staff.t='聘請人手・勞工主任小馬';
+(function(){var T0=PANELS.staff.tabs;if(!T0.some(function(q){return q[0]==='mdoc';})){var ix=-1;T0.forEach(function(q,i){if(q[0]==='police')ix=i;});T0.splice(ix>=0?ix+1:T0.length,0,['mdoc','導賞員']);}})();
+RENDER.staff_mdoc=function(b){if(!bld('dome')){b.appendChild(note('博物館開業之後，先可以聘請導賞員帶旅客參觀展品。'));return;}RENDER.mdoc_hire(b);};
+// 酒店人手：揀邊間住宿，再開人手分頁（酒店改善面板唔再有人手分頁）
+PANELS.hotel.tabs=PANELS.hotel.tabs.filter(function(q){return q[0]!=='staff';});
+PANELS.hst61={t:'酒店人手・勞工主任小馬',tabs:[['staff','人手']]};
+RENDER.hst61_staff=function(b){if(!htlOn()){b.appendChild(note('呢間住宿未開業。'));return;}RENDER.hotel_staff(b);};
+function ma61Stays(){var L=[];if(bld('hotel')&&S.htl&&S.htl.type)L.push({e:null,o:S.htl});(S.lf||[]).forEach(function(e){if(e.k==='stay'&&e.done&&e.h&&e.h.type)L.push({e:e,o:e.h});});return L;}
+function ma61HotelOpen(q){htlUse(q.e);PANELS.hst61.t='星際'+htlT(q.o).n+'人手・勞工主任小馬';openPanel('hst61','staff');}
+function ma61Hotel(){var L=ma61Stays();if(!L.length){talk(MA_NM,MA_BG,'#ffffff',['你未有開業嘅住宿：住宿開業之後，先可以搵我安排人手編制、前堂經理同管家部主管。']);return;}
+ if(L.length===1){ma61HotelOpen(L[0]);return;}
+ talk(MA_NM,MA_BG,'#ffffff',['想安排邊間住宿嘅人手？'],L.map(function(q){return {t:'星際'+htlT(q.o).n,cb:function(){ma61HotelOpen(q);}};}).concat([{t:'返回',cb:function(){maTalk();}}]));}
+// 樂園卡通人物（主題樂園改善面板唔再有卡通人物分頁）
+PANELS.park.tabs=PANELS.park.tabs.filter(function(q){return q[0]!=='char';});
+PANELS.pch61={t:'樂園卡通人物・勞工主任小馬',tabs:[['char','卡通人物']]};
+RENDER.pch61_char=function(b){RENDER.park_char(b);};
+function ma61Park(){if(!parkBuilt()){talk(MA_NM,MA_BG,'#ffffff',['主題樂園開業之後，先可以聘請卡通人物喺樂園入面同遊客影相。']);return;}openPanel('pch61','char');}
+// Tiffany：聘請導賞員改搵小馬
+var tifTalkV61=tifTalk;tifTalk=function(){var T0=talk;talk=function(nm,bg,fg,lines,opts,done){if(Array.isArray(opts))opts.forEach(function(o){if(o.t==='聘請導賞員')o.cb=function(){talk(TIF_NM,TIF_BG,'#ffffff',['聘請導賞員而家由服務中心嘅勞工主任小馬負責，你去搵佢啦！']);};});return T0(nm,bg,fg,lines,opts,done);};try{tifTalkV61();}finally{talk=T0;}};
+// ================= v61 建材行嘉禧選單（用戶指示）：① 買／升級工具 ② 升級餐廳設備 ③ 自動化（農場、牧場、花圃）=================
+// 自動化人手（農務人員、牧場人員、花王）唔屬於聘請人手，所以留喺嘉禧；要澆水器、採摘器、播種器都升到最高級先開放聘請／升級
+// 餐廳五感裝修放入「升級餐廳設備」面板（分頁）
+function tools61Max(){return (S.can||0)>=CANS.length-1&&(S.harv||0)>=HARVS.length-1&&(S.sow||0)>=SEEDRS.length-1;}
+function tools61Txt(){return '澆水器 '+CANS[S.can||0].n+'、採摘器 '+HARVS[S.harv||0].n+'、播種器 '+SEEDRS[S.sow||0].n;}
+function auto61Note(){return note('<b>自動化開放條件</b>：澆水器、採摘器、播種器都要升到最高級（'+CANS[CANS.length-1].n+'、'+HARVS[HARVS.length-1].n+'、'+SEEDRS[SEEDRS.length-1].n+'）。'+
+ (tools61Max()?'<span style="color:#2f8a3a">（已達成）</span>':'<br><span style="color:#c0392b">而家：'+esc(tools61Txt())+'（未達成）</span>'));}
+jianTalk=function(){S.met=S.met||{};var first=!S.met.jh61;S.met.jh61=1;S.met.jh2=1;save();npcHop.jian=0.8;
+ talk(JIAN_NM,JIAN_BG,'#ffffff',first?['你好，'+me()+'！我係建材行嘅嘉禧。','我度有三樣服務：買或者升級工具（澆水器、採摘器、播種器、魚竿、消防用品）；升級餐廳設備（雪櫃、爐具、銷售點系統、五感裝修）；同埋農場、牧場、花圃嘅自動化。','自動化要你先將澆水器、採摘器、播種器都升到最高級先開放。今日想做咩？']:['你好，'+me()+'！今日想做咩？'],
+  [{t:'買／升級工具',cb:function(){openPanel('shop','can');}},{t:'升級餐廳設備',cb:function(){openPanel('equip','rest');}},{t:'自動化（農場、牧場、花圃）',cb:function(){auto61Open();}},{t:'沒事了',cb:function(){}}]);};
+function auto61Open(){if(!tools61Max()){talk(JIAN_NM,JIAN_BG,'#ffffff',['農場、牧場、花圃嘅自動化，要先將澆水器、採摘器、播種器都升到最高級先開放。','你而家：'+tools61Txt()+'。'],[{t:'買／升級工具',cb:function(){openPanel('shop','can');}},{t:'睇吓自動化',cb:function(){openPanel('auto','farm');}},{t:'返回',cb:function(){jianTalk();}}]);return;}openPanel('auto','farm');}
+PANELS.shop.t='買／升級工具・建材行嘉禧';
+PANELS.equip={t:'升級餐廳設備・建材行嘉禧',tabs:[['rest','旅款餐廳'],['sense','五感裝修']]};
+RENDER.equip_sense=function(b){b.appendChild(note('餐廳嘅氣氛由客人五種感官決定：視覺（地板、牆身、燈飾）、觸覺（餐檯、椅子、餐具、地氈）、聽覺（音響、吸音）、嗅覺（減油煙、空氣清新）、溫度（空調、抽濕）。'));
+ SENSES.forEach(function(se){b.appendChild(card({emo:se.ic},se.n,'改善「'+se.n+'」嘅裝修同設備',[{t:'裝修',cls:'o',dis:!!VISIT,fn:function(){closePanel();openPanel('sense',se.k);}}]));});};
+// 自動化面板：條件未達成 → 聘請／升級掣唔開放（已經請咗嘅人員照做；改種植物照用）
+PANELS.auto.t='自動化（農場、牧場、花圃）・建材行嘉禧';
+function auto61Lock(b){b.insertBefore(auto61Note(),b.firstChild);if(tools61Max())return;
+ [].forEach.call(b.querySelectorAll('.card button'),function(bt){if(/^(聘請|升級) \$/.test(bt.textContent)){bt.textContent='未開放';bt.disabled=true;bt.className=bt.className.replace(/\bo\b/,'g');}});}
+['farm','ranch','fbed'].forEach(function(k){var f=RENDER['auto_'+k];if(!f)return;RENDER['auto_'+k]=function(b){f(b);auto61Lock(b);};});
+// ================= v61 探訪返屋企（用戶指示：一定要行到好友飛碟下面先可以按鍵返自己星球）=================
+// 原因：畫面頂「返回我的星球」掣喺載入時綁咗最初版 leaveVisit（未有 v54 飛碟檢查），喺邊度撳都即刻返到屋企
+try{var vb61=$('vbBack');if(vb61){vb61.removeEventListener('click',leaveVisitV53);vb61.addEventListener('click',function(){leaveVisit();});}}catch(e){errNote(e,'返屋企掣');}
+// ================= v61 定價重評（玩家反映興建費用高得唔合理）=================
+// v57 倍數＝max(1＋0.5×發展指數, 每小時收入÷4000)：收入一高價錢就同比例升，每樣嘢固定要玩「基本價÷4000」個鐘，賺得越多都唔會快啲；
+// 粗略估計買齊全部建築同升級要玩 600 幾個鐘。改做只跟發展程度（用戶 v57 原意）：倍數＝1＋0.12×發展指數，最多 3 倍
+pm57Calc=function(){var idx=0;try{idx=big41c().idx||0;}catch(e){}PM57.idx=idx;try{PM57.inc=incRate()||0;}catch(e){}return Math.min(3,1+0.12*idx);};
+// 第一次用新算法：即刻轉做新倍數（唔使等每 10 分鐘最多跌 15%）
+var pm57UpdateV61=pm57Update;pm57Update=function(force){if(S&&!VISIT&&!S.pm61){S.pm61=1;S.pm57=0;PM57.t=0;force=true;}return pm57UpdateV61(force);};
+// ================= v61 邦邦每次嚟訪只可以買兩款動物（用戶指示）=================
+// 每次嚟（xyNow() 嘅 id）最多引入兩款；動物園、水族館一齊計
+function xy61Left(){var v=xyNow();if(!v)return 0;var o=S.xy61;if(!o||o.id!==v.id)return 2;return Math.max(0,2-(o.n||0));}
+var xyBuyV61=xyBuy;xyBuy=function(k){var v=xyNow();if(!v)return xyBuyV61(k);if(xy61Left()<=0){toast('邦邦今次只可以賣兩款動物俾你，下次佢再嚟先買過啦',3800);return;}
+ var A=ZA[k],e=A&&zaE(A.f),z=e&&zaSt(e),n0=z?z.a.length:0,done=false;
+ function xy61chk(){if(done)return;var z2=e&&zaSt(e);if(z2&&z2.a.length>n0){done=true;var o=S.xy61;if(!o||o.id!==v.id)o=S.xy61={id:v.id,n:0};o.n++;save();try{if(panelKind)renderPanel();}catch(x){}}}
+ xyBuyV61(k);xy61chk();if(!done)setTimeout(xy61chk,400);};
+var xyListV61=xyList;xyList=function(b,f){var v=xyNow();if(v){var n=xy61Left();b.appendChild(note('邦邦每次嚟只可以賣<b>兩款</b>動物（動物園、水族館一齊計）：今次仲可以買 <b>'+n+'</b> 款。'));}
+ xyListV61(b,f);if(v&&xy61Left()<=0)[].forEach.call(b.querySelectorAll('.card button'),function(bt){if(/\$/.test(bt.textContent)&&!bt.disabled){bt.textContent='今次買夠喇';bt.disabled=true;bt.className=bt.className.replace(/\bo\b/,'g');}});};
+// ================= v61 牧場鋼琴（用戶指示）：牛欄旁邊有部鋼琴，彈一次有一小段琴音；彈完之後一個鐘內牛奶生產快 10%；每日彈幾多次都得 =================
+// 位置：牧場入面左邊牆、牛欄前面（乾草堆同牛欄之間）；鍵盤向住房中間
+var PN61={x:-7.62,z:1.38,play:0,notes:[],cowB:[]};
+function piano61On(){var p=S&&S.piano61;return !!(p&&Date.now()<p.u);}
+function piano61Left(){var p=S&&S.piano61;return p?Math.max(0,p.u-Date.now()):0;}
+function piano61Model(){var g=new T.Group(),wd=std({c:0x3a2216,r:0.35}),wd2=std({c:0x5a3524,r:0.4}),wh=M(0xfaf6ec),bk=M(0x1a1416),gd=M(0xd8b24a);
+ g.add(ms(new T.BoxGeometry(0.56,1.18,1.42),wd,0,0.62,0));g.add(ms(new T.BoxGeometry(0.62,0.06,1.5),wd2,0.02,1.24,0));
+ g.add(ms(new T.BoxGeometry(0.34,0.07,1.36),wd2,0.42,0.74,0));g.add(ms(new T.BoxGeometry(0.2,0.025,1.26),wh,0.44,0.785,0));
+ var bkPat=[1,1,0,1,1,1,0];for(var i=0;i<17;i++){if(!bkPat[i%7])continue;g.add(ms(new T.BoxGeometry(0.11,0.03,0.034),bk,0.4,0.81,-0.6+(i+0.5)*0.071));}
+ g.add(ms(new T.BoxGeometry(0.04,0.3,1.0),wd2,0.29,1.0,0).rotateZ(0.18));g.add(ms(new T.BoxGeometry(0.012,0.2,0.36),wh,0.315,1.03,0).rotateZ(0.18));
+ [-0.6,0.6].forEach(function(z){g.add(ms(new T.BoxGeometry(0.08,0.72,0.08),wd,0.52,0.36,z));});g.add(ms(new T.BoxGeometry(0.42,0.06,1.42),wd,0.22,0.06,0));
+ [-0.25,0.25].forEach(function(z){g.add(ms(new T.CylinderGeometry(0.02,0.02,0.04,8),gd,0.36,0.1,z));});
+ var s=roomSign('鋼琴','#3a2216','#ffffff',0.5,0.16);s.position.set(0.29,1.18,0);s.rotation.y=Math.PI/2;g.add(s);
+ g.position.set(PN61.x,0,PN61.z);return g;}
+function piano61Add(){var R=ROOMS.ranch;if(!R||!RNS.g)return;
+ if(!RNS.g.userData.p61){RNS.g.userData.p61=1;var m=piano61Model();shadowAll(m,true,true);RNS.g.add(m);}
+ if(!R.box.some(function(q){return q.p61;})){var bx=[-8,-7.22,0.6,2.16];bx.p61=1;R.box.push(bx);}
+ for(var i=R.items.length-1;i>=0;i--)if(R.items[i].p61)R.items.splice(i,1);
+ R.items.push({p61:1,x:-6.75,z:PN61.z,r:0.85,th:1.6,tr:0.8,l:function(){var l=piano61Left();return l?'彈琴（產奶加快：仲有 '+Math.ceil(l/60000)+' 分鐘）':'彈琴';},fn:function(){piano61Play();}});}
+var rnBuildV61=rnBuild;rnBuild=function(){rnBuildV61();piano61Add();};
+// 琴音：原創小段（C 大調），三個泛音、快起音、慢慢收
+function piano61Snd(){if(!AUD.sfxOn)return;try{var c=audCtx();if(!c)return;if(c.state==='suspended')c.resume();var out=AUD.sfx||AUD.out;if(!out)return;var t0=c.currentTime+0.06,bt=0.3;
+ function hz(n){return 440*Math.pow(2,(n-69)/12);}
+ function nt(n,at,d,v){var t=t0+at*bt,g=c.createGain();g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(v,t+0.012);g.gain.exponentialRampToValueAtTime(0.0008,t+d*bt+0.9);g.connect(out);
+  [[1,'triangle',1],[2,'sine',0.32],[3,'sine',0.12]].forEach(function(h){var o=c.createOscillator(),gg=c.createGain();o.type=h[1];o.frequency.value=hz(n)*h[0];gg.gain.value=h[2];o.connect(gg);gg.connect(g);o.start(t);o.stop(t+d*bt+1.0);});}
+ [[64,0,1],[67,1,1],[72,2,1],[71,3,1],[69,4,1],[67,5,1],[65,6,1],[64,7,1],[62,8,1],[64,9,1],[67,10,1],[72,11,3]].forEach(function(q){nt(q[0],q[1],q[2],0.16);});
+ [[48,0,4],[53,4,4],[55,8,3],[48,11,4]].forEach(function(q){nt(q[0],q[1],q[2],0.1);nt(q[0]+7,q[1],q[2],0.06);});
+ if(AUD.mus&&AUD.on){var gm=AUD.mus.gain;try{gm.setTargetAtTime(AUD.vol*0.3,c.currentTime,0.15);setTimeout(function(){try{gm.setTargetAtTime(AUD.on?AUD.vol*1.1:0,c.currentTime,0.5);}catch(x){}},5600);}catch(x){}}
+ }catch(e){}}
+function piano61Play(){if(VISIT){toast('喺好友個島彈琴，牛仔都好鍾意聽！（唔會影響你自己個牧場）',3000);piano61Snd();piano61FX();return;}
+ if(PN61.play>0)return;var now=Date.now(),p=S.piano61;if(p&&now<p.u)p.u=now+3600000;else S.piano61={f:now,u:now+3600000};save();
+ piano61Snd();piano61FX();toast('你彈咗一首曲，牛仔聽得好開心！一個鐘內牛奶生產快 10%',4200);}
+function piano61FX(){PN61.play=4.6;var nb=0;PN61.nt=0;
+ RNS.an.forEach(function(q){if(q.a.k!=='cow')return;var b=bubble('♪','#ffffff','#7a4fb0',0.26);scRN.add(b);PN61.cowB.push({s:b,q:q,t:0});nb++;});}
+var rnTickV61=rnTick;rnTick=function(dt,t){rnTickV61(dt,t);
+ if(PN61.play>0){PN61.play-=dt;PN61.nt-=dt;if(PN61.nt<=0){PN61.nt=0.35;var s=bubble(Math.random()<0.5?'♪':'♫','#fff6dc','#7a4fb0',0.2);s.position.set(PN61.x+0.4,1.5,PN61.z+(Math.random()-0.5)*0.9);scRN.add(s);PN61.notes.push({s:s,t:0});}}
+ for(var i=PN61.notes.length-1;i>=0;i--){var n=PN61.notes[i];n.t+=dt;n.s.position.y+=dt*0.55;n.s.position.x+=dt*0.25;if(n.s.material)n.s.material.opacity=Math.max(0,1-n.t/1.8);if(n.t>1.8){killSprite(n.s);PN61.notes.splice(i,1);}}
+ for(var j=PN61.cowB.length-1;j>=0;j--){var c=PN61.cowB[j];c.t+=dt;c.s.position.set(c.q.x,2.15+Math.sin(c.t*4)*0.06,c.q.z);if(c.t>4.5){killSprite(c.s);PN61.cowB.splice(j,1);}}};
+// 牛奶加快：同 ranchSettleV34 一樣計（餵咗 12 小時內、未老死餓死），只計同鋼琴一個鐘重疊嘅時間，加多 10%
+var ranchSettleV61=ranchSettleV34;ranchSettleV34=function(){try{var p=S&&S.piano61;if(p&&S.ranch&&!VISIT){var o=ranchSt(),now=Date.now();
+ o.a.forEach(function(a){if(a.k!=='cow')return;var R0=RA.cow,dieAt=Math.min(a.b+R0.life*RANCH_DAY,a.f+RANCH_STARVE),end=Math.min(now,a.f+RANCH_WIN,dieAt),s=Math.max(a.pt,p.f),e=Math.min(end,p.u);
+  if(e>s)a.acc=(a.acc||0)+(e-s)/3600000*R0.rate[ranchStage(a,end)]/12*0.1;});}}catch(err){}return ranchSettleV61.apply(this,arguments);};
+// 告示板：顯示鋼琴效果
+var ranchBoardV61=ranchBoard;ranchBoard=function(){var T0=talk;talk=function(nm,bg,fg,lines,opts,done){if(nm==='牧場告示板'&&Array.isArray(lines)&&piano61On())lines=lines.concat(['鋼琴：牛仔聽完琴好開心，牛奶生產快 10%（仲有 '+Math.ceil(piano61Left()/60000)+' 分鐘）。']);return T0(nm,bg,fg,lines,opts,done);};try{ranchBoardV61();}finally{talk=T0;}};
+// ================= v61 廣告欄新消息（只講新項目係乜、去邊度搵）=================
+if(typeof AD47_NEWS!=='undefined'){
+ AD47_NEWS.unshift({id:'xy61',t:'邦邦',lines:['動物引薦商邦邦每次嚟只會賣兩款動物，記得揀定想要邊兩款！']});
+ AD47_NEWS.unshift({id:'auto61',t:'自動化',lines:['將澆水器、採摘器、播種器都升到最高級，就可以搵建材行嘉禧安排農場、牧場、花圃自動化。']});
+ AD47_NEWS.unshift({id:'lk61',t:'林庫新選單',lines:['市長林庫負責增建、升級同填海，填海由 Lv1 開始；興建住宿、博物館、主題樂園、動物園同宗教聖地有新條件，喺增建頁睇得到。']});
+ AD47_NEWS.unshift({id:'pn61',t:'牧場鋼琴',lines:['牧場牛欄旁邊新增鋼琴：彈琴俾牛仔聽，牛奶會生產得快啲！']});
+ AD47_NEWS.unshift({id:'rod61',t:'新魚竿',lines:['新魚竿登場：火焰魚竿、金之魚竿、凰鳳魚竿、麒麟魚竿、神之魚竿，去建材行嘉禧買啦！']});
+ AD47_NEWS.unshift({id:'ma61',t:'勞工主任小馬',lines:['新增勞工主任小馬，負責聘請所有人手，你可以去服務中心搵佢啦！']});}
+// ================= v62 餐廳新設備（用戶指示：升級餐廳設備包括玩家已開設嘅所有餐廳；要做多 10 樣餐廳設備）=================
+// 10 樣設備，每樣最多三級；旅款餐廳同每間主題餐廳各自買
+//   煮食（焗爐、蒸櫃、炸爐、燒味爐）：旅款餐廳每級煮得快 2%
+//   飲品甜品（咖啡機、榨汁機、雪糕機、製冰機）：旅款餐廳每級每道菜多賺 2.5%
+//   清潔（洗碗機、消毒碗櫃）：旅款餐廳每級客人耐性多 5%
+//   主題餐廳：每級收入多 1.5%（10 樣 × 3 級＝最多 +45%）
+// 旅款餐廳：買咗就見到（後面右邊設備檯＋左邊高櫃）
+var EQ62=[
+ {k:'oven',n:'焗爐',t:'cook',d:'焗薄餅、焗飯、焗麵包',c:[1500,4000,9000],slot:'L0'},
+ {k:'steam',n:'蒸櫃',t:'cook',d:'蒸點心、蒸魚、蒸飯',c:[1500,4000,9000],slot:'L1'},
+ {k:'roast',n:'燒味爐',t:'cook',d:'燒鴨、叉燒、燒肉',c:[1500,4000,9000],slot:'L2'},
+ {k:'fryer',n:'炸爐',t:'cook',d:'炸薯條、炸雞翼',c:[1500,4000,9000],slot:'T4'},
+ {k:'coffee',n:'咖啡機',t:'pay',d:'即磨咖啡、港式奶茶',c:[1200,3200,7500],slot:'T0'},
+ {k:'juice',n:'榨汁機',t:'pay',d:'鮮榨果汁、奶昔',c:[1200,3200,7500],slot:'T1'},
+ {k:'icecream',n:'雪糕機',t:'pay',d:'甜筒、新地',c:[1200,3200,7500],slot:'T2'},
+ {k:'ice',n:'製冰機',t:'pay',d:'凍飲加冰、刨冰',c:[1200,3200,7500],slot:'T3'},
+ {k:'dish',n:'洗碗機',t:'pat',d:'碗碟洗得快，翻枱快',c:[1000,2800,6500],slot:'U0'},
+ {k:'steril',n:'消毒碗櫃',t:'pat',d:'碗筷消毒，衞生好、客人安心',c:[1000,2800,6500],slot:'U1'}];
+var EQ62_EF={cook:'煮得快 2%',pay:'每道菜多賺 2.5%',pat:'客人耐性多 5%'};
+function eq62St(e){if(!e){S.eq62=S.eq62||{};return S.eq62;}var r=e.r||(e.r=trNew());r.eq=r.eq||{};return r.eq;}
+function eq62Lv(e,k){return Math.max(0,Math.min(3,eq62St(e)[k]||0));}
+function eq62Sum(e,t){var s=0;EQ62.forEach(function(q){if(!t||q.t===t)s+=eq62Lv(e,q.k);});return s;}
+// ---- 效果 ----
+var cookSecV62=cookSec;cookSec=function(c){return cookSecV62(c)*(1-0.02*eq62Sum(null,'cook'));};
+var payMultV62=payMult;payMult=function(ck){return payMultV62(ck)*(1+0.025*eq62Sum(null,'pay'));};
+var patienceOfV62=patienceOf;patienceOf=function(c){return patienceOfV62(c)*(1+0.05*eq62Sum(null,'pat'));};
+var trCalcV62=trCalc;trCalc=function(e){var q=trCalcV62(e),n=e&&e.r&&e.r.eq?eq62Sum(e):0;if(n)q.inc=Math.round(q.inc*(1+0.015*n));return q;};
+// ---- 模型（底喺 y=0，面向 +z）----
+function eq62Model(k,lv,ico){var g=new T.Group(),ss=std({c:0xc9ced6,r:0.35,mt:0.4}),dk=M(0x2d2f36),wh=M(0xf6f4ee),gd=M(0xf2c14e),gl=std({c:0x9fd8ff,tr:1,op:0.45,r:0.1,dw:false});
+ function eqA(geo,m,x,y,z){var o=ms(geo,m,x,y,z);g.add(o);return o;}
+ if(k==='oven'){eqA(new T.BoxGeometry(0.62,1.3,0.55),ss,0,0.65,0);[0.42,0.95].forEach(function(y){eqA(new T.BoxGeometry(0.5,0.34,0.02),dk,0,y,0.28);eqA(new T.BoxGeometry(0.4,0.22,0.02),std({c:0xff8a3a,e:0x6a2a0a}),0,y,0.29);eqA(new T.BoxGeometry(0.4,0.03,0.04),wh,0,y+0.2,0.3);});}
+ else if(k==='steam'){eqA(new T.BoxGeometry(0.62,1.45,0.55),ss,0,0.725,0);for(var i=0;i<4;i++){eqA(new T.BoxGeometry(0.52,0.26,0.02),M(0xa8b0ba),0,0.3+i*0.3,0.28);eqA(new T.BoxGeometry(0.16,0.03,0.04),dk,0,0.4+i*0.3,0.3);}
+  [0,1,2].forEach(function(j){var p=eqA(new T.SphereGeometry(0.07+j*0.02,8,6),std({c:0xffffff,tr:1,op:0.55,dw:false}),0.1-j*0.08,1.55+j*0.13,0);p.userData.st62=1;});}
+ else if(k==='roast'){eqA(new T.BoxGeometry(0.66,1.55,0.55),std({c:0x8a2a1f,r:0.5}),0,0.775,0);eqA(new T.BoxGeometry(0.56,0.95,0.02),gl,0,1.0,0.28);eqA(new T.BoxGeometry(0.6,0.16,0.04),gd,0,1.6,0.27);
+  for(var r=0;r<3;r++){eqA(new T.CylinderGeometry(0.005,0.005,0.2,4),dk,-0.18+r*0.18,1.32,0.12);var dkm=eqA(new T.SphereGeometry(0.09,10,8),M(0x8a3a14),-0.18+r*0.18,1.12,0.12);dkm.scale.set(0.8,1.4,0.7);}
+  eqA(new T.BoxGeometry(0.5,0.08,0.3),M(0xc0392b),0,0.62,0.12);}
+ else if(k==='fryer'){eqA(new T.BoxGeometry(0.5,0.32,0.42),ss,0,0.16,0);eqA(new T.BoxGeometry(0.44,0.02,0.34),M(0xe8b84a),0,0.33,0);[-0.11,0.11].forEach(function(x){eqA(new T.BoxGeometry(0.18,0.12,0.22),std({c:0x9aa0aa,tr:1,op:0.7,dw:false}),x,0.36,0);eqA(new T.BoxGeometry(0.03,0.03,0.22),dk,x,0.43,0.18);});}
+ else if(k==='coffee'){eqA(new T.BoxGeometry(0.5,0.42,0.4),std({c:0xc0392b,r:0.35,mt:0.2}),0,0.21,0);eqA(new T.BoxGeometry(0.52,0.06,0.42),ss,0,0.45,0);[-0.1,0.1].forEach(function(x){eqA(new T.CylinderGeometry(0.04,0.04,0.08,10),ss,x,0.27,0.2);eqA(new T.CylinderGeometry(0.035,0.03,0.06,10),wh,x,0.05,0.22);});eqA(new T.BoxGeometry(0.4,0.02,0.16),dk,0,0.01,0.26);}
+ else if(k==='juice'){eqA(new T.CylinderGeometry(0.13,0.15,0.12,16),M(0x3a8a5a),0,0.06,0);eqA(new T.CylinderGeometry(0.1,0.12,0.3,16),std({c:0xffffff,tr:1,op:0.35,dw:false}),0,0.27,0);eqA(new T.CylinderGeometry(0.095,0.11,0.2,16),M(0xff9a2a),0,0.23,0);eqA(new T.SphereGeometry(0.05,10,8),M(0xf2c14e),0.18,0.05,0.06);eqA(new T.SphereGeometry(0.05,10,8),M(0x7ac84a),0.24,0.05,-0.04);}
+ else if(k==='icecream'){eqA(new T.BoxGeometry(0.42,0.48,0.4),wh,0,0.24,0);eqA(new T.BoxGeometry(0.44,0.06,0.42),M(0xf5a0c0),0,0.5,0);eqA(new T.CylinderGeometry(0.03,0.04,0.08,8),ss,0,0.3,0.22);var cn=eqA(new T.ConeGeometry(0.04,0.1,10),M(0xd8a058),0.12,0.06,0.2);cn.rotation.x=Math.PI;eqA(new T.SphereGeometry(0.045,10,8),M(0xfff8f0),0.12,0.13,0.2);}
+ else if(k==='ice'){eqA(new T.BoxGeometry(0.5,0.5,0.42),ss,0,0.25,0);eqA(new T.BoxGeometry(0.4,0.26,0.02),gl,0,0.26,0.22);for(var c2=0;c2<6;c2++)eqA(new T.BoxGeometry(0.06,0.06,0.06),std({c:0xe8f8ff,tr:1,op:0.85}),-0.12+(c2%3)*0.12,0.18+Math.floor(c2/3)*0.07,0.15);}
+ else if(k==='dish'){eqA(new T.BoxGeometry(0.58,0.02,0.02),dk,0,0.62,0);eqA(new T.BoxGeometry(0.56,0.6,0.02),ss,0,0.32,0);eqA(new T.BoxGeometry(0.4,0.03,0.04),dk,0,0.55,0.02);eqA(new T.SphereGeometry(0.015,6,4),std({c:0x5ad0ff,e:0x2a8ad0}),0.22,0.58,0.02);}
+ else if(k==='steril'){eqA(new T.BoxGeometry(0.56,0.6,0.02),wh,0,0.32,0);eqA(new T.BoxGeometry(0.48,0.42,0.02),std({c:0xb89aff,e:0x4a2a8a,tr:1,op:0.8}),0,0.34,0.012);[0.22,0.42].forEach(function(y){eqA(new T.CylinderGeometry(0.08,0.05,0.04,12),wh,0,y,0.03);});}
+ if(lv>=3){var bx=new T.Box3().setFromObject(g),sz=bx.getSize(new T.Vector3());eqA(new T.BoxGeometry(sz.x*0.86,0.03,0.012),gd,0,bx.max.y-0.06,bx.max.z+0.004);}
+ if(lv>=2&&!ico)g.scale.setScalar(1.04);
+ return g;}
+var icoModelV62=icoModel;icoModel=function(key){var a=String(key).split(':');if(a[0]==='eq62')return eq62Model(a[1],+a[2]||1,true);return icoModelV62(key);};
+// ---- 旅款餐廳入面擺設 ----
+var EQ62G=null,EQ62B=[];
+var EQ62_SLOT={T0:[3.2,-4.12],T1:[3.82,-4.12],T2:[4.44,-4.12],T3:[5.06,-4.12],T4:[5.66,-4.12],U0:[3.45,-3.81],U1:[4.75,-3.81],L0:[-5.88,-3.95],L1:[-5.88,-3.28],L2:[-5.88,-2.6]};
+function eq62Sync(){try{if(EQ62G){scI.remove(EQ62G);disposeTree(EQ62G);EQ62G=null;}EQ62B.forEach(function(q){var i=BOX_I.indexOf(q);if(i>=0)BOX_I.splice(i,1);});EQ62B=[];
+ var st=eq62St(null),any=EQ62.some(function(q){return (st[q.k]||0)>0;});if(!any)return;var g=EQ62G=new T.Group();
+ var needCounter=EQ62.some(function(q){return (st[q.k]||0)>0&&(q.slot[0]==='T'||q.slot[0]==='U');});
+ if(needCounter){g.add(ms(new T.BoxGeometry(3.1,0.9,0.62),std({c:0xe8dcc8,r:0.7}),4.4,0.45,-4.12));g.add(ms(new T.BoxGeometry(3.16,0.05,0.68),std({c:0x8a6a4a,r:0.5}),4.4,0.92,-4.12));var b1=[2.82,5.98,-4.45,-3.78];BOX_I.push(b1);EQ62B.push(b1);}
+ EQ62.forEach(function(q){var lv=st[q.k]||0;if(!lv)return;var m=eq62Model(q.k,lv,false),p=EQ62_SLOT[q.slot],t=q.slot[0];
+  if(t==='T')m.position.set(p[0],0.945,p[1]);else if(t==='U')m.position.set(p[0],0.0,p[1]);else{m.position.set(p[0],0,p[1]);m.rotation.y=Math.PI/2;var b2=[-6.2,-5.5,p[1]-0.34,p[1]+0.34];BOX_I.push(b2);EQ62B.push(b2);}
+  g.add(m);});
+ shadowAll(g,true,true);noCull(g);scI.add(g);}catch(e){errNote(e,'餐廳設備');}}
+setTimeout(function(){if(S)eq62Sync();},1600);
+var rebuildWorldV62=rebuildWorld;rebuildWorld=function(){var r=rebuildWorldV62.apply(this,arguments);try{eq62Sync();}catch(e){}return r;};
+// ---- 面板 ----
+function eq62Card(b,e,q){var lv=eq62Lv(e,q.k),nx=lv<3?q.c[lv]:0;
+ b.appendChild(card({ico:'eq62:'+q.k+':'+Math.max(1,lv)},q.n+(lv?'（Lv'+lv+'）':'（未有）'),esc(q.d)+'；每級'+(e?'收入多 1.5%':EQ62_EF[q.t])+(nx?'<br>'+(lv?'升級到 Lv'+(lv+1):'購買 Lv1')+'：$'+fmtC(nx):'<br><span class="good">已經係最高級</span>'),
+  [nx?{t:(lv?'升級 $':'購買 $')+fmtC(nx),cls:'o',dis:S.coins<nx||!!VISIT,fn:function(){buy(nx,function(){eq62St(e)[q.k]=lv+1;noteInvest(nx,'eq62');if(typeof qAdd==='function')qAdd('upgrade',1);if(!e)eq62Sync();toast((e?lfName(e):'旅款餐廳')+'：'+q.n+(lv?'升級到 Lv'+(lv+1):'安裝好喇'),3000);});}}:{t:'最高級',cls:'g',dis:true,fn:function(){}}],lv>0));}
+RENDER.equip_rest=function(b){RENDER.build_rest(b);
+ b.appendChild(note('<b>新設備</b>（每樣最多三級）：煮食設備（焗爐、蒸櫃、燒味爐、炸爐）每級令廚師煮得快 2%；飲品甜品設備（咖啡機、榨汁機、雪糕機、製冰機）每級令每道菜多賺 2.5%；清潔設備（洗碗機、消毒碗櫃）每級令客人耐性多 5%。買咗就會擺喺餐廳入面。'));
+ EQ62.forEach(function(q){eq62Card(b,null,q);});};
+function eq62TRs(){return lfTRs().filter(function(e){return e.done;});}
+function eq62Tabs(){var T0=[['rest','旅款餐廳']];eq62TRs().forEach(function(e,i){if(i<3)T0.push(['t'+i,trTh(e.t).n]);});T0.push(['sense','五感裝修']);PANELS.equip.tabs=T0;}
+[0,1,2].forEach(function(i){RENDER['equip_t'+i]=function(b){var e=eq62TRs()[i];if(!e){b.appendChild(note('未有呢間餐廳。'));return;}
+ b.appendChild(note('<b>'+esc(lfName(e))+'</b>：每樣新設備每級令呢間主題餐廳收入多 1.5%（每樣最多三級）。而家合共 Lv'+eq62Sum(e)+'，收入多 '+(Math.round(eq62Sum(e)*15)/10)+'%。'));EQ62.forEach(function(q){eq62Card(b,e,q);});};});
+var openPanelV62=openPanel;openPanel=function(k,tab){if(k==='equip')eq62Tabs();return openPanelV62.apply(this,arguments);};
+// ================= v62 動物園加升級、更多動物進駐（用戶指示）=================
+// 新增 Lv4「動物王國」（10 個展區）、Lv5「星際野生王國」（12 個展區）；新動物：老虎、河馬、白犀牛、狐獴（邦邦有得賣）
+// 動物園向兩邊擴闊（ZOO_B x ±15.2），新展區：後排兩角＋兩邊前面（喺前面廣場睇）
+ZOO_UP.push({n:'動物王國',d:'動物園向兩邊擴建；10 個展區；參觀收入再多 20%',cap:10,c:40000},{n:'星際野生王國',d:'12 個展區；入口加建野生王國大門；參觀收入再多 20%、旅客多 3%',cap:12,c:60000});
+try{pm57Reg(ZOO_UP[4],'c');pm57Reg(ZOO_UP[5],'c');pm57Apply();}catch(e){}
+zaLv=function(e){var n=e&&e.k==='zoo'?ZOO_UP.length-1:AQ_UP.length-1;return Math.max(0,Math.min(n,(e&&e.z&&e.z.lv)||0));};
+ZOO_B[0]=-15.2;ZOO_B[1]=15.2;
+ZOO_SL.push([-15.1,-11.1,-8,-3.8,'s'],[11.1,15.1,-8,-3.8,'s'],[-15.1,-11.4,-2.3,2.4,'s'],[11.4,15.1,-2.3,2.4,'s']);
+// ---- 新動物資料 ----
+ZA.tiger={f:'zoo',n:'老虎',en:'Tiger',sci:'Panthera tigris',p:10000,ap:8,n0:1,hab:'forest',iucn:'瀕危（EN）',dist:'南亞、東南亞、中國同俄羅斯遠東嘅森林',food:'肉食：鹿、野豬等',fun:'每隻老虎嘅條紋都唔同；就算剃咗毛，皮膚上面都見到條紋。',src:'IUCN 紅色名錄、WWF、Smithsonian National Zoo'};
+ZA.hippo={f:'zoo',n:'河馬',en:'Common hippopotamus',sci:'Hippopotamus amphibius',p:8500,ap:7,n0:2,hab:'lake',iucn:'易危（VU）',dist:'撒哈拉以南非洲嘅河流同湖泊',food:'草：日頭喺水入面休息，夜晚上岸食草',fun:'皮膚會分泌紅色嘅分泌物，可以防曬同抗菌，所以好似「流血汗」咁。',src:'IUCN 紅色名錄、San Diego Zoo、Smithsonian National Zoo'};
+ZA.rhino={f:'zoo',n:'白犀牛',en:'White rhinoceros',sci:'Ceratotherium simum',p:9500,ap:7,n0:1,hab:'savanna',iucn:'近危（NT）',dist:'非洲南部同東部嘅草原',food:'草',fun:'犀牛角由角蛋白組成，同人類嘅指甲同頭髮係同一種物質。',src:'IUCN 紅色名錄、WWF、Save the Rhino'};
+ZA.meerkat={f:'zoo',n:'狐獴',en:'Meerkat',sci:'Suricata suricatta',p:3000,ap:4,n0:4,hab:'outback',iucn:'無危（LC）',dist:'非洲南部嘅乾旱草原同半沙漠（例如喀拉哈里沙漠）',food:'昆蟲、蠍子、蜥蜴等',fun:'一群狐獴會輪流企高放哨，見到老鷹等危險就大聲叫，同伴即刻走入地洞避難。',src:'IUCN 紅色名錄、San Diego Zoo、Animal Diversity Web'};
+// ---- 老虎條紋貼圖 ----
+var zaMatV62=zaMat;zaMat=function(k){if(k!=='tiger')return zaMatV62(k);if(ZAM[k])return ZAM[k];
+ var t=HFU.cv(128,64,function(x,W,H){x.fillStyle='#f08a2a';x.fillRect(0,0,W,H);x.fillStyle='#1d1a22';var r=rng(31);for(var i=0;i<12;i++){var X=i*10.7+r()*4;x.beginPath();x.moveTo(X,0);x.quadraticCurveTo(X+4+r()*4,H*0.35,X+1,H*0.62);x.lineTo(X+4,H*0.6);x.quadraticCurveTo(X+8,H*0.3,X+5,0);x.closePath();x.fill();}});
+ t.wrapS=t.wrapT=T.RepeatWrapping;var o=std({map:t,r:0.85});o.userData.keep=1;return ZAM[k]=o;};
+// ---- 新動物模型（面向 +x）----
+function zmTiger(){var g=zG(),b=zG();g.add(b);var U=g.userData,L=[],TG=zaMat('tiger'),C=M(0xf08a2a),W=M(0xfaf3e6),K=M(0x26232a);
+ zA(b,rbox(1.4,0.5,0.48,0.2),TG,0,0.78,0);zA(b,zSp(0.2),W,0.05,0.58,0).scale.set(2.8,0.5,1.05);
+ zLeg(b,L,0.46,-0.15,0.6,0.56,0.085,C,W,0,1.2);zLeg(b,L,-0.46,0.15,0.6,0.56,0.085,C,W,0,1.2);zLeg(b,L,0.46,0.15,0.6,0.56,0.085,C,W,Math.PI,1.2);zLeg(b,L,-0.46,-0.15,0.6,0.56,0.085,C,W,Math.PI,1.2);
+ var hd=zPiv(b,0.66,0.98,0),R=0.25,hx=0.18;zA(hd,zSp(R,16,12),C,hx,0,0);
+ [[-0.05,0.9,0],[0.15,0.95,0.2],[0.15,0.95,-0.2]].forEach(function(d){var q=zOn(R,d[0],d[1],d[2],0.99);var s=zA(hd,zBx(0.025,0.1,0.03),K,hx+q[0],q[1],q[2]);s.rotation.x=d[2]*2;});
+ var mz=zA(hd,zSp(0.13,10,8),W,hx+0.2,-0.08,0);mz.scale.set(0.9,0.75,1.3);zA(hd,zSp(0.045,8,6),M(0xd88080),hx+0.31,-0.03,0);
+ [-1,1].forEach(function(s){var ck=zOn(R,0.45,-0.35,0.75*s,0.95);zA(hd,zSp(0.1,8,6),W,hx+ck[0],ck[1],ck[2]).scale.set(0.8,0.7,0.6);});
+ zEye(hd,R,hx,0.02,0.8,0.32,0.5,0.03);
+ [-1,1].forEach(function(s){var q=zOn(R,-0.1,0.9,0.6*s,0.95);var e=zA(hd,zSp(0.075,8,6),C,hx+q[0],q[1],q[2]);e.scale.set(0.55,1,1);var e2=zA(hd,zSp(0.045,6,5),W,hx+q[0]+0.025,q[1],q[2]);e2.scale.set(0.5,0.9,0.9);});
+ var tl=zPiv(b,-0.7,0.9,0);zA(tl,zCy(0.03,0.035,0.75,6),TG,-0.14,-0.32,0,0,0,0.42);zA(tl,zSp(0.05,8,6),K,-0.28,-0.66,0);
+ U.head=hd;U.tail=tl;U.hDown=-0.4;U.legs=L;U.gait=[6,0.45];return zaFin(g,b,'tiger');}
+function zmHippo(){var g=zG(),b=zG();g.add(b);var U=g.userData,L=[],H=M(0x8a7e8e),H2=M(0xc89aa0),K=M(0x2d2a32);
+ var bd=zA(b,zSp(0.6,18,14),H,0,0.72,0);bd.scale.set(1.45,0.85,0.95);zA(b,zSp(0.5,16,12),H2,0.05,0.48,0).scale.set(1.45,0.45,0.85);
+ zLeg(b,L,0.5,-0.3,0.4,0.36,0.14,H,K,0,1.05);zLeg(b,L,-0.5,0.3,0.4,0.36,0.14,H,K,0,1.05);zLeg(b,L,0.5,0.3,0.4,0.36,0.14,H,K,Math.PI,1.05);zLeg(b,L,-0.5,-0.3,0.4,0.36,0.14,H,K,Math.PI,1.05);
+ var hd=zPiv(b,0.78,0.85,0);zA(hd,zSp(0.32,14,12),H,0.1,0.04,0).scale.set(1.0,0.85,0.95);zA(hd,rbox(0.42,0.3,0.5,0.12),H2,0.4,-0.1,0);
+ [-1,1].forEach(function(s){zA(hd,zSp(0.04,8,6),K,0.6,0.0,s*0.11);var e=zA(hd,zSp(0.06,8,6),H,0.0,0.27,s*0.2);e.scale.set(0.6,0.9,0.6);zA(hd,zSp(0.035,8,6),M(0x1d1a22),0.24,0.2,s*0.17);});
+ var tl=zPiv(b,-0.86,0.8,0);zA(tl,zCy(0.025,0.05,0.18,6),H,-0.05,-0.08,0,0,0,0.9);
+ U.head=hd;U.tail=tl;U.hDown=-0.3;U.legs=L;U.gait=[3.6,0.3];return zaFin(g,b,'hippo');}
+function zmRhino(){var g=zG(),b=zG();g.add(b);var U=g.userData,L=[],R1=M(0xa9a59c),R2=M(0x96928a),K=M(0x2d2a32),HN=M(0xd8d0c0);
+ var bd=zA(b,zSp(0.62,18,14),R1,0,0.95,0);bd.scale.set(1.5,0.82,0.85);zA(b,zSp(0.3,12,10),R2,0.45,1.32,0).scale.set(1,0.55,0.9);
+ zLeg(b,L,0.55,-0.27,0.66,0.62,0.13,R1,K,0,1.05);zLeg(b,L,-0.55,0.27,0.66,0.62,0.13,R1,K,0,1.05);zLeg(b,L,0.55,0.27,0.66,0.62,0.13,R1,K,Math.PI,1.05);zLeg(b,L,-0.55,-0.27,0.66,0.62,0.13,R1,K,Math.PI,1.05);
+ var hd=zPiv(b,0.95,1.0,0);var h=zA(hd,zSp(0.3,14,12),R1,0.25,-0.12,0);h.scale.set(1.55,0.8,0.8);zA(hd,rbox(0.2,0.18,0.3,0.06),R2,0.66,-0.2,0);
+ var hn=zA(hd,zCo(0.09,0.42,10),HN,0.6,0.16,0);hn.rotation.z=-0.35;var hn2=zA(hd,zCo(0.06,0.2,8),HN,0.36,0.12,0);hn2.rotation.z=-0.2;
+ [-1,1].forEach(function(s){var e=zA(hd,zCo(0.06,0.16,6),R1,0.02,0.22,s*0.14);e.rotation.x=s*0.4;zA(hd,zSp(0.03,6,5),M(0x1d1a22),0.36,0.0,s*0.2);});
+ var tl=zPiv(b,-0.9,1.0,0);zA(tl,zCy(0.02,0.025,0.4,6),R1,-0.05,-0.2,0,0,0,0.2);
+ U.head=hd;U.tail=tl;U.hDown=-0.45;U.legs=L;U.gait=[3.8,0.32];return zaFin(g,b,'rhino');}
+function zmMeerkat(){var g=zG(),b=zG();g.add(b);var U=g.userData,L=[],C=M(0xc9a87a),C2=M(0xe8d4b0),K=M(0x2d2a32);
+ var bd=zA(b,zSp(0.12,12,10),C,0,0.32,0);bd.scale.set(0.9,1.75,0.85);zA(b,zSp(0.1,10,8),C2,0.04,0.3,0).scale.set(0.7,1.6,0.75);
+ [-1,1].forEach(function(s){zLeg(b,L,0.0,s*0.06,0.14,0.13,0.03,C,K,s>0?0:Math.PI);var ar=zA(b,zCy(0.018,0.015,0.13,6),C,0.08,0.38,s*0.07);ar.rotation.z=0.25;});
+ var hd=zPiv(b,0.02,0.56,0);zA(hd,zSp(0.075,12,10),C,0,0,0).scale.set(1.1,0.9,0.9);var sn=zA(hd,zCo(0.04,0.1,8),C2,0.1,-0.01,0);sn.rotation.z=-Math.PI/2;zA(hd,zSp(0.014,6,4),K,0.15,-0.01,0);
+ [-1,1].forEach(function(s){zA(hd,zSp(0.022,8,6),K,0.045,0.02,s*0.045).scale.set(1,1.2,0.8);zA(hd,zSp(0.02,6,5),C,-0.02,0.045,s*0.065);});
+ var tl=zPiv(b,-0.08,0.16,0);zA(tl,zCy(0.012,0.02,0.24,6),C,-0.05,-0.08,0,0,0,1.0);zA(tl,zSp(0.014,6,4),K,-0.16,-0.13,0);
+ U.head=hd;U.tail=tl;U.hDown=-0.3;U.legs=L;U.gait=[9,0.5];return zaFin(g,b,'meerkat');}
+ZA_MK.tiger=zmTiger;ZA_MK.hippo=zmHippo;ZA_MK.rhino=zmRhino;ZA_MK.meerkat=zmMeerkat;
+// ---- Lv4／Lv5 外觀：彩旗、野生王國大門 ----
+var zooBuildV62=zooBuild;zooBuild=function(){var sig0=ZOS.sig;zooBuildV62();var e=ZA_CUR;if(!e||!ZOS.g||ZOS.g.userData.v62)return;ZOS.g.userData.v62=1;var g=ZOS.g,lv=zaLv(e),R=ROOMS.zoo;
+ try{if(lv>=4){var cols=[0xe8574f,0xf2c14e,0x57a8e8,0x7ac84a,0xf5a0c0];for(var i=0;i<=30;i++){var x=-14.5+i*0.97,y=3.05-Math.sin(i/30*Math.PI)*0.35;var f=zA(g,zCo(0.16,0.32,3),M(cols[i%5]),x,y,3.0);f.rotation.x=Math.PI;}
+   [-14.6,14.6].forEach(function(x){zA(g,zCy(0.06,0.07,3.3,8),M(0x6b4526),x,1.65,3.0);R.cir.push([x,3.0,0.2]);});}
+  if(lv>=5){[-1.9,1.9].forEach(function(x){zA(g,zBx(0.4,3.0,0.4),M(0x8a6a4a),x,1.5,5.7);R.box.push([x-0.25,x+0.25,5.45,5.95]);});zA(g,zBx(4.2,0.5,0.45),M(0x3a8a5a),0,3.1,5.7);
+   var s=roomSign('星際野生王國','#3a8a5a','#ffffff',3.2,0.42);s.position.set(0,3.1,5.95);g.add(s);}
+  shadowAll(g,true,true);}catch(err){errNote(err,'動物園外觀');}};
+// ---- 字眼：可以引入嘅動物數目 ----
+var zaBuildCardV62=zaBuildCard;zaBuildCard=function(b,k){zaBuildCardV62(b,k);if(k!=='zoo')return;[].forEach.call(b.querySelectorAll('.card small'),function(s){s.innerHTML=s.innerHTML.replace('可以引入大熊貓、大象、獅子、長頸鹿、樹熊、斑馬、袋鼠、紅鶴 8 種動物','可以引入大熊貓、大象、獅子、老虎、長頸鹿、白犀牛、河馬、樹熊、斑馬、袋鼠、紅鶴、狐獴 12 種動物');});};
+// ================= v62 水族館海洋大屏幕（用戶指示）：一入門向前望到嘅當眼處，旅客喺前面觀賞，入面最多放 15 條魚 =================
+// 原本後面成排嘅近海魚缸改做大屏幕：由地下去到天花（Y0 0.3–Y1 4.1，牆加高到 4.8）、魚放大、光柱、前面地下藍光、多啲旅客企喺前面睇
+// 魚數上限：Lv0 9、Lv1 11、Lv2 13、Lv3 15
+AQ_UP[0].fc=9;AQ_UP[1].fc=11;AQ_UP[2].fc=13;AQ_UP[3].fc=15;
+AQ_UP[0].d='3 個海洋生物展區；海洋大屏幕放得 9 條魚';AQ_UP[1].d='4 個展區；大屏幕放得 11 條魚；參觀收入多 20%';
+AQ_UP[2].d='6 個展區；大屏幕放得 13 條魚；加建海洋教育角；參觀收入再多 20%';AQ_UP[3].d='加建海底隧道（喺大屏幕下面行入去，魚喺你頭頂游過）；大屏幕放得 15 條魚；參觀收入再多 20%、旅客多 3%';
+var AQ62={rays:[],tex:null,gtex:null};
+function aq62RayTex(){if(AQ62.tex)return AQ62.tex;var c=document.createElement('canvas');c.width=128;c.height=256;var x=c.getContext('2d');
+ for(var i=0;i<6;i++){var cx=10+i*22+Math.random()*8,w=6+Math.random()*10,g=x.createLinearGradient(0,0,0,256);g.addColorStop(0,'rgba(220,245,255,0.6)');g.addColorStop(1,'rgba(220,245,255,0)');x.fillStyle=g;x.beginPath();x.moveTo(cx-w*0.4,0);x.lineTo(cx+w*0.4,0);x.lineTo(cx+w*1.6,256);x.lineTo(cx-w*1.2,256);x.closePath();x.fill();}
+ AQ62.tex=texEnc(new T.CanvasTexture(c));return AQ62.tex;}
+function aq62GlowTex(){if(AQ62.gtex)return AQ62.gtex;var c=document.createElement('canvas');c.width=64;c.height=64;var x=c.getContext('2d'),gr=x.createLinearGradient(0,0,0,64);gr.addColorStop(0,'rgba(90,190,255,0.5)');gr.addColorStop(1,'rgba(90,190,255,0)');x.fillStyle=gr;x.fillRect(0,0,64,64);AQ62.gtex=texEnc(new T.CanvasTexture(c));return AQ62.gtex;}
+var aqBuildV62=aqBuild;aqBuild=function(){aqBuildV62();var g=AQS.g;if(!g||g.userData.v62)return;g.userData.v62=1;AQ62.rays=[];
+ try{var TX=8.8,TZ0=-7.45,TZ1=-5.2,Y0=0.3,Y1=4.1;
+  for(var i=0;i<7;i++){var mt=new T.MeshBasicMaterial({map:aq62RayTex(),transparent:true,opacity:0.3,depthWrite:false,blending:T.AdditiveBlending,side:T.DoubleSide});
+   var p=new T.Mesh(new T.PlaneGeometry(2.6,Y1-Y0),mt);p.position.set(-7.5+i*2.5+(Math.random()-0.5)*0.6,(Y0+Y1)/2,TZ0+0.35+Math.random()*0.5);p.rotation.z=(Math.random()-0.5)*0.25;p.userData.dyn=1;p.renderOrder=3;g.add(p);AQ62.rays.push({m:p,ph:Math.random()*6,z0:p.rotation.z});}
+  var fm=new T.MeshBasicMaterial({map:aq62GlowTex(),transparent:true,depthWrite:false,blending:T.AdditiveBlending});var fl=new T.Mesh(new T.PlaneGeometry(2*TX,2.4),fm);fl.rotation.x=-Math.PI/2;fl.position.set(0,0.016,TZ1+1.2);fl.userData.dyn=1;g.add(fl);
+ }catch(e){errNote(e,'水族館大屏幕');}};
+var aqTickV62=aqTick;aqTick=function(dt,t){aqTickV62(dt,t);for(var i=0;i<AQ62.rays.length;i++){var r=AQ62.rays[i];if(!r.m.parent)continue;r.m.material.opacity=0.2+0.13*Math.sin(t*0.6+r.ph);r.m.rotation.z=r.z0+Math.sin(t*0.25+r.ph)*0.05;}};
+// ================= v62 廣告欄新消息 =================
+if(typeof AD47_NEWS!=='undefined'){
+ AD47_NEWS.unshift({id:'zoo62',t:'動物園擴建',lines:['動物園可以升級做「動物王國」同「星際野生王國」，新增老虎、河馬、白犀牛、狐獴：搵林庫升級，再向邦邦引入動物啦！']});
+ AD47_NEWS.unshift({id:'aq62',t:'水族館海洋大屏幕',lines:['水族館新增海洋大屏幕：一入門就見到，放你釣到嘅魚入去俾旅客欣賞，最多 15 條！']});
+ AD47_NEWS.unshift({id:'eq62',t:'餐廳新設備',lines:['新增 10 樣餐廳設備（焗爐、蒸櫃、燒味爐、炸爐、咖啡機、榨汁機、雪糕機、製冰機、洗碗機、消毒碗櫃），主題餐廳都用得，去建材行嘉禧買啦！']});}
 // ---- 模組載入完：開始砌大型設施、牧場外型 ----
 LF_OK=true;if(MAP&&MAP.L&&typeof lfSync==='function')lfSync(true);
 requestAnimationFrame(loop);
