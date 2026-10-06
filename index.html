@@ -2,7 +2,7 @@
 <html lang="zh-Hant-HK">
 <head>
 <meta charset="utf-8">
-<meta name="ths-build" content="2610052326">
+<meta name="ths-build" content="2610060759">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="color-scheme" content="light">
 <!-- iPhone Safari 冇 element fullscreen API：由「分享 → 加入主畫面」開就會冇工具列（同旅款亂Upper 一樣）-->
@@ -857,7 +857,7 @@ function fishModel(sp){var f=sp&&sp.sh?sp:(fishOf(sp&&sp.k)||FISH[0]),g=new T.Gr
 // ---- 選魚：時間、天氣、地點、拋竿距離、魚竿、魚餌 ----
 function fishPick(ctx){var night=typeof nk==='number'&&nk>0.55,rain=typeof RAIN!=='undefined'&&RAIN.i>0.3,rod=S.rod||0,bait=ctx.bait||0,L=[],tot=0;
  FISH.forEach(function(f){if(f.tm==='day'&&night)return;if(f.tm==='night'&&!night)return;if(f.rain&&!rain)return;if(f.rar===3&&rod<2)return;if(f.rar===4&&rod<4)return;
-  var w=f.w;if(f.rar>=2)w*=(0.8+0.4*ctx.dist)*(ctx.pier?1.25:1)*fsRare38(rod);if(f.rar>=3)w*=1+0.15*rod;if(f.rar===4)w*=1+0.12*rod;if(f.rar>=1)w*=1+0.15*bait;if(f.rar>=3)w*=1+0.25*bait;if(f.deep)w*=ctx.pier||ctx.dist>0.75?1.3:0.4;
+  var w=f.w;w*=fsDist60(f.rar,ctx.dist);if(f.rar>=2)w*=(ctx.pier?1.25:1)*fsRare38(rod);if(f.rar>=3)w*=1+0.15*rod;if(f.rar===4)w*=1+0.12*rod;if(f.rar>=1)w*=1+0.15*bait;if(f.rar>=3)w*=1+0.25*bait;if(f.deep)w*=ctx.pier||ctx.dist>0.75?1.3:0.4;
   L.push([f,w]);tot+=w;});var r=Math.random()*tot;for(var i=0;i<L.length;i++){r-=L[i][1];if(r<=0)return L[i][0];}return L[0][0];}
 function fishRollKg(f){var r=Math.pow(Math.random(),1.6)*Math.min(1,0.75+0.05*(S.rod||0));if(f.rar>=2)r*=0.69;var kg=f.kg[0]+(f.kg[1]-f.kg[0])*r,q=(kg-f.kg[0])/(f.kg[1]-f.kg[0]||1);return {kg:+kg.toFixed(kg<0.1?3:kg<1?2:1),cl:q<0.35?'S':q<0.7?'M':q<0.92?'L':'XL'};}
 
@@ -2785,7 +2785,7 @@ function ccTalk(){var first=!S.met.tt;S.met.tt=1;save();npcHop.tutu=0.8;var nm='
  talk(nm,'#5b7fd6','#ffffff',first?['歡迎來到服務中心，'+me()+'！我是百貨櫃檯的方DD。','我這裏有澆水器、採摘器、播種器、魚竿和消防用品；餐廳的雪櫃、爐具和銷售點系統，也可以找我。','想升級農場、池塘，或者興建酒店、主題樂園、主題餐廳等大型設施，就找市長林庫。研發新菜找大地博士，請人找勞工處的勞工主任啟聰，衣服和更大的背包就找芷華。今天想要甚麼？']:['你好，'+me()+'！今天想要甚麼？'],
   [{t:'買工具',cb:function(){openPanel('shop','can');}},{t:'餐廳設備',cb:function(){openPanel('equip','rest');}},{t:'擴建',cb:function(){talk(nm,'#5b7fd6','#ffffff',['升級設施、增建社區設施同大型設施，都要向市長林庫申請，佢就喺服務中心後面嘅辦公桌。']);}},{t:'沒事了',cb:function(){}}]);}
 function buyHarv(i){buy(HARVS[i].p,function(){S.harv=i;if(typeof qAdd==='function')qAdd('upgrade',1);harvHinted=false;drawBoard();toast('🧺 買了'+HARVS[i].n+'：站在成熟的農田上連按兩下 A，一次過收成 '+HARVS[i].k+' 格',4500);});}
-function buyRod(i){buy(RODS[i].p,function(){S.rod=i;if(typeof qAdd==='function')qAdd('upgrade',1);setCol(rodMat,RODS[i].c);drawBoard();toast('買了'+RODS[i].n+'：收線限時更長、更容易釣到珍貴魚同大魚',4000);});}
+function buyRod(i){buy(RODS[i].p,function(){S.rod=i;if(typeof qAdd==='function')qAdd('upgrade',1);setCol(rodMat,RODS[i].c);drawBoard();toast('買了'+RODS[i].n+'：收線更快、拉力更穩，更容易釣到珍貴魚同大魚',4000);});}
 function buyCan(i){buy(CANS[i].p,function(){S.can=i;if(typeof qAdd==='function')qAdd('upgrade',1);canHinted=false;drawBoard();toast('💧 買了'+CANS[i].n+'：站在農田上連按兩下 A，一次過澆 '+CANS[i].k+' 格',4500);});}
 function applyUp(key){var u=UP[key],c0=u&&u.L[S.up[key]]&&u.L[S.up[key]].c;if(c0)noteInvest(c0,key);if(key==='pond'||key==='farm')S.flags.capFix=Date.now();if(key==='pond')syncPond();if(key==='farm'){syncFarm();prevSt=S.plots.map(plotState);}else if(key==='fridge')syncFridge();else if(key==='stove'){buildStoves();syncChefs();}drawBoard();}
 function upCard(b,key,emo){var u=UP[key],lv=S.up[key],cur=u.L[lv],nx=u.L[lv+1],sub='現在：'+cur.d+(nx?'<br>升級後：'+nx.d:'');
@@ -3319,7 +3319,7 @@ function updMac(dt,t){var m=MAC,u=macO.userData;macO.visible=macSh.visible=!maki
 
 // ================= 封面、揀地形 =================
 // 每次開遊戲先見封面；未玩過嘅新玩家：揀地形 → 建立角色 → 開場白
-var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v59',BUILD='2610052326';
+var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v60',BUILD='2610060759';
 function showCoverV42(){phase='cover';$('cover').classList.add('on');$('app').classList.add('cover');CU.uB.value=0;sea.scale.set(4,7,1);sea.position.z=(MAP.bc||[0,0])[1];
  var old=!!(S.me&&S.me.nm);$('cvVer').textContent=BUILD+'V'+VERSION.slice(1);$('cvGo').textContent=old?'繼續遊戲':'開始遊戲';$('cvHint').textContent=old?'歡迎回來，'+S.me.nm+'！':'第一次玩：先揀島嶼地形，再建立角色';}
 function leaveCoverV42(){if(phase!=='cover')return;$('cover').classList.remove('on');if(!S.layout){if(!S.story)openStory();else openTerr();}else startPlay();}
@@ -3739,7 +3739,7 @@ var HELP=[
  {t:'操作方法',say:['行路：用手指喺畫面任何位置按住，向想去的方向拖動（電腦用方向鍵）。','撳一下人物、門口或者設施，主角會自動行過去，然後對話、入屋或者查看。','有對話框時，撳畫面任何位置就等於按「繼續」。右下角的 A 掣用來耕種、釣魚、拾起物品、坐低同起身。','畫面上面：「視角」掣轉鏡頭角度（低角度時下面有「拍照」掣）；「雜誌」睇《星旅》；「背包」睇物品；背包下面嘅「任務」掣睇每日、每週、每月任務。','主角行咗去建築物後面、俾建築物擋住嘅時候，頭上會出一隻手指，提你主角喺邊度。']},
  {t:'點樣賺錢？',say:['最主要的收入來自旅款餐廳：旅客吃完就付錢。菜式越多、廚師越好、餐廳五感越舒服，旅客越多。','另外可以把農作物、水果、蜂蜜和漁獲賣給市場的阿康；魚先放入池塘養大，價錢會高很多。','晚上在中央廣場噴水池放煙花，或者聘請導遊帶團，都可以吸引更多旅客。']},
  {t:'農田同工具',say:['空田按 A 播種，未熟的田按 A 澆水，成熟了按 A 收成。','星球上有五十種蔬果，分一級、二級、三級：等級越高，種子越貴、生長越耐（要澆多幾次水），但賣得越貴、做的菜越值錢。每個星球有 10 款本島蔬果，星球等級越高（累積收入越多），市場解鎖越多。其他蔬果要朋友送，收到之後市場先有得買；賣外來蔬果，收購價高五成。','在服務中心建材行（嘉禧）可以買更好的澆水器、採摘器、播種器：揀好之後快快連按兩下 A，就可以一次過處理幾格。','工具要逐級買，不可以一下子跳到最高級。']},
- {t:'釣魚同池塘',say:['站在任何海邊、面向大海按 A 就會打開釣魚畫面；碼頭是深水，大魚多啲。','按住「拋竿」蓄力，放手拋出去（拋得越遠越易遇到稀有魚）；浮標大力沉落就撳「拉！」；之後按住「收線」，拉力錶去到紅色、或者魚大力掙扎就要放手，否則會斷線。','海裏有三十三種魚，分普通、少見、稀有、珍貴、傳說：好啲的魚竿收線快、拉力耐，珍貴和傳說的魚要碳纖或者星光魚竿先釣到。有啲魚只喺夜晚、日頭或者落雨出現，可以喺「背包 → 魚類圖鑑」睇提示。','池塘可以養魚：魚會長大、會繁殖。池塘面板有「全部放入」和「全部撈起」，會由貴到平處理。','阿康每日收購魚有上限：頭 40 條照價，第 41–80 條六折，之後三折；用魚做菜、放入池塘養大就唔受影響。','釣魚有時限：上釣之後畫面上面有「時限」倒數，越珍貴嘅魚時限越短、越大力、越會掙扎，時間到魚就會逃走。所以稀有、珍貴、傳說魚都賣得貴啲。','魚類圖鑑撳釣到咗嘅魚，就睇到兩面魚卡：正面係基本資料，翻轉係生態資料（資料經網上核實）。珍貴同傳說魚要放入池塘養大先賣得好價：傳說魚大約要 1 日先長到「巨」。']},
+ {t:'釣魚同池塘',say:['站在任何海邊、面向大海按 A 就會打開釣魚畫面；碼頭是深水，大魚多啲。','按住「拋竿」蓄力，放手拋出去（拋得越遠，越易釣到貴魚）；浮標大力沉落就撳「拉！」；之後按住「收線」，將拉力保持喺綠色範圍，慢慢拉近條魚；拉力去到紅色、或者魚大力掙扎就要鬆手，否則會斷線。','海裏有三十三種魚，分普通、少見、稀有、珍貴、傳說：好啲的魚竿收線快、拉力耐，珍貴和傳說的魚要碳纖或者星光魚竿先釣到。有啲魚只喺夜晚、日頭或者落雨出現，可以喺「背包 → 魚類圖鑑」睇提示。','池塘可以養魚：魚會長大、會繁殖。池塘面板有「全部放入」和「全部撈起」，會由貴到平處理。','阿康每日收購魚有上限：頭 40 條照價，第 41–80 條六折，之後三折；用魚做菜、放入池塘養大就唔受影響。','釣魚有時限：上釣之後畫面上面有「時限」倒數，越珍貴嘅魚時限越短、越大力、越會掙扎，時間到魚就會逃走。所以稀有、珍貴、傳說魚都賣得貴啲。','魚類圖鑑撳釣到咗嘅魚，就睇到兩面魚卡：正面係基本資料，翻轉係生態資料（資料經網上核實）。珍貴同傳說魚要放入池塘養大先賣得好價：傳說魚大約要 1 日先長到「巨」。']},
  {t:'擴建同大型設施',say:['服務中心的市長林庫負責審批：「升級設施」（農場、池塘、花圃、噴水池、填海）、「增建社區設施」（電車、長椅、街燈、主道路）、「增建大型設施」（住宿、博物館、主題樂園、主題餐廳）同「升級大型設施」；批准之後由建材行嘉禧的工程隊施工。','大型設施只要儲夠錢就可以開工：住宿（商務酒店、精品酒店、渡假村各一間）、博物館、主題樂園工期 24 小時；主題餐廳（10 款揀最多 3 間）工期 12 小時。第二間起嘅住宿同主題餐廳，工程隊會起喺新填海嘅土地上（每座要先填海一次；唔會壓住建築物同行人路），重疊嘅樹會斬走，仲會鋪一條行人路去門口。','工具、雪櫃、爐具、銷售點系統同餐廳五感裝修，就搵建材行的嘉禧。','星球後期（主題樂園、第一間住宿、博物館都落成）先可以申請填海：之後走到海邊、面向大海按 A，就會填出一塊新土地。','農作物、水果可以放入池塘邊或農場入口的「食材交收箱」，直接送到餐廳廚房。']},
  {t:'信箱同好友',say:['飛碟站下面有一個信箱。成為好友之後，可以用信箱把種子、農作物、水果、漁獲、花送給好友，每 15 分鐘可以送一次。','好友送給你的禮物會寄到你的信箱：信箱上面出現彈吓彈吓嘅禮物盒（旗仔亦會升起），就是有禮物，按 A 就會放進背包。','互相送禮物會增加大家的好友度；收到其他島的特產，你的星際市場以後都有得買。','同好友企近，按 A 就可以一齊揮手、拍手、擊掌、拖手；影相時鏡頭入面有好友，喺麥仔攝影室就可以揀好友名，相片會加上「合照」字眼同日期時間。']},
  {t:'花圃同各島特產',say:['星球上有一個花圃：到星際市場買花種子，種在花圃，不用澆水，時間到了就會開花。開花後按 A 摘花，花可以賣給市場，或者送給朋友；摘完之後會再開。','每個島都有自己的特產水果（果樹上）和特產花。其他島的特產，要朋友用信箱送給你，之後你的市場才有得買，還可以用來研發新菜式。']},
@@ -5601,7 +5601,7 @@ FS.birds.forEach(function(b){b.ph+=dt*0.25;var a=b.ph;b.m.position.set(b.cx+Math
  // 捲線器到竿尖嗰段魚絲（經過每個導環）
  var a2=FS.rline.geometry.attributes.position,pts=[FS.reel].concat(FS.guides).concat([FS.tip]);for(var i=0;i<7;i++){var o=pts[Math.min(i,pts.length-1)];o.getWorldPosition(_ta);a2.setXYZ(i,_ta.x,_ta.y,_ta.z);}a2.needsUpdate=true;}
 function fsOpen(pier){if(FS.on)return;if(bagFree()<1){bagFullMsg();return;}fsBuild();FS.on=true;FS.pier=!!pier;FS.bait=-1;fsReset();fsTheme();$('app').classList.add('fishing');$('fishui').classList.add('on');fsBaitUI();
- S.flags=S.flags||{};if(!S.flags.fs2){S.flags.fs2=1;save();fsMsg('按住「拋竿」蓄力，放手拋出去；浮標大力沉落就撳「拉！」；之後按住「收線」，拉力去到紅色或者魚掙扎就放手。',6);}else fsMsg('按住「拋竿」蓄力，放手拋出去',2.5);}
+ S.flags=S.flags||{};if(!S.flags.fs2){S.flags.fs2=1;save();fsMsg('按住「拋竿」蓄力，放手拋出去（拋得越遠，越易釣到貴魚）；浮標大力沉落就撳「拉！」；之後按住「收線」，將拉力保持喺綠色範圍，慢慢拉近條魚。',6);}else fsMsg('按住「拋竿」蓄力，放手拋出去',2.5);}
 function fsClose(){if(!FS.on)return;FS.on=false;$('app').classList.remove('fishing');$('fishui').classList.remove('on');$('fsRes').classList.remove('on');FS.splash.forEach(function(s){FS.sc.remove(s.m);});FS.splash=[];if(FS.jump){FS.sc.remove(FS.jump.m);FS.jump=null;}}
 // 浮標越遠放得越大（遠處都睇得清），加一圈水紋
 function fsBobS(t){var s=1+Math.max(0,-FS.bob.position.z-4)*0.09;FS.bob.scale.setScalar(s);if(FS.rip){var k=(t*0.7)%1;FS.rip.visible=FS.st!=='fly';FS.rip.scale.setScalar(1+k*1.6);FS.rip.material.opacity=0.55*(1-k);}}
@@ -5632,17 +5632,10 @@ function fsTick(dt){var t=FS.uT+=dt;FS.t+=dt;FS.sea.uniforms.uT.value=t;var cam=
  var st=FS.st,rodBend=0,sh=0;
  if(st==='charge'){FS.pow=1-Math.abs(((FS.t/0.8)%2)-1);$('fsPowI').style.width=Math.round(FS.pow*100)+'%';FS.rod.rotation.x=-0.95-0.5*FS.pow;}
  else if(st==='fly'){var k=Math.min(1,FS.t/0.9);FS.rod.rotation.x=-0.95+0.35*Math.sin(k*Math.PI);FS.tip.getWorldPosition(_ta);FS.bob.visible=true;var ex=FS.bx,ez=FS.bz;FS.bob.position.set(_ta.x+(ex-_ta.x)*k,_ta.y+(0.05-_ta.y)*k+Math.sin(k*Math.PI)*(3+FS.D*0.12),_ta.z+(ez-_ta.z)*k);fsBobS(0);
-  if(k>=1){fsSplash(ex,ez,6,0.6);FS.st='wait';FS.t=0;FS.wait=(3+Math.random()*5)*(FS.baitLv?0.8:1);FS.nib=0.8+Math.random();}}
+  if(k>=1){fsSplash(ex,ez,6,0.6);FS.st='wait';FS.t=0;FS.wait=(2+Math.random()*3)*(FS.baitLv?0.8:1);FS.nib=0.8+Math.random();}}
  else if(st==='wait'){FS.nib-=dt;if(FS.nib<=0){FS.nib=0.6+Math.random()*1.4;FS.dip=0.12;fsSplash(FS.bx,FS.bz,2,0.25);}if(FS.t>FS.wait){FS.f=fishPick({pier:FS.pier,dist:(FS.D-6)/26,bait:FS.baitLv||0});FS.st='bite';FS.t=0;FS.win=fsWin38(S.rod||0)+(FS.f.rar<2?0.3:0);fsBtnTxt('拉！',true);fsMsg('浮標沉落了！快撳「拉！」',FS.win);fsSplash(FS.bx,FS.bz,10,0.8);vib([80,40,80]);}}
  else if(st==='bite'){FS.dip=0.5;sh=0.08;if(FS.t>FS.win)fsFail('太遲了，魚走咗……');}
- else if(st==='fight'){if(fsTimeTick(dt))return;var f=FS.f,str=f.str/10,rod=S.rod||0;FS.ph+=dt;FS.rushNext-=dt;if(FS.rush>0)FS.rush-=dt;else if(FS.rushNext<=0){FS.rush=0.8+Math.random()*0.7*str;FS.rushNext=(2.5+Math.random()*3.5)*(1-0.05*f.rar);fsMsg('魚大力掙扎！放手！',FS.rush);
-   if(!FS.jump&&Math.random()<0.55){var jm=fishModel(f);var bb=new T.Box3().setFromObject(jm),bs=bb.getBoundingSphere(new T.Sphere()).radius;jm.scale.multiplyScalar((f.rar>=3?2.4:1.5)*(1+FS.D*0.03)/Math.max(0.2,bs));FS.sc.add(jm);FS.jump={m:jm,t:0,x:FS.bx,z:FS.bz};fsSplash(FS.bx,FS.bz,12,1);}}
-  var pull=(str*0.7*(0.75+0.25*Math.sin(FS.ph*1.7))+(FS.rush>0?0.6*str+0.25:0))*(1+0.03*f.rar);
-  if(FS.hold){FS.D-=3.9*(1+0.12*rod)*(1-0.45*Math.min(1,pull))*dt;FS.T+=(0.25+0.9*pull)/(1+0.1*rod)*dt;FS.reel.rotation.x+=dt*18;}else{FS.T-=0.55*dt;FS.D+=pull*2.2*dt;}
-  FS.T=Math.max(0,FS.T);rodBend=0.2+0.5*FS.T;sh=FS.rush>0?0.06:0.02;
-  FS.bx=Math.sin(FS.ph*0.9)*Math.min(5,FS.D*0.18);FS.bz=1-FS.D*0.72;
-  $('fsNeedle').style.left=Math.round(Math.min(1,FS.T)*100)+'%';$('fsProgI').style.width=Math.round(Math.max(0,Math.min(1,1-FS.D/Math.max(1,FS.D0)))*100)+'%';$('fsDist').textContent='距離 '+Math.max(0,FS.D).toFixed(1)+' 米';$('fsFight').classList.toggle('danger',FS.T>0.78||FS.rush>0);
-  if(FS.T>=1){fsFail('斷線！魚走咗……（拉力太大，下次早啲放手）');}else if(FS.D>FS.D0+12){fsFail('魚游走咗……（放手太耐，要間中收線）');}else if(FS.D<=0.4)fsCatch();}
+ else if(st==='fight'){var o60=fsFight60(dt,t);rodBend=o60.b;sh=o60.s;}
  else if(st==='fail'){if(FS.t>1.8)fsReset();}
  // 魚跳出水（Fishing Clash 招牌動作）
  if(FS.jump){var J=FS.jump;J.t+=dt*(FS.f&&FS.f.rar>=3?0.55:FS.f&&FS.f.rar>=2?0.75:1);var jk=J.t/1.1;J.m.position.set(J.x+jk*1.8,fsWaveH(J.x,J.z,t)-0.4+Math.sin(Math.min(1,jk)*Math.PI)*(2.6+FS.D*0.06),J.z);J.m.rotation.z=0.9-jk*1.8;J.m.rotation.y=-0.6;if(jk>=1){fsSplash(J.x+1.5,J.z,12,1);FS.sc.remove(J.m);disposeTree(J.m);FS.jump=null;}}
@@ -6097,7 +6090,7 @@ function infoCard(o){var box=$('fcard');if(!box)return;
  box.querySelector('.fcx').onclick=function(){box.classList.remove('on');};box.onclick=function(ev){if(ev.target===box)box.classList.remove('on');};}
 function fishCard(k){var f=fishOf(k),e=(typeof FISH_ECO!=='undefined'&&FISH_ECO[k])||{},d=(S.fdex||{})[k],R0=FISH_RAR[f.rar];
  infoCard({col:R0.c,tag:R0.n,kind:'魚類圖鑑',img:icoURL('fish:'+k),title:f.n,sub:e.zh,sub2:[e.sci,e.en].filter(Boolean).join('・'),
-  front:[['分類',e.fam],['體長',e.len],['體重',e.wt],['你嘅紀錄',d?'最重 '+d.kg+' 公斤・釣到 '+d.n+' 條':'未釣到'],['收購價','小 $'+fmtC(fishPrice(k+'|S'))+'；池塘養到「巨」$'+fmtC(fishPrice(k+'|XL'))],['池塘養大','由「小」養到「巨」'+growTxt(k)],['點樣釣',fishHint(f)+'；'+FISH_RAR[f.rar].n+'魚限時 '+fsLimTxt(f)]],
+  front:[['分類',e.fam],['體長',e.len],['體重',e.wt],['你嘅紀錄',d?'最重 '+d.kg+' 公斤・釣到 '+d.n+' 條':'未釣到'],['收購價','小 $'+fmtC(fishPrice(k+'|S'))+'；池塘養到「巨」$'+fmtC(fishPrice(k+'|XL'))],['池塘養大','由「小」養到「巨」'+growTxt(k)],['點樣釣',fishHint(f)+'；'+'拉力難度 '+fsDiff60(f)]],
   flipTo:'翻去背面：生態資料',col2:'#2f8f6a',tag2:'生態',
   back:[['分布',e.dist],['棲息環境',e.hab],['食物',e.food],['習性、繁殖',e.life],['保育狀況（IUCN 紅色名錄）',e.iucn],['國際貿易（CITES 公約）',e.cites],['同香港嘅關係',e.hk],['冷知識',e.fun]],
   src:e.srcN?esc(e.srcN):''});}
@@ -10036,7 +10029,7 @@ var TUT39_I={
  water:['種子要喺濕泥入面先會生長；泥土乾咗，作物就會停低唔生長。','做法：企喺啱啱種咗嘅田上面按 A 淋水。之後可以向建材行嘉禧買更好嘅澆水器，連按兩下 A 一次過淋幾格，慳好多時間。'],
  harv:['作物熟咗（葉上面有閃閃嘅光點）就可以收成，收成嘅蔬果會放入你嘅背包。','做法：企喺熟咗嘅田上面按 A。背包有格數限制，滿咗就收唔到：可以賣走啲嘢，或者去芷華時裝換個大啲嘅背包。'],
  box:['農場入口有個「食材交收箱」：將背包嘅蔬果放入去，就會送去餐廳廚房。','廚師有食材先煮到菜；一份菜賣俾旅客，通常賺得多過直接賣食材。呢個係星球最穩定嘅收入來源！'],
- fish:['去碼頭，面向大海按 A 就可以釣魚：按住「拋竿」蓄力，放手拋出去；浮標沉落就快啲撳「拉！」；之後按住收線，拉力去到紅色或者魚大力掙扎就要放手。','釣到嘅魚有三個用途：①放入池塘養大，養到「巨」先賣，價錢高好多；②做鮮魚食材送去餐廳（要有雪櫃）；③喺市場直接賣錢。','魚竿越高級，收線限時越長，越易釣到珍貴嘅魚。'],
+ fish:['去碼頭，面向大海按 A 就可以釣魚：按住「拋竿」蓄力，放手拋出去（拋得越遠，越易釣到貴魚）；浮標沉落就快啲撳「拉！」；之後按住收線，將拉力保持喺綠色範圍，慢慢拉近條魚；拉力去到紅色或者魚大力掙扎就要鬆手。','釣到嘅魚有三個用途：①放入池塘養大，養到「巨」先賣，價錢高好多；②做鮮魚食材送去餐廳（要有雪櫃）；③喺市場直接賣錢。','魚竿越高級，收線越快、拉力越穩，越易釣到珍貴嘅魚。'],
  fruit:['島上嘅果樹會不時結果：行到結咗果嘅樹旁邊按 A 就摘得。','水果可以送去餐廳做奶昔、果汁同甜品，亦可以直接賣。蜂巢樹搖一搖會有蜜糖，不過會有蜜蜂追住你，小心啲！'],
  hire:['餐廳要有廚師先煮到菜。入服務中心搵市長林庫，揀「聘請人員」就可以請廚師。','廚藝越高，菜越好食、旅客越滿意；手速越快，出菜越快，一日可以做多啲生意。'],
  buy:['星際市場嘅阿康有種子、魚餌、煙花，仲有其他星球嘅食材。','種子用完就要補貨；用魚餌更易釣到好魚；夜晚喺中央廣場噴水池放煙花，當晚嘅旅客會多好多。'],
@@ -14578,6 +14571,72 @@ function reclFill59(land,g1,g2,rlk,N,rc,INF){var seen=new Uint8Array(N*N),qq=new
  cop56:['星空保安＋神跡池','新增星空保安，負責捉偷魚賊，你可以搵林庫聘請啦！','星際教堂外面新增神跡池：拋一樣物品落去，會拋返一件出嚟！'],
  land57:['填海起新建築','起新建築之前要先填海：你可以搵林庫申請填海，新建築會起喺新填海嘅土地上。']};
  for(var i=AD47_NEWS.length-1;i>=0;i--){var n=AD47_NEWS[i];if(n.id==='eco50'){AD47_NEWS.splice(i,1);continue;}var r=R[n.id];if(r){n.t=r[0];n.lines=r.slice(1);}}})();
+// ================= v60 釣魚改版（用戶指示：拋得越遠越易釣到貴魚；參考 Ultimate Fishing：保持拉力喺控制範圍先慢慢拉近條魚；冇限時）=================
+// 拋竿：力度越大拋得越遠（6–32 米）；稀有度越高，越需要拋遠先易上釣：機會 ×(0.55＋1.1×距離比例)^稀有度
+// 拉魚（冇時限，但每局設計喺 30 秒內完）：拉力條有綠色控制範圍；按住「收線」拉力會升、鬆手會跌
+//   拉力喺綠色範圍＝收線最快，條魚亦會慢慢攰（魚體力跌，掙扎越嚟越細）；高過綠色＝收得慢、好易斷線；低過綠色太耐＝線太鬆，魚甩鈎
+//   魚會間中大力掙扎（拉力急升，要鬆手）；稀有或以上嘅魚仲會突然扯線、綠色範圍會左右移；越珍貴，綠色範圍越窄、掙扎越大力
+//   魚竿越高級：綠色範圍闊少少、拉力升得慢少少、收線快少少、魚攰得快少少（高級魚竿都唔會令珍貴魚變得好易釣）
+//   ★ 魚竿唔夠力（用戶指示：最平魚竿唔可以輕易釣到傳說魚）：建議魚竿 REC60＝[0,1,3,5,7]，差 g 級：
+//     綠色範圍 ÷(1＋kW·g)、拉力升 ×(1＋kU·g)、掙扎拉力 ＋kR·g、掙扎密 ×(1＋kF·g)、收線 Tp×(1＋kT·g)、魚遲 kFs·g 秒先攰
+//   收線用「進度」計：喺綠色範圍按住，大約 Tp 秒拉得埋身（Tp＝(2.46＋0.96×稀有度＋0.86×(力量−0.25))×(0.75＋0.25×距離/32)×(1−3%×魚竿級)）
+//   上釣 7 秒後條魚開始冇力（再過 5 秒完全冇力）：9.5 秒起唔再大力掙扎（出「條魚冇晒力喇」）、收線越嚟越快 → 拉魚最長約 16–18 秒（魚竿唔夠力會長少少），連拋竿等魚每局約 30 秒內
+//   模擬（sim60h.py，最遠拋竿；熟手／一般／新手）：傳說魚 星光 12%／4%／0%、彩虹 55%／31%／5%；珍貴魚 碳纖 35%／22%／2%、鈦金 94%／56%／16%；最平魚竿硬釣傳說魚 0%
+var FP60={W0:0.40,Wr:0.052,Ws:0.057,Wrod:0.005,C:0.52,dA0:0.04,dA1:0.038,dF0:0.45,dF1:0.21,jerk:0.083,
+ up0:0.18,up1:1.054,uprod:0.04,dn0:0.7,dn1:0.3,dnmin:0.14,outHi:0.5,outLo:0.6,
+ E0:0.15,Erod:0.05,Eoff:0.03,slackK:0.6,slackT:2.6,slackR:0.25,rushI:2.5,rushR:3.0,rushRar:0.11,rushD:0.6,rushDr:0.6,pE:0.45,rushP0:0.1,rushPr:0.32,rushP1:0.75,
+ Tp0:2.46,Tpr:0.96,Tps:0.86,Tprod:0.03,runQ:0.03,rushQ:0.06,fleeQ:0.35,Fs:7,Fd:5,fatR:1.5,
+ kW:0.121,kU:0.07,kR:0.061,kF:0.009,kT:0.051,kFs:0.046};
+// 建議魚竿（普通、少見、稀有、珍貴、傳說）：差幾多級就難幾多（綠色範圍窄、拉力升得快、掙扎大力又密、收線慢、魚遲啲先攰）
+var REC60=[0,1,3,5,7];
+function fs60Gap(f,rod){return Math.max(0,REC60[f.rar]-(rod||0));}
+var F60={};
+function fsDist60(r,d){return Math.pow(0.55+1.1*Math.max(0,Math.min(1,d||0)),r||0);}
+function fs60Zone(){var bar=document.querySelector('#fsFight .fs-bar'),z=document.getElementById('fsZone');if(!z&&bar){z=document.createElement('div');z.id='fsZone';bar.insertBefore(z,bar.firstChild);}return z;}
+function fsJump60(f){var jm=fishModel(f),bb=new T.Box3().setFromObject(jm),bs=bb.getBoundingSphere(new T.Sphere()).radius;jm.scale.multiplyScalar((f.rar>=3?2.4:1.5)*(1+FS.D*0.03)/Math.max(0.2,bs));FS.sc.add(jm);FS.jump={m:jm,t:0,x:FS.bx,z:FS.bz};fsSplash(FS.bx,FS.bz,12,1);}
+fsFightStart=function(){var f=FS.f,rar=f.rar,rod=S.rod||0,s=f.str/10,P=FP60,g=fs60Gap(f,rod);FS.D+=1.2*rar;FS.D0=FS.D;FS.T=0.35;FS.left=null;FS.rush=0;FS.rushNext=(P.rushI+Math.random()*P.rushR)/(1+P.kF*g);
+ F60={E:1,q:1,ft:0,fatMsg:0,g:g,upK:(1+P.kU*g)/(1+P.uprod*rod),Fs:P.Fs+P.kFs*g,Tp:(P.Tp0+P.Tpr*rar+P.Tps*(s-0.25))*(0.75+0.25*FS.D0/32)*(1-P.Tprod*rod)*(1+P.kT*g),slack:0,slackMsg:0,jk:1,C:P.C,W:Math.min(0.44,Math.max(0.05,(P.W0-P.Wr*rar-P.Ws*(s-0.5)+P.Wrod*rod)/(1+P.kW*g))),amp:rar>=2?P.dA0+P.dA1*rar:0,fr:P.dF0+P.dF1*rar,slackLim:P.slackT-P.slackR*rar,zoneEl:fs60Zone()};
+ var ff=$('fsFight');ff.classList.remove('late','danger','slack','inz');var tl=document.querySelector('#fsFight .fs-time span');if(tl)tl.textContent='魚體力';
+ var first=!(S.flags&&S.flags.fs60);if(first){S.flags=S.flags||{};S.flags.fs60=1;save();}
+ fsMsg(first?'上釣！按住「收線」，將拉力保持喺綠色範圍，就可以慢慢拉近條魚。拉力去到紅色會斷線，太鬆魚會甩鈎。':(g>=2?'上釣！魚竿唔夠力，條魚好難拉，小心斷線！':'上釣！保持拉力喺綠色範圍'+(rar>=3?'（'+FISH_RAR[rar].n+'魚好大力，小心！）':'')),first?5:2.4);};
+function fsFight60(dt,t){var f=FS.f,G=F60,rod=S.rod||0,s=f.str/10,rar=f.rar,P=FP60;FS.ph+=dt;G.ft+=dt;var fat=Math.max(0,Math.min(1,(G.ft-G.Fs)/P.Fd));
+ G.C=P.C+G.amp*Math.sin(G.fr*FS.ph);var lo=G.C-G.W/2,hi=G.C+G.W/2;
+ FS.rushNext-=dt;if(FS.rush>0)FS.rush-=dt;else if(FS.rushNext<=0&&fat<0.5){FS.rush=(P.rushD+Math.random()*P.rushDr)*(0.6+s);FS.rushNext=(P.rushI+Math.random()*P.rushR)*(1-P.rushRar*rar)/(1+P.kF*G.g);fsMsg('魚大力掙扎！鬆手！',Math.min(1.6,FS.rush));if(!FS.jump&&Math.random()<0.55){try{fsJump60(f);}catch(x){}}}
+ if(fat>=0.5&&!G.fatMsg){G.fatMsg=1;fsMsg('條魚冇晒力喇！快啲收線！',2.5);}
+ // 突然扯線：拉力跳一下（最多跳入紅色，唔會即刻斷線，要即刻鬆手）
+ if(rar>=2){G.jk-=dt;if(G.jk<=0){G.jk=0.6+Math.random()*1.2;FS.T=Math.max(0,Math.min(Math.max(FS.T,0.96),FS.T+(Math.random()-0.3)*P.jerk*rar*(1-fat)));}}
+ var Ee=Math.min(G.E,1-fat),pb=s*(P.pE+(1-P.pE)*Ee),pull=pb*(0.85+0.15*Math.sin(1.7*FS.ph))+(FS.rush>0?P.rushP1*s+P.rushP0+P.rushPr*rar+P.kR*G.g:0),v=(0.8+0.4*(1-Ee))*(1+P.fatR*fat)/G.Tp;
+ if(FS.hold){FS.T+=(P.up0+P.up1*pull)*G.upK*dt;G.q-=(FS.T>=lo&&FS.T<=hi?1:FS.T>hi?P.outHi:P.outLo)*v*dt;FS.reel.rotation.x+=dt*18;}
+ else{FS.T-=Math.max(P.dnmin,P.dn0-P.dn1*pull)*dt;G.q+=(pb*P.runQ+(FS.rush>0?P.rushQ*(0.6+0.4*s):0))*(1-fat)*dt;}
+ FS.D=Math.max(0,G.q*FS.D0);
+ FS.T=Math.max(0,FS.T);var inZ=FS.T>=lo&&FS.T<=hi;
+ if(inZ)G.E=Math.max(0,G.E-dt*P.E0*(1+P.Erod*rod)/(0.4+s));else G.E=Math.max(0,G.E-dt*P.Eoff);
+ if(FS.T<lo*P.slackK)G.slack+=dt;else G.slack=Math.max(0,G.slack-2*dt);
+ FS.bx=Math.sin(FS.ph*0.9)*Math.min(5,FS.D*0.18);FS.bz=1-FS.D*0.72;
+ $('fsNeedle').style.left=Math.round(Math.min(1,FS.T)*100)+'%';var z=G.zoneEl;if(z){z.style.left=(lo*100).toFixed(1)+'%';z.style.width=((hi-lo)*100).toFixed(1)+'%';}
+ $('fsProgI').style.width=Math.round(Math.max(0,Math.min(1,1-G.q))*100)+'%';$('fsDist').textContent='距離 '+Math.max(0,FS.D).toFixed(1)+' 米';
+ $('fsTimeI').style.width=Math.round(Ee*100)+'%';$('fsTime').textContent=Math.round(Ee*100)+'%';
+ var ff=$('fsFight');ff.classList.toggle('danger',FS.T>hi||FS.rush>0);ff.classList.toggle('slack',FS.T<lo*P.slackK);ff.classList.toggle('inz',inZ);
+ if(G.slack>0.8&&!G.slackMsg){G.slackMsg=1;fsMsg('線太鬆！快啲收線！',1.6);}if(G.slack<=0.2)G.slackMsg=0;
+ if(FS.T>=1)fsFail('斷線！拉力太大，魚走咗……（拉力去到紅色就要鬆手）');
+ else if(G.slack>G.slackLim)fsFail('線太鬆，魚甩鈎走咗……（拉力唔好長時間低過綠色範圍）');
+ else if(G.q>=1+P.fleeQ)fsFail('魚游走咗……（要保持拉力收線）');
+ else if(FS.D<=0.5)fsCatch();
+ return {b:0.2+0.5*Math.min(1,FS.T),s:FS.rush>0?0.06:0.02};}
+// 拋竿力度條旁邊顯示拋幾遠
+(function(){var pw=$('fsPow');if(pw&&!$('fsPowM')){var m=document.createElement('b');m.id='fsPowM';pw.appendChild(m);}
+ var st=document.createElement('style');st.textContent='#fsZone{position:absolute;top:2px;bottom:2px;border-radius:7px;background:rgba(80,220,110,.5);box-shadow:inset 0 0 0 2px #2f9a47;pointer-events:none}'+
+  '#fsFight .fs-bar{background:linear-gradient(90deg,#8fb8de 0%,#c9dbe9 38%,#f4d26a 66%,#f08a3a 84%,#e8473f 100%)}#fsFight.inz #fsZone{background:rgba(70,230,110,.78)}'+
+  '#fsFight.slack .fs-bar{box-shadow:inset 0 0 0 2px #57a8e8,0 0 10px #57a8e8}#fsFight .fs-time .fs-pb i{background:linear-gradient(90deg,#f4c542,#e8473f)}#fsPowM{min-width:46px;text-align:left}';document.head.appendChild(st);})();
+var fsTickV59=fsTick;fsTick=function(dt){fsTickV59(dt);if(FS.st==='charge'){var m=$('fsPowM');if(m)m.textContent=Math.round(6+26*FS.pow)+' 米';}};
+// 魚竿店：講新嘅魚竿效果
+function fs60RodTxt(i){var P=FP60;return (i?'收線快 '+Math.round((1/(1-P.Tprod*i)-1)*100)+'%、拉力升得慢 '+Math.round((1-1/(1+P.uprod*i))*100)+'%、':'')+'反應時間 '+fsWin38(i).toFixed(2)+' 秒'+(i>=4?'（可以釣傳說魚）':i>=2?'（可以釣珍貴魚）':'');}
+RENDER.shop_rod=function(b){b.appendChild(note('魚竿越高級：拉力嘅綠色範圍闊少少、拉力升得慢少少、收線快少少、浮標沉落之後反應時間長啲、稀有魚越常上釣。第 3 級起先會有珍貴魚上釣，第 5 級起先有傳說魚。<br>魚竿唔夠力，條魚好難拉（綠色範圍窄好多、拉力升得快、好易斷線）：稀有魚建議用金魚竿、珍貴魚建議用鈦金魚竿、傳說魚建議用彩虹魚竿。<br>拋得越遠，越易釣到貴魚。工具要<b>逐級購買</b>。'));
+ RODS.forEach(function(c,i){b.appendChild(card({ico:'rod:'+i},c.n,fs60RodTxt(i)+(i?'　$'+fmtC(c.p):'　開局的魚竿'),[tierBtn(S.rod||0,i,c.p,function(){buyRod(i);})],i===(S.rod||0)));});};
+// 魚卡「點樣釣」：講拉力難度
+function fsDiff60(f){var s=f.str/10,d=Math.max(1,Math.min(5,Math.round(1+f.rar+(s-0.5)*1.5))),r0=fsMinRod(f),rc=REC60[f.rar],mine=S.rod||0;return starStr(d)+(mine<r0?'（要用「'+RODS[r0].n+'」或以上魚竿先會上釣）':mine<rc?'（建議用「'+RODS[rc].n+'」'+(rc<RODS.length-1?'或以上':'')+'，魚竿唔夠力好難拉）':'');}
+// ================= v60 廣告欄新消息 =================
+if(typeof AD47_NEWS!=='undefined')AD47_NEWS.unshift({id:'fish60',t:'釣魚新玩法',lines:['釣魚有新玩法：拋得越遠，越易釣到貴魚；收線時要將拉力保持喺綠色範圍，就可以慢慢拉近條魚！']});
 // ---- 模組載入完：開始砌大型設施、牧場外型 ----
 LF_OK=true;if(MAP&&MAP.L&&typeof lfSync==='function')lfSync(true);
 requestAnimationFrame(loop);
