@@ -2,7 +2,7 @@
 <html lang="zh-Hant-HK">
 <head>
 <meta charset="utf-8">
-<meta name="ths-build" content="2610061618">
+<meta name="ths-build" content="2610082240">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="color-scheme" content="light">
 <!-- iPhone Safari 冇 element fullscreen API：由「分享 → 加入主畫面」開就會冇工具列（同旅款亂Upper 一樣）-->
@@ -3319,7 +3319,7 @@ function updMac(dt,t){var m=MAC,u=macO.userData;macO.visible=macSh.visible=!maki
 
 // ================= 封面、揀地形 =================
 // 每次開遊戲先見封面；未玩過嘅新玩家：揀地形 → 建立角色 → 開場白
-var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v65',BUILD='2610061618';
+var phase='cover',trSel='square',orbA=0.6,THUMB={},VERSION='v66',BUILD='2610082240';
 function showCoverV42(){phase='cover';$('cover').classList.add('on');$('app').classList.add('cover');CU.uB.value=0;sea.scale.set(4,7,1);sea.position.z=(MAP.bc||[0,0])[1];
  var old=!!(S.me&&S.me.nm);$('cvVer').textContent=BUILD+'V'+VERSION.slice(1);$('cvGo').textContent=old?'繼續遊戲':'開始遊戲';$('cvHint').textContent=old?'歡迎回來，'+S.me.nm+'！':'第一次玩：先揀島嶼地形，再建立角色';}
 function leaveCoverV42(){if(phase!=='cover')return;$('cover').classList.remove('on');if(!S.layout){if(!S.story)openStory();else openTerr();}else startPlay();}
@@ -14749,7 +14749,7 @@ function maTalk(){S.met=S.met||{};var first=!S.met.ma;S.met.ma=1;save();npcHop.m
  var L=[{t:'聘請廚師',cb:function(){openPanel('staff','hire');}},{t:'聘請導遊',cb:function(){openPanel('staff','guide');}},{t:'街頭表演者',cb:function(){openPanel('staff','perf');}},
   {t:'星空保安',cb:function(){openPanel('staff','police');}},{t:'博物館導賞員',cb:function(){openPanel('staff','mdoc');}},{t:'酒店人手',cb:function(){ma61Hotel();}},
   {t:'樂園卡通人物',cb:function(){ma61Park();}},{t:'餐廳管理合約',cb:function(){openPanel('staff','mgmt');}},{t:'現有員工',cb:function(){openPanel('staff','list');}},{t:'沒事了',cb:function(){}}];
- talk(MA_NM,MA_BG,'#ffffff',first?['你好，'+me()+'！我係勞工主任小馬，負責聘請星球上所有人手。','廚師、導遊、街頭表演者、星空保安、博物館導賞員、酒店人手、樂園卡通人物，同埋餐廳管理合約，都可以搵我。今日想請邊類人手？']:['你好，'+me()+'！今日想請邊類人手？'],L);}
+ talk(MA_NM,MA_BG,'#ffffff',first?['你好，'+me()+'！我係勞工主任小馬，負責聘請星球上所有人手。','廚師、導遊、街頭表演者、星空保安、博物館導賞員、酒店人手、樂園卡通人物，同埋各餐廳嘅管理合約，都可以搵我。今日想請邊類人手？']:['你好，'+me()+'！今日想請邊類人手？'],L);}
 // ---- 聘請面板：全部人手集中喺度 ----
 PANELS.staff.t='聘請人手・勞工主任小馬';
 (function(){var T0=PANELS.staff.tabs;if(!T0.some(function(q){return q[0]==='mdoc';})){var ix=-1;T0.forEach(function(q,i){if(q[0]==='police')ix=i;});T0.splice(ix>=0?ix+1:T0.length,0,['mdoc','導賞員']);}})();
@@ -15054,6 +15054,202 @@ setInterval(function(){try{if(phase==='cover'&&NET.user&&!NET.pend&&$('login').c
  else if(phase==='cover'&&CV43.auto&&NET.user&&!NET.pend&&!$('login').classList.contains('on')&&!CV43.busy){CV43.auto=false;leaveCover();}}catch(e){}},700);
 // 登出 → 存檔後返去封面，要再登入
 var onLogoutV64=onLogout;onLogout=function(){onLogoutV64();if(!MOCK&&netAvail())setTimeout(function(){try{location.reload();}catch(e){}},900);};
+
+// ================= v66 各餐廳雪櫃／食材平分／研發餐單／管理團隊／財哥特許經營（用戶指示）=================
+// ① 旅款餐廳＋每間主題餐廳各自有雪櫃（可升級；主題餐廳存 e.r.fr）
+// ② 交收魚獲／農作物（同牧場牛奶雞蛋、市場買入）按各餐廳餐單需求平均分配；冷藏品要該餐廳有雪櫃位
+// ③ 大地博士：研發新菜＋為各餐廳編排餐單；勞工主任小馬：為各餐廳簽管理合約（旅款＝家豪；主題＝管理團隊）
+// ④ 開齊 3 間主題餐廳後，NPC「財哥」隨機出現喺餐廳附近，遊說特許經營；答應即收 $5,000
+// ⑤ 每日廣告欄刊登分店消息：賺錢分成，或者壞消息令本島餐廳名聲受損、當日旅客大幅減少
+var FR66_FEE=5000,MGMT66_TR=800;
+function fran66(){if(!S.fran)S.fran={on:0,day:'',bad:0,earn:0,n:0,told:0};return S.fran;}
+function restDone66(){return lfTRs().filter(function(e){return e.done;});}
+function restOpen66(){var L=[{id:'main',nm:'旅款餐廳',kind:'main'}];restDone66().forEach(function(e){L.push({id:e.id,nm:lfName(e),kind:'tr',e:e});});return L;}
+function restOf66(id){var L=restOpen66();for(var i=0;i<L.length;i++)if(L[i].id===id)return L[i];return L[0];}
+function restInv66(R){if(R.kind==='main'){S.inv=S.inv||{};return S.inv;}var e=R.e;e.r=e.r||trNew();e.r.inv=e.r.inv||{};return e.r.inv;}
+function restFr66(R){return R.kind==='main'?(S.up.fridge||0):Math.max(0,Math.min(UP.fridge.L.length-1,(R.e.r&&R.e.r.fr)||0));}
+function restSetFr66(R,lv){if(R.kind==='main'){S.up.fridge=lv;if(typeof syncFridge==='function')syncFridge();}else{R.e.r=R.e.r||trNew();R.e.r.fr=lv;}}
+function restMenu66(R){if(R.kind==='main')return (S.menu||[]).map(recipeById).filter(Boolean);var e=R.e;e.r=e.r||trNew();e.r.rmenu=e.r.rmenu||[];return e.r.rmenu.map(recipeById).filter(Boolean);}
+function restMenuIds66(R){if(R.kind==='main')return S.menu||(S.menu=[]);var e=R.e;e.r=e.r||trNew();return e.r.rmenu||(e.r.rmenu=[]);}
+function restNeed66(R,k){var n=0;restMenu66(R).forEach(function(r){if(r.ks&&r.ks.indexOf(k)>=0)n++;});return n;}
+function restChill66(R){var inv=restInv66(R),n=0;for(var k in CHILL)n+=inv[k]||0;return n;}
+function restCap66(R){return UP.fridge.L[restFr66(R)].cap;}
+function restRoom66(R,k){if(!CHILL[k])return 9999;var cap=restCap66(R);if(!cap)return 0;return Math.max(0,cap-restChill66(R));}
+function kitPut66(R,k,n){if(n<=0)return 0;var room=restRoom66(R,k);if(CHILL[k]&&room<=0)return 0;var m=CHILL[k]?Math.min(n,room):n;var inv=restInv66(R);inv[k]=(inv[k]||0)+m;seen(k);return m;}
+function kitAdd66(k,n){if(n<=0)return {ok:0,map:{}};var all=restOpen66(),need=all.filter(function(R){return restNeed66(R,k)>0;}),pool=need.length?need:all,left=n,map={},guard=0;
+ while(left>0&&guard++<500){var got=0;pool.forEach(function(R){if(left<=0)return;var m=kitPut66(R,k,1);if(m){left--;got++;map[R.id]=(map[R.id]||0)+m;}});if(!got)break;}
+ return {ok:n-left,left:left,map:map};}
+function kitShareTxt66(map){var L=[];restOpen66().forEach(function(R){if(map[R.id])L.push(R.nm+' ×'+map[R.id]);});return L.length?L.join('、'):'沒有餐廳收得下';}
+// ---- 交收／市場／牧場：改為平分 ----
+var depositV66=deposit;deposit=function(bk,n){var k=bk.slice(4);if(!bagTake(bk,n))return;var r=kitAdd66(k,n);if(r.left){bagAdd(bk,r.left);toast('📦 '+iname(k)+'：雪櫃或倉庫不夠位，退回背包 '+r.left+' 件',3500);}
+ else toast('📦 '+iname(k)+' ×'+r.ok+' 已按餐單需求分配：'+kitShareTxt66(r.map));if(typeof qAdd==='function')qAdd('deliver',r.ok);save();renderPanel();};
+var depositAllV66=depositAll;depositAll=function(){var tot=0,leftN=0;bagKeys('ing:').forEach(function(bk){var k=bk.slice(4),c=bagCount(bk);if(!c||!bagTake(bk,c))return;var r=kitAdd66(k,c);tot+=r.ok;if(r.left){bagAdd(bk,r.left);leftN+=r.left;}});
+ if(tot){toast('📦 已分配 '+tot+' 件食材到各餐廳'+(leftN?'（退回 '+leftN+' 件）':''),4000);if(typeof qAdd==='function')qAdd('deliver',tot);save();}renderPanel();};
+var fishToIngV66=fishToIng;fishToIng=function(fk){var por=parseKey(fk).cl.por,room=0;restOpen66().forEach(function(R){room+=restRoom66(R,'fish');});
+ if(room<por){toast('🧊 各餐廳雪櫃合共只剩 '+room+' 格（需要 '+por+' 格）');return;}
+ if(!bagTake('fish:'+fk,1))return;var r=kitAdd66('fish',por);
+ toast('🐟 '+fishLab(fk)+'處理成 '+por+' 份鮮魚，已分配：'+kitShareTxt66(r.map));
+ seen('fish');if(typeof qAdd==='function')qAdd('deliver',r.ok);save();renderPanel();};
+// 市場買入：改為平分
+var RENDER_market_trade66=RENDER.market_trade;RENDER.market_trade=function(b){var left=Math.max(0,Math.ceil((S.mk.next-Date.now())/1000));
+ b.appendChild(note('其他星球玩家放售的食材，買了會<b>按各餐廳餐單需求平均分配</b>到廚房倉庫。約 <span id="mkcd">'+mmss(left)+'</span>後補貨。'));
+ b.appendChild(note('🧊 冷藏食品要該餐廳有雪櫃位才收得下。旅款餐廳雪櫃：'+(S.up.fridge?restChill66(restOf66('main'))+' / '+restCap66(restOf66('main'))+' 件':'未有')));
+ if(!S.mk.list.length)b.appendChild(note('暫時全部賣光了。'));
+ S.mk.list.forEach(function(L){var ch=CHILL[L.k],any=restOpen66().some(function(R){return restRoom66(R,L.k)>0||!ch;}),btn;
+  if(ch&&!any)btn={t:'各餐廳雪櫃已滿／未有',cls:'g',dis:true,fn:function(){}};
+  else btn={t:'買 1 個 $'+L.p,dis:S.coins<L.p,fn:function(){buy(L.p,function(){var r=kitAdd66(L.k,1);if(!r.ok){S.coins+=L.p;coinsUI();toast('沒有餐廳收得下');return;}L.q--;if(L.q<=0)S.mk.list.splice(S.mk.list.indexOf(L),1);toast('📦 '+iname(L.k)+'已分配：'+kitShareTxt66(r.map));});}};
+  b.appendChild(card({ico:'item:'+L.k},iname(L.k)+' × '+L.q,(ch?'🧊 冷藏　':'')+esc(L.w)+'　'+GRADE_N[ING[L.k].g]+'食材　每個 $'+L.p,[btn]));});};
+// 牧場牛奶／雞蛋：平分到有雪櫃嘅餐廳
+var ranchSettleV66=ranchSettleV34;ranchSettleV34=function(){ranchSettleV66();if(!S||VISIT||!S.ranch)return;var o=ranchSt(),ch=false;
+ ['milk','egg'].forEach(function(k){var n=o.box[k]||0;if(!n)return;var r=kitAdd66(k,n);if(r.ok){o.box[k]-=r.ok;ch=true;}});if(ch)save();};
+var ranchBoxTalkV66=ranchBoxTalk;ranchBoxTalk=function(k){ranchSettle();var o=ranchSt(),n=o.box[k]||0,nm=k==='milk'?'牛奶':'雞蛋',any=restOpen66().some(function(R){return restFr66(R)>0;});
+ if(!any){talk(nm+'收集箱','#5a8f86','#ffffff',['收集箱有 '+n+' 件'+nm+'（最多 '+RANCH_BOX+' 件）。','未有任何餐廳安裝雪櫃：'+nm+'送唔到廚房。去建材行嘉禧為餐廳安裝雪櫃。']);return;}
+ talk(nm+'收集箱','#5a8f86','#ffffff',[n?'收集箱仲有 '+n+' 件'+nm+'，有雪櫃位就會平均分配去各餐廳。':'所有'+nm+'都已經按餐單需求分配去各餐廳廚房。','牧場到而家一共出產咗 '+(o.n||0)+' 件牛奶同雞蛋。']);};
+// 旅款餐廳仍然用 S.inv；hasIng／chilledCount 照舊（主廚）
+// ---- 雪櫃升級（嘉禧設備面板）----
+function fr66Card(b,R){var lv=restFr66(R),u=UP.fridge,cur=u.L[lv],nx=u.L[lv+1];
+ b.appendChild(card({emo:'🧊'},'雪櫃'+(lv?'（Lv'+lv+'）':'（未有）'),'現在：'+esc(cur.d)+(nx?'<br>下一級：'+esc(nx.d)+'　$'+fmtC(nx.c):'<br><span class="good">已經係最高級</span>')+(R.kind==='main'?'':'：主題餐廳要有雪櫃，先可以存放雞蛋、牛奶、鮮魚等冷藏食材'),
+  [nx?{t:(lv?'升級 $':'安裝 $')+fmtC(nx.c),cls:'o',dis:S.coins<nx.c||!!VISIT,fn:function(){buy(nx.c,function(){restSetFr66(R,lv+1);noteInvest(nx.c,'fridge');if(typeof qAdd==='function')qAdd('upgrade',1);toast('🧊 '+R.nm+'：'+u.n+'（Lv'+(lv+1)+'）',3000);});}}:{t:'最高級',cls:'g',dis:true,fn:function(){}}],lv>0));}
+var RENDER_equip_rest66=RENDER.equip_rest;RENDER.equip_rest=function(b){b.appendChild(note('<b>雪櫃</b>：每間餐廳各自升級。冷藏食材（雞蛋、牛奶、鮮魚、豬肉、牛肉）會按餐單需求平均分配到各餐廳。'));fr66Card(b,restOf66('main'));RENDER_equip_rest66(b);};
+[0,1,2].forEach(function(i){var old=RENDER['equip_t'+i];RENDER['equip_t'+i]=function(b){var e=eq62TRs()[i];if(!e){b.appendChild(note('未有呢間餐廳。'));return;}
+ b.appendChild(note('<b>'+esc(lfName(e))+'</b>：先安裝雪櫃，再買設備。食材交收後會按呢間餐廳嘅餐單分配冷藏同乾貨。'));fr66Card(b,{id:e.id,nm:lfName(e),kind:'tr',e:e});old(b);};});
+// 倉庫面板：顯示各餐廳存量
+var RENDER_store_stock66=RENDER.store_stock;RENDER.store_stock=function(b){RENDER_store_stock66(b);var TRs=restDone66();if(!TRs.length)return;
+ b.appendChild(note('<b>主題餐廳倉庫</b>（交收時會按餐單平均分配）'));
+ TRs.forEach(function(e){var R={id:e.id,nm:lfName(e),kind:'tr',e:e},inv=restInv66(R),cap=restCap66(R),ch=restChill66(R),parts=[];
+  ING_ORDER.forEach(function(k){if(inv[k])parts.push(iname(k)+'×'+inv[k]);});
+  b.appendChild(card({ico:'tr:'+e.t},R.nm+(restFr66(R)?'　🧊 '+ch+'／'+cap:''),parts.length?parts.join('、'):'倉庫空空如也（未有雪櫃或未分配到食材）',[]));});};
+var RENDER_store_put66=RENDER.store_put;RENDER.store_put=function(b){var ks=bagKeys('ing:'),fs=bagKeys('fish:'),anyFr=restOpen66().some(function(R){return restFr66(R)>0;});
+ b.appendChild(note('食材會<b>按各餐廳餐單需求平均分配</b>。魚處理成鮮魚後一樣平分到有雪櫃嘅餐廳。'));
+ if(ks.length){var tot=0;ks.forEach(function(k){tot+=bagCount(k);});b.appendChild(card({emo:'📦'},'全部農作物交給廚房','背包裏共有 '+tot+' 件農作物',[{t:'全部交給廚房',cls:'o',fn:depositAll}]));}
+ ks.forEach(function(bk){var k=bk.slice(4);b.appendChild(card({ico:'item:'+k},iname(k)+' × '+bagCount(bk),'會按餐單分配到各餐廳',[{t:'交 1 個',fn:function(){deposit(bk,1);}},{t:'全部',cls:'o',fn:function(){deposit(bk,bagCount(bk));}}]));});
+ fs.forEach(function(fk0){var fk=fk0.slice(5),p=parseKey(fk);b.appendChild(card({ico:'fish:'+p.k},fishLab(fk)+' × '+bagCount(fk0),'可以處理成 '+p.cl.por+' 份鮮魚'+(anyFr?'':'（要先為餐廳安裝雪櫃）'),[{t:'處理成鮮魚',dis:!anyFr,fn:function(){fishToIng(fk);}}]));});
+ if(!ks.length&&!fs.length)b.appendChild(note('背包裏沒有農作物或魚。先到農田採摘，或者到碼頭釣魚吧！'));};
+// ---- 主題餐廳餐單＋煮食消耗 ----
+function trMenuAdd66(e,id){e.r=e.r||trNew();e.r.rmenu=e.r.rmenu||[];if(e.r.rmenu.indexOf(id)>=0)return true;if(e.r.rmenu.length>=MENU_CAP){toast('📋 '+lfName(e)+'餐單已滿（最多 '+MENU_CAP+' 款）');return false;}e.r.rmenu.push(id);save();return true;}
+function trMenuDel66(e,id){e.r=e.r||trNew();e.r.rmenu=e.r.rmenu||[];var i=e.r.rmenu.indexOf(id);if(i>=0){e.r.rmenu.splice(i,1);save();}}
+function trHasIng66(e,r){var inv=restInv66({kind:'tr',e:e});for(var i=0;i<r.ks.length;i++){var k=r.ks[i];if((inv[k]||0)<1)return false;if(CHILL[k]&&!restFr66({kind:'tr',e:e}))return false;}return true;}
+function trCookPick66(e){var L=restMenu66({kind:'tr',e:e}).filter(function(r){return trHasIng66(e,r);});return L.length?L[0]:null;}
+function trConsume66(e,r){var inv=restInv66({kind:'tr',e:e});r.ks.forEach(function(k){inv[k]=(inv[k]||0)-1;if(inv[k]<=0)delete inv[k];});}
+function trMgmtOn66(e){return !!(e&&e.r&&e.r.mgmt&&Date.now()<e.r.mgmt.until);}
+var trTickV66=trTick;trTick=function(dt){if(VISIT||!S||phase!=='play'){trTickV66(dt);return;}
+ (S.lf||[]).forEach(function(e){if(e.k!=='tr'||!e.done)return;var r=e.r||(e.r=trNew());r.t=(r.t||0)+dt;if(r.t<150)return;r.t=0;var q=trCalc(e),dish=trCookPick66(e),amt=q.inc,ok=!!dish;
+  if(!restMenu66({kind:'tr',e:e}).length)amt=Math.round(amt*0.4);else if(!ok)amt=Math.round(amt*0.35);else{trConsume66(e,dish);if(trMgmtOn66(e))amt=Math.round(amt*1.2);}
+  if(typeof franBad66==='function'&&franBad66())amt=Math.round(amt*0.4);
+  S.coins+=amt;r.earn=(r.earn||0)+amt;coinsUI();
+  if(where==='trr'&&TR_CUR===e)toast(trTh(e.t).n+'收入 +$'+fmtC(amt)+(ok?'':'（食材不足）'),2200);
+  if(q.stars!==r.stars){var up=q.stars>r.stars,first=r.stars<0;r.stars=q.stars;if(!first||q.stars>1)addArticle('tr',{t:e.t,stars:q.stars,avg:+q.avg.toFixed(1),st:TR_SK.map(function(k){return +q.st[k].toFixed(1);}),up:up});}save();});};
+// 主題餐廳面板加「餐單」分頁
+PANELS.tr.tabs=[['sense','感官升級'],['rate','評級'],['menu','餐單']];
+RENDER.tr_menu=function(b){var e=TR_CUR;if(!e)return;var ids=restMenuIds66({kind:'tr',e:e});
+ b.appendChild(note('<b>'+esc(lfName(e))+'</b>餐單（最多 '+MENU_CAP+' 款）。有雪櫃同足夠食材，收入先會足額；食材由交收箱／市場按需求平均分配。亦可找大地博士編排。'));
+ if(!ids.length)b.appendChild(note('餐單空空如也：去服務中心找大地博士「編排餐廳餐單」，或者下面由菜譜上架。'));
+ ids.forEach(function(id){var r=recipeById(id);if(!r)return;b.appendChild(card({ico:dishIco(r)},r.n,'食材：'+r.ks.map(iname).join('、')+'　售價 $'+r.price+(trHasIng66(e,r)?'　<span class="ok">✓ 供應中</span>':'　<span class="bad">欠食材／雪櫃</span>'),
+  [{t:'下架',cls:'g',fn:function(){trMenuDel66(e,id);toast('📋 已下架「'+r.n+'」');renderPanel();}}]));});
+ b.appendChild(note('菜譜上架（已研發）'));
+ S.recipes.forEach(function(r){if(ids.indexOf(r.id)>=0)return;b.appendChild(card({ico:dishIco(r)},r.n,'食材：'+r.ks.map(iname).join('、'),
+  [{t:'上架',cls:'o',dis:ids.length>=MENU_CAP||!!VISIT,fn:function(){if(trMenuAdd66(e,r.id)){toast('📋 「'+r.n+'」已加入'+lfName(e));renderPanel();}}}]));});};
+// ---- 大地博士：編排餐單 ----
+function labTabs66(editNm){PANELS.lab.tabs=[['new','研發新菜'],['book','菜譜'],['arr','編排餐單']];if(editNm)PANELS.lab.tabs.push(['edit',editNm]);}
+labTabs66();
+RENDER.lab_arr=function(b){labTabs66();b.appendChild(note('為各餐廳編排餐單：旅款餐廳同主題餐廳各最多 '+MENU_CAP+' 款。編排後，交收嘅食材會優先平均分配俾有相關菜式嘅餐廳。'));
+ restOpen66().forEach(function(R){var ids=restMenuIds66(R);b.appendChild(card({ico:R.kind==='main'?'pot':'tr:'+(R.e&&R.e.t)},R.nm,'餐單 '+ids.length+'／'+MENU_CAP+'　雪櫃 Lv'+restFr66(R),
+  [{t:'編排',cls:'o',fn:function(){LAB66=R;labTabs66(R.nm.slice(0,8));openPanel('lab','edit');}}]));});};
+var LAB66=null;
+RENDER.lab_edit=function(b){var R=LAB66;if(!R){b.appendChild(note('請先揀一間餐廳。'));return;}var ids=restMenuIds66(R);
+ b.appendChild(note('正在編排：<b>'+esc(R.nm)+'</b>（'+ids.length+'／'+MENU_CAP+'）'));
+ ids.forEach(function(id){var r=recipeById(id);if(!r)return;b.appendChild(card({ico:dishIco(r)},r.n,'已上架',[{t:'下架',cls:'g',fn:function(){if(R.kind==='main')menuDel(r);else trMenuDel66(R.e,id);renderPanel();}}]));});
+ S.recipes.forEach(function(r){if(ids.indexOf(r.id)>=0)return;b.appendChild(card({ico:dishIco(r)},r.n,'食材：'+r.ks.map(iname).join('、'),[{t:'上架',cls:'o',dis:ids.length>=MENU_CAP,fn:function(){
+  if(R.kind==='main'){if(menuAdd(r))toast('📋 已上架「'+r.n+'」');}else if(trMenuAdd66(R.e,r.id))toast('📋 「'+r.n+'」已加入'+R.nm);renderPanel();}}]));});
+ b.appendChild(card({emo:'←'},'返回餐廳列表','',[{t:'返回',fn:function(){labTabs66();openPanel('lab','arr');}}]));};
+var labTalkV66=labTalk;labTalk=function(){var first=!S.met.gl;S.met.gl=1;save();npcHop.gulo=0.8;
+ talk('大地博士（研發室）','#6a4fb0','#ffffff',first?['我是大地博士，專門研究星際美食。','選兩至三種你曾經擁有過的食材，我就可以研發新菜式；也可以幫你為各間餐廳編排餐單。','記住：食材等級越低，做出來的菜就越便宜。']:['又想研發新菜式，還是編排餐單？'],
+  [{t:'研發新菜式',cb:function(){openPanel('lab','new');}},{t:'編排餐廳餐單',cb:function(){openPanel('lab','arr');}},{t:'看看菜譜',cb:function(){openPanel('lab','book');}},{t:'沒事了',cb:function(){}}]);};
+// 研發成功後提示可編排
+var finishResearchV66=finishResearch;finishResearch=function(r,how){finishResearchV66(r,how);setTimeout(function(){if(D0)return;talk('大地博士（研發室）','#6a4fb0','#ffffff',['新菜「'+r.n+'」已入菜譜。要不要現在編排到某一間餐廳的餐單？'],
+  [{t:'編排餐單',cb:function(){openPanel('lab','arr');}},{t:'稍後再說',cb:function(){}}]);},400);};
+// ---- 各餐廳管理合約（小馬）----
+function hireMgmtMain66(d){hireMgmt(d);}
+function hireMgmtTr66(e,d){buy(MGMT66_TR*d,function(){e.r=e.r||trNew();e.r.mgmt=e.r.mgmt||{until:0,nextR:0};e.r.mgmt.until=Math.max(Date.now(),e.r.mgmt.until||0)+d*86400000;e.r.mgmt.nextR=Date.now()+10*60000;noteInvest(MGMT66_TR*d,'mgmt');
+ addNews('🤝 '+lfName(e)+'引入管理團隊','店主與管理公司簽訂 '+d+' 日管理合約：主題餐廳日常運作由管理團隊打理，店主承擔盈虧。','ev');toast('🤝 '+lfName(e)+'簽了 '+d+' 日管理合約',4500);});}
+function mgmtTickTr66(){(S.lf||[]).forEach(function(e){if(e.k!=='tr'||!e.done||!trMgmtOn66(e))return;var m=e.r.mgmt;if(Date.now()<m.nextR)return;m.nextR=Date.now()+15*60000;
+ var ids=restMenuIds66({kind:'tr',e:e});if(ids.length>=MENU_CAP)return;var cand=S.recipes.filter(function(r){return ids.indexOf(r.id)<0;});if(!cand.length)return;var r=pick(cand);if(trMenuAdd66(e,r.id))toast('🤝 '+lfName(e)+'管理團隊把「'+r.n+'」加進餐單',4000);});}
+var mgmtTickV66=mgmtTick;mgmtTick=function(dt){mgmtTickV66(dt);try{mgmtTickTr66();}catch(err){errNote(err,'主題餐廳管理');}};
+var RENDER_staff_mgmt66=RENDER.staff_mgmt;RENDER.staff_mgmt=function(b){b.appendChild(note('課本：酒店有三類管理模式——獨立擁有及經營、<b>管理合約</b>、<b>特許經營</b>。你可以為<b>每一間餐廳</b>分別簽管理合約。'));
+ b.appendChild(note('<b>旅款餐廳・家豪</b>：廚師廚藝／手速 +20；每 15 分鐘自動研發新菜。費用每日 $'+MGMT_FEE+'。'));
+ if(mgmtOn()){var left=S.mgmt.until-Date.now(),h=Math.floor(left/3600000),m=Math.floor(left%3600000/60000);b.appendChild(card({emo:'🤝'},'旅款餐廳・合約生效中','還有 '+h+' 小時 '+m+' 分鐘',[]));}
+ [1,2,3].forEach(function(d){b.appendChild(card({emo:'📝'},(mgmtOn()?'延長 ':'簽訂 ')+'旅款餐廳 '+d+' 日','費用 $'+MGMT_FEE*d,[{t:'簽約 $'+MGMT_FEE*d,cls:'o',dis:S.coins<MGMT_FEE*d,fn:function(){hireMgmtMain66(d);}}]));});
+ restDone66().forEach(function(e){var on=trMgmtOn66(e);b.appendChild(note('<b>'+esc(lfName(e))+'</b>：管理團隊令收入 +20%，每 15 分鐘自動由菜譜加一款上餐單。費用每日 $'+MGMT66_TR+'。'));
+  if(on){var left2=e.r.mgmt.until-Date.now(),h2=Math.floor(left2/3600000),m2=Math.floor(left2%3600000/60000);b.appendChild(card({emo:'🤝'},lfName(e)+'・合約生效中','還有 '+h2+' 小時 '+m2+' 分鐘',[]));}
+  [1,2,3].forEach(function(d){b.appendChild(card({emo:'📝'},(on?'延長 ':'簽訂 ')+lfName(e)+' '+d+' 日','費用 $'+MGMT66_TR*d,[{t:'簽約 $'+MGMT66_TR*d,cls:'o',dis:S.coins<MGMT66_TR*d||!!VISIT,fn:function(){hireMgmtTr66(e,d);}}]));});});};
+// ---- 特許經營壞消息：旅客減少 ----
+function franBad66(){var F=fran66();return F.on&&Date.now()<(F.bad||0);}
+var starInfoV66=starInfo;starInfo=function(){var si=starInfoV66();if(franBad66()&&si.interval)si.interval*=2.4;return si;};
+// ---- 財哥 NPC ----
+var CAI={m:null,tag:null,x:0,z:0,rot:0,ph:0,until:0,next:0,spot:null,show:0};
+function caiReady66(){return !VISIT&&phase==='play'&&restDone66().length>=3;}
+function caiLook66(){return {t:'h',nm:'財哥',hs:'side',eye:'smile',shirt:0x1a3a6a,hair:0x2a2020,skin:0xe8b98f,pants:0x2d2a32,hat:{st:'officer',c:0x1a3a6a}};}
+function caiSpot66(){var spots=[];var R=MAP&&MAP.rest;if(R)spots.push([R[0]+3.2,R[1]+2.4,'旅款餐廳']);
+ restDone66().forEach(function(e){if(e.p)spots.push([e.p[0]+2.4,e.p[1]+2.6,lfName(e)]);});
+ if(!spots.length)return null;return pick(spots);}
+function caiSpawn66(){if(CAI.m||!caiReady66())return;var sp=caiSpot66();if(!sp)return;CAI.spot=sp;CAI.x=sp[0];CAI.z=sp[1];CAI.until=Date.now()+(8+Math.floor(Math.random()*10))*60000;CAI.show=1;
+ CAI.m=noCull(lookModel(caiLook66()));CAI.m.scale.setScalar(2.45);CAI.m.position.set(CAI.x,0,CAI.z);scO.add(CAI.m);
+ CAI.tag=bubble('財哥','#1a3a6a','#ffffff',0.32);scO.add(CAI.tag);if(typeof buildITO==='function')buildITO();
+ if(!fran66().told){fran66().told=1;save();setTimeout(function(){toast('財哥出現在餐廳附近：過去同他傾偈',4500);},600);}
+}
+function caiDespawn66(){if(CAI.m){scO.remove(CAI.m);disposeTree(CAI.m);CAI.m=null;}if(CAI.tag){killSprite(CAI.tag);CAI.tag=null;}CAI.show=0;CAI.next=Date.now()+(4+Math.floor(Math.random()*8))*60000;if(typeof buildITO==='function')buildITO();}
+function caiTick66(dt){if(!caiReady66()){if(CAI.m)caiDespawn66();return;}
+ if(!CAI.m){if(Date.now()>=(CAI.next||0))caiSpawn66();return;}
+ if(Date.now()>CAI.until&&!(D0&&$('dlgN')&&$('dlgN').textContent.indexOf('財哥')===0)){caiDespawn66();return;}
+ CAI.ph+=dt;var near=Math.hypot(P.x-CAI.x,P.z-CAI.z)<2.4;CAI.rot=lerpA(CAI.rot,near?Math.atan2(P.x-CAI.x,P.z-CAI.z):(CAI.ph*0.3),dt*5);
+ CAI.m.rotation.y=CAI.rot;CAI.m.position.set(CAI.x,0,CAI.z);animWalk(CAI.m,CAI.ph*2,false);if(CAI.tag)CAI.tag.position.copy(bendPt(CAI.x,2.35,CAI.z));}
+function caiAccept66(){var F=fran66();if(F.on){talk('財哥','#1a3a6a','#ffffff',['你已經簽咗特許經營啦！每日留意廣告欄，分店有消息我會叫人貼出嚟。']);return;}
+ F.on=1;F.n=(F.n||0)+1;F.day='';S.coins+=FR66_FEE;coinsUI();hudPlus(FR66_FEE);save();
+ addNews('📜 簽訂特許經營','其他星球以特許經營方式購入本島餐廳經營權：本島一次過收取特許經營費 $'+fmtC(FR66_FEE)+'，之後按分店業績分成，亦須承擔品牌風險。','ev');
+ talk('財哥','#1a3a6a','#ffffff',['好眼光！呢份合約一簽，特許經營費 $'+fmtC(FR66_FEE)+'即刻入帳。','由明日開始，廣告欄會每日刊登分店消息：賺到就有你份；若果分店出事，你嘅品牌都可能受損，記得留意！','課本所講：特許經營下，特許人提供品牌同營運模式，持牌人按協議經營並支付費用。'],null,function(){toast('🪙 收到特許經營費 $'+fmtC(FR66_FEE),4000);});}
+function caiTalk66(){if(!CAI.m)return;P.face=Math.atan2(CAI.x-P.x,CAI.z-P.z);var F=fran66(),nm='財哥（特許經營顧問）',bg='#1a3a6a';
+ if(F.on){talk(nm,bg,'#ffffff',['老闆 '+me()+'！分店喺其他星球開得幾旺，詳細睇廣告欄啦。','有咩想問？'],[
+  {t:'特許經營是甚麼？',cb:function(){talk(nm,bg,'#ffffff',['課本：特許經營（franchising）下，特許人（你）提供品牌、餐單同營運模式；持牌人用自己嘅資金喺其他星球開分店，向你支付特許經營費同分成。','好處係擴張快、一次過收授權費；風險係分店質素影響你嘅品牌名聲。']);}},
+  {t:'今日分店點樣？',cb:function(){franTell66();}},{t:'沒事了',cb:function(){}}]);return;}
+ talk(nm,bg,'#ffffff',['喂喂，'+me()+'老闆！我係財哥，專門幫餐廳做特許經營。','你而家開齊三間主題餐廳，品牌已經夠晒。其他星球有投資者想用「特許經營」買你嘅餐廳經營權——用你嘅招牌、餐單同營運模式開分店。','你只需要授權，即刻收 $'+fmtC(FR66_FEE)+' 特許經營費；之後分店賺錢你有分成，但若果佢哋搞砸，你嘅名聲都可能受損。簽唔簽？'],
+  [{t:'答應，收取 $'+fmtC(FR66_FEE),cls:'o',cb:caiAccept66},{t:'特許經營是甚麼？',cb:function(){talk(nm,bg,'#ffffff',['課本：特許經營下，特許人提供品牌同Know-how，持牌人按協議經營並支付費用。同管理合約唔同：管理合約係別人幫手打理你嘅店；特許經營係別人用你嘅品牌開佢自己嘅店。'],[{t:'咁我簽啦',cb:caiAccept66},{t:'再考慮',cb:function(){}}]);}},{t:'暫不考虑',cb:function(){talk(nm,bg,'#ffffff',['得，我過兩日再嚟搵你。機會唔等人呀！']);}}]);}
+// 互動點
+var buildITOV66=buildITO;buildITO=function(){buildITOV66();if(CAI.m)IT_O.push({x:CAI.x,z:CAI.z,r:1.6,l:'對話',th:2.2,tr:0.8,fn:caiTalk66});};
+// ---- 每日分店消息 ----
+var FRAN66_GOOD=[
+ {t:'分店生意興隆',lines:['星球日報：特許經營分店「星際分號」上星期客似雲來，營業額創新高！','按合約，分成 $AMT 已撥入你的戶口。繼續保持品牌質素，分店會越開越多。'],lo:400,hi:1200},
+ {t:'分店獲當地推介',lines:['好消息！外星球旅遊局把你的特許經營分店列入「必食清單」。','當地食評讚不絕口，本月分成 $AMT 已到帳。'],lo:500,hi:1500},
+ {t:'分店開張誌慶',lines:['另一個星球又新開了一間用你品牌的特許經營分店，開張首日人頭湧湧。','按協議，開張祝賀金兼分成合共 $AMT 已入帳。'],lo:600,hi:1600}
+];
+var FRAN66_BAD=[
+ {t:'分店衛生事故',lines:['緊急消息：特許經營分店被揭發廚房衛生差劣，多名食客進食後不適入院。','當地衛生署暫時停業處分。你的品牌聲譽受損——今日本島各餐廳旅客將大幅減少。請加強培訓與巡查！'],why:'衛生'},
+ {t:'分店食材過期',lines:['曝光：有分店被拍到使用過期食材，社交平台瘋傳。','旅客對品牌失去信心。今日本島餐廳人流預期急跌，品牌要花時間重建信任。'],why:'食安'},
+ {t:'分店服務惡評',lines:['投訴湧現：分店侍應態度惡劣、落錯單、迫客人消費。','「同牌子、唔同樣」成為熱話，拖累本島名聲。今日客人會明顯減少。'],why:'服務'},
+ {t:'分店遭食評低分',lines:['著名食評人到訪分店後只給一星：「完全失去原創餐廳的靈魂。」','報道迅速傳開，品牌形象受創。今日本島餐廳客量大幅下滑。'],why:'食評'},
+ {t:'分店違規擴張',lines:['分店未經授權擅自更改餐單、加收「星球服務費」，被當地消委會點名。','合約糾紛影響品牌信譽。今日本島旅客對餐廳卻步。'],why:'違規'}
+];
+function franDayNews66(){var F=fran66();if(!F.on||VISIT)return;var dk=dayKey();if(F.day===dk)return;F.day=dk;var good=Math.random()<0.55,item,lines,amt=0;
+ if(good){item=pick(FRAN66_GOOD);amt=item.lo+Math.floor(Math.random()*(item.hi-item.lo+1));amt=Math.round(amt/10)*10;S.coins+=amt;F.earn=(F.earn||0)+amt;F.bad=0;coinsUI();hudPlus(amt);
+  lines=item.lines.map(function(s){return s.replace('$AMT','$'+fmtC(amt));});toast('📜 特許經營分成 +$'+fmtC(amt)+'：去廣告欄睇詳情',5000);}
+ else{item=pick(FRAN66_BAD);F.bad=Date.now()+18*3600000;lines=item.lines.slice();toast('⚠ 特許經營分店壞消息：品牌受損，今日旅客減少！去廣告欄睇',6000);}
+ F.news={id:'fran'+dk.replace(/-/g,''),t:item.t,lines:lines,good:good?1:0,amt:amt,at:Date.now()};
+ // 塞入廣告欄未讀
+ try{var sn=ad47Seen();sn[F.news.id]=0;delete sn[F.news.id];AD47_NEWS.unshift({id:F.news.id,t:'特許經營・'+item.t,lines:lines});}catch(e){}
+ save();}
+function franTell66(){var F=fran66();if(!F.news){talk('財哥','#1a3a6a','#ffffff',['今日未有新消息，明日廣告欄見！累積分成 $'+fmtC(F.earn||0)+'。']);return;}
+ talk('財哥','#1a3a6a','#ffffff',F.news.lines.concat(['累積分成 $'+fmtC(F.earn||0)+'。']));}
+// 廣告欄：優先講特許經營今日消息
+var misBoardTalkV66=misBoardTalk;misBoardTalk=function(){try{franDayNews66();}catch(e){}
+ var F=fran66();if(F.on&&F.news&&F.news.id&&!ad47Seen()[F.news.id]){talk(AD47_NM,AD47_BG,'#ffffff',['啱啱貼出特許經營分店消息！'].concat(F.news.lines),null,function(){ad47Mark(F.news.id);ad47Next();});return;}
+ return misBoardTalkV66.apply(this,arguments);};
+// ---- 掛鈎主迴圈／頭像 ----
+PT_REG.push(['財哥',function(){return lookModel(caiLook66());}]);
+var tick46V66=tick46;tick46=function(dt,t){tick46V66(dt,t);try{franDayNews66();caiTick66(dt);}catch(e){errNote(e,'財哥／特許經營');}};
+// 廣告欄功能介紹
+if(typeof AD47_NEWS!=='undefined'){
+ AD47_NEWS.unshift({id:'fran66',t:'特許經營・財哥',lines:['新內容！開齊三間主題餐廳之後，餐廳附近會出現「財哥」。','佢會遊說你用特許經營方式，授權其他星球開分店：答應即收 $5,000 特許經營費。','之後每日廣告欄會刊登分店消息——可能賺錢分成，亦可能因為衛生或服務問題拖累你嘅品牌，令當日旅客大減。','另外：每間餐廳而家都有獨立雪櫃；交收嘅魚獲同農作物會按餐單需求平均分配；大地博士可以幫你編排各餐廳餐單，小馬可以為各餐廳簽管理合約。']});
+ AD47_NEWS.unshift({id:'kit66',t:'餐廳雪櫃同餐單',lines:['每間餐廳（旅款＋主題）都可以喺嘉禧度安裝／升級雪櫃。','交收箱、市場同牧場送來嘅食材，會按各餐廳餐單需求平均分配。','搵大地博士「編排餐廳餐單」，再搵小馬為各餐廳簽管理合約啦！']});}
+
 // ---- 模組載入完：開始砌大型設施、牧場外型 ----
 LF_OK=true;if(MAP&&MAP.L&&typeof lfSync==='function')lfSync(true);
 requestAnimationFrame(loop);
